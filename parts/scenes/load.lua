@@ -7,8 +7,7 @@ local studioLogo--Studio logo text object
 local logoColor1,logoColor2
 
 local loadingThread=coroutine.wrap(function()
-    BG.setDefault('space')
-    BGM.setDefault('hang out')
+    BG.setDefault('none')
     BG.set()
     BGM.play()
     local r=math.random()*6.2832

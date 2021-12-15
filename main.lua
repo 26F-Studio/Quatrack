@@ -92,10 +92,9 @@ do--Z.setCursor
         {'dCirc',8,8,7},
         {'fCirc',8,8,3},
     }
-    local min,int,abs=math.min,math.floor,math.abs
     local gc_setColor,gc_draw=love.graphics.setColor,love.graphics.draw
     local ms=love.mouse
-    Z.setCursor(function(time,x,y)
+    Z.setCursor(function(_,x,y)
         gc_setColor(1,1,1)
         gc_draw(ms.isDown(1)and holdImg or normImg,x,y,nil,nil,nil,8,8)
     end)
@@ -167,8 +166,6 @@ table.insert(_LOADTIMELIST_,("Load Files: %.3fs"):format(TIME()-_LOADTIME_))
 --First start
 FIRSTLAUNCH=STAT.run==0
 if FIRSTLAUNCH and MOBILE then
-    SETTING.VKSwitch=true
-    SETTING.powerInfo=true
     SETTING.cleanCanvas=true
 end
 

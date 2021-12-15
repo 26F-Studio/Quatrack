@@ -10,8 +10,8 @@ function scene.sceneInit()
         end
     else
         MES.update(1e99)
-        SETTING.powerInfo=false
-        SETTING.tapFX=false
+        Z.setPowerInfo(false)
+        Z.setClickFX(false)
         VERSION.string=""
         MES.new('error',"Please quit with HOME button on iOS",1e99)
     end

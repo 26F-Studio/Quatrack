@@ -31,31 +31,10 @@ do--Userdata tables
         simpMode=false,
         sysCursor=true,
         locale='zh',
-        skinSet='crystal_scf',
-        skin={
-            1,7,11,3,14,4,9,
-            1,7,2,6,10,2,13,5,9,15,4,11,3,12,2,16,8,4,
-            10,13,2,8
-        },
-        face={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 
         --Graphic
-        ghostType='gray',
-        block=true,ghost=.3,center=1,
-        smooth=true,grid=.16,lineNum=.5,
-        upEdge=true,
-        bagLine=false,
-        lockFX=2,
-        dropFX=2,
-        moveFX=2,
-        clearFX=2,
-        splashFX=2,
-        shakeFX=2,
-        atkFX=2,
         frameMul=100,
         cleanCanvas=false,
-        blockSatur='normal',
-        fieldSatur='normal',
 
         text=true,
         score=true,
@@ -66,7 +45,7 @@ do--Userdata tables
         fullscreen=true,
         bg='on',
         bgAlpha=.26,
-        powerInfo=false,
+        setPowerInfo=false,
         clickFX=true,
         warn=true,
 
