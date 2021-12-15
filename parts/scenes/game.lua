@@ -51,6 +51,8 @@ local hitTextTime--Time stamp, for hitText fading-out animation
 local scene={}
 
 function scene.sceneInit()
+    local mapName=SCN.args[1]
+
     BGM.stop()
     BG.set('none')
 
@@ -60,7 +62,7 @@ function scene.sceneInit()
 
     hitLV,hitTextTime=false,1e-99
 
-    map=require'parts.map'.new('parts/levels/goodrage.qmp')
+    map=require'parts.map'.new(('parts/levels/$1.qmp'):repD(mapName))
 
     tracks={}
     for i=1,4 do
@@ -179,6 +181,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.newKey{name="pause", x=30,y=30,w=50,fText="| |",code=backScene},
+    WIDGET.newKey{name="pause", x=30,y=60,w=50,fText="| |",code=backScene},
 }
 return scene

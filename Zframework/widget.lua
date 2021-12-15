@@ -1263,7 +1263,7 @@ end
 function listBox:getInfo()
     return("x=%d,y=%d,w=%d,h=%d"):format(self.x+self.w*.5,self.y+self.h*.5,self.w,self.h)
 end
-function WIDGET.newListBox(D)--name,x,y,w,h,lineH[,hideF][,hide][,drawF]
+function WIDGET.newListBox(D)--name,x,y,w,h,lineH,drawF[,hideF][,hide]
     local _={
         name=    D.name or"_",
 

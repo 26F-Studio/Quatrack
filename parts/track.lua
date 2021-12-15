@@ -82,7 +82,6 @@ function Track:draw()
     gc_scale(self.pos.kx,self.pos.ky)
 
     --Draw track line
-    gc_translate(0,self.glowTime*60)
     gc_setColor(1,1,1,1)
     gc_setLineWidth(4)
     gc_line(-50,0,50,0)
@@ -95,7 +94,6 @@ function Track:draw()
             gc_rectangle('fill',-50,-i*26-26,100,26)
         end
     end
-    gc_translate(0,self.glowTime*-60)
 
     --Draw press effect
     if self.glowTime>0 then
