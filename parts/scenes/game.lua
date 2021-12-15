@@ -69,6 +69,10 @@ function scene.sceneInit()
     end
 end
 
+function scene.sceneBack()
+    BGM.stop()
+end
+
 function scene.keyDown(key,isRep)
     if isRep then return end
     if KEY_MAP[key]then

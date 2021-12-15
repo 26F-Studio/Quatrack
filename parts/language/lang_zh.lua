@@ -74,12 +74,6 @@ return{
     pasteWrongPlace="提醒:可能粘贴错地方了",
     noFile="找不到文件",
 
-    nowPlaying="正在播放:",
-
-    VKTchW="触摸点权重",
-    VKOrgW="原始点权重",
-    VKCurW="当前点权重",
-
     noScore="暂无成绩",
     modeLocked="暂未解锁",
     unlockHint="前一模式达到成绩B或以上即可解锁",

@@ -74,12 +74,6 @@ return{
     pasteWrongPlace="Paste at the wrong place?",
     noFile="File missing",
 
-    nowPlaying="Now playing:",
-
-    VKTchW="Touch weight",
-    VKOrgW="Origin weight",
-    VKCurW="Current position wt.",
-
     noScore="No scores",
     modeLocked="Locked",
     unlockHint="Achieve Rank B or above in the preceding modes to unlock",
