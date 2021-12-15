@@ -84,15 +84,15 @@ function Map.new(file)
                     str=str:sub(1,-2)
                     step=step*.5
                 end
-            elseif str:sub(-1)=='-'then
-                while str:sub(-1)=='-'do
+            elseif str:sub(-1)=='~'then
+                while str:sub(-1)=='~'do
                     str=str:sub(1,-2)
                     step=step+1
                 end
             end
             for j=1,o.tracks do
                 local c=str:sub(j,j)
-                if c=='.'or c==' 'then
+                if c=='.'or c=='-'then
                     --Do nothing
                 elseif c=='X'or c=='O'then
                     ins(o.eventQueue,{
