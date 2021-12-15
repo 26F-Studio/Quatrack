@@ -65,7 +65,7 @@ function scene.sceneInit()
     tracks={}
     for i=1,4 do
         tracks[i]=require'parts.track'.new()
-        tracks[i]:setPosition{x=140+200*i,y=680}
+        tracks[i]:setPosition{x=365+110*i,y=680}
     end
 end
 
