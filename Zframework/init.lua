@@ -808,6 +808,8 @@ function love.run()
                 love.resize(gc.getWidth(),gc.getHeight())
             end
         end
+
+        love.timer.sleep(.01)
     end
 end
 
