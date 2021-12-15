@@ -1,4 +1,4 @@
-local ins,rem=table.insert,table.remove
+local ins=table.insert
 
 local Map={}
 
@@ -128,7 +128,7 @@ end
 function Map:pollNote()
     local n=self.eventQueue[self.notePtr]
     if n then
-        if self.time>n.time-5 then
+        if self.time>n.time-1 then
             repeat
                 self.notePtr=self.notePtr+1
             until not self.eventQueue[self.notePtr] or self.eventQueue[self.notePtr].type=='note'

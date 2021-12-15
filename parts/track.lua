@@ -4,7 +4,7 @@ local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_rectangle,gc_line=gc.rectangle,gc.line
 
-local ins,rem=table.insert,table.remove
+local rem=table.remove
 
 local Track={}
 
@@ -87,8 +87,8 @@ function Track:draw()
     gc_line(-50,0,50,0)
     for i=0,25 do
         gc_setColor(1,1,1,1-i/26)
-        gc_line(-50,-i*26,-50,-i*26-26)
-        gc_line(50,-i*26,50,-i*26-26)
+        gc_line(-50,-i*26,-50,-i*26-25.26)
+        gc_line(50,-i*26,50,-i*26-25.26)
         if self.pressed then
             gc_setColor(1,1,1,(1-i/26)/6)
             gc_rectangle('fill',-50,-i*26-26,100,26)

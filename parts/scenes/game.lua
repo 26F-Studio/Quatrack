@@ -163,9 +163,9 @@ function scene.draw()
 
     setFont(40)
     gc.setColor(1,1,1)
-    gc.printf(score,0,10,1270,'right')
+    gc.printf(score,0,5,1270,'right')
     setFont(30)
-    gc.printf(("%.2f%%"):format(100*curAcc/fullAcc),0,60,1270,'right')
+    gc.printf(("%.2f%%"):format(100*curAcc/fullAcc),0,50,1270,'right')
 
     if time<4 then
         setFont(80)
