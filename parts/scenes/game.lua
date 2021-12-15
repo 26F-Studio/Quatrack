@@ -1,5 +1,7 @@
 local gc=love.graphics
 
+local Note=require'parts.note'
+
 local int,abs=math.floor,math.abs
 
 local hitColors={
@@ -38,18 +40,18 @@ local function _getHitLV(div)
     0
 end
 
-local Track=require'parts.track'
-local Note=require'parts.note'
+local map,tracks
 
 local time
 local curAcc,fullAcc
 local combo,score,score0
-local hitLV,hitTextTime
-local TRK={}
+local hitLV--Hit level (-1~5)
+local hitTextTime--Time stamp, for hitText fading-out animation
 
 local scene={}
 
 function scene.sceneInit()
+    BGM.stop()
     BG.set('none')
 
     time=0
@@ -58,29 +60,19 @@ function scene.sceneInit()
 
     hitLV,hitTextTime=false,1e-99
 
-    for i=1,4 do
-        TRK[i]=Track.new()
-        TRK[i]:setPosition{x=140+200*i,y=680}
-    end
+    map=require'parts.map'.new('parts/levels/goodrage.qmp')
 
-    local r=math.random(1,4)
-    for i=1,62 do
-        TRK[r]:addNote(Note.new{time=1+.15*i})
-        if i%4==1 then
-            local r1=math.random(1,3)
-            if r1>=r then r1=r1+1 end
-            TRK[r1]:addNote(Note.new{time=1+.15*i})
-        end
-        r1=math.random(1,3)
-        if r1>=r then r1=r1+1 end
-        r=r1
+    tracks={}
+    for i=1,4 do
+        tracks[i]=require'parts.track'.new()
+        tracks[i]:setPosition{x=140+200*i,y=680}
     end
 end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
     if KEY_MAP[key]then
-        local divTime=TRK[KEY_MAP[key]]:press()
+        local divTime=tracks[KEY_MAP[key]]:press()
         if divTime then
             hitTextTime=TIME()
             fullAcc=fullAcc+10
@@ -101,13 +93,13 @@ function scene.keyDown(key,isRep)
 end
 function scene.keyUp(key)
     if key=='d'then
-        TRK[1]:release()
+        tracks[1]:release()
     elseif key=='f'then
-        TRK[2]:release()
+        tracks[2]:release()
     elseif key=='j'then
-        TRK[3]:release()
+        tracks[3]:release()
     elseif key=='k'then
-        TRK[4]:release()
+        tracks[4]:release()
     end
 end
 
@@ -116,10 +108,22 @@ end
 -- end
 
 function scene.update(dt)
+    if time<=4.5 and time+dt>4.5 then
+        BGM.play('goodrage','-si')
+    end
+
     time=time+dt
+    map:updateTime(time)
+    local n=map:pollNote()
+    while n do
+        tracks[n.track]:addNote(Note.new(n))
+        n=map:pollNote()
+    end
+
+    --Update tracks (check too-late miss)
     for i=1,4 do
-        TRK[i]:update(dt)
-        local missCount=TRK[i]:updateLogic(time)
+        tracks[i]:update(dt)
+        local missCount=tracks[i]:updateLogic(time)
         if missCount then
             hitTextTime=TIME()
             hitLV=-1
@@ -128,6 +132,8 @@ function scene.update(dt)
             combo=0
         end
     end
+
+    --Update score animation
     if score<score0 then
         score=int(score*.7+score0*.3)
         if score<score0 then score=score+1 end
@@ -136,7 +142,7 @@ end
 
 function scene.draw()
     for i=1,4 do
-        TRK[i]:draw()
+        tracks[i]:draw()
     end
 
     if TIME()-hitTextTime<.2 then
@@ -156,6 +162,16 @@ function scene.draw()
     gc.printf(score,0,10,1270,'right')
     setFont(30)
     gc.printf(("%.2f%%"):format(100*curAcc/fullAcc),0,60,1270,'right')
+
+    if time<4 then
+        setFont(80)
+        gc.setColor(1,1,1,2-2*abs(2-time))
+        mStr(map.mapName,640,100)
+        gc.setColor(.7,.7,.7,2-2*abs(2-time))
+        setFont(40)
+        mStr(map.musicAuth,640,200)
+        mStr(map.mapAuth,640,240)
+    end
 end
 
 scene.widgetList={

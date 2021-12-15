@@ -1,6 +1,6 @@
 local gc=love.graphics
-local gc_push,gc_pop,gc_clear=gc.push,gc.pop,gc.clear
-local gc_translate,gc_scale,gc_rotate,gc_shear=gc.translate,gc.scale,gc.rotate,gc.shear
+local gc_push,gc_pop=gc.push,gc.pop
+local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_rectangle,gc_line=gc.rectangle,gc.line
 
