@@ -42,6 +42,7 @@ end
 
 local map,tracks
 
+local songPlaying
 local time
 local curAcc,fullAcc
 local combo,score,score0
@@ -56,7 +57,8 @@ function scene.sceneInit()
     BGM.stop()
     BG.set('none')
 
-    time=0
+    songPlaying=false
+    time=-4
     curAcc,fullAcc=0,0
     combo,score,score0=0,0,0
 
@@ -114,8 +116,9 @@ end
 -- end
 
 function scene.update(dt)
-    if time<=4.5 and time+dt>4.5 then
-        BGM.play('goodrage','-si')
+    if not songPlaying and time<=map.songOffset and time+dt>map.songOffset then
+        BGM.play(map.songFile,'-si')
+        BGM.seek(time+dt-map.songOffset)
     end
 
     time=time+dt
@@ -169,11 +172,12 @@ function scene.draw()
     setFont(30)
     gc.printf(("%.2f%%"):format(100*curAcc/fullAcc),0,50,1270,'right')
 
-    if time<4 then
+    if time<0 then
+        local a=4-2*abs(time+2)
         setFont(80)
-        gc.setColor(1,1,1,2-2*abs(2-time))
+        gc.setColor(1,1,1,a)
         mStr(map.mapName,640,100)
-        gc.setColor(.7,.7,.7,2-2*abs(2-time))
+        gc.setColor(.7,.7,.7,a)
         setFont(40)
         mStr(map.musicAuth,640,200)
         mStr(map.mapAuth,640,240)
@@ -181,6 +185,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.newKey{name="pause", x=30,y=60,w=50,fText="| |",code=backScene},
+    WIDGET.newKey{name="pause", x=40,y=60,w=50,fText="| |",code=backScene},
 }
 return scene

@@ -7,6 +7,9 @@ local mapInfoKeys={
     "mapName",
     "musicAuth",
     "mapAuth",
+    "songFile",
+    "songOffset",
+    "tracks",
 }
 
 local _iter
@@ -30,6 +33,9 @@ function Map.new(file)
         mapName='[mapName]',
         musicAuth='[musicAuth]',
         mapAuth='[mapAuth]',
+
+        songFile="[songFile]",
+        songOffset=0,
         tracks=4,
 
         time=0,
@@ -55,6 +61,9 @@ function Map.new(file)
             break
         end
     end
+
+    if type(o.tracks)=='string'then o.tracks=tonumber(o.tracks)end
+    if type(o.songOffset)=='string'then o.songOffset=tonumber(o.songOffset)end
 
     repeat
         ins(o.eventQueue,l)

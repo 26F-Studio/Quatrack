@@ -3,6 +3,9 @@ $mapName=GOODRAGE
 $musicAuth=EBIMAYO
 $mapAuth=MrZ
 
+$songFile=goodrage
+$songOffset=-0.14
+
 O--O|
 OOOO|
 --O-|
@@ -770,6 +773,5 @@ O---||
 ---O||
 O--O
 -OO-
-
-:00:4.6
+:0:0
 !222
