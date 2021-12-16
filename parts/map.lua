@@ -71,7 +71,7 @@ function Map.new(file)
     until not l
 
     --Parse notes & animations
-    local curTime=2.6
+    local curTime=0
     local curBPM=180
     for i=#o.eventQueue,1,-1 do
         local str=o.eventQueue[i]
