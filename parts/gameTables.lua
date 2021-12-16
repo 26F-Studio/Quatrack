@@ -16,11 +16,19 @@ RANK_COLORS={
 }
 do--Userdata tables
     KEY_MAP={
-        d=1,
-        f=2,
-        j=3,
-        k=4,
+        {space=1},
+        {d=1,f=1,j=2,k=2},
+        {d=1,f=1,v=2,n=2,j=3,k=3},
+        {d=1,f=2,j=3,k=4},
+        {d=1,f=2,v=3,n=3,j=4,k=5},
+        {s=1,d=2,f=3,j=4,k=5,l=6},
+        {s=1,d=2,f=3,space=4,j=5,k=6,l=7},
+        {a=1,s=2,d=3,f=4,j=5,k=6,l=7,[';']=8},
+        space='skip',
     }
+    for i=1,#KEY_MAP do
+        setmetatable(KEY_MAP[i],{__index=KEY_MAP})
+    end
     SETTING={--Settings
         --System
         autoPause=true,

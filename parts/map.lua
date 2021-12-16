@@ -42,6 +42,7 @@ function Map.new(file)
         eventQueue={},
         notePtr=0,
         animePtr=0,
+        finished=false,
     }
 
     _iter=love.filesystem.lines(file)
@@ -137,10 +138,17 @@ end
 function Map:pollNote()
     local n=self.eventQueue[self.notePtr]
     if n then
-        if self.time>n.time-1 then
-            repeat
+        if self.time>n.time-2.6 then
+            local queue=self.eventQueue
+            while true do
                 self.notePtr=self.notePtr+1
-            until not self.eventQueue[self.notePtr] or self.eventQueue[self.notePtr].type=='note'
+                if not queue[self.notePtr]then
+                    self.finished=true
+                    break
+                elseif queue[self.notePtr].type=='note'then
+                    break
+                end
+            end
             return n
         end
     end
