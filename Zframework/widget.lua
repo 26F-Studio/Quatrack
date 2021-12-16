@@ -45,7 +45,12 @@ local function _rectangleStencil()
     gc.rectangle('fill',1,1,STW-2,STH-2)
 end
 
+local onChange=NULL
+
 local WIDGET={}
+
+function WIDGET.setOnChange(func)onChange=assert(type(func)=='function'and func,"WIDGET.setOnChange(func): func must be a function")end
+
 local widgetMetatable={
     __tostring=function(self)
         return self:getInfo()
@@ -1320,6 +1325,7 @@ function WIDGET.setWidgetList(list)
         for i=1,#list do
             list[i]:reset()
         end
+        onChange()
     end
 end
 function WIDGET.setScrollHeight(height)

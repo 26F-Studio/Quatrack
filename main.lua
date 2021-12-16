@@ -81,24 +81,6 @@ for _,v in next,fs.getDirectoryItems('parts/shaders')do
 end
 
 --Init Zframework
-do--Z.setCursor
-    local normImg=GC.DO{16,16,
-        {'fCirc',8,8,4},
-        {'setCL',1,1,1,.7},
-        {'fCirc',8,8,6},
-    }
-    local holdImg=GC.DO{16,16,
-        {'setLW',2},
-        {'dCirc',8,8,7},
-        {'fCirc',8,8,3},
-    }
-    local gc_setColor,gc_draw=love.graphics.setColor,love.graphics.draw
-    local ms=love.mouse
-    Z.setCursor(function(_,x,y)
-        gc_setColor(1,1,1)
-        gc_draw(ms.isDown(1)and holdImg or normImg,x,y,nil,nil,nil,8,8)
-    end)
-end
 Z.setOnFnKeys({
     function()MES.new('check',PROFILE.switch()and"profile start!"or"profile report copied!")end,
     function()MES.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num))end,
@@ -170,7 +152,7 @@ if FIRSTLAUNCH and MOBILE then
 end
 
 --Apply system setting
-applyAllSettings()
+applySettings()
 
 table.insert(_LOADTIMELIST_,("Initialize Data: %.3fs"):format(TIME()-_LOADTIME_))
 

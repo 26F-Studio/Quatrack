@@ -92,25 +92,62 @@ end
 function saveSettings()
     return saveFile(SETTING,'conf/settings')
 end
-function applyLanguage()
-    text=LANG.get(SETTING.locale)
-    WIDGET.setLang(text.WidgetText)
-end
-function applyCursor()
-    love.mouse.setVisible(SETTING.sysCursor)
-end
-function applyFullscreen()
-    love.window.setFullscreen(SETTING.fullscreen)
-    love.resize(gc.getWidth(),gc.getHeight())
-end
-function applyAllSettings()
-    applyFullscreen()
-    love.audio.setVolume(SETTING.mainVol)
-    BGM.setVol(SETTING.bgm)
-    SFX.setVol(SETTING.sfx)
-    VOC.setVol(SETTING.voc)
-    applyLanguage()
-    applyCursor()
+do--function applySettings()
+    function applySettings()
+        --Apply fullscreen
+        love.window.setFullscreen(SETTING.fullscreen)
+        love.resize(gc.getWidth(),gc.getHeight())
+
+        --Apply Zframework setting
+        Z.setClickFX(SETTING.clickFX)
+        Z.setFrameMul(SETTING.frameMul)
+        Z.setPowerInfo(SETTING.powerInfo)
+        Z.setCleanCanvas(SETTING.cleanCanvas)
+
+        --Apply sound
+        love.audio.setVolume(SETTING.mainVol)
+        BGM.setVol(SETTING.bgm)
+        SFX.setVol(SETTING.sfx)
+        VOC.setVol(SETTING.voc)
+
+        --Apply language
+        text=LANG.get(SETTING.locale)
+        WIDGET.setLang(text.WidgetText)
+
+        --Apply cursor
+        love.mouse.setVisible(SETTING.sysCursor)
+
+        --Apply BG
+        if SETTING.bg=='on'then
+            BG.unlock()
+            BG.set()
+        elseif SETTING.bg=='off'then
+            BG.unlock()
+            BG.set('gray')
+            BG.send(SETTING.bgAlpha)
+            BG.lock()
+        elseif SETTING.bg=='custom'then
+            if love.filesystem.getInfo('conf/customBG')then
+                local res,image=pcall(gc.newImage,love.filesystem.newFile('conf/customBG'))
+                if res then
+                    BG.unlock()
+                    BG.set('custom')
+                    gc.setDefaultFilter('linear','linear')
+                    BG.send(SETTING.bgAlpha,image)
+                    gc.setDefaultFilter('nearest','nearest')
+                    BG.lock()
+                else
+                    MES.new('error',text.customBGloadFailed)
+                end
+            else--Switch off when custom BG not found
+                SETTING.bg='off'
+                BG.unlock()
+                BG.set('gray')
+                BG.send(SETTING.bgAlpha)
+                BG.lock()
+            end
+        end
+    end
 end
 
 

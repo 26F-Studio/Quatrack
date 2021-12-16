@@ -84,7 +84,7 @@ local function drawCursor(_,x,y)
     gc_setLineWidth(2)
     gc_circle(ms.isDown(1)and'fill'or'line',x,y,6)
 end
-local showsetPowerInfo=true
+local showPowerInfo=true
 local showClickFX=true
 local discardCanvas=false
 local frameMul=100
@@ -98,7 +98,7 @@ local batteryImg=GC.DO{31,20,
     {'fRect',29,3,2,14},
 }
 local infoCanvas=gc.newCanvas(108,27)
-local function updatesetPowerInfo()
+local function updatePowerInfo()
     local state,pow=love.system.getPowerInfo()
     gc.setCanvas(infoCanvas)
     gc_push('transform')
@@ -319,7 +319,7 @@ function love.keypressed(key,_,isRep)
         MES.new('info',"DEBUG ON",.2)
     elseif key=='f11'then
         SETTING.fullscreen=not SETTING.fullscreen
-        applyFullscreen()
+        applySettings()
         saveSettings()
     elseif not SCN.swapping then
         if EDITING==""and(not SCN.keyDown or SCN.keyDown(key,isRep))then
@@ -722,7 +722,7 @@ function love.run()
                     MES_draw()
                 gc_replaceTransform(SCR.origin)
                     --Draw power info.
-                    if showsetPowerInfo then
+                    if showPowerInfo then
                         gc_setColor(1,1,1)
                         gc_draw(infoCanvas,safeX,0,0,SCR.k)
                     end
@@ -802,8 +802,8 @@ function love.run()
 
         --Fresh power info.
         if time-lastFreshPow>2.6 then
-            if showsetPowerInfo then
-                updatesetPowerInfo()
+            if showPowerInfo then
+                updatePowerInfo()
                 lastFreshPow=time
             end
             if gc.getWidth()~=SCR.w or gc.getHeight()~=SCR.h then
@@ -826,13 +826,19 @@ end
 
 local Z={}
 
-Z.js=jsState
-Z.errData=errData
+function Z.getJsState()return jsState end
+function Z.getErr(i)
+    if i=='#'then
+        return errData[#errData]
+    elseif i then
+        return errData[i]
+    else
+        return errData
+    end
+end
 
-function Z.setIfsetPowerInfo(bool)showsetPowerInfo=bool end
-
+function Z.setPowerInfo(bool)showPowerInfo=bool end
 function Z.setCleanCanvas(bool)discardCanvas=bool end
-
 function Z.setFrameMul(n)frameMul=n end
 function Z.setClickFX(bool)showClickFX=bool end
 
