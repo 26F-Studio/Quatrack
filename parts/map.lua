@@ -1,4 +1,6 @@
+local int=math.floor
 local ins=table.insert
+local assert=assert
 
 local Map={}
 
@@ -53,9 +55,7 @@ function Map.new(file)
     while true do
         if l:sub(1,1)=='$'then
             local k=l:sub(2,l:find("=")-1)
-            if not TABLE.find(mapInfoKeys,k)then
-                error("Invalid map info key: "..l)
-            end
+            assert(TABLE.find(mapInfoKeys,k),"Invalid map info key:7 "..l)
             o[k]=l:sub(assert(l:find("="),"Syntax error: need '='")+1)
             l=iterator()
         else
@@ -74,46 +74,114 @@ function Map.new(file)
     --Parse notes & animations
     local curTime=0
     local curBPM=180
-    for i=#o.eventQueue,1,-1 do
-        local str=o.eventQueue[i]
+    local loopMark
+    local loopEnd
+    local loopCountDown
+    local line=#o.eventQueue
+    while line>0 do
+        local str=o.eventQueue[line]
 
-        if str:sub(1,1)==':'then
+        if str:sub(1,1)=='#'then--Annotation
+            --Do nothing
+        elseif str:sub(1,1)=='!'then--BPM mark
+            local bpm=tonumber(str:sub(2))
+            assert(type(bpm)=='number'and bpm>0,"Invalid BPM: "..str)
+            curBPM=bpm
+        elseif str:sub(1,1)==':'then--Time mark
+            assert(not loopMark,"Cannot set time in loop")
+
             str=str:sub(2)
             local stamp=STRING.split(str,":")
-            if #stamp==2 then
-                curTime=tonumber(stamp[1])*60+tonumber(stamp[2])
+
+            assert(#stamp==2 and type(stamp[1])=='number'and type(stamp[2])=='number',"Wrong Time stamp: "..str:sub(2))
+
+            stamp=tonumber(stamp[1])*60+tonumber(stamp[2])
+            assert(stamp>curTime,"Cannot warp to past")
+
+            curTime=stamp
+        elseif str:sub(1,1)=='='then--Repeat mark
+            local len=0
+            repeat
+                len=len+1
+                str=str:sub(2)
+            until str:sub(1,1)~='='
+            assert(len>=4 and len<=10,"Invalid repeat mark length: "..len)
+
+            if str:sub(1,1)=='S'then
+                assert(not loopMark,"Cannot start another loop in a loop")
+                loopMark=line
+                if str:sub(2)==''then
+                    loopCountDown=1
+                else
+                    loopCountDown=tonumber(str:sub(2))
+                    assert(loopCountDown>=2 and int(loopCountDown)==loopCountDown,"Invalid loop count: "..str:sub(2))
+                    loopCountDown=loopCountDown-1
+                end
+            elseif str=='E'then
+                assert(loopMark,"Cannot end a loop without a start")
+                if loopCountDown>0 then
+                    loopEnd=line
+                    loopCountDown=loopCountDown-1
+                    line=loopMark
+                else
+                    loopMark=nil
+                    loopCountDown=nil
+                end
+            elseif str=='M'then
+                if loopCountDown==0 then
+                    loopMark=nil
+                    loopCountDown=nil
+                    line=loopEnd
+                end
             else
-                error("Wrong Time stamp: "..str:sub(2))
+                error("Invalid repeat mark: "..str)
             end
-        elseif str:sub(1,1)=='!'then
-            curBPM=tonumber(str:sub(2))
-        else
+        else--Notes
             local step=1
-            if str:sub(-1)=='|'then
+            if str:sub(-1)=='|'then--Shorten 1/2 for each
                 while str:sub(-1)=='|'do
                     str=str:sub(1,-2)
                     step=step*.5
                 end
-            elseif str:sub(-1)=='~'then
+            elseif str:sub(-1)=='~'then--Add 1 for each
                 while str:sub(-1)=='~'do
                     str=str:sub(1,-2)
                     step=step+1
                 end
+            elseif str:find('*')then
+                local mul=tonumber(str:sub(str:find('*')+1))
+                assert(type(mul)=='number',"Invalid time multiplier: "..str:sub(2))
+                str=str:sub(1,str:find('*')-1)
+                step=step*mul
+            elseif str:find('/')then
+                local div=tonumber(str:sub(str:find('/')+1))
+                assert(type(div)=='number',"Invalid time divider: "..str:sub(2))
+                str=str:sub(1,str:find('/')-1)
+                step=step/div
             end
-            for j=1,o.tracks do
-                local c=str:sub(j,j)
-                if c=='.'or c=='-'then
+            for n=1,o.tracks do
+                local c=str:sub(n,n)
+                if c=='-'then
                     --Do nothing
                 elseif c=='X'or c=='O'then
                     ins(o.eventQueue,{
                         type="note",
                         time=curTime,
-                        track=j,
+                        track=n,
                     })
+                elseif c=='U'then
+                    --?
+                elseif c=='A'then
+                    --?
+                elseif c=='H'then
+                    --?
+                else
+                    error("Invalid note character: "..c)
                 end
             end
             curTime=curTime+60/curBPM*step
         end
+        line=line-1
     end
 
     --Move two pointers to first [item]
