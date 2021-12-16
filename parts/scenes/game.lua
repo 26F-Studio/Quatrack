@@ -55,15 +55,7 @@ local time
 local devTimes
 local curAcc,fullAcc,accText
 local combo,maxCombo,score,score0
-local hits={
-    [-1]=0,
-    [0]=0,
-    [1]=0,
-    [2]=0,
-    [3]=0,
-    [4]=0,
-    [5]=0,
-}
+local hits={}
 
 local function _updateAcc()
     accText=("%.2f%%"):format(100*max(curAcc,0)/max(fullAcc,1))
@@ -104,6 +96,7 @@ function scene.sceneInit()
     curAcc,fullAcc=0,0
     _updateAcc()
     combo,maxCombo,score,score0=0,0,0,0
+    for i=-1,5 do hits[i]=0 end
 
     hitLV,hitTextTime=false,1e-99
 
