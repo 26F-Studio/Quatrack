@@ -95,7 +95,6 @@ function BGM.init(list)
                 return true
             elseif love.filesystem.getInfo(SourceObjList[name].path)then
                 SourceObjList[name].source=love.audio.newSource(SourceObjList[name].path,'stream')
-                SourceObjList[name].source:setLooping(true)
                 SourceObjList[name].source:setVolume(0)
                 table.insert(lastLoaded,1,name)
                 _tryReleaseSources()
@@ -119,7 +118,7 @@ function BGM.init(list)
         if name and SourceObjList[name].source then
             if BGM.nowPlay~=name then
                 if BGM.nowPlay then
-                    if not args:sArg('-so')then
+                    if not args:sArg('-sdout')then
                         TASK.new(task_fadeOut,BGM.playing)
                     else
                         BGM.playing:pause()
@@ -130,13 +129,14 @@ function BGM.init(list)
 
                 BGM.nowPlay=name
                 BGM.playing=SourceObjList[name].source
-                if not args:sArg('-si')then
+                if not args:sArg('-sdin')then
                     BGM.playing:setVolume(0)
                     TASK.new(task_fadeIn,BGM.playing)
                 else
                     BGM.playing:setVolume(volume)
                     BGM.playing:play()
                 end
+                SourceObjList[name].source:setLooping(not args:sArg('-noloop'))
                 BGM.lastPlayed=BGM.nowPlay
                 BGM.playing:seek(0)
                 BGM.playing:play()
@@ -149,6 +149,9 @@ function BGM.init(list)
         if BGM.playing then
             BGM.playing:seek(t)
         end
+    end
+    function BGM.isPlaying()
+        return BGM.playing and BGM.playing:isPlaying()
     end
     function BGM.continue()
         if BGM.lastPlayed then
