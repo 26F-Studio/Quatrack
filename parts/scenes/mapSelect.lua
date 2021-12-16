@@ -7,7 +7,8 @@ local listBox=WIDGET.newListBox{name='sel',x=100,y=80,w=1080,h=480,lineH=40,draw
     end
     setFont(30)
     gc.setColor(COLOR.Z)
-    gc.print(v,6,-1)
+    gc.print(k,8,-1)
+    gc.print(v,80,-1)
 end}
 
 local mapList={
