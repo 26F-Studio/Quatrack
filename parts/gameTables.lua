@@ -45,7 +45,7 @@ do--Userdata tables
         fullscreen=true,
         bg='on',
         bgAlpha=.26,
-        setPowerInfo=false,
+        powerInfo=true,
         clickFX=true,
         warn=true,
 

@@ -1,8 +1,8 @@
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
 local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
-local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_rectangle,gc_line=gc.rectangle,gc.line
+local gc_setColor=gc.setColor
+local gc_rectangle=gc.rectangle
 
 local rem=table.remove
 
@@ -83,12 +83,11 @@ function Track:draw()
 
     --Draw track line
     gc_setColor(1,1,1,1)
-    gc_setLineWidth(4)
-    gc_line(-50,0,50,0)
+    gc_rectangle('fill',-54,0,108,4)
     for i=0,25 do
         gc_setColor(1,1,1,1-i/26)
-        gc_line(-50,-i*26,-50,-i*26-25.26)
-        gc_line(50,-i*26,50,-i*26-25.26)
+        gc_rectangle('fill',-50,-i*26,-4,-26)
+        gc_rectangle('fill',50,-i*26,4,-26)
         if self.pressed then
             gc_setColor(1,1,1,(1-i/26)/6)
             gc_rectangle('fill',-50,-i*26-26,100,26)

@@ -42,7 +42,7 @@ end
 
 local map,tracks
 
-local songPlaying
+local isSongPlaying
 local time
 local curAcc,fullAcc
 local combo,score,score0
@@ -57,7 +57,7 @@ function scene.sceneInit()
     BGM.stop()
     BG.set('none')
 
-    songPlaying=false
+    isSongPlaying=false
     time=-4
     curAcc,fullAcc=0,0
     combo,score,score0=0,0,0
@@ -100,14 +100,8 @@ function scene.keyDown(key,isRep)
     end
 end
 function scene.keyUp(key)
-    if key=='d'then
-        tracks[1]:release()
-    elseif key=='f'then
-        tracks[2]:release()
-    elseif key=='j'then
-        tracks[3]:release()
-    elseif key=='k'then
-        tracks[4]:release()
+    if KEY_MAP[key]then
+        tracks[KEY_MAP[key]]:release()
     end
 end
 
@@ -116,7 +110,7 @@ end
 -- end
 
 function scene.update(dt)
-    if not songPlaying and time<=map.songOffset and time+dt>map.songOffset then
+    if not isSongPlaying and time<=map.songOffset and time+dt>map.songOffset then
         BGM.play(map.songFile,'-si')
         BGM.seek(time+dt-map.songOffset)
     end
@@ -170,7 +164,7 @@ function scene.draw()
     gc.setColor(1,1,1)
     gc.printf(score,0,5,1270,'right')
     setFont(30)
-    gc.printf(("%.2f%%"):format(100*curAcc/fullAcc),0,50,1270,'right')
+    gc.printf(("%.2f%%"):format(100*curAcc/(fullAcc>0 and fullAcc or 1)),0,50,1270,'right')
 
     if time<0 then
         local a=4-2*abs(time+2)
