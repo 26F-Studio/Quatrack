@@ -234,15 +234,15 @@ function Map.new(file)
                             end
                         end
                     elseif str:sub(1,1)=='*'then--Multiply time by any number
-                        local mul=tonumber(c:sub(2))
+                        local mul=tonumber(str:sub(2))
                         assert(type(mul)=='number',"[Bad line: wrong num] "..str0)
-                        c=c:sub(1,c:find('*')-1)
                         step=step*mul
+                        break
                     elseif str:sub(1,1)=='/'then--Divide time by any number
-                        local div=tonumber(c:sub(2))
+                        local div=tonumber(str:sub(2))
                         assert(type(div)=='number',"[Bad line: wrong num] "..str0)
-                        c=c:sub(1,c:find('/')-1)
                         step=step/div
+                        break
                     elseif str==""then
                         break
                     else
