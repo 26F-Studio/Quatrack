@@ -10,18 +10,8 @@ function scene.sceneInit()
 end
 
 function scene.draw()
-    gc.push('transform')
-    gc.translate(640+sin(2.6*TIME()),120+sin(3.6*TIME()))
     setFont(100)
-    gc.setColor(COLOR.Z)
-    gc.setColorMask(true,false,false,true)
-    mStr('QUATRACK',sin(6*TIME()),sin(11*TIME()))
-    gc.setColorMask(false,true,false,true)
-    mStr('QUATRACK',sin(7*TIME()),sin(10*TIME()))
-    gc.setColorMask(false,false,true,true)
-    mStr('QUATRACK',sin(8*TIME()),sin(9*TIME()))
-    gc.setColorMask()
-    gc.pop()
+    posterizedText('QUATRACK',640,120)
 end
 
 scene.widgetList={

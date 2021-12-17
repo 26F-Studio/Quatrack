@@ -37,7 +37,7 @@ end
 function scene.draw()
     gc.setColor(COLOR.Z)
     setFont(100,'mono')
-    mStr("Result",640,80)
+    posterizedText('Result',640,60)
 
     setFont(40)
     for i=-1,5 do
@@ -53,7 +53,7 @@ function scene.draw()
     gc.print(results.accText,800,315)
 
     setFont(40)
-    gc.print(results.maxCombo.."x",800,460)
+    gc.print(results.maxCombo.."x",800,500)
 end
 
 scene.widgetList={
