@@ -89,12 +89,13 @@ function Map.new(file)
         elseif str:sub(1,1)==':'then--Time mark
             _syntaxCheck(not loopMark,"Cannot set time in loop")
 
-            str=str:sub(2)
-            local stamp=STRING.split(str,":")
-
-            _syntaxCheck(#stamp==2 and type(stamp[1])=='number'and type(stamp[2])=='number',"Wrong Time stamp")
-
-            stamp=tonumber(stamp[1])*60+tonumber(stamp[2])
+            local stamp=STRING.split(str:sub(2),":")
+            if #stamp==1 then ins(stamp,1,"0")end
+            for i=1,2 do
+                stamp[i]=tonumber(stamp[i])
+                _syntaxCheck(type(stamp[i])=='number'and stamp[i]>=0,"Invalid time mark")
+            end
+            stamp=stamp[1]*60+stamp[2]
             _syntaxCheck(stamp>curTime,"Cannot warp to past")
 
             curTime=stamp
