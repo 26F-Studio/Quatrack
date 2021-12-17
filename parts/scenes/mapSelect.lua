@@ -12,7 +12,7 @@ local listBox=WIDGET.newListBox{name='sel',x=100,y=80,w=1080,h=480,lineH=40,draw
 end}
 
 local mapList={
-    'GOODRAGE',
+    "GOODRAGE (malody ver)",
 }
 
 local scene={}
