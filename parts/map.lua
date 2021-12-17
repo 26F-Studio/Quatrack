@@ -74,7 +74,7 @@ function Map.new(file)
     --Parse notes & animations
     local curTime,curBPM=0,180
     local loopMark,loopEnd,loopCountDown
-    local trackState=TABLE.new(0,o.tracks)
+    local longBarState=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
     local line=#o.eventQueue
     while line>0 do
@@ -148,23 +148,37 @@ function Map.new(file)
                     c=str:sub(1,1)
                     if c~='-'then--Space
                         if c=='O'then--Normal note
-                        ins(o.eventQueue,{
-                            type="note",
-                            time=curTime,
-                            track=curTrack,
-                        })
-                    elseif c=='U'then--Long bar start
-                        --?
-                    elseif c=='A'then--Long bar stop
-                        --?
-                    elseif c=='H'then--Long bar end
-                        --?
-                    else
-                        assert(curTrack==o.tracks+1,"[Bad line: too few notes in one line] "..str0)
-                        readState='rnd'
-                        goto CONTINUE_nextState
-                    end
-                    curLineState[curTrack]=true
+                            ins(o.eventQueue,{
+                                type="note",
+                                time=curTime,
+                                track=curTrack,
+                            })
+                        elseif c=='U'then--Long bar start
+                            assert(not longBarState[curTrack],"[Cannot start a long bar in a long bar] "..str0)
+                            local b={
+                                type="bar",
+                                track=curTrack,
+                                stime=curTime,
+                                etime=false,
+                                tail=false,
+                            }
+                            ins(o.eventQueue,b)
+                            longBarState[curTrack]=b
+                        elseif c=='A'then--Long bar stop
+                            assert(longBarState[curTrack],"[No long bar to stop] "..str0)
+                            longBarState[curTrack].etime=curTime
+                            longBarState[curTrack].tail=true
+                            longBarState[curTrack]=false
+                        elseif c=='H'then--Long bar end
+                            assert(longBarState[curTrack],"[No long bar to end] "..str0)
+                            longBarState[curTrack].etime=curTime
+                            longBarState[curTrack]=false
+                        else
+                            assert(curTrack==o.tracks+1,"[Bad line: too few notes in one line] "..str0)
+                            readState='rnd'
+                            goto CONTINUE_nextState
+                        end
+                        curLineState[curTrack]=true
                     end
                     assert(curTrack<=o.tracks,"[Bad line: too many notes in one line] "..str0)
                     curTrack=curTrack+1
