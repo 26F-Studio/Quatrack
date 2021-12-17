@@ -53,7 +53,7 @@ end
 
 function scene.draw()
     gc.setColor(1,1,1)
-    mDraw(IMG.title,640,200,0,.8)
+    mDraw(IMG.title,640,200,0,.3)
 
     gc.setColor(logoColor1[1],logoColor1[2],logoColor1[3],progress/maxProgress)mDraw(studioLogo,640,400)
     gc.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress)for dx=-2,2,2 do for dy=-2,2,2 do mDraw(studioLogo,640+dx,400+dy)end end

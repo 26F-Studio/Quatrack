@@ -95,8 +95,10 @@ Z.setOnFnKeys({
 --Load settings and statistics
 TABLE.update(loadFile('conf/settings','-canSkip')or{},SETTING)
 
---Initialize image libs
-IMG.init{}
+--Initialize media modules
+IMG.init{
+    title='media/image/title.png',
+}
 SFX.init((function()
     local L={}
     for _,v in next,fs.getDirectoryItems('media/effect/chiptune/')do
