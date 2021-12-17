@@ -118,7 +118,7 @@ function Map.new(file)
                     loopCountDown=loopCountDown-1
                 end
             elseif str=='E'then
-                assert(loopMark,"[Cannot end a loop without a start] "..str0)
+                assert(loopMark,"[Cannot end a loop without start one] "..str0)
                 if loopCountDown>0 then
                     loopEnd=line
                     loopCountDown=loopCountDown-1
@@ -174,13 +174,13 @@ function Map.new(file)
                             longBarState[curTrack].etime=curTime
                             longBarState[curTrack]=false
                         else
-                            assert(curTrack==o.tracks+1,"[Bad line: too few notes in one line] "..str0)
+                            assert(curTrack==o.tracks+1,"[Too few notes in one line] "..str0)
                             readState='rnd'
                             goto CONTINUE_nextState
                         end
                         curLineState[curTrack]=true
                     end
-                    assert(curTrack<=o.tracks,"[Bad line: too many notes in one line] "..str0)
+                    assert(curTrack<=o.tracks,"[Too many notes in one line] "..str0)
                     curTrack=curTrack+1
                     str=str:sub(2)
                 elseif readState=='rnd'then
@@ -222,7 +222,7 @@ function Map.new(file)
                         })
                         curLineState[curTrack]=true
                     else
-                        error('[Bad line: no available position to place notes] '..str0)
+                        error('[No available position to place notes] '..str0)
                     end
                     str=str:sub(2)
                 elseif readState=='time'then
@@ -233,7 +233,7 @@ function Map.new(file)
                             if str==""then
                                 break
                             elseif str:sub(1,1)~='|'then
-                                error("[Bad line: mixed mark] "..str0)
+                                error("[Mixed mark] "..str0)
                             end
                         end
                     elseif str:sub(1,1)=='~'then--Add 1 beat for each
@@ -243,23 +243,23 @@ function Map.new(file)
                             if str==""then
                                 break
                             elseif str:sub(1,1)~='~'then
-                                error("[Bad line: mixed mark] "..str0)
+                                error("[Mixed mark] "..str0)
                             end
                         end
                     elseif str:sub(1,1)=='*'then--Multiply time by any number
                         local mul=tonumber(str:sub(2))
-                        assert(type(mul)=='number',"[Bad line: wrong num] "..str0)
+                        assert(type(mul)=='number',"[Wrong scale num] "..str0)
                         step=step*mul
                         break
                     elseif str:sub(1,1)=='/'then--Divide time by any number
                         local div=tonumber(str:sub(2))
-                        assert(type(div)=='number',"[Bad line: wrong num] "..str0)
+                        assert(type(div)=='number',"[Wrong scale num] "..str0)
                         step=step/div
                         break
                     elseif str==""then
                         break
                     else
-                        error("[Bad line: invalid time mark] "..str0)
+                        error("[Invalid time mark] "..str0)
                     end
                 end
                 ::CONTINUE_nextState::
