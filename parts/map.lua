@@ -146,9 +146,8 @@ function Map.new(file)
             while true do
                 if readState=='note'then
                     c=str:sub(1,1)
-                    if c=='-'then--Space
-                        goto BREAK_noNote
-                    elseif c=='O'then--Normal note
+                    if c~='-'then--Space
+                        if c=='O'then--Normal note
                         ins(o.eventQueue,{
                             type="note",
                             time=curTime,
@@ -166,7 +165,7 @@ function Map.new(file)
                         goto CONTINUE_nextState
                     end
                     curLineState[curTrack]=true
-                    ::BREAK_noNote::
+                    end
                     assert(curTrack<=o.tracks,"[Bad line: too many notes in one line] "..str0)
                     curTrack=curTrack+1
                     str=str:sub(2)
