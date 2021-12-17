@@ -49,7 +49,6 @@ local map,tracks
 local hitLV--Hit level (-1~5)
 local hitTextTime--Time stamp, for hitText fading-out animation
 
-local mapName
 local isSongPlaying
 local time
 local devTimes
@@ -66,7 +65,7 @@ local function _tryGoResult()
         if tracks[i].notes[1]then return end
     end
     SCN.swapTo('result',nil,{
-        mapName=mapName,
+        mapName=map.mapName,
         score=score0,
         maxCombo=maxCombo,
         accText=accText,
@@ -85,7 +84,7 @@ end
 local scene={}
 
 function scene.sceneInit()
-    mapName=SCN.args[1]
+    map=SCN.args[1]
 
     BGM.stop()
     BG.set('none')
@@ -100,7 +99,6 @@ function scene.sceneInit()
 
     hitLV,hitTextTime=false,1e-99
 
-    map=require'parts.map'.new(('parts/levels/$1'):repD(mapName))
     tracks={}
     for i=1,map.tracks do
         tracks[i]=require'parts.track'.new()

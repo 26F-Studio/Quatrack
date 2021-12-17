@@ -11,7 +11,6 @@ local listBox=WIDGET.newListBox{name='sel',x=100,y=80,w=1080,h=480,lineH=40,draw
     gc.print(v,80,-1)
 end}
 
-
 local mapList=love.filesystem.getDirectoryItems('parts/levels')
 
 local scene={}
@@ -23,9 +22,14 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='return'then
-        local rep=listBox:getSel()
-        if rep then
-            SCN.go('game',nil,rep)
+        local mapName=listBox:getSel()
+        if mapName then
+            local success,res=pcall(require'parts.map'.new,('parts/levels/$1'):repD(mapName))
+            if success then
+                SCN.go('game',nil,res)
+            else
+                MES.new('error',res)
+            end
         end
     elseif key=='escape'then
         SCN.back()
