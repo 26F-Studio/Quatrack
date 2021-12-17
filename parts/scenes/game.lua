@@ -45,6 +45,8 @@ local function _getHitLV(div)
     0
 end
 
+local playSongTime
+
 local map,tracks
 local hitLV--Hit level (-1~5)
 local hitTextTime--Time stamp, for hitText fading-out animation
@@ -85,6 +87,8 @@ local scene={}
 
 function scene.sceneInit()
     map=SCN.args[1]
+
+    playSongTime=map.songOffset+(SETTING.musicDelay-260)/1000
 
     BGM.stop()
     BG.set('none')
@@ -130,7 +134,7 @@ function scene.keyDown(key,isRep)
                     end
                     SFX.play('hit')
                 else
-                    if combo>=10 then SFX.play('break')end
+                    if combo>=10 then SFX.play('combobreak')end
                     combo=0
                 end
                 _updateAcc()
@@ -162,9 +166,9 @@ end
 function scene.update(dt)
     --Try play bgm
     if not isSongPlaying then
-        if time<=map.songOffset and time+dt>map.songOffset then
+        if time<=playSongTime and time+dt>playSongTime then
             BGM.play(map.songFile,'-sdin -noloop')
-            BGM.seek(time+dt-map.songOffset)
+            BGM.seek(time+dt-playSongTime)
             isSongPlaying=true
         end
     else
@@ -191,7 +195,7 @@ function scene.update(dt)
             hitLV=-1
             fullAcc=fullAcc+10*missCount
             _updateAcc()
-            if combo>=10 then SFX.play('break')end
+            if combo>=10 then SFX.play('combobreak')end
             combo=0
             hits[-1]=hits[-1]+missCount
         end

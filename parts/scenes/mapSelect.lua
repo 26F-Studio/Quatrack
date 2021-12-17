@@ -16,6 +16,7 @@ local mapList=love.filesystem.getDirectoryItems('parts/levels')
 local scene={}
 
 function scene.sceneInit()
+    BGM.play()
     listBox:setList(mapList)
 end
 
@@ -26,6 +27,7 @@ function scene.keyDown(key,isRep)
         if mapName then
             local success,res=pcall(require'parts.map'.new,('parts/levels/$1'):repD(mapName))
             if success then
+                SFX.play('enter')
                 SCN.go('game',nil,res)
             else
                 MES.new('error',res)
@@ -40,6 +42,6 @@ end
 
 scene.widgetList={
     listBox,
-    WIDGET.newButton{name="back", x=1140,y=640,w=170,h=80,font=60,fText=CHAR.icon.back,code=backScene},
+    WIDGET.newButton{name="back", x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
 }
 return scene

@@ -31,25 +31,16 @@ do--Userdata tables
     end
     SETTING={--Settings
         --System
-        autoPause=true,
-        menuPos='middle',
-        fine=false,
-        autoSave=false,
-        autoLogin=true,
-        simpMode=false,
         sysCursor=true,
         locale='zh',
+
+        --Delay
+        musicDelay=260,
 
         --Graphic
         frameMul=100,
         cleanCanvas=false,
 
-        text=true,
-        score=true,
-        bufferWarn=true,
-        showSpike=true,
-        highCam=true,
-        nextPos=true,
         fullscreen=true,
         bg='on',
         bgAlpha=.26,
@@ -69,18 +60,6 @@ do--Userdata tables
         stereo=.7,
         vib=0,
         voc=0,
-
-        --Virtualkey
-        VKSFX=.2,--SFX volume
-        VKVIB=0,--VIB
-        VKSwitch=false,--If disp
-        VKSkin=1,--If disp
-        VKTrack=false,--If tracked
-        VKDodge=false,--If dodge
-        VKTchW=.3,--Touch-Pos Weight
-        VKCurW=.4,--Cur-Pos Weight
-        VKIcon=true,--If disp icon
-        VKAlpha=.3,
     }
     STAT={
         version=VERSION.code,

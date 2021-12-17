@@ -25,6 +25,7 @@ local scene={}
 
 function scene.sceneInit()
     results=SCN.args[1]
+    BGM.play('result')
 end
 
 function scene.keyDown(key,isRep)
@@ -57,6 +58,6 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.newButton{name="back", x=1140,y=640,w=170,h=80,font=60,fText=CHAR.icon.back,code=backScene},
+    WIDGET.newButton{name="back", x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
 }
 return scene

@@ -38,6 +38,7 @@ FONT.setDefault('norm')
 FONT.setFallback('norm')
 
 SCR.setSize(1280,720)--Initialize Screen size
+BGM.setDefault('title')
 BGM.setMaxSources(5)
 VOC.setDiversion(.62)
 
