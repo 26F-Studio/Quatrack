@@ -100,7 +100,7 @@ function scene.sceneInit()
 
     hitLV,hitTextTime=false,1e-99
 
-    map=require'parts.map'.new(('parts/levels/$1.qmp'):repD(mapName))
+    map=require'parts.map'.new(('parts/levels/$1'):repD(mapName))
     tracks={}
     for i=1,map.tracks do
         tracks[i]=require'parts.track'.new()

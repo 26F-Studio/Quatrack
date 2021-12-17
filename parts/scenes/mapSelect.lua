@@ -11,9 +11,8 @@ local listBox=WIDGET.newListBox{name='sel',x=100,y=80,w=1080,h=480,lineH=40,draw
     gc.print(v,80,-1)
 end}
 
-local mapList={
-    "GOODRAGE",
-}
+
+local mapList=love.filesystem.getDirectoryItems('parts/levels')
 
 local scene={}
 
@@ -22,7 +21,7 @@ function scene.sceneInit()
 end
 
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     if key=='return'then
         local rep=listBox:getSel()
         if rep then
@@ -30,6 +29,8 @@ function scene.keyDown(key,isRep)
         end
     elseif key=='escape'then
         SCN.back()
+    else
+        return true
     end
 end
 
