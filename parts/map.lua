@@ -1,5 +1,5 @@
-local int=math.floor
-local ins=table.insert
+local int,rnd=math.floor,math.random
+local ins,rem=table.insert,table.remove
 local assert=assert
 
 local Map={}
@@ -72,31 +72,31 @@ function Map.new(file)
     until not l
 
     --Parse notes & animations
-    local curTime=0
-    local curBPM=180
-    local loopMark
-    local loopEnd
-    local loopCountDown
+    local curTime,curBPM=0,180
+    local loopMark,loopEnd,loopCountDown
+    local trackState=TABLE.new(0,o.tracks)
+    local lastLineState=TABLE.new(false,o.tracks)
     local line=#o.eventQueue
     while line>0 do
         local str=o.eventQueue[line]
+        local str0=str--Original string, for error message
 
         if str:sub(1,1)=='#'then--Annotation
             --Do nothing
         elseif str:sub(1,1)=='!'then--BPM mark
             local bpm=tonumber(str:sub(2))
-            assert(type(bpm)=='number'and bpm>0,"Invalid BPM: "..str)
+            assert(type(bpm)=='number'and bpm>0,"[Invalid BPM mark] "..str0)
             curBPM=bpm
         elseif str:sub(1,1)==':'then--Time mark
-            assert(not loopMark,"Cannot set time in loop")
+            assert(not loopMark,"[Cannot set time in loop] "..str0)
 
             str=str:sub(2)
             local stamp=STRING.split(str,":")
 
-            assert(#stamp==2 and type(stamp[1])=='number'and type(stamp[2])=='number',"Wrong Time stamp: "..str:sub(2))
+            assert(#stamp==2 and type(stamp[1])=='number'and type(stamp[2])=='number',"[Wrong Time stamp] "..str0)
 
             stamp=tonumber(stamp[1])*60+tonumber(stamp[2])
-            assert(stamp>curTime,"Cannot warp to past")
+            assert(stamp>curTime,"[Cannot warp to past] "..str0)
 
             curTime=stamp
         elseif str:sub(1,1)=='='then--Repeat mark
@@ -105,20 +105,20 @@ function Map.new(file)
                 len=len+1
                 str=str:sub(2)
             until str:sub(1,1)~='='
-            assert(len>=4 and len<=10,"Invalid repeat mark length: "..len)
+            assert(len>=4 and len<=10,"[Invalid repeat mark length] "..str0)
 
             if str:sub(1,1)=='S'then
-                assert(not loopMark,"Cannot start another loop in a loop")
+                assert(not loopMark,"[Cannot start another loop in a loop] "..str0)
                 loopMark=line
                 if str:sub(2)==''then
                     loopCountDown=1
                 else
                     loopCountDown=tonumber(str:sub(2))
-                    assert(loopCountDown>=2 and int(loopCountDown)==loopCountDown,"Invalid loop count: "..str:sub(2))
+                    assert(loopCountDown>=2 and int(loopCountDown)==loopCountDown,"[Invalid loop count] "..str0)
                     loopCountDown=loopCountDown-1
                 end
             elseif str=='E'then
-                assert(loopMark,"Cannot end a loop without a start")
+                assert(loopMark,"[Cannot end a loop without a start] "..str0)
                 if loopCountDown>0 then
                     loopEnd=line
                     loopCountDown=loopCountDown-1
@@ -134,51 +134,124 @@ function Map.new(file)
                     line=loopEnd
                 end
             else
-                error("Invalid repeat mark: "..str)
+                error("[Invalid repeat mark] "..str0)
             end
         else--Notes
+            local readState='note'
+            local curLineState=TABLE.new(false,o.tracks)
+            local curTrack=1
             local step=1
-            if str:sub(-1)=='|'then--Shorten 1/2 for each
-                while str:sub(-1)=='|'do
-                    str=str:sub(1,-2)
-                    step=step*.5
+
+            local c
+            while true do
+                if readState=='note'then
+                    c=str:sub(1,1)
+                    if c=='-'then--Space
+                        goto BREAK_noNote
+                    elseif c=='O'then--Normal note
+                        ins(o.eventQueue,{
+                            type="note",
+                            time=curTime,
+                            track=curTrack,
+                        })
+                    elseif c=='U'then--Long bar start
+                        --?
+                    elseif c=='A'then--Long bar stop
+                        --?
+                    elseif c=='H'then--Long bar end
+                        --?
+                    else
+                        assert(curTrack==o.tracks+1,"[Bad line: too few notes in one line] "..str0)
+                        readState='rnd'
+                        goto CONTINUE_nextState
+                    end
+                    curLineState[curTrack]=true
+                    ::BREAK_noNote::
+                    assert(curTrack<=o.tracks,"[Bad line: too many notes in one line] "..str0)
+                    curTrack=curTrack+1
+                    str=str:sub(2)
+                elseif readState=='rnd'then
+                    c=str:sub(1,1)
+                    local available={}
+                    for i=1,o.tracks do available[i]=i end
+                    for i=#available,1,-1 do
+                        if curLineState[available[i]]then
+                            rem(available,i)
+                        end
+                    end
+                    local ifJack=c==c:upper()
+                    for i=#available,1,-1 do if ifJack==lastLineState[available[i]]then rem(available,i)end end
+                    c=c:upper()
+                    if c=='L'then--Random left
+                        for i=#available,1,-1 do
+                            if available[i]>=o.tracks*.5 then
+                                rem(available,i)
+                            end
+                        end
+                    elseif c=='R'then--Random right
+                        for i=#available,1,-1 do
+                            if available[i]<=o.tracks*.5 then
+                                rem(available,i)
+                            end
+                        end
+                    elseif c=='X'then--Random anywhere
+                        --Do nothing
+                    else
+                        readState='time'
+                        goto CONTINUE_nextState
+                    end
+                    if #available>0 then
+                        curTrack=available[rnd(#available)]
+                        ins(o.eventQueue,{
+                            type="note",
+                            time=curTime,
+                            track=curTrack,
+                        })
+                        curLineState[curTrack]=true
+                    else
+                        error('[Bad line: no available position to place notes] '..str0)
+                    end
+                    str=str:sub(2)
+                elseif readState=='time'then
+                    if str:sub(1,1)=='|'then--Shorten 1/2 for each
+                        while true do
+                            step=step*.5
+                            str=str:sub(2)
+                            if str==""then
+                                break
+                            elseif str:sub(1,1)~='|'then
+                                error("[Bad line: mixed mark] "..str0)
+                            end
+                        end
+                    elseif str:sub(1,1)=='~'then--Add 1 beat for each
+                        while true do
+                            step=step+1
+                            str=str:sub(2)
+                            if str==""then
+                                break
+                            elseif str:sub(1,1)~='~'then
+                                error("[Bad line: mixed mark] "..str0)
+                            end
+                        end
+                    elseif str:sub(1,1)=='*'then--Multiply time by any number
+                        local mul=tonumber(c:sub(2))
+                        assert(type(mul)=='number',"[Bad line: wrong num] "..str0)
+                        c=c:sub(1,c:find('*')-1)
+                        step=step*mul
+                    elseif str:sub(1,1)=='/'then--Divide time by any number
+                        local div=tonumber(c:sub(2))
+                        assert(type(div)=='number',"[Bad line: wrong num] "..str0)
+                        c=c:sub(1,c:find('/')-1)
+                        step=step/div
+                    elseif str==""then
+                        break
+                    else
+                        error("[Bad line: invalid time mark] "..str0)
+                    end
                 end
-            elseif str:sub(-1)=='~'then--Add 1 for each
-                while str:sub(-1)=='~'do
-                    str=str:sub(1,-2)
-                    step=step+1
-                end
-            elseif str:find('*')then
-                local mul=tonumber(str:sub(str:find('*')+1))
-                assert(type(mul)=='number',"Invalid time multiplier: "..str:sub(2))
-                str=str:sub(1,str:find('*')-1)
-                step=step*mul
-            elseif str:find('/')then
-                local div=tonumber(str:sub(str:find('/')+1))
-                assert(type(div)=='number',"Invalid time divider: "..str:sub(2))
-                str=str:sub(1,str:find('/')-1)
-                step=step/div
+                ::CONTINUE_nextState::
             end
-            for n=1,o.tracks do
-                local c=str:sub(n,n)
-                if c=='-'then
-                    --Do nothing
-                elseif c=='X'or c=='O'then
-                    ins(o.eventQueue,{
-                        type="note",
-                        time=curTime,
-                        track=n,
-                    })
-                elseif c=='U'then
-                    --?
-                elseif c=='A'then
-                    --?
-                elseif c=='H'then
-                    --?
-                else
-                    error("Invalid note character: "..c)
-                end
-            end
+            lastLineState=curLineState
             curTime=curTime+60/curBPM*step
         end
         line=line-1
