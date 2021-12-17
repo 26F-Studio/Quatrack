@@ -32,6 +32,7 @@ function Map.new(file)
         tracks=4,
 
         time=0,
+        noteQueue={},
         eventQueue={},
         notePtr=0,
         animePtr=0,
@@ -99,6 +100,29 @@ function Map.new(file)
             _syntaxCheck(stamp>curTime,"Cannot warp to past")
 
             curTime=stamp
+        elseif str:sub(1,1)=='['then--Animation: move track (WIP)
+            local id=str:find(':')
+            _syntaxCheck(id,"Syntax error (need ':')")
+            id=tonumber(str:sub(2,id-1))
+            _syntaxCheck(id,"Wrong track ID")
+            local pos=STRING.split(str:sub(str:find(':')+1),",")
+            _syntaxCheck(#pos==5,"Invalid track position")
+            for i=1,5 do
+                pos[i]=tonumber(pos[i])
+                _syntaxCheck(type(pos[i])=='number',"Invalid track position")
+            end
+            ins(o.eventQueue,{
+                type="moveTrack",
+                time=curTime,
+                track=id,
+                pos={
+                    x=pos[1],
+                    y=pos[2],
+                    ang=pos[3],
+                    kx=pos[4],
+                    ky=pos[5],
+                },
+            })
         elseif str:sub(1,1)=='='then--Repeat mark
             local len=0
             repeat
@@ -148,21 +172,21 @@ function Map.new(file)
                     c=str:sub(1,1)
                     if c~='-'then--Space
                         if c=='O'then--Normal note
-                            ins(o.eventQueue,{
-                                type="note",
+                            ins(o.noteQueue,{
+                                type='hit',
                                 time=curTime,
                                 track=curTrack,
                             })
                         elseif c=='U'then--Long bar start
                             _syntaxCheck(not longBarState[curTrack],"Cannot start a long bar in a long bar")
                             local b={
-                                type="bar",
+                                type='bar',
                                 track=curTrack,
                                 stime=curTime,
                                 etime=false,
                                 tail=false,
                             }
-                            ins(o.eventQueue,b)
+                            ins(o.noteQueue,b)
                             longBarState[curTrack]=b
                         elseif c=='A'then--Long bar stop
                             _syntaxCheck(longBarState[curTrack],"No long bar to stop")
@@ -215,8 +239,8 @@ function Map.new(file)
                     end
                     _syntaxCheck(#available>0,"No space to place notes")
                     curTrack=available[rnd(#available)]
-                    ins(o.eventQueue,{
-                        type="note",
+                    ins(o.noteQueue,{
+                        type='hit',
                         time=curTime,
                         track=curTrack,
                     })
@@ -267,17 +291,8 @@ function Map.new(file)
         line=line-1
     end
 
-    --Move two pointers to first [item]
-    o.notePtr=1
-    o.animePtr=1
-    while o.eventQueue[o.notePtr]do
-        if o.eventQueue[o.notePtr].type=='note'then break end
-        o.notePtr=o.notePtr+1
-    end
-    while o.eventQueue[o.animePtr]do
-        if o.eventQueue[o.animePtr].type=='event'then break end
-        o.animePtr=o.animePtr+1
-    end
+    --Reset two pointers
+    o.notePtr,o.animePtr=1,1
 
     return setmetatable(o,{__index=Map})
 end
@@ -286,21 +301,24 @@ function Map:updateTime(time)
     self.time=time
 end
 
-function Map:pollNote()
-    local n=self.eventQueue[self.notePtr]
-    if n then
-        if self.time>n.time-2.6 then
-            local queue=self.eventQueue
-            while true do
+function Map:poll(type)
+    if type=='note'then
+        local n=self.noteQueue[self.notePtr]
+        if n then
+            if self.time>n.time-2.6 then
+                local queue=self.noteQueue
                 self.notePtr=self.notePtr+1
-                if not queue[self.notePtr]then
-                    self.finished=true
-                    break
-                elseif queue[self.notePtr].type=='note'then
-                    break
-                end
+                if not queue[self.notePtr]then self.finished=true end
+                return n
             end
-            return n
+        end
+    elseif type=='event'then
+        local n=self.eventQueue[self.animePtr]
+        if n then
+            if self.time>n.time-2.6 then
+                self.animePtr=self.animePtr+1
+                return n
+            end
         end
     end
 end

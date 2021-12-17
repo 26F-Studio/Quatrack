@@ -1,13 +1,14 @@
-local gc=love.graphics
-
-local sin=math.sin
-
-
 local scene={}
 
 function scene.sceneInit()
     BG.set()
     BGM.play()
+end
+
+function scene.keyDown(key)
+    if key=='application'then
+        SCN.go('result')
+    end
 end
 
 function scene.draw()

@@ -1,5 +1,3 @@
-local gc=love.graphics
-
 local scene={}
 
 function scene.sceneInit()

@@ -180,10 +180,17 @@ function scene.update(dt)
     --Update notes
     time=time+dt
     map:updateTime(time)
-    local n=map:pollNote()
+    local n=map:poll('note')
     while n do
         tracks[n.track]:addNote(Note.new(n))
-        n=map:pollNote()
+        n=map:poll('note')
+    end
+    n=map:poll('event')
+    while n do
+        if n.type=='moveTrack'then
+            tracks[n.track]:setPosition(n.pos)
+        end
+        n=map:poll('event')
     end
 
     --Update tracks (check too-late miss)

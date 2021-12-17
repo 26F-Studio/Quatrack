@@ -24,8 +24,23 @@ local results
 local scene={}
 
 function scene.sceneInit()
-    results=SCN.args[1]
+    results=SCN.args[1]or{
+        mapName="/",
+        score=62600,
+        maxCombo=260,
+        accText="96.20%",
+        hits={
+            [-1]=4,
+            [0]=4,
+            [1]=4,
+            [2]=62,
+            [3]=62,
+            [4]=62,
+            [5]=62,
+        }
+    }
     BGM.play('result')
+    BG.set()
 end
 
 function scene.keyDown(key,isRep)
@@ -43,6 +58,9 @@ function scene.draw()
     setFont(40)
     for i=-1,5 do
         gc.setColor(hitColors[i])
+        gc.printf(hitTexts[i],130,460-40*i,200,'right')
+        gc.print(results.hits[i],365,460-40*i)
+        gc.setColor(1,1,1,.26)
         gc.printf(hitTexts[i],130,460-40*i,200,'right')
         gc.print(results.hits[i],365,460-40*i)
     end
