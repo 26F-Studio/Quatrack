@@ -54,6 +54,7 @@ Snd=SFX.playSample
 string.repD=STRING.repD
 string.sArg=STRING.sArg
 string.split=STRING.split
+string.trim=STRING.trim
 
 --Delete all naked files (from too old version)
 FILE.clear('')

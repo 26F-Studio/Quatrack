@@ -48,14 +48,18 @@ function Map.new(file)
     local fileData={}do
         local lineNum=1
         for l in love.filesystem.lines(file)do
-            if l:sub(1,1)~='$'then l=l:gsub("%s","")end
-            if l~=""and l:sub(1,1)~='#'then
-                if l:find(';')then
-                    l=l:split(';')
-                    for i=1,#l do
+            l=l:trim()
+            if l:find(';')then
+                l=l:split(';')
+                for i=1,#l do
+                    l[i]=l[i]:trim()
+                    if l[i]~=""and l[i]:sub(1,1)~='#'then
                         ins(fileData,{lineNum,l[i]})
                     end
-                else
+                end
+            else
+                l=l:trim()
+                if l~=""and l:sub(1,1)~='#'then
                     ins(fileData,{lineNum,l})
                 end
             end
@@ -177,9 +181,9 @@ function Map.new(file)
                 elseif id=='R'then
                     i,j=o.tracks*.5+1,o.tracks
                 end
-                for i=i,j do
+                for k=i,j do
                     local E=TABLE.copy(event)
-                    E.track=i
+                    E.track=k
                     ins(o.eventQueue,E)
                 end
             else
