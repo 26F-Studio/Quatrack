@@ -6,10 +6,13 @@ local gc_rectangle=gc.rectangle
 local gc_printf=gc.printf
 local gc_push,gc_pop,gc_replaceTransform=gc.push,gc.pop,gc.replaceTransform
 
+local kbIsDown=love.keyboard.isDown
+
 local setFont=setFont
+local mStr=mStr
 
 local unpack=unpack
-local max=math.max
+local max,min=math.max,math.min
 local int,abs=math.floor,math.abs
 local ins=table.insert
 
@@ -170,6 +173,12 @@ end
 -- end
 
 function scene.update(dt)
+    if kbIsDown'lctrl'and kbIsDown('0','-','=')then
+        dt=dt*(kbIsDown'0'and .5 or kbIsDown'-'and 3 or 8)
+        if time-dt-playSongTime>0 then
+            BGM.seek(time-dt-playSongTime)
+        end
+    end
     --Try play bgm
     if not isSongPlaying then
         if time<=playSongTime and time+dt>playSongTime then
@@ -277,7 +286,7 @@ function scene.draw()
         gc_printf(map.mapDifficulty,0,-90,SCR.w-5,'right')
         if time>0 then
             gc_setColor(COLOR.rainbow_light(TIME()*12.6,.8))
-        gc_rectangle('fill',0,-10,SCR.w*time/songLength,6)
+            gc_rectangle('fill',0,-10,SCR.w*time/songLength,6)
             local d=time-songLength
             if d>0 then
                 gc_setColor(.92,.86,0,min(d,1))
