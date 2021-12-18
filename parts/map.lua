@@ -105,9 +105,9 @@ function Map.new(file)
             _syntaxCheck(stamp>curTime,"Cannot warp to past")
 
             curTime=stamp
-        elseif str:sub(1,1)=='['then--Animation: move track (WIP)
-            local t=str:find('>')
-            _syntaxCheck(t,"Syntax error (need '>')")
+        elseif str:sub(1,1)=='['then--Animation: set track states
+            local t=str:find(']')
+            _syntaxCheck(t,"Syntax error (need ']')")
 
             id=str:sub(2,t-1)
             if not(id=='A'or id=='L'or id=='R')then
