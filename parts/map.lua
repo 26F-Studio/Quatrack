@@ -8,6 +8,8 @@ local mapInfoKeys={
     "mapName",
     "musicAuth",
     "mapAuth",
+    "mapDifficulty",
+
     "songFile",
     "songOffset",
     "tracks",
@@ -26,10 +28,13 @@ function Map.new(file)
         mapName='[mapName]',
         musicAuth='[musicAuth]',
         mapAuth='[mapAuth]',
+        mapDifficulty='[mapDifficulty]',
 
-        songFile="songFile]",
+        songFile="[songFile]",
         songOffset=0,
         tracks=4,
+
+        songLength=nil,
 
         time=0,
         noteQueue={},
@@ -350,6 +355,8 @@ function Map.new(file)
 
     --Reset two pointers
     o.notePtr,o.animePtr=1,1
+
+    o.songLength=o.noteQueue[#o.noteQueue].time
 
     return setmetatable(o,{__index=Map})
 end

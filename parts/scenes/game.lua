@@ -4,6 +4,9 @@ local gc=love.graphics
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 local gc_printf=gc.printf
+local gc_push,gc_pop,gc_replaceTransform=gc.push,gc.pop,gc.replaceTransform
+
+local setFont=setFont
 
 local unpack=unpack
 local max=math.max
@@ -53,8 +56,8 @@ local hitLV--Hit level (-1~5)
 local hitTextTime--Time stamp, for hitText fading-out animation
 
 local isSongPlaying
-local time
-local devTimes
+local time,songLength
+local hitOffests
 local curAcc,fullAcc,accText
 local combo,maxCombo,score,score0
 local hits={}
@@ -90,13 +93,14 @@ function scene.sceneInit()
     map=SCN.args[1]
 
     playSongTime=map.songOffset+(SETTING.musicDelay-260)/1000
+    songLength=map.songLength
 
     BGM.stop()
     BG.set('none')
 
     isSongPlaying=false
     time=-4
-    devTimes={}
+    hitOffests={}
     curAcc,fullAcc=0,0
     _updateAcc()
     combo,maxCombo,score,score0=0,0,0,0
@@ -140,8 +144,8 @@ function scene.keyDown(key,isRep)
                     combo=0
                 end
                 _updateAcc()
-                ins(devTimes,1,deviateTime)
-                devTimes[27]=nil
+                ins(hitOffests,1,deviateTime)
+                hitOffests[27]=nil
             end
         elseif k=='skip'then
             if map.finished then
@@ -237,7 +241,7 @@ function scene.draw()
     --Draw deviate indicator
     gc_setColor(1,1,1)gc_rectangle('fill',640-1,350-15,3,34)
     gc_setColor(1,1,1,.4)gc_rectangle('fill',640-100,350,200,4)
-    gc_setColor(1,1,1,.3)for i=1,#devTimes do gc_rectangle('fill',640-devTimes[i]*626-1,350-8,3,20)end
+    gc_setColor(1,1,1,.3)for i=1,#hitOffests do gc_rectangle('fill',640-hitOffests[i]*626-1,350-8,3,20)end
 
     --Draw combo
     if combo>1 then
@@ -264,6 +268,16 @@ function scene.draw()
         mStr(map.musicAuth,640,200)
         mStr(map.mapAuth,640,240)
     end
+
+    gc_push('transform')
+    gc_setColor(1,1,1)
+    setFont(30)
+    gc_replaceTransform(SCR.xOy_dl)
+        gc_printf(map.mapName,0,-55,SCR.w-5,'right')
+        gc_printf(map.mapDifficulty,0,-90,SCR.w-5,'right')
+        gc_setColor(COLOR.rainbow_light(TIME()*16.26))
+        gc_rectangle('fill',0,-10,SCR.w*time/songLength,6)
+    gc_pop()
 end
 
 scene.widgetList={

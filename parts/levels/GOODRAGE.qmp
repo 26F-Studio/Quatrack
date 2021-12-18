@@ -2,6 +2,7 @@ $version=1.0
 $mapName=GOODRAGE
 $musicAuth=EBIMAYO
 $mapAuth=MrZ
+$mapDifficulty=LV.?
 
 $songFile=goodrage
 $songOffset=-0.14
