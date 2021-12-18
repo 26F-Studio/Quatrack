@@ -275,8 +275,15 @@ function scene.draw()
     gc_replaceTransform(SCR.xOy_dl)
         gc_printf(map.mapName,0,-55,SCR.w-5,'right')
         gc_printf(map.mapDifficulty,0,-90,SCR.w-5,'right')
-        gc_setColor(COLOR.rainbow_light(TIME()*16.26))
+        if time>0 then
+            gc_setColor(COLOR.rainbow_light(TIME()*12.6,.8))
         gc_rectangle('fill',0,-10,SCR.w*time/songLength,6)
+            local d=time-songLength
+            if d>0 then
+                gc_setColor(.92,.86,0,min(d,1))
+                gc_rectangle('fill',0,-10,SCR.w,6)
+            end
+        end
     gc_pop()
 end
 
