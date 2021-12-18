@@ -1,5 +1,7 @@
 local gc=love.graphics
 
+local min=math.min
+
 local hitColors={
     [-1]=COLOR.dRed,
     [0]=COLOR.dRed,
@@ -25,7 +27,7 @@ local scene={}
 
 function scene.sceneInit()
     results=SCN.args[1]or{
-        mapName="/",
+        map=require'parts.map'.new(),
         score=62600,
         maxCombo=260,
         accText="96.20%",
@@ -39,6 +41,9 @@ function scene.sceneInit()
             [5]=62,
         }
     }
+    results.mapName=gc.newText(getFont(80,'mono'),results.map.mapName)
+    results.mapDifficulty=gc.newText(getFont(30,'mono'),results.map.mapDifficulty)
+
     BGM.play('result')
     BG.set()
 end
@@ -52,8 +57,12 @@ end
 
 function scene.draw()
     gc.setColor(COLOR.Z)
-    setFont(100,'mono')
-    posterizedText('Result',640,60)
+    gc.push('transform')
+        gc.translate(640,100)
+        gc.scale(min(900/results.mapName:getWidth(),1))
+        posterizedDraw(results.mapName,0,0)
+    gc.pop()
+    posterizedDraw(results.mapDifficulty,640,150)
 
     setFont(40)
     for i=-1,5 do

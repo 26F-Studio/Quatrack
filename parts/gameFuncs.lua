@@ -170,6 +170,19 @@ do--function posterizedText(str,x,y)
         gc_setColorMask()
         gc.pop()
     end
+    function posterizedDraw(obj,x,y)
+        gc.push('transform')
+        gc.translate(x+sin(2.6*TIME()),y+sin(3.6*TIME()))
+        gc.setColor(1,1,1)
+        gc_setColorMask(true,false,false,true)
+        mDraw(obj,sin(6*TIME()),sin(11*TIME()))
+        gc_setColorMask(false,true,false,true)
+        mDraw(obj,sin(7*TIME()),sin(10*TIME()))
+        gc_setColorMask(false,false,true,true)
+        mDraw(obj,sin(8*TIME()),sin(9*TIME()))
+        gc_setColorMask()
+        gc.pop()
+    end
 end
 
 
