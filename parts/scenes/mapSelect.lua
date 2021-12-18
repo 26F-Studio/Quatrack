@@ -15,7 +15,7 @@ local mapList=love.filesystem.getDirectoryItems('parts/levels')
 for i=1,#mapList do
     mapList[i]={
         fileName=mapList[i],
-        name=mapList[i]:gsub("%.qmp",""),
+        name=mapList[i]:gsub("%.qbp",""),
     }
 end
 
