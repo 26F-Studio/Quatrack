@@ -152,7 +152,7 @@ function Map.new(file)
                     operation=opType.."Position",
                     args={data[2],data[3],false},
                 }
-            elseif op=='A'then--Angle
+            elseif op=='R'then--Rotate
                 _syntaxCheck(#data<=2,"Too many arguments")
                 data[2]=tonumber(data[2])
                 event={
@@ -174,6 +174,7 @@ function Map.new(file)
                 }
             elseif op=='D'then--Drop speed
                 data[2]=tonumber(data[2])
+                _syntaxCheck(data[2],"Invalid drop speed")
                 event={
                     type="setTrack",
                     time=curTime,
@@ -182,7 +183,7 @@ function Map.new(file)
                     args={data[2],false},
                 }
             else
-                _syntaxCheck(#data==5,"Invalid track opration")
+                _syntaxCheck(false,"Invalid track operation")
             end
             if id=='A'or id=='L'or id=='R'then
                 local i,j
