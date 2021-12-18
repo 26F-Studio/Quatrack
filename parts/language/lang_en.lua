@@ -68,12 +68,14 @@ return{
         },
         setting={
             musicDelay="Music Delay",
+            dropSpeed="Scrolling speed",
+            holdAlpha="Hold note alpha",
+            holdWidth="Hold note width",
 
             clickFX="Click FX",
             power="Battery Info",
             clean="Quick Draw",
             fullscreen="Fullscreen",
-            bg="Background",
 
             mainVol="Main Volume",
             bgm="BGM",

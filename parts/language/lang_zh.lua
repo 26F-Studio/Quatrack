@@ -68,12 +68,14 @@ return{
         },
         setting={
             musicDelay="音乐延迟",
+            dropSpeed="音符流速",
+            holdAlpha="长条不透明度",
+            holdWidth="长条宽度",
 
             clickFX="点按特效",
             power="电量显示",
             clean="绘制优化",
             fullscreen="全屏",
-            bg="背景",
 
             mainVol="总音量",
             bgm="音乐",

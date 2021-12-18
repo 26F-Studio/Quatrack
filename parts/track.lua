@@ -190,25 +190,26 @@ function Track:draw()
     end
 
     --Draw notes
+    local dropSpeed=self.state.dropSpeed*1.1^(SETTING.dropSpeed-8)
     for i=1,#self.notes do
         local note=self.notes[i]
         if note.type=='tap'then
             gc_setColor(note.color)
-            gc_rectangle('fill',-50,-(note.time-self.time)*self.state.dropSpeed-26,100,26)
+            gc_rectangle('fill',-50,-(note.time-self.time)*dropSpeed-26,100,26)
         elseif note.type=='hold'then
             --Body
-            gc_setColor(note.color[1],note.color[2],note.color[3],note.color[4]*.26)
-            gc_rectangle('fill',-40,-(note.etime-self.time)*self.state.dropSpeed,80,(note.etime-note.time)*self.state.dropSpeed)
+            gc_setColor(note.color[1],note.color[2],note.color[3],note.color[4]*SETTING.holdAlpha)
+            gc_rectangle('fill',-50*SETTING.holdWidth,-(note.etime-self.time)*dropSpeed,100*SETTING.holdWidth,(note.etime-note.time)*dropSpeed)
 
             --Head
             gc_setColor(note.color)
             if not note.pressed then
-                gc_rectangle('fill',-50,-(note.time-self.time)*self.state.dropSpeed-26,100,26)
+                gc_rectangle('fill',-50,-(note.time-self.time)*dropSpeed-26,100,26)
             end
 
             --Tail
             if note.tail then
-                gc_rectangle('fill',-50,-(note.etime-self.time)*self.state.dropSpeed-10,100,10)
+                gc_rectangle('fill',-50,-(note.etime-self.time)*dropSpeed-10,100,10)
             end
         end
     end

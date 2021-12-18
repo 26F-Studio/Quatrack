@@ -34,19 +34,17 @@ do--Userdata tables
         sysCursor=true,
         locale='zh',
 
-        --Delay
+        --Game
         musicDelay=260,
+        dropSpeed=8,
+        holdAlpha=.26,
+        holdWidth=.8,
 
         --Graphic
-        frameMul=100,
-        cleanCanvas=false,
-
-        fullscreen=true,
-        bg='on',
-        bgAlpha=.26,
-        powerInfo=true,
         clickFX=true,
-        warn=true,
+        powerInfo=true,
+        cleanCanvas=false,
+        fullscreen=true,
 
         --Sound
         autoMute=true,

@@ -101,7 +101,6 @@ do--function applySettings()
 
         --Apply Zframework setting
         Z.setClickFX(SETTING.clickFX)
-        Z.setFrameMul(SETTING.frameMul)
         Z.setPowerInfo(SETTING.powerInfo)
         Z.setCleanCanvas(SETTING.cleanCanvas)
 
