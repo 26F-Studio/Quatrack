@@ -1,3 +1,4 @@
+math.randomseed("123")
 local Note=require'parts.note'
 
 local int,rnd=math.floor,math.random
@@ -104,6 +105,14 @@ function Map.new(file)
             local bpm=tonumber(str:sub(2))
             _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
             curBPM=bpm
+        elseif str:sub(1,1)=='@'then--Random seed mark
+            if str:sub(2)==""then
+                local r=tonumber(str:sub(2))
+                _syntaxCheck(type(r)=='number'and r%1==0 and r>=-2^63 and r<2^63,"Invalid random seed number")
+                math.randomseed(r)
+            else
+                math.randomseed(math.random(-2^63,2^63-1))
+            end
         elseif str:sub(1,1)==':'then--Time mark
             _syntaxCheck(not loopMark,"Cannot set time in loop")
 
