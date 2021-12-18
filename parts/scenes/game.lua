@@ -1,5 +1,3 @@
-local Note=require'parts.note'
-
 local gc=love.graphics
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
@@ -74,7 +72,7 @@ local function _tryGoResult()
         if tracks[i].notes[1]then return end
     end
     SCN.swapTo('result',nil,{
-        mapName=map.mapName,
+        map=map,
         score=score0,
         maxCombo=maxCombo,
         accText=accText,
@@ -123,33 +121,36 @@ function scene.sceneBack()
     BGM.stop()
 end
 
+local function _trigNote(deviateTime,noTailHold)
+    hitTextTime=TIME()
+    fullAcc=fullAcc+10
+    hitLV=_getHitLV(deviateTime)
+    hits[hitLV]=hits[hitLV]+1
+    if hitLV>0 then
+        curAcc=curAcc+hitAccList[hitLV]
+        score0=score0+int(hitLV*(10000+combo)^.5)
+        combo=combo+1
+        if combo>maxCombo then
+            maxCombo=combo
+        end
+        if not noTailHold then
+            SFX.play('hit')
+        end
+    else
+        if combo>=10 then SFX.play('combobreak')end
+        combo=0
+    end
+    _updateAcc()
+    ins(hitOffests,1,deviateTime)
+    hitOffests[27]=nil
+end
 function scene.keyDown(key,isRep)
     if isRep then return end
     local k=KEY_MAP[map.tracks][key]
     if k then
         if type(k)=='number'then
             local deviateTime=tracks[k]:press()
-            if deviateTime then
-                hitTextTime=TIME()
-                fullAcc=fullAcc+10
-                hitLV=_getHitLV(deviateTime)
-                hits[hitLV]=hits[hitLV]+1
-                if hitLV>0 then
-                    curAcc=curAcc+hitAccList[hitLV]
-                    score0=score0+int(hitLV*(10000+combo)^.5)
-                    combo=combo+1
-                    if combo>maxCombo then
-                        maxCombo=combo
-                    end
-                    SFX.play('hit')
-                else
-                    if combo>=10 then SFX.play('combobreak')end
-                    combo=0
-                end
-                _updateAcc()
-                ins(hitOffests,1,deviateTime)
-                hitOffests[27]=nil
-            end
+            if deviateTime then _trigNote(deviateTime)end
         elseif k=='skip'then
             if map.finished then
                 _tryGoResult()
@@ -163,7 +164,8 @@ function scene.keyUp(key)
     local k=KEY_MAP[map.tracks][key]
     if k then
         if type(k)=='number'then
-            tracks[k]:release()
+            local deviateTime,noTailHold=tracks[k]:release()
+            if deviateTime then _trigNote(deviateTime,noTailHold)end
         end
     end
 end
@@ -195,25 +197,30 @@ function scene.update(dt)
     --Update notes
     time=time+dt
     map:updateTime(time)
-    local n=map:poll('note')
-    while n do
-        tracks[n.track]:addNote(Note.new(n))
-        n=map:poll('note')
+    while true do
+        local n=map:poll('note')
+        if not n then break end
+        tracks[n.track]:addNote(n)
     end
-    n=map:poll('event')
-    while n do
+    while true do
+        local n=map:poll('event')
+        if not n then break end
         if n.type=='setTrack'then
             local t=tracks[n.track]
             t[n.operation](t,unpack(n.args))
         end
-        n=map:poll('event')
     end
 
     --Update tracks (check too-late miss)
     for i=1,map.tracks do
         tracks[i]:update(dt)
-        local missCount=tracks[i]:updateLogic(time)
-        if missCount then
+        local missCount,marvCount=tracks[i]:updateLogic(time)
+        if marvCount>0 then
+            for _=1,marvCount do
+                _trigNote(0,true)
+            end
+        end
+        if missCount>0 then
             hitTextTime=TIME()
             hitLV=-1
             fullAcc=fullAcc+10*missCount

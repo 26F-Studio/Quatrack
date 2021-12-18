@@ -4,6 +4,7 @@ local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
+local max=math.max
 local rem=table.remove
 
 local Track={}
@@ -75,8 +76,8 @@ function Track:setDropSpeed(dropSpeed,force)
     self.targetState.dropSpeed=dropSpeed
 end
 
-function Track:addNote(noteObj)
-    table.insert(self.notes,noteObj)
+function Track:addNote(note)
+    table.insert(self.notes,note)
 end
 
 function Track:press()
@@ -87,8 +88,12 @@ function Track:press()
     --Check first note
     local note=self.notes[1]
     if note then
-        if self.time>note.time-note.badTime then
-            rem(self.notes,1)
+        if self.time>note.time-note.trigTime then
+            if note.type=='tap'then--Press tap note
+                rem(self.notes,1)
+            elseif note.type=='hold'then--Press hold note
+                note.pressed=true
+            end
             return note.time-self.time
         end
     end
@@ -96,6 +101,11 @@ end
 
 function Track:release()
     self.pressed=false
+    local note=self.notes[1]
+    if note and note.type=='hold'and note.pressed then--Release hold note
+        rem(self.notes,1)
+        return note.etime-self.time,not note.tail
+    end
 end
 
 --For animation
@@ -119,15 +129,37 @@ end
 --Logics
 function Track:updateLogic(time)
     self.time=time
-    local bad=0
+    local missCount,marvCount=0,0
     for i=#self.notes,1,-1 do
         local note=self.notes[i]
-        if self.time>note.time+note.missTime then
-            rem(self.notes,i)
-            bad=bad+1
+        if note.type=='tap'then
+            if self.time>note.time+note.lostTime then
+                rem(self.notes,i)
+                missCount=missCount+1
+            end
+        elseif note.type=='hold'then
+            if not note.pressed then--Hold not pressed, miss whole when head missed
+                if self.time>note.time+note.lostTime then
+                    rem(self.notes,i)
+                    missCount=missCount+1
+                end
+            else--Pressed, miss tail when tail missed
+                note.time=max(note.time,self.time)
+                if note.tail then
+                    if self.time>note.etime+note.lostTime then
+                        rem(self.notes,i)
+                        missCount=missCount+1
+                    end
+                else
+                    if self.time>note.etime then
+                        rem(self.notes,i)
+                        marvCount=marvCount+1
+                    end
+                end
+            end
         end
     end
-    return bad>0 and bad
+    return missCount,marvCount
 end
 
 function Track:draw()
@@ -158,10 +190,27 @@ function Track:draw()
     end
 
     --Draw notes
-    gc_setColor(1,1,1,.8)
     for i=1,#self.notes do
         local note=self.notes[i]
-        gc_rectangle('fill',-50,-(note.time-self.time)*self.state.dropSpeed-26,100,26)
+        if note.type=='tap'then
+            gc_setColor(note.color)
+            gc_rectangle('fill',-50,-(note.time-self.time)*self.state.dropSpeed-26,100,26)
+        elseif note.type=='hold'then
+            --Body
+            gc_setColor(note.color[1],note.color[2],note.color[3],note.color[4]*.26)
+            gc_rectangle('fill',-40,-(note.etime-self.time)*self.state.dropSpeed,80,(note.etime-note.time)*self.state.dropSpeed)
+
+            --Head
+            gc_setColor(note.color)
+            if not note.pressed then
+                gc_rectangle('fill',-50,-(note.time-self.time)*self.state.dropSpeed-26,100,26)
+            end
+
+            --Tail
+            if note.tail then
+                gc_rectangle('fill',-50,-(note.etime-self.time)*self.state.dropSpeed-10,100,10)
+            end
+        end
     end
 
     gc_pop()

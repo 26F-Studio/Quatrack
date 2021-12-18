@@ -1,3 +1,5 @@
+local Note=require'parts.note'
+
 local int,rnd=math.floor,math.random
 local ins,rem=table.insert,table.remove
 
@@ -43,6 +45,7 @@ function Map.new(file)
         animePtr=0,
         finished=false,
     }
+    if not file then return setmetatable(o,{__index=Map})end
 
     --Read file
     local fileData={}do
@@ -239,14 +242,14 @@ function Map.new(file)
                     if c~='-'then--Space
                         if c=='O'then--Normal note
                             ins(o.noteQueue,{
-                                type='hit',
+                                type='tap',
                                 time=curTime,
                                 track=curTrack,
                             })
                         elseif c=='U'then--Long bar start
                             _syntaxCheck(not longBarState[curTrack],"Cannot start a long bar in a long bar")
                             local b={
-                                type='bar',
+                                type='hold',
                                 track=curTrack,
                                 time=curTime,
                                 etime=false,
@@ -306,7 +309,7 @@ function Map.new(file)
                     _syntaxCheck(#available>0,"No space to place notes")
                     curTrack=available[rnd(#available)]
                     ins(o.noteQueue,{
-                        type='hit',
+                        type='tap',
                         time=curTime,
                         track=curTrack,
                     })
@@ -377,7 +380,7 @@ function Map:poll(type)
                 local queue=self.noteQueue
                 self.notePtr=self.notePtr+1
                 if not queue[self.notePtr]then self.finished=true end
-                return n
+                return Note.new(n)
             end
         end
     elseif type=='event'then
