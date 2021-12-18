@@ -8,10 +8,16 @@ local listBox=WIDGET.newListBox{name='sel',x=100,y=80,w=1080,h=480,lineH=40,draw
     setFont(30)
     gc.setColor(COLOR.Z)
     gc.print(k,8,-1)
-    gc.print(v,80,-1)
+    gc.print(v.name,80,-1)
 end}
 
 local mapList=love.filesystem.getDirectoryItems('parts/levels')
+for i=1,#mapList do
+    mapList[i]={
+        fileName=mapList[i],
+        name=mapList[i]:gsub("%.qmp",""),
+    }
+end
 
 local scene={}
 
@@ -23,7 +29,7 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='return'then
-        local mapName=listBox:getSel()
+        local mapName=listBox:getSel().fileName
         if mapName then
             local success,res=pcall(require'parts.map'.new,('parts/levels/$1'):repD(mapName))
             if success then
