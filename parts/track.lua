@@ -20,7 +20,7 @@ function Track.new(id)
             x=0,y=0,
             ang=0,
             kx=1,ky=1,
-            dropSpeed=1260,
+            dropSpeed=1000,
         },
         defaultState=false,
         targetState=false,
