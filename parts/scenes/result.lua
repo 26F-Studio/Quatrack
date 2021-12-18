@@ -13,8 +13,8 @@ local hitTexts={
     [-1]="MISS",
     [0]="BAD",
     'OK',
-    'GREAT',
     'GOOD',
+    'GREAT',
     'PERF',
     'MARV'
 }

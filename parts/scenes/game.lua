@@ -22,15 +22,15 @@ local hitTexts={
     [-1]="MISS",
     [0]="BAD",
     'OK',
-    'GREAT',
     'GOOD',
+    'GREAT',
     'PERF',
     'MARV'
 }
 local hitAccList={
     -5, --OK
-    2,  --GREAT
-    6,  --GOOD
+    2,  --GOOD
+    6,  --GREAT
     10, --PERF
     10, --MARV
 }
