@@ -39,6 +39,8 @@ function scene.keyDown(key,isRep)
                 MES.new('error',res)
             end
         end
+    elseif key=='up'or key=='down'then
+        listBox:arrowKey(key)
     elseif key=='escape'then
         SCN.back()
     else
