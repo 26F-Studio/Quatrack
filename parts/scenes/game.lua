@@ -5,6 +5,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 local gc_printf=gc.printf
 
+local unpack=unpack
 local max=math.max
 local int,abs=math.floor,math.abs
 local ins=table.insert
@@ -104,9 +105,10 @@ function scene.sceneInit()
     hitLV,hitTextTime=false,1e-99
 
     tracks={}
-    for i=1,map.tracks do
-        tracks[i]=require'parts.track'.new()
-        tracks[i]:setPosition{x=580-60*map.tracks+120*i,y=680}
+    for id=1,map.tracks do
+        tracks[id]=require'parts.track'.new(id)
+        tracks[id]:setDefaultPosition(580-60*map.tracks+120*id,680)
+        tracks[id]:setPosition(nil,nil,true)
     end
 end
 
@@ -187,8 +189,9 @@ function scene.update(dt)
     end
     n=map:poll('event')
     while n do
-        if n.type=='moveTrack'then
-            tracks[n.track]:setPosition(n.pos)
+        if n.type=='setTrack'then
+            local t=tracks[n.track]
+            t[n.operation](t,unpack(n.args))
         end
         n=map:poll('event')
     end

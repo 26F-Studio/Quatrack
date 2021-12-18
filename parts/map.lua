@@ -43,9 +43,16 @@ function Map.new(file)
     local fileData={}do
         local lineNum=1
         for l in love.filesystem.lines(file)do
-            l=STRING.trim(l)
-            if l~=""then
-                ins(fileData,{lineNum,l})
+            if l:sub(1,1)~='$'then l=l:gsub("%s","")end
+            if l~=""and l:sub(1,1)~='#'then
+                if l:find(';')then
+                    l=l:split(';')
+                    for i=1,#l do
+                        ins(fileData,{lineNum,l[i]})
+                    end
+                else
+                    ins(fileData,{lineNum,l})
+                end
             end
             lineNum=lineNum+1
         end
@@ -81,16 +88,14 @@ function Map.new(file)
 
         SCline,SCstr=fileData[line][1],str--For assertion
 
-        if str:sub(1,1)=='#'then--Annotation
-            --Do nothing
-        elseif str:sub(1,1)=='!'then--BPM mark
+        if str:sub(1,1)=='!'then--BPM mark
             local bpm=tonumber(str:sub(2))
             _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
             curBPM=bpm
         elseif str:sub(1,1)==':'then--Time mark
             _syntaxCheck(not loopMark,"Cannot set time in loop")
 
-            local stamp=STRING.split(str:sub(2),":")
+            local stamp=str:sub(2):split(":")
             if #stamp==1 then ins(stamp,1,"0")end
             for i=1,2 do
                 stamp[i]=tonumber(stamp[i])
@@ -101,28 +106,80 @@ function Map.new(file)
 
             curTime=stamp
         elseif str:sub(1,1)=='['then--Animation: move track (WIP)
-            local id=str:find(':')
-            _syntaxCheck(id,"Syntax error (need ':')")
-            id=tonumber(str:sub(2,id-1))
-            _syntaxCheck(id,"Wrong track ID")
-            local pos=STRING.split(str:sub(str:find(':')+1),",")
-            _syntaxCheck(#pos==5,"Invalid track position")
-            for i=1,5 do
-                pos[i]=tonumber(pos[i])
-                _syntaxCheck(type(pos[i])=='number',"Invalid track position")
+            local t=str:find('>')
+            _syntaxCheck(t,"Syntax error (need '>')")
+
+            id=str:sub(2,t-1)
+            if not(id=='A'or id=='L'or id=='R')then
+                id=tonumber(id)
+                _syntaxCheck(id and id%1==0 and id>=1 and id<=o.tracks,"Wrong track ID")
             end
-            ins(o.eventQueue,{
-                type="moveTrack",
-                time=curTime,
-                track=id,
-                pos={
-                    x=pos[1],
-                    y=pos[2],
-                    ang=pos[3],
-                    kx=pos[4],
-                    ky=pos[5],
-                },
-            })
+
+            local data=str:sub(t+1):split(",")
+            local op=data[1]:upper()
+            local opType=data[1]==data[1]:upper()and'set'or'move'
+
+            local event
+            if op=='P'then--Position
+                _syntaxCheck(#data<=3,"Too many arguments")
+                data[2]=tonumber(data[2])
+                data[3]=tonumber(data[3])
+                event={
+                    type="setTrack",
+                    time=curTime,
+                    track=id,
+                    operation=opType.."Position",
+                    args={data[2],data[3],false},
+                }
+            elseif op=='A'then--Angle
+                _syntaxCheck(#data<=2,"Too many arguments")
+                data[2]=tonumber(data[2])
+                event={
+                    type="setTrack",
+                    time=curTime,
+                    track=id,
+                    operation=opType.."Angle",
+                    args={data[2],false},
+                }
+            elseif op=='S'then--Size
+                data[2]=tonumber(data[2])
+                data[3]=tonumber(data[3])
+                event={
+                    type="setTrack",
+                    time=curTime,
+                    track=id,
+                    operation=opType.."Size",
+                    args={data[2],data[3],false},
+                }
+            elseif op=='D'then--Drop speed
+                data[2]=tonumber(data[2])
+                event={
+                    type="setTrack",
+                    time=curTime,
+                    track=id,
+                    operation=opType.."DropSpeed",
+                    args={data[2],false},
+                }
+            else
+                _syntaxCheck(#data==5,"Invalid track opration")
+            end
+            if id=='A'or id=='L'or id=='R'then
+                local i,j
+                if id=='A'then
+                    i,j=1,o.tracks
+                elseif id=='L'then
+                    i,j=1,(o.tracks+1)*.5
+                elseif id=='R'then
+                    i,j=o.tracks*.5+1,o.tracks
+                end
+                for i=i,j do
+                    local E=TABLE.copy(event)
+                    E.track=i
+                    ins(o.eventQueue,E)
+                end
+            else
+                ins(o.eventQueue,event)
+            end
         elseif str:sub(1,1)=='='then--Repeat mark
             local len=0
             repeat
@@ -182,7 +239,7 @@ function Map.new(file)
                             local b={
                                 type='bar',
                                 track=curTrack,
-                                stime=curTime,
+                                time=curTime,
                                 etime=false,
                                 tail=false,
                             }
@@ -315,7 +372,7 @@ function Map:poll(type)
     elseif type=='event'then
         local n=self.eventQueue[self.animePtr]
         if n then
-            if self.time>n.time-2.6 then
+            if self.time>n.time then
                 self.animePtr=self.animePtr+1
                 return n
             end

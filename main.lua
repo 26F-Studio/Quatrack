@@ -53,6 +53,7 @@ mDraw=GC.draw
 Snd=SFX.playSample
 string.repD=STRING.repD
 string.sArg=STRING.sArg
+string.split=STRING.split
 
 --Delete all naked files (from too old version)
 FILE.clear('')
