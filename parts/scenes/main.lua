@@ -1,8 +1,11 @@
 local scene={}
 
+local title
+
 function scene.sceneInit()
     BG.set()
     BGM.play()
+    title=MATH.roll(1e-6)and'QUADTRACK'or'QUATRACK'
 end
 
 function scene.keyDown(key)
@@ -13,7 +16,7 @@ end
 
 function scene.draw()
     setFont(100)
-    posterizedText('QUATRACK',640,120)
+    posterizedText(title,640,120)
 end
 
 scene.widgetList={
