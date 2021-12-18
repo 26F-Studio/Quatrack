@@ -41,12 +41,13 @@ local hitAccList={
 }
 
 local function _getHitLV(div)
+    div=abs(div)
     return
-    abs(div)<=.02 and 5 or
-    abs(div)<=.04 and 4 or
-    abs(div)<=.07 and 3 or
-    abs(div)<=.10 and 2 or
-    abs(div)<=.14 and 1 or
+    div<=.02 and 5 or
+    div<=.04 and 4 or
+    div<=.07 and 3 or
+    div<=.10 and 2 or
+    div<=.14 and 1 or
     0
 end
 
