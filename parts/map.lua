@@ -22,7 +22,7 @@ end
 
 function Map.new(file)
     local o={
-        version="0.1",
+        version="1.0",
         mapName='[mapName]',
         musicAuth='[musicAuth]',
         mapAuth='[mapAuth]',
