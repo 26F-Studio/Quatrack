@@ -2,7 +2,7 @@ local gc=love.graphics
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 local gc_printf=gc.printf
-local gc_push,gc_pop,gc_replaceTransform=gc.push,gc.pop,gc.replaceTransform
+local gc_replaceTransform=gc.replaceTransform
 
 local kbIsDown=love.keyboard.isDown
 
@@ -39,7 +39,14 @@ local hitAccList={
     10, --PERF
     10, --MARV
 }
-
+local hitLVOffsets={--Only for deviation drawing
+    [0]={0,.02},
+    {.02,.04},
+    {.04,.07},
+    {.07,.10},
+    {.10,.14},
+    {.14,.20},
+}
 local function _getHitLV(div)
     div=abs(div)
     return
@@ -143,8 +150,11 @@ local function _trigNote(deviateTime,noTailHold)
         combo=0
     end
     _updateAcc()
-    ins(hitOffests,1,deviateTime)
-    hitOffests[27]=nil
+    if not noTailHold then
+        if abs(deviateTime)>.2 then deviateTime=deviateTime>0 and .2 or -.2 end
+        ins(hitOffests,1,deviateTime)
+        hitOffests[27]=nil
+    end
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
@@ -258,31 +268,37 @@ function scene.draw()
     end
 
     --Draw hit text
-    if TIME()-hitTextTime<.2 then
-        local a=2-(TIME()-hitTextTime)*10
+    if TIME()-hitTextTime<.26 then
+        local c=hitColors[hitLV]
         setFont(80,'mono')
-        gc_setColor(hitColors[hitLV][1],hitColors[hitLV][2],hitColors[hitLV][3],a)
+        gc_setColor(c[1],c[2],c[3],2.6-(TIME()-hitTextTime)*10)
         mStr(hitTexts[hitLV],640,245)
     end
-
-    --Draw deviate indicator
-    gc_setColor(1,1,1)gc_rectangle('fill',640-1,350-15,3,34)
-    gc_setColor(1,1,1,.4)gc_rectangle('fill',640-100,350,200,4)
-    gc_setColor(1,1,1,.3)for i=1,#hitOffests do gc_rectangle('fill',640-hitOffests[i]*626-1,350-8,3,20)end
 
     --Draw combo
     if combo>1 then
         setFont(50,'mono')
-        mStr(combo,640,355)
+        gc_setColor(hitColors[hitLV])
+        mStr(combo,640,356)
         GC.shadedPrint(combo,640,360,'center',2,comboTextColor1,comboTextColor2)
     end
 
-    --Draw score and accuracy
-    setFont(40)
-    gc_setColor(1,1,1)
-    gc_printf(score,0,5,1270,'right')
-    setFont(30)
-    gc_printf(accText,0,50,1270,'right')
+    --Draw deviate indicator
+    gc_setColor(1,1,1)gc_rectangle('fill',640-1,350-15,2,34)
+    for i=0,5 do
+        local c=hitColors[i]
+        local d=hitLVOffsets[5-i]
+        gc_setColor(c[1]*.8+.3,c[2]*.8+.3,c[3]*.8+.3,.626)
+        gc_rectangle('fill',640-d[1]*626,350,(d[1]-d[2])*626,4)
+        gc_rectangle('fill',640+d[1]*626,350,(d[2]-d[1])*626,4)
+    end
+
+    --Draw deviate times
+    for i=1,#hitOffests do
+        local c=hitColors[_getHitLV(hitOffests[i])]
+        gc_setColor(c[1],c[2],c[3],.4)
+        gc_rectangle('fill',640-hitOffests[i]*626-1,350-8,3,20)
+    end
 
     --Draw map info at start
     if time<0 then
@@ -296,12 +312,19 @@ function scene.draw()
         mStr(map.mapAuth,640,240)
     end
 
-    gc_push('transform')
-    gc_setColor(1,1,1)
-    setFont(30)
+    gc_replaceTransform(SCR.xOy_ur)
+        --Draw score & accuracy
+        gc_setColor(1,1,1)
+        setFont(40)
+        gc_printf(score,-1010,5,1000,'right')
+        setFont(30)
+        gc_printf(accText,-1010,50,1000,'right')
+    gc_replaceTransform(SCR.xOy_dr)
+        --Draw map info
+        gc_printf(map.mapName,-1010,-55,1000,'right')
+        gc_printf(map.mapDifficulty,-1010,-90,1000,'right')
     gc_replaceTransform(SCR.xOy_dl)
-        gc_printf(map.mapName,0,-55,SCR.w-5,'right')
-        gc_printf(map.mapDifficulty,0,-90,SCR.w-5,'right')
+        --Draw progress bar
         if time>0 then
             gc_setColor(COLOR.rainbow_light(TIME()*12.6,.8))
             gc_rectangle('fill',0,-10,SCR.w*time/songLength,6)
@@ -311,7 +334,7 @@ function scene.draw()
                 gc_rectangle('fill',0,-10,SCR.w,6)
             end
         end
-    gc_pop()
+    gc_replaceTransform(SCR.xOy)
 end
 
 scene.widgetList={

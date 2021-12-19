@@ -13,8 +13,8 @@ local noteColor={
 
 local function _copyColor(i)return{i[1],i[2],i[3],i[4]}end
 function Note.new(d)
-    d.lostTime=.26
-    d.trigTime=.26
+    d.lostTime=.2
+    d.trigTime=.2
     d.color=_copyColor(noteColor[d.color or'W'])
     return setmetatable(d,{__index=Note})
 end
