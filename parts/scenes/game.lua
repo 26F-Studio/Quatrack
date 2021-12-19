@@ -176,6 +176,20 @@ function scene.keyDown(key,isRep)
             else
                 MES.new('error',errmsg)
             end
+        elseif k=='dropSlower'then
+            if score0==0 then
+                SETTING.dropSpeed=max(SETTING.dropSpeed-1,0)
+                MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
+            else
+                MES.new('warn',text.cannotAdjustDropSpeed,0)
+            end
+        elseif k=='dropFaster'then
+            if score0==0 then
+                SETTING.dropSpeed=min(SETTING.dropSpeed+1,16)
+                MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
+            else
+                MES.new('warn',text.cannotAdjustDropSpeed,0)
+            end
         end
     elseif key=='escape'then
         SCN.back()
@@ -196,8 +210,8 @@ end
 -- end
 
 function scene.update(dt)
-    if kbIsDown'lctrl'and kbIsDown('9','0','-','=')then
-        dt=dt*(kbIsDown'9'and .4 or kbIsDown'0'and .75 or kbIsDown'-'and 6 or 32)
+    if kbIsDown'lctrl'and kbIsDown('o','p','[',']')then
+        dt=dt*(kbIsDown'o'and .4 or kbIsDown'p'and .75 or kbIsDown'['and 6 or 32)
         if time-dt-playSongTime>0 then
             BGM.seek(time-dt-playSongTime)
         end

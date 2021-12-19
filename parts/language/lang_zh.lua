@@ -37,6 +37,9 @@ return{
 
     keySettingInstruction="点击添加键位绑定\nesc取消选中\n退格键清空选中",
 
+    dropSpeedChanged="下落速度调整为$1",
+    cannotAdjustDropSpeed="此时不能调整下落速度",
+
     errorMsg="Quatrack遭受了雷击,需要重新启动.\n我们已收集了一些错误信息,你可以向作者进行反馈.",
 
     staff={

@@ -37,6 +37,9 @@ return{
 
     keySettingInstruction="Press to bind key\nescape: cancel\nbackspace: delete",
 
+    dropSpeedChanged="Drop speed changed to $1",
+    cannotAdjustDropSpeed="Cannot adjust drop speed now",
+
     errorMsg="Quatrack ran into a problem and needs to restart.\nYou can send the error log to the developers.",
 
     staff={
