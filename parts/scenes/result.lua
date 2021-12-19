@@ -31,6 +31,7 @@ function scene.sceneInit()
         score=62600,
         maxCombo=260,
         accText="96.20%",
+        averageDeviate='26.26ms',
         hits={
             [-1]=4,
             [0]=4,
@@ -94,6 +95,8 @@ function scene.draw()
     gc.print(results.score,800,255)
     setFont(50)
     gc.print(results.accText,800,315)
+    setFont(30)
+    gc.print(results.averageDeviate,800,365)
 
     setFont(40)
     gc.print(results.maxCombo.."x",800,500)

@@ -69,6 +69,7 @@ local time,songLength
 local hitOffests
 local curAcc,fullAcc,accText
 local combo,maxCombo,score,score0
+local hitCount,totalDeviateTime
 local hits={}
 
 local function _updateAcc()
@@ -84,6 +85,7 @@ local function _tryGoResult()
         score=score0,
         maxCombo=maxCombo,
         accText=accText,
+        averageDeviate=("%.2fms"):format(totalDeviateTime/hitCount*1000),
         hits={
             [-1]=hits[-1],
             [0]=hits[0],
@@ -113,6 +115,7 @@ function scene.sceneInit()
     curAcc,fullAcc=0,0
     _updateAcc()
     combo,maxCombo,score,score0=0,0,0,0
+    hitCount,totalDeviateTime=0,0
     for i=-1,5 do hits[i]=0 end
 
     hitLV,hitTextTime=false,1e-99
@@ -153,6 +156,8 @@ local function _trigNote(deviateTime,noTailHold)
     if not noTailHold then
         if abs(deviateTime)>.2 then deviateTime=deviateTime>0 and .2 or -.2 end
         ins(hitOffests,1,deviateTime)
+        hitCount=hitCount+1
+        totalDeviateTime=totalDeviateTime+deviateTime
         hitOffests[27]=nil
     end
 end
