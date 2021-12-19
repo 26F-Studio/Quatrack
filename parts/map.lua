@@ -99,6 +99,7 @@ function Map.new(file)
     local loopMark,loopEnd,loopCountDown
     local longBarState=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
+    local trackDir={}for i=1,o.tracks do trackDir[i]=i end
     local line=#fileData
     while line>0 do
         local str=fileData[line][2]
@@ -110,7 +111,7 @@ function Map.new(file)
             _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
             curBPM=bpm
         elseif str:sub(1,1)=='@'then--Random seed mark
-            if str:sub(2)==""then
+            if str:sub(2)==''then
                 local r=tonumber(str:sub(2))
                 _syntaxCheck(type(r)=='number'and r%1==0 and r>=-2^63 and r<2^63,"Invalid random seed number")
                 math.randomseed(r)
@@ -243,6 +244,26 @@ function Map.new(file)
             else
                 _syntaxCheck(false,"Invalid repeat mark")
             end
+        elseif str:sub(1,1)=='&'then--Redirect notes to different track
+            if str:sub(2)==''then
+                for i=1,o.tracks do trackDir[i]=i end
+            elseif str:sub(2)=='A'then--Random shuffle (won't reset to 1~N!)
+                local l={}
+                for i=1,o.tracks do l[i]=trackDir[i]end
+                for i=1,o.tracks do trackDir[i]=rem(l,rnd(#l))end
+            else
+                local argList=str:sub(2):split(",")
+                for i=1,#argList do
+                    _syntaxCheck(#argList[i]==o.tracks,"Illegal redirection (track count)")
+                    _syntaxCheck(not argList[i]:find('[^1-9a-zA-Z]'),"Illegal redirection (track number)")
+                end
+                local directMethod=argList[rnd(#argList)]
+                for i=1,o.tracks do
+                    local id=tonumber(directMethod:sub(i,i),36)
+                    _syntaxCheck(id<=o.tracks,"Illegal redirection (too large track number)")
+                    trackDir[i]=id
+                end
+            end
         else--Notes
             local readState='note'
             local trackUsed=TABLE.new(false,o.tracks)
@@ -258,13 +279,13 @@ function Map.new(file)
                             ins(o.noteQueue,{
                                 type='tap',
                                 time=curTime,
-                                track=curTrack,
+                                track=trackDir[curTrack],
                             })
                         elseif c=='U'then--Hold note start
                             _syntaxCheck(not longBarState[curTrack],"Cannot start a long bar in a long bar")
                             local b={
                                 type='hold',
-                                track=curTrack,
+                                track=trackDir[curTrack],
                                 time=curTime,
                                 etime=false,
                                 tail=false,
@@ -321,7 +342,7 @@ function Map.new(file)
                     ins(o.noteQueue,{
                         type='tap',
                         time=curTime,
-                        track=curTrack,
+                        track=trackDir[curTrack],
                     })
                     trackUsed[curTrack]=true
                     str=str:sub(2)
@@ -330,7 +351,7 @@ function Map.new(file)
                         while true do
                             step=step*.5
                             str=str:sub(2)
-                            if str==""then
+                            if str==''then
                                 break
                             else
                                 _syntaxCheck(str:sub(1,1)=='|',"Mixed mark")
@@ -340,7 +361,7 @@ function Map.new(file)
                         while true do
                             step=step+1
                             str=str:sub(2)
-                            if str==""then
+                            if str==''then
                                 break
                             else
                                 _syntaxCheck(str:sub(1,1)=='~',"Mixed mark")
@@ -356,7 +377,7 @@ function Map.new(file)
                         _syntaxCheck(type(div)=='number',"Wrong scale num")
                         step=step/div
                         break
-                    elseif str==""then
+                    elseif str==''then
                         break
                     else
                         _syntaxCheck(false,"Invalid time mark")
