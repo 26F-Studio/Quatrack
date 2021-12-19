@@ -112,11 +112,14 @@ function Map.new(file)
             curBPM=bpm
         elseif str:sub(1,1)=='@'then--Random seed mark
             if str:sub(2)==''then
-                local r=tonumber(str:sub(2))
-                _syntaxCheck(type(r)=='number'and r%1==0 and r>=-2^63 and r<2^63,"Invalid random seed number")
-                math.randomseed(r)
+                math.randomseed(love.timer.getTime())
             else
-                math.randomseed(math.random(-2^63,2^63-1))
+                local seedList=str:sub(2):split(',')
+                for i=1,#seedList do
+                    _syntaxCheck(tonumber(seedList[i]),"Invalid seed number")
+                end
+                math.randomseed(love.timer.getTime())
+                math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
             end
         elseif str:sub(1,1)==':'then--Time mark
             _syntaxCheck(not loopMark,"Cannot set time in loop")
