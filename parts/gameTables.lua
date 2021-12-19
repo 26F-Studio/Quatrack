@@ -25,6 +25,7 @@ do--Userdata tables
         {s=1,d=2,f=3,space=4,j=5,k=6,l=7},
         {a=1,s=2,d=3,f=4,j=5,k=6,l=7,[';']=8},
         space='skip',
+        ['`']='restart',
     }
     for i=1,#KEY_MAP do
         setmetatable(KEY_MAP[i],{__index=KEY_MAP})

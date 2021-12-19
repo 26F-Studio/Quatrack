@@ -37,6 +37,7 @@ function Map.new(file)
         songOffset=0,
         tracks=4,
 
+        qbpFilePath=file,
         songLength=nil,
 
         time=0,

@@ -157,6 +157,15 @@ function scene.keyDown(key,isRep)
             if map.finished then
                 _tryGoResult()
             end
+        elseif k=='restart'then
+            local m,errmsg=loadBeatmap(map.qbpFilePath)
+            if m then
+                SCN.args[1]=m
+                BGM.stop('-s')
+                scene.sceneInit()
+            else
+                MES.new('error',errmsg)
+            end
         end
     elseif key=='escape'then
         SCN.back()

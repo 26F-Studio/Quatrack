@@ -152,6 +152,18 @@ end
 
 
 
+--Game
+function loadBeatmap(path)
+    local success,res=pcall(require'parts.map'.new,path)
+    if success then
+        return res
+    else
+        return false,res
+    end
+end
+
+
+
 --GC
 do--function posterizedText(str,x,y)
     local TIME=TIME
@@ -183,6 +195,7 @@ do--function posterizedText(str,x,y)
         gc.pop()
     end
 end
+
 
 
 --Widget function shortcuts

@@ -29,15 +29,12 @@ end
 function scene.keyDown(key,isRep)
     if isRep then return true end
     if key=='return'then
-        local mapName=listBox:getSel().fileName
-        if mapName then
-            local success,res=pcall(require'parts.map'.new,('parts/levels/$1'):repD(mapName))
-            if success then
-                SFX.play('enter')
-                SCN.go('game',nil,res)
-            else
-                MES.new('error',res)
-            end
+        local map,errmsg=loadBeatmap(('parts/levels/$1'):repD(listBox:getSel().fileName))
+        if map then
+            SFX.play('enter')
+            SCN.go('game',nil,map)
+        else
+            MES.new('error',errmsg)
         end
     elseif key=='up'or key=='down'then
         listBox:arrowKey(key)
