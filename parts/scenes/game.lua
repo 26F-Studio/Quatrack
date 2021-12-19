@@ -84,7 +84,7 @@ local function _tryGoResult()
         score=score0,
         maxCombo=maxCombo,
         accText=accText,
-        averageDeviate=("%.2fms"):format(totalDeviateTime/hitCount*1000),
+        averageDeviate=("%.2fms"):format(hitCount>0 and totalDeviateTime/hitCount*1000 or 0),
         hits={
             [-1]=hits[-1],
             [0]=hits[0],
