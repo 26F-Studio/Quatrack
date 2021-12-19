@@ -21,10 +21,10 @@ function Track.new(id)
             ang=0,
             kx=1,ky=1,
             dropSpeed=1000,
+            r=1,g=1,b=1,alpha=1,
         },
         defaultState=false,
         targetState=false,
-        color={r=1,g=1,b=1,a=1},
     }
     track.defaultState=TABLE.copy(track.state)
     track.targetState=TABLE.copy(track.state)
@@ -163,34 +163,35 @@ function Track:updateLogic(time)
 end
 
 function Track:draw(map)
+    local s=self.state
     gc_push('transform')
 
     --Set coordinate for single track
-    gc_translate(self.state.x,self.state.y)
-    gc_rotate(self.state.ang)
-    gc_scale(self.state.kx,self.state.ky)
+    gc_translate(s.x,s.y)
+    gc_rotate(s.ang)
+    gc_scale(s.kx,s.ky)
 
     --Draw track line
-    gc_setColor(1,1,1,1)
+    gc_setColor(s.r,s.g,s.b,s.alpha)
     gc_rectangle('fill',-54,0,108,4)
     for i=0,25 do
-        gc_setColor(1,1,1,1-i/26)
+        gc_setColor(s.r,s.g,s.b,s.alpha*(1-i/26))
         gc_rectangle('fill',-50,-i*26,-4,-26)
         gc_rectangle('fill',50,-i*26,4,-26)
         if self.pressed then
-            gc_setColor(1,1,1,(1-i/26)/6)
+            gc_setColor(s.r,s.g,s.b,s.alpha*((1-i/26)/6))
             gc_rectangle('fill',-50,-i*26-26,100,26)
         end
     end
 
     --Draw press effect
     if self.glowTime>0 then
-        gc_setColor(1,1,1,self.glowTime/.26)
+        gc_setColor(s.r,s.g,s.b,s.alpha*(self.glowTime/.26))
         gc_rectangle('fill',-50,10,100,10)
     end
 
     --Draw notes
-    local dropSpeed=self.state.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed-8 or 1))
+    local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed-8 or 1))
     for i=1,#self.notes do
         local note=self.notes[i]
         if note.type=='tap'then
