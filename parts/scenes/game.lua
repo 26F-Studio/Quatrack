@@ -101,7 +101,7 @@ function scene.sceneInit()
     BG.set('none')
 
     isSongPlaying=false
-    time=-4
+    time=-3.6
     hitOffests={}
     curAcc,fullAcc=0,0
     _updateAcc()
@@ -286,7 +286,7 @@ function scene.draw()
 
     --Draw map info at start
     if time<0 then
-        local a=4-2*abs(time+2)
+        local a=3.6-2*abs(time+1.8)
         setFont(80)
         gc_setColor(1,1,1,a)
         mStr(map.mapName,640,100)
