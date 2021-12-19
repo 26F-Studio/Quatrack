@@ -73,11 +73,11 @@ end
 function scene.draw()
     gc.setColor(COLOR.Z)
     gc.push('transform')
-        gc.translate(640,100)
+        gc.translate(640,150)
         gc.scale(min(900/results.mapName:getWidth(),1))
         posterizedDraw(results.mapName,0,0)
     gc.pop()
-    posterizedDraw(results.mapDifficulty,640,150)
+    posterizedDraw(results.mapDifficulty,640,200)
 
     setFont(40)
     for i=-1,5 do
