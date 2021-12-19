@@ -60,7 +60,7 @@ string.trim=STRING.trim
 FILE.clear('')
 
 --Create directories
-for _,v in next,{'conf','record','replay','cache','lib'}do
+for _,v in next,{'conf','record','replay','cache','lib','songs'}do
     local info=fs.getInfo(v)
     if not info then
         fs.createDirectory(v)
@@ -110,11 +110,11 @@ SFX.init((function()
     end
     return L
 end)())
-BGM.init((function()
+BGM.load((function()
     local L={}
     for _,v in next,fs.getDirectoryItems('media/music')do
         if isSafeFile('media/music/'..v,"Dangerous file : %SAVE%/media/music/"..v)then
-            table.insert(L,{name=v:sub(1,-5),path='media/music/'..v})
+            L[v:sub(1,-5)]='media/music/'..v
         end
     end
     return L
