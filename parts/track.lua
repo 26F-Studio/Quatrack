@@ -162,7 +162,7 @@ function Track:updateLogic(time)
     return missCount,marvCount
 end
 
-function Track:draw()
+function Track:draw(map)
     gc_push('transform')
 
     --Set coordinate for single track
@@ -190,7 +190,7 @@ function Track:draw()
     end
 
     --Draw notes
-    local dropSpeed=self.state.dropSpeed*1.1^(SETTING.dropSpeed-8)
+    local dropSpeed=self.state.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed-8 or 1))
     for i=1,#self.notes do
         local note=self.notes[i]
         if note.type=='tap'then

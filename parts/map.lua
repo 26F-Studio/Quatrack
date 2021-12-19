@@ -16,6 +16,7 @@ local mapInfoKeys={
     "songFile",
     "songOffset",
     "tracks",
+    "freeSpeed",
 }
 
 local SCline,SCstr
@@ -36,6 +37,7 @@ function Map.new(file)
         songFile="[songFile]",
         songOffset=0,
         tracks=4,
+        freeSpeed=true,
 
         qbpFilePath=file,
         songLength=nil,
@@ -90,6 +92,7 @@ function Map.new(file)
     --Parse non-string metadata
     if type(o.tracks)=='string'then o.tracks=tonumber(o.tracks)end
     if type(o.songOffset)=='string'then o.songOffset=tonumber(o.songOffset)end
+    if type(o.freeSpeed)=='string'then o.freeSpeed=o.freeSpeed=='true'end
 
     --Parse notes & animations
     local curTime,curBPM=0,180

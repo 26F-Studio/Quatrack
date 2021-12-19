@@ -283,7 +283,7 @@ local comboTextColor2={.86,.92,1,.8}
 function scene.draw()
     --Draw tracks
     for i=1,map.tracks do
-        tracks[i]:draw()
+        tracks[i]:draw(map)
     end
 
     --Draw hit text
