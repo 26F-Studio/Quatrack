@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=LV.?
 
 $songFile=intersect
-$songOffset=-0.26
+$songOffset=-0.255
 $tracks=4
 
 HHHH
@@ -15,22 +15,22 @@ UUUU*8
 
 ====E
 ----X/4
-----XX/4
+----X/4
+----X/4
+----X/4
 ----X/4
 ----XX/4
-----X/4
-----XXX/4
 ====S2
 
 
 ====E
 ----X/4
-----XX/4
+----X/4
 ====M
 ----X/4
-----XX/4
 ----X/4
-----XXX/4
+----X/4
+----XX/4
 ====S3
 
 
@@ -38,12 +38,12 @@ UUUU*8
 ----XX/4
 ----X/4
 ----Xx/4
-----Xxx/2
-----xxx/2
-OOOO/2
-----Xxx/2
-----xxx/2
-OOOO/2
+----Xx/2
+----Xx/2
+----XXx/2
+----Xx/2
+----Xx/2
+----XXx/2
 ----Xx/2
 ----XXx/2
 ----LR/2
