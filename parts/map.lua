@@ -248,23 +248,24 @@ function Map.new(file)
                 _syntaxCheck(false,"Invalid repeat mark")
             end
         elseif str:sub(1,1)=='&'then--Redirect notes to different track
-            if str:sub(2)==''then
+            if str:sub(2)==''then--Reset
                 for i=1,o.tracks do trackDir[i]=i end
             elseif str:sub(2)=='A'then--Random shuffle (won't reset to 1~N!)
                 local l={}
                 for i=1,o.tracks do l[i]=trackDir[i]end
                 for i=1,o.tracks do trackDir[i]=rem(l,rnd(#l))end
-            else
+            else--Redirect tracks from presets
                 local argList=str:sub(2):split(",")
                 for i=1,#argList do
                     _syntaxCheck(#argList[i]==o.tracks,"Illegal redirection (track count)")
                     _syntaxCheck(not argList[i]:find('[^1-9a-zA-Z]'),"Illegal redirection (track number)")
                 end
-                local directMethod=argList[rnd(#argList)]
+                local reDirMethod=argList[rnd(#argList)]
+                local l=TABLE.shift(trackDir)
                 for i=1,o.tracks do
-                    local id=tonumber(directMethod:sub(i,i),36)
+                    local id=tonumber(reDirMethod:sub(i,i),36)
                     _syntaxCheck(id<=o.tracks,"Illegal redirection (too large track number)")
-                    trackDir[i]=id
+                    trackDir[i]=l[id]
                 end
             end
         else--Notes
