@@ -15,9 +15,10 @@ local BGM={
 function BGM.getList()return nameList end
 function BGM.getCount()return #nameList end
 local function _addFile(name,path)
-    table.insert(nameList,name)
-    SourceObjList[name]={path=path,source=false}
-
+    if not SourceObjList[name]then
+        table.insert(nameList,name)
+        SourceObjList[name]={path=path,source=false}
+    end
 end
 function BGM.load(name,path)
     if type(name)=='table'then
