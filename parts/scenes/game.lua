@@ -126,6 +126,7 @@ local function _trigNote(deviateTime,noTailHold)
     hitTextTime=TIME()
     fullAcc=fullAcc+10
     hitLV=_getHitLV(deviateTime)
+    if hitLV>0 and noTailHold then hitLV=5 end
     hits[hitLV]=hits[hitLV]+1
     if hitLV>0 then
         curAcc=curAcc+hitAccList[hitLV]

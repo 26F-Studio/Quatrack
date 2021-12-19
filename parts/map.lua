@@ -250,13 +250,13 @@ function Map.new(file)
                 if readState=='note'then
                     c=str:sub(1,1)
                     if c~='-'then--Space
-                        if c=='O'then--Normal note
+                        if c=='O'then--Tap note
                             ins(o.noteQueue,{
                                 type='tap',
                                 time=curTime,
                                 track=curTrack,
                             })
-                        elseif c=='U'then--Long bar start
+                        elseif c=='U'then--Hold note start
                             _syntaxCheck(not longBarState[curTrack],"Cannot start a long bar in a long bar")
                             local b={
                                 type='hold',
@@ -267,14 +267,10 @@ function Map.new(file)
                             }
                             ins(o.noteQueue,b)
                             longBarState[curTrack]=b
-                        elseif c=='A'then--Long bar stop
+                        elseif c=='A'or c=='H'then--Long bar stop
                             _syntaxCheck(longBarState[curTrack],"No long bar to stop")
                             longBarState[curTrack].etime=curTime
-                            longBarState[curTrack].tail=true
-                            longBarState[curTrack]=false
-                        elseif c=='H'then--Long bar end
-                            _syntaxCheck(longBarState[curTrack],"No long bar to end")
-                            longBarState[curTrack].etime=curTime
+                            longBarState[curTrack].tail=c=='A'
                             longBarState[curTrack]=false
                         else
                             _syntaxCheck(curTrack==o.tracks+1,"Too few notes in one line")
