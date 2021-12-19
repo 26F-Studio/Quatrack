@@ -40,12 +40,11 @@ local hitAccList={
     10, --MARV
 }
 local hitLVOffsets={--Only for deviation drawing
-    [0]={0,.02},
-    {.02,.04},
-    {.04,.07},
-    {.07,.10},
     {.10,.14},
-    {.14,.20},
+    {.07,.10},
+    {.04,.07},
+    {.02,.04},
+    {0,.02},
 }
 local function _getHitLV(div)
     div=abs(div)
@@ -154,7 +153,7 @@ local function _trigNote(deviateTime,noTailHold)
     end
     _updateAcc()
     if not noTailHold then
-        if abs(deviateTime)>.2 then deviateTime=deviateTime>0 and .2 or -.2 end
+        if abs(deviateTime)>.14 then deviateTime=deviateTime>0 and .14 or -.14 end
         ins(hitOffests,1,deviateTime)
         hitCount=hitCount+1
         totalDeviateTime=totalDeviateTime+deviateTime
@@ -309,19 +308,19 @@ function scene.draw()
 
     --Draw deviate indicator
     gc_setColor(1,1,1)gc_rectangle('fill',640-1,350-15,2,34)
-    for i=0,5 do
+    for i=1,5 do
         local c=hitColors[i]
-        local d=hitLVOffsets[5-i]
+        local d=hitLVOffsets[i]
         gc_setColor(c[1]*.8+.3,c[2]*.8+.3,c[3]*.8+.3,.626)
-        gc_rectangle('fill',640-d[1]*626,350,(d[1]-d[2])*626,4)
-        gc_rectangle('fill',640+d[1]*626,350,(d[2]-d[1])*626,4)
+        gc_rectangle('fill',640-d[1]*700,350,(d[1]-d[2])*700,4)
+        gc_rectangle('fill',640+d[1]*700,350,(d[2]-d[1])*700,4)
     end
 
     --Draw deviate times
     for i=1,#hitOffests do
         local c=hitColors[_getHitLV(hitOffests[i])]
         gc_setColor(c[1],c[2],c[3],.4)
-        gc_rectangle('fill',640-hitOffests[i]*626-1,350-8,3,20)
+        gc_rectangle('fill',640-hitOffests[i]*700-1,350-8,3,20)
     end
 
     --Draw map info at start
