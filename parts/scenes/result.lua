@@ -50,7 +50,22 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    if key=='escape' then
+    local k=KEY_MAP[key]
+    if k then
+        if k=='restart'then
+            local map,errmsg=loadBeatmap(results.map.qbpFilePath)
+            if map then
+                SCN.pop()
+                SFX.play('enter')
+                SCN.go('game',nil,map)
+            else
+                MES.new('error',errmsg)
+            end
+        end
+    elseif key=='escape'then
+        SCN.back()
+    end
+    if key=='escape'then
         SCN.back()
     end
 end
