@@ -205,6 +205,11 @@ function scene.update(dt)
     --Try play bgm
     if not isSongPlaying then
         if time<=playSongTime and time+dt>playSongTime then
+            if love.filesystem.getInfo('parts/levels/'..map.songFile..'.ogg')then
+                BGM.load(map.songFile,'parts/levels/'..map.songFile..'.ogg')
+            elseif love.filesystem.getInfo('songs/'..map.songFile..'.ogg')then
+                BGM.load(map.songFile,'songs/'..map.songFile..'.ogg')
+            end
             BGM.play(map.songFile,'-sdin -noloop')
             BGM.seek(time+dt-playSongTime)
             isSongPlaying=true
