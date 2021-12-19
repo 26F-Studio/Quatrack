@@ -122,7 +122,7 @@ function scene.sceneInit()
     tracks={}
     for id=1,map.tracks do
         tracks[id]=require'parts.track'.new(id)
-        tracks[id]:setDefaultPosition(580-60*map.tracks+120*id,680)
+        tracks[id]:setDefaultPosition(570-70*map.tracks+140*id,680)
         tracks[id]:setPosition(nil,nil,true)
     end
 end
