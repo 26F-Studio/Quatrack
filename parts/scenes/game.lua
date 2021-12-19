@@ -187,7 +187,7 @@ end
 
 function scene.update(dt)
     if kbIsDown'lctrl'and kbIsDown('9','0','-','=')then
-        dt=dt*(kbIsDown'9'and .25 or kbIsDown'0'and .5 or kbIsDown'-'and 4 or 16)
+        dt=dt*(kbIsDown'9'and .4 or kbIsDown'0'and .75 or kbIsDown'-'and 6 or 32)
         if time-dt-playSongTime>0 then
             BGM.seek(time-dt-playSongTime)
         end
