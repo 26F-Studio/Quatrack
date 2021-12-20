@@ -71,8 +71,8 @@ function scene.draw()
         gc.setColor(hitColors[i])
         gc.printf(hitTexts[i],130,460-40*i,200,'right')
         gc.print(results.hits[i],365,460-40*i)
-        gc.setColor(1,1,1,.26)
-        gc.printf(hitTexts[i],130,460-40*i,200,'right')
+        gc.setColor(1,1,1,.626)
+        gc.print(results.hits[i],365,460-40*i)
     end
 
     gc.setColor(COLOR.Z)
@@ -104,7 +104,7 @@ function scene.draw()
         elseif c==3 then
             gc.setColor(chainColors[3])
             gc.print(trophy,800,415)
-            gc.setColor(1,1,1,.9+.05*sin(t*62.6))
+            gc.setColor(1,1,1,.9+.1*sin(t*62.6))
             gc.print(trophy,800,415)
         elseif c==4 then
             gc.setColor(chainColors[4])
