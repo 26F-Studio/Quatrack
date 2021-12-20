@@ -409,7 +409,12 @@ function Map.new(file)
     --Reset two pointers
     o.notePtr,o.animePtr=1,1
 
-    o.songLength=o.noteQueue[#o.noteQueue].time
+    local lastNote=o.noteQueue[#o.noteQueue]
+    if lastNote.type=='tap'then
+        o.songLength=lastNote.time
+    elseif lastNote.type=='hold'then
+        o.songLength=lastNote.etime
+    end
 
     return setmetatable(o,{__index=Map})
 end
