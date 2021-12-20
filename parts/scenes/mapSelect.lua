@@ -23,20 +23,15 @@ local mapList
 local function _freshSongList()
     lastFreshTime=TIME()
     mapList={}
-    for _,fileName in next,love.filesystem.getDirectoryItems('parts/levels')do
-        ins(mapList,{
-            path='parts/levels/'..fileName,
-            name=fileName:sub(1,-5),
-            source='game',
-        })
-    end
-    for _,fileName in next,love.filesystem.getDirectoryItems('songs')do
-        if fileName:sub(-4)=='.qbp'then
-            ins(mapList,{
-                path='songs/'..fileName,
-                name=fileName:sub(1,-5),
-                source='outside',
-            })
+    for source,path in next,{game='parts/levels',outside='songs'}do
+        for _,fileName in next,love.filesystem.getDirectoryItems(path)do
+            if fileName:sub(-4)=='.qbp'then
+                ins(mapList,{
+                    path=path..'/'..fileName,
+                    name=fileName:sub(1,-5),
+                    source=source,
+                })
+            end
         end
     end
     table.sort(mapList,function(a,b) return a.path<b.path end)
