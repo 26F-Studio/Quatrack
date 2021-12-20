@@ -80,8 +80,8 @@ function Track:setDropSpeed(dropSpeed,force)
     if force then self.state.dropSpeed=dropSpeed end
     self.targetState.dropSpeed=dropSpeed
 end
-function Track:setAlpha(alpha,force)
-    if not alpha then alpha=self.defaultState.alpha end
+function Track:setAlpha(alpha,force)print(alpha)
+    if not alpha then alpha=self.defaultState.alpha*100 end
     alpha=MATH.interval(alpha/100,0,1)
     if force then self.state.alpha=alpha end
     self.targetState.alpha=alpha
