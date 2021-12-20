@@ -6,18 +6,7 @@ local ins,rem=table.insert,table.remove
 
 local Map={}
 
-local mapInfoKeys={
-    "version",
-    "mapName",
-    "musicAuth",
-    "mapAuth",
-    "mapDifficulty",
-
-    "songFile",
-    "songOffset",
-    "tracks",
-    "freeSpeed",
-}
+local mapMetaKeys=mapMetaKeys
 
 local SCline,SCstr
 local function _syntaxCheck(cond,msg)
@@ -60,13 +49,13 @@ function Map.new(file)
                 l=l:split(';')
                 for i=1,#l do
                     l[i]=l[i]:trim()
-                    if l[i]~=""and l[i]:sub(1,1)~='#'then
+                    if l[i]~=''and l[i]:sub(1,1)~='#'then
                         ins(fileData,{lineNum,l[i]})
                     end
                 end
             else
                 l=l:trim()
-                if l~=""and l:sub(1,1)~='#'then
+                if l~=''and l:sub(1,1)~='#'then
                     ins(fileData,{lineNum,l})
                 end
             end
@@ -80,7 +69,7 @@ function Map.new(file)
         SCline,SCstr=fileData[1][1],str
         if str:sub(1,1)=='$'then
             local k=str:sub(2,str:find("=")-1)
-            _syntaxCheck(TABLE.find(mapInfoKeys,k),"Invalid map info key '"..k.."'")
+            _syntaxCheck(TABLE.find(mapMetaKeys,k),"Invalid map info key '"..k.."'")
             _syntaxCheck(str:find("="),"Syntax error (need '=')")
             o[k]=str:sub(str:find("=")+1)
             rem(fileData,1)

@@ -1,4 +1,17 @@
 --Static data tables
+mapMetaKeys={
+    "version",
+    "mapName",
+    "musicAuth",
+    "mapAuth",
+    "mapDifficulty",
+
+    "songFile",
+    "songOffset",
+    "tracks",
+    "freeSpeed",
+}
+mapMetaKeyMap={}for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
 hitColors={
     [-1]=COLOR.dRed,
     [0]=COLOR.dRed,
