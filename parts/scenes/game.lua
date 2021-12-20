@@ -243,6 +243,8 @@ function scene.touchUp(_,_,id)
         end
     end
 end
+function scene.mouseDown(x,y,k)scene.touchDown(x,y,k)end
+function scene.mouseUp(_,_,k)scene.touchUp(_,_,k)end
 
 function scene.update(dt)
     if kbIsDown'lctrl'and kbIsDown('o','p','[',']')then
