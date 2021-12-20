@@ -12,7 +12,7 @@ local mStr=mStr
 local unpack=unpack
 local max,min=math.max,math.min
 local int,abs=math.floor,math.abs
-local ins=table.insert
+local ins,rem=table.insert,table.remove
 
 local hitColors={
     [-1]=COLOR.dRed,
@@ -70,6 +70,7 @@ local curAcc,fullAcc,accText
 local combo,maxCombo,score,score0
 local hitCount,totalDeviateTime
 local hits={}
+local touches
 
 local function _updateAcc()
     accText=("%.2f%%"):format(100*max(curAcc,0)/max(fullAcc,1))
@@ -124,6 +125,8 @@ function scene.sceneInit()
     for i=-1,5 do hits[i]=0 end
 
     hitLV,hitTextTime=false,1e-99
+
+    touches={}
 
     tracks={}
     for id=1,map.tracks do
@@ -221,9 +224,25 @@ function scene.keyUp(key)
     end
 end
 
--- function scene.touchDown(x,y,id)
---     --?
--- end
+function scene.touchDown(x,y,id)
+    x,y=SCR.xOy_m:inverseTransformPoint(x,y)
+    local minDist,closestTrackID=1e99,false
+    for id=1,#tracks do
+        local dist=((tracks[id].state.x-x)^2+(tracks[id].state.y-y)^2)^.5
+        if dist<minDist then minDist,closestTrackID=dist,id end
+    end
+    ins(touches,{id,closestTrackID})
+    _trackPress(closestTrackID)
+end
+function scene.touchUp(_,_,id)
+    for i=1,#touches do
+        if touches[i][1]==id then
+            _trackRelease(touches[i][2])
+            rem(touches,i)
+            return
+        end
+    end
+end
 
 function scene.update(dt)
     if kbIsDown'lctrl'and kbIsDown('o','p','[',']')then
