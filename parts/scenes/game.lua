@@ -71,7 +71,8 @@ local function _tryGoResult()
             [3]=hits[3],
             [4]=hits[4],
             [5]=hits[5],
-        }
+        },
+        bestChain=bestChain,
     })
 end
 

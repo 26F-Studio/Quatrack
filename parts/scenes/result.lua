@@ -1,6 +1,8 @@
 local gc=love.graphics
 
 local min=math.min
+local sin=math.sin
+
 
 local hitColors=hitColors
 local hitTexts=hitTexts
@@ -24,7 +26,8 @@ function scene.sceneInit()
             [3]=62,
             [4]=62,
             [5]=62,
-        }
+        },
+        bestChain=4,
     }
     results.mapName=gc.newText(getFont(80,'mono'),results.map.mapName)
     results.mapDifficulty=gc.newText(getFont(30,'mono'),results.map.mapDifficulty)
@@ -50,6 +53,10 @@ function scene.keyDown(key,isRep)
     end
 end
 
+local _stencilX
+local function _marvStencil()
+    gc.rectangle('fill',_stencilX,430,100,50)
+end
 function scene.draw()
     gc.setColor(COLOR.Z)
     gc.push('transform')
@@ -66,7 +73,6 @@ function scene.draw()
         gc.print(results.hits[i],365,460-40*i)
         gc.setColor(1,1,1,.26)
         gc.printf(hitTexts[i],130,460-40*i,200,'right')
-        gc.print(results.hits[i],365,460-40*i)
     end
 
     gc.setColor(COLOR.Z)
@@ -79,6 +85,45 @@ function scene.draw()
 
     setFont(40)
     gc.print(results.maxCombo.."x",800,500)
+
+    if results.bestChain>0 then
+        local t=TIME()
+        local c=results.bestChain
+        local trophy=text.chainTexts[c]
+        setFont(55)
+        if c==1 then
+            gc.setColor(chainColors[c])
+            gc.print(trophy,800,415)
+            gc.setColor(1,1,1,.626)
+            gc.print(trophy,800,415)
+        elseif c==2 then
+            gc.setColor(chainColors[c])
+            gc.print(trophy,800,415)
+            gc.setColor(1,1,1,.626+.0626*sin(t*62.6))
+            gc.print(trophy,800,415)
+        elseif c==3 then
+            gc.setColor(chainColors[3])
+            gc.print(trophy,800,415)
+            gc.setColor(1,1,1,.9+.05*sin(t*62.6))
+            gc.print(trophy,800,415)
+        elseif c==4 then
+            gc.setColor(chainColors[4])
+            gc.print(trophy,800,415)
+            gc.setColor(1,1,1,.8+.1*sin(t*62.6))
+            gc.print(trophy,800,415)
+        elseif c==5 then
+            for i=0,2 do
+                _stencilX=800+100*i
+                gc.stencil(_marvStencil,'replace',1)
+                gc.setStencilTest('equal',1)
+                gc.setColor(COLOR.rainbow_light(t*6.26-i))
+                gc.print(trophy,800+2*sin(t*626),415+2*sin(t*355))
+                gc.setStencilTest()
+            end
+            gc.setColor(1,1,1,.9)
+            gc.print(trophy,800,415)
+        end
+    end
 end
 
 scene.widgetList={

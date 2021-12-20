@@ -16,8 +16,13 @@ return{
 
     pause="Pause",
     pauseCount="Pauses",
-    finesse_ap="All Perfect",
-    finesse_fc="Full Combo",
+    chainTexts={
+        "NO BREAK",
+        "ALL COMBO",
+        "Full COMBO",
+        "ALL PERFECT",
+        "MARVELOUS",
+    },
 
     saveDone="Data saved",
     saveError="Failed to save:",
