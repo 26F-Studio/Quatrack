@@ -101,10 +101,13 @@ function Track:press()
         if self.time>note.time-note.trigTime then
             if note.type=='tap'then--Press tap note
                 rem(self.notes,1)
+                return note.time-self.time
             elseif note.type=='hold'then--Press hold note
-                note.pressed=true
+                if not note.pressed then
+                    note.pressed=true
+                    return note.time-self.time
+                end
             end
-            return note.time-self.time
         end
     end
 end
