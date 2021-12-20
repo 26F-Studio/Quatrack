@@ -88,6 +88,7 @@ local showPowerInfo=true
 local showClickFX=true
 local discardCanvas=false
 local frameMul=100
+local sleepInterval=1/60
 local onQuit=NULL
 
 local batteryImg=GC.DO{31,20,
@@ -821,7 +822,7 @@ function love.run()
             end
         end
 
-        WAIT(.006)
+        WAIT(sleepInterval)
     end
 end
 
@@ -841,6 +842,7 @@ end
 function Z.setPowerInfo(bool)showPowerInfo=bool end
 function Z.setCleanCanvas(bool)discardCanvas=bool end
 function Z.setFrameMul(n)frameMul=n end
+function Z.setMaxFPS(fps)sleepInterval=1/fps end
 function Z.setClickFX(bool)showClickFX=bool end
 
 --[Warning] Color and line width is uncertain value, set it in the function.
