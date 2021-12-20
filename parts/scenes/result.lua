@@ -2,24 +2,8 @@ local gc=love.graphics
 
 local min=math.min
 
-local hitColors={
-    [-1]=COLOR.dRed,
-    [0]=COLOR.dRed,
-    COLOR.lWine,
-    COLOR.lBlue,
-    COLOR.lGreen,
-    COLOR.lOrange,
-    COLOR.lH,
-}
-local hitTexts={
-    [-1]="MISS",
-    [0]="BAD",
-    'OK',
-    'GOOD',
-    'GREAT',
-    'PERF',
-    'MARV'
-}
+local hitColors=hitColors
+local hitTexts=hitTexts
 
 local results
 
@@ -56,7 +40,6 @@ function scene.keyDown(key,isRep)
         if k=='restart'then
             local map,errmsg=loadBeatmap(results.map.qbpFilePath)
             if map then
-                SFX.play('enter')
                 SCN.swapTo('game',nil,map)
             else
                 MES.new('error',errmsg)

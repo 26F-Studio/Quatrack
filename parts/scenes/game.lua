@@ -16,38 +16,12 @@ local sin,cos=math.sin,math.cos
 local int,abs=math.floor,math.abs
 local ins,rem=table.insert,table.remove
 
-local hitColors={
-    [-1]=COLOR.dRed,
-    [0]=COLOR.dRed,
-    COLOR.lWine,
-    COLOR.lBlue,
-    COLOR.lGreen,
-    COLOR.lOrange,
-    COLOR.lH,
-}
-local hitTexts={
-    [-1]="MISS",
-    [0]="BAD",
-    'OK',
-    'GOOD',
-    'GREAT',
-    'PERF',
-    'MARV'
-}
-local hitAccList={
-    -5, --OK
-    2,  --GOOD
-    6,  --GREAT
-    10, --PERF
-    10, --MARV
-}
-local hitLVOffsets={--Only for deviation drawing
-    {.10,.14},
-    {.07,.10},
-    {.04,.07},
-    {.02,.04},
-    {0,.02},
-}
+local hitColors=hitColors
+local hitTexts=hitTexts
+local hitAccList=hitAccList
+local hitLVOffsets=hitLVOffsets
+local chainColors=chainColors
+
 local function _getHitLV(div)
     div=abs(div)
     return
@@ -71,6 +45,7 @@ local hitOffests
 local curAcc,fullAcc,accText
 local combo,maxCombo,score,score0
 local hitCount,totalDeviateTime
+local bestChain
 local hits={}
 local touches
 
@@ -124,6 +99,7 @@ function scene.sceneInit()
     _updateAcc()
     combo,maxCombo,score,score0=0,0,0,0
     hitCount,totalDeviateTime=0,0
+    bestChain=5
     for i=-1,5 do hits[i]=0 end
 
     hitLV,hitTextTime=false,1e-99
@@ -147,6 +123,7 @@ local function _trigNote(deviateTime,noTailHold)
     fullAcc=fullAcc+10
     hitLV=_getHitLV(deviateTime)
     if hitLV>0 and noTailHold then hitLV=5 end
+    bestChain=min(bestChain,hitLV)
     hits[hitLV]=hits[hitLV]+1
     if hitLV>0 then
         curAcc=curAcc+hitAccList[hitLV]
@@ -161,6 +138,7 @@ local function _trigNote(deviateTime,noTailHold)
     else
         if combo>=10 then SFX.play('combobreak')end
         combo=0
+        bestChain=0
     end
     _updateAcc()
     if not noTailHold then
@@ -318,6 +296,7 @@ function scene.update(dt)
             _updateAcc()
             if combo>=10 then SFX.play('combobreak')end
             combo=0
+            bestChain=0
             hits[-1]=hits[-1]+missCount
         end
     end
@@ -329,8 +308,7 @@ function scene.update(dt)
     end
 end
 
-local comboTextColor1={.1,.05,0,.8}
-local comboTextColor2={.86,.92,1,.8}
+local SCC={1,1,1}
 function scene.draw()
     --Draw tracks
     gc_replaceTransform(SCR.xOy_m)
@@ -349,11 +327,14 @@ function scene.draw()
     end
 
     --Draw combo
-    if combo>1 then
+    if combo>0 then
         setFont(50,'mono')
-        gc_setColor(hitColors[hitLV])
-        mStr(combo,640,356)
-        GC.shadedPrint(combo,640,360,'center',2,comboTextColor1,comboTextColor2)
+        if bestChain==5 then
+            SCC[3]=(1-time/songLength)^.26
+            GC.shadedPrint(combo,640,360,'center',1,chainColors[bestChain],SCC)
+        else
+            GC.shadedPrint(combo,640,360,'center',1,chainColors[bestChain],COLOR.Z)
+        end
     end
 
     --Draw deviate indicator
@@ -388,8 +369,8 @@ function scene.draw()
     --Draw score & accuracy
     gc_replaceTransform(SCR.xOy_ur)
     gc_setColor(1,1,1)
-    setFont(40)gc_printf(score,-1010,5,1000,'right')
-    setFont(30)gc_printf(accText,-1010,50,1000,'right')
+    setFont(60)gc_printf(score,-1010,-10,1000,'right')
+    setFont(40)gc_printf(accText,-1010,50,1000,'right')
 
     --Draw map info
     gc_replaceTransform(SCR.xOy_dr)

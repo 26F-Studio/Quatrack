@@ -1,18 +1,43 @@
 --Static data tables
-RANK_CHARS={'B','A','S','U','X'}for i=1,#RANK_CHARS do RANK_CHARS[i]=CHAR.icon['rank'..RANK_CHARS[i]]end
-RANK_BASE_COLORS={
-    {.1,.2,.3},
-    {.3,.42,.32},
-    {.45,.44,.15},
-    {.42,.25,.2},
-    {.42,.15,.4},
+hitColors={
+    [-1]=COLOR.dRed,
+    [0]=COLOR.dRed,
+    COLOR.lWine,
+    COLOR.lBlue,
+    COLOR.lGreen,
+    COLOR.lOrange,
+    COLOR.lH,
 }
-RANK_COLORS={
-    {.8,.86,.9},
-    {.6,.9,.7},
-    {.93,.93,.65},
-    {1,.5,.4},
-    {.95,.5,.95},
+hitTexts={
+    [-1]="MISS",
+    [0]="BAD",
+    'OK',
+    'GOOD',
+    'GREAT',
+    'PERF',
+    'MARV'
+}
+hitAccList={
+    -5, --OK
+    2,  --GOOD
+    6,  --GREAT
+    10, --PERF
+    10, --MARV
+}
+hitLVOffsets={--Only for deviation drawing
+    {.10,.14},
+    {.07,.10},
+    {.04,.07},
+    {.02,.04},
+    {0,.02},
+}
+chainColors={
+    [0]=COLOR.dH,
+    COLOR.wine,
+    COLOR.blue,
+    COLOR.green,
+    COLOR.orange,
+    COLOR.orange,
 }
 do--Userdata tables
     KEY_MAP={
