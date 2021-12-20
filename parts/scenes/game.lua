@@ -352,7 +352,7 @@ function scene.draw()
     for i=1,#hitOffests do
         local c=hitColors[_getHitLV(hitOffests[i])]
         gc_setColor(c[1],c[2],c[3],.4)
-        gc_rectangle('fill',640-hitOffests[i]*700-1,350-8,3,20)
+        gc_rectangle('fill',640+hitOffests[i]*700-1,350-8,3,20)
     end
 
     --Draw map info at start

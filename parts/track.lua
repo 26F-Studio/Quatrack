@@ -101,11 +101,11 @@ function Track:press()
         if self.time>note.time-note.trigTime then
             if note.type=='tap'then--Press tap note
                 rem(self.notes,1)
-                return note.time-self.time
+                return self.time-note.time
             elseif note.type=='hold'then--Press hold note
                 if not note.pressed then
                     note.pressed=true
-                    return note.time-self.time
+                    return self.time-note.time
                 end
             end
         end
@@ -201,7 +201,7 @@ function Track:draw(map)
     --Draw press effect
     if self.glowTime>0 then
         gc_setColor(s.r,s.g,s.b,s.alpha*(self.glowTime/.26))
-        gc_rectangle('fill',-50,10,100,10)
+        gc_rectangle('fill',-50,0,100,self.glowTime*100)
     end
 
     --Draw notes
