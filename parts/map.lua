@@ -171,6 +171,7 @@ function Map.new(file)
                     args={data[2],false},
                 }
             elseif op=='S'then--Size
+                _syntaxCheck(#data<=3,"Too many arguments")
                 data[2]=tonumber(data[2])
                 data[3]=tonumber(data[3])
                 event={
@@ -181,8 +182,8 @@ function Map.new(file)
                     args={data[2],data[3],false},
                 }
             elseif op=='D'then--Drop speed
+                _syntaxCheck(#data<=2,"Too many arguments")
                 data[2]=tonumber(data[2])
-                _syntaxCheck(data[2],"Invalid drop speed")
                 event={
                     type="setTrack",
                     time=curTime,
