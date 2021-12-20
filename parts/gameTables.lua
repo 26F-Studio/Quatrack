@@ -3,8 +3,8 @@ hitColors={
     [-1]=COLOR.dRed,
     [0]=COLOR.dRed,
     COLOR.lWine,
-    COLOR.lBlue,
     COLOR.lGreen,
+    COLOR.lBlue,
     COLOR.lOrange,
     COLOR.lH,
 }
@@ -34,8 +34,8 @@ hitLVOffsets={--Only for deviation drawing
 chainColors={
     [0]=COLOR.dH,
     COLOR.wine,
-    COLOR.blue,
     COLOR.green,
+    COLOR.blue,
     COLOR.orange,
     COLOR.orange,
 }
