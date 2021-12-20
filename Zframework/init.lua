@@ -821,7 +821,7 @@ function love.run()
             end
         end
 
-        WAIT(.00626)
+        WAIT(.006)
     end
 end
 
