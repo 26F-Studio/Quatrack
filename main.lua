@@ -84,6 +84,16 @@ for _,v in next,fs.getDirectoryItems('parts/shaders')do
 end
 
 --Init Zframework
+do--Z.setCursor
+    local gc=love.graphics
+    Z.setCursor(function(_,x,y)
+        if not SETTING.sysCursor then
+            gc.setColor(1,1,1)
+            gc.setLineWidth(2)
+            gc.circle(love.mouse.isDown(1)and'fill'or'line',x,y,6)
+        end
+    end)
+end
 Z.setOnFnKeys({
     function()MES.new('check',PROFILE.switch()and"profile start!"or"profile report copied!")end,
     function()MES.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num))end,

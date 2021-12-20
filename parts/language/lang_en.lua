@@ -80,10 +80,14 @@ return{
             holdAlpha="Hold note alpha",
             holdWidth="Hold note width",
 
+            sysCursor="System cursor",
             clickFX="Click FX",
             power="Battery Info",
             clean="Quick Draw",
             fullscreen="Fullscreen",
+
+            maxFPS="Max FPS",
+            frameMul="Frame draw rate",
 
             mainVol="Main Volume",
             bgm="BGM",

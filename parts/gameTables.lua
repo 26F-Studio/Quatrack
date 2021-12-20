@@ -58,8 +58,16 @@ do--Userdata tables
         setmetatable(KEY_MAP[i],{__index=KEY_MAP})
     end
     SETTING={--Settings
+        --Framework
+        clickFX=true,
+        powerInfo=true,
+        cleanCanvas=false,
+        fullscreen=true,
+        maxFPS=180,
+        frameMul=50,
+
         --System
-        sysCursor=true,
+        sysCursor=false,
         locale='zh',
 
         --Game
@@ -67,12 +75,6 @@ do--Userdata tables
         dropSpeed=8,
         holdAlpha=.26,
         holdWidth=.8,
-
-        --Graphic
-        clickFX=true,
-        powerInfo=true,
-        cleanCanvas=false,
-        fullscreen=true,
 
         --Sound
         autoMute=true,

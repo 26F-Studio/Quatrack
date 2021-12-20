@@ -109,6 +109,8 @@ do--function applySettings()
         BGM.setVol(SETTING.bgm)
         SFX.setVol(SETTING.sfx)
         VOC.setVol(SETTING.voc)
+        Z.setMaxFPS(SETTING.maxFPS)
+        Z.setFrameMul(SETTING.frameMul)
 
         --Apply language
         text=LANG.get(SETTING.locale)

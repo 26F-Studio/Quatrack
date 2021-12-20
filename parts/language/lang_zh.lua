@@ -80,10 +80,14 @@ return{
             holdAlpha="长条不透明度",
             holdWidth="长条宽度",
 
+            sysCursor="使用系统光标",
             clickFX="点按特效",
             power="电量显示",
             clean="绘制优化",
             fullscreen="全屏",
+
+            maxFPS="最大FPS",
+            frameMul="绘制帧率百分比",
 
             mainVol="总音量",
             bgm="音乐",
