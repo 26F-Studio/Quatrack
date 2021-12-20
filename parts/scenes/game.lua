@@ -128,7 +128,7 @@ function scene.sceneInit()
     tracks={}
     for id=1,map.tracks do
         tracks[id]=require'parts.track'.new(id)
-        tracks[id]:setDefaultPosition(570-70*map.tracks+140*id,680)
+        tracks[id]:setDefaultPosition(70*(2*id-map.tracks-1),320)
         tracks[id]:setPosition(nil,nil,true)
     end
 end
@@ -310,9 +310,12 @@ local comboTextColor1={.1,.05,0,.8}
 local comboTextColor2={.86,.92,1,.8}
 function scene.draw()
     --Draw tracks
+    gc_replaceTransform(SCR.xOy_m)
     for i=1,map.tracks do
         tracks[i]:draw(map)
     end
+
+    gc_replaceTransform(SCR.xOy)
 
     --Draw hit text
     if TIME()-hitTextTime<.26 then
