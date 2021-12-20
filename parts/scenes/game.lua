@@ -226,10 +226,10 @@ end
 
 function scene.touchDown(x,y,id)
     x,y=SCR.xOy_m:inverseTransformPoint(x,y)
-    local minDist,closestTrackID=1e99,false
-    for id=1,#tracks do
-        local dist=((tracks[id].state.x-x)^2+(tracks[id].state.y-y)^2)^.5
-        if dist<minDist then minDist,closestTrackID=dist,id end
+    local minD2,closestTrackID=1e99,false
+    for i=1,#tracks do
+        local D2=(tracks[i].state.x-x)^2+(tracks[i].state.y-y)^2
+        if D2<minD2 then minD2,closestTrackID=D2,i end
     end
     ins(touches,{id,closestTrackID})
     _trackPress(closestTrackID)
