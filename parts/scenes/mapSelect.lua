@@ -102,7 +102,7 @@ scene.widgetList={
             end
         end
     },
-    WIDGET.newButton{name="fresh",x=320,y=640,w=80,fText=CHAR.icon.retry_spin,color='lB',font=50,code=_freshSongList,hideF=function()return TIME()-lastFreshTime<1 end},
+    WIDGET.newButton{name="fresh",x=320,y=640,w=80,fText=CHAR.icon.retry_spin,color='lB',font=50,code=_freshSongList,hideF=function()return TIME()-lastFreshTime<2.6 end},
     WIDGET.newButton{name="play",x=640,y=640,w=140,h=80,fText=CHAR.icon.play,color='lG',font=60,code=pressKey'return'},
     WIDGET.newButton{name="back", x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
 }

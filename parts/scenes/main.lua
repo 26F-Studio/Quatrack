@@ -11,6 +11,8 @@ end
 function scene.keyDown(key)
     if key=='application'then
         SCN.go('result')
+    else
+        return true
     end
 end
 
