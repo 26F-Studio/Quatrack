@@ -35,7 +35,7 @@ function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,
 function Track:setDefaultAngle(ang)self.defaultState.ang=ang end
 function Track:setDefaultSize(kx,ky)self.defaultState.kx,self.defaultState.ky=kx,ky end
 function Track:setDefaultDropSpeed(speed)self.defaultState.dropSpeed=speed end
-function Track:setDefaultAlpha(alpha)self.defaultState.alpha=alpha end
+function Track:setDefaultAlpha(alpha)self.defaultState.alpha=MATH.interval(alpha/100,0,1)end
 
 function Track:movePosition(dx,dy)
     if not dx then dx=0 end if not dy then dy=0 end
@@ -54,7 +54,7 @@ function Track:moveDropSpeed(dds)
     self.targetState.dropSpeed=self.targetState.dropSpeed+dds
 end
 function Track:moveAlpha(da)
-    self.targetState.alpha=self.targetState.alpha+da
+    self.targetState.alpha=MATH.interval(self.targetState.alpha+da/100,0,1)
 end
 
 function Track:setPosition(x,y,force)
@@ -81,6 +81,7 @@ function Track:setDropSpeed(dropSpeed,force)
 end
 function Track:setAlpha(alpha,force)
     if not alpha then alpha=self.defaultState.alpha end
+    alpha=MATH.interval(alpha/100,0,1)
     if force then self.state.alpha=alpha end
     self.targetState.alpha=alpha
 end
