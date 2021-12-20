@@ -225,7 +225,7 @@ function scene.keyUp(key)
 end
 
 function scene.touchDown(x,y,id)
-    x,y=SCR.xOy_m:inverseTransformPoint(x,y)
+    x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
     local minD2,closestTrackID=1e99,false
     for i=1,#tracks do
         local D2=(tracks[i].state.x-x)^2+(tracks[i].state.y-y)^2
