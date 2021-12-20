@@ -166,13 +166,20 @@ local function _trigNote(deviateTime,noTailHold)
         hitOffests[27]=nil
     end
 end
+local function _trackPress(k)
+    local deviateTime=tracks[k]:press()
+    if deviateTime then _trigNote(deviateTime)end
+end
+local function _trackRelease(k)
+    local deviateTime,noTailHold=tracks[k]:release()
+    if deviateTime then _trigNote(deviateTime,noTailHold)end
+end
 function scene.keyDown(key,isRep)
     if isRep then return end
     local k=KEY_MAP[map.tracks][key]
     if k then
         if type(k)=='number'then
-            local deviateTime=tracks[k]:press()
-            if deviateTime then _trigNote(deviateTime)end
+            _trackPress(k)
         elseif k=='skip'then
             if map.finished then
                 _tryGoResult()
@@ -209,8 +216,7 @@ function scene.keyUp(key)
     local k=KEY_MAP[map.tracks][key]
     if k then
         if type(k)=='number'then
-            local deviateTime,noTailHold=tracks[k]:release()
-            if deviateTime then _trigNote(deviateTime,noTailHold)end
+            _trackRelease(k)
         end
     end
 end
@@ -258,6 +264,23 @@ function scene.update(dt)
 
     --Update tracks (check too-late miss)
     for i=1,map.tracks do
+        if kbIsDown('tab')then
+            local n=tracks[i].notes[1]
+            if n then
+                if n.type=='tap'then
+                    if time>=n.time then
+                        _trackPress(i)
+                        _trackRelease(i)
+                    end
+                elseif n.type=='hold'then
+                    if not n.pressed then
+                        if time>=n.time then _trackPress(i)end
+                    else
+                        if time>=n.etime then _trackRelease(i)end
+                    end
+                end
+            end
+        end
         tracks[i]:update(dt)
         local missCount,marvCount=tracks[i]:updateLogic(time)
         if marvCount>0 then
