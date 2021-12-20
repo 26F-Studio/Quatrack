@@ -336,28 +336,29 @@ function scene.draw()
         mStr(map.mapAuth,640,240)
     end
 
+    --Draw score & accuracy
     gc_replaceTransform(SCR.xOy_ur)
-        --Draw score & accuracy
-        gc_setColor(1,1,1)
-        setFont(40)
-        gc_printf(score,-1010,5,1000,'right')
-        setFont(30)
-        gc_printf(accText,-1010,50,1000,'right')
+    gc_setColor(1,1,1)
+    setFont(40)gc_printf(score,-1010,5,1000,'right')
+    setFont(30)gc_printf(accText,-1010,50,1000,'right')
+
+    --Draw map info
     gc_replaceTransform(SCR.xOy_dr)
-        --Draw map info
-        gc_printf(map.mapName,-1010,-55,1000,'right')
-        gc_printf(map.mapDifficulty,-1010,-90,1000,'right')
+    setFont(30)gc_printf(map.mapName,-1010,-55,1000,'right')
+    setFont(25)gc_printf(map.mapDifficulty,-1010,-85,1000,'right')
+
+    --Draw progress bar
     gc_replaceTransform(SCR.xOy_dl)
-        --Draw progress bar
-        if time>0 then
-            gc_setColor(COLOR.rainbow_light(TIME()*12.6,.8))
-            gc_rectangle('fill',0,-10,SCR.w*time/songLength,6)
-            local d=time-songLength
-            if d>0 then
-                gc_setColor(.92,.86,0,min(d,1))
-                gc_rectangle('fill',0,-10,SCR.w,6)
-            end
+    if time>0 then
+        gc_setColor(COLOR.rainbow_light(TIME()*12.6,.8))
+        gc_rectangle('fill',0,-10,SCR.w*time/songLength,6)
+        local d=time-songLength
+        if d>0 then
+            gc_setColor(.92,.86,0,min(d,1))
+            gc_rectangle('fill',0,-10,SCR.w,6)
         end
+    end
+
     gc_replaceTransform(SCR.xOy)
 end
 
