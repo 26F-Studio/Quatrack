@@ -1,4 +1,4 @@
 return{
-    ["code"]=0006,
-    ["string"]="V0.0.6",
+    ["code"]=0007,
+    ["string"]="V0.0.7",
 }
