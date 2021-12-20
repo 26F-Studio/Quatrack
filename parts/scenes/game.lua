@@ -358,7 +358,7 @@ function scene.draw()
     --Draw map info at start
     if time<0 then
         local a=3.6-2*abs(time+1.8)
-        setFont(80)
+        setFont(70)
         gc_setColor(1,1,1,a)
         mStr(map.mapName,640,100)
         gc_setColor(.7,.7,.7,a)

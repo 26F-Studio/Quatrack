@@ -13,7 +13,8 @@ function Track.new(id)
     local track={
         id=id,
         pressed=false,
-        glowTime=0,
+        lastPressTime=-1e99,
+        lastReleaseTime=-1e99,
         time=0,
         notes={},
         state={
@@ -93,7 +94,7 @@ end
 function Track:press()
     --Animation
     self.pressed=true
-    self.glowTime=.26
+    self.lastPressTime=self.time
 
     --Check first note
     local note=self.notes[1]
@@ -114,6 +115,7 @@ end
 
 function Track:release()
     self.pressed=false
+    self.lastReleaseTime=self.time
     local note=self.notes[1]
     if note and note.type=='hold'and note.pressed then--Release hold note
         rem(self.notes,1)
@@ -130,9 +132,6 @@ local expAnimations={
     'r','g','b','alpha',
 }
 function Track:update(dt)
-    if self.glowTime>0 then
-        self.glowTime=self.glowTime-dt
-    end
     local s=self.state
     for i=1,#expAnimations do
         local k=expAnimations[i]
@@ -199,9 +198,16 @@ function Track:draw(map)
     end
 
     --Draw press effect
-    if self.glowTime>0 then
-        gc_setColor(s.r,s.g,s.b,s.alpha*(self.glowTime/.26))
-        gc_rectangle('fill',-50,0,100,self.glowTime*100)
+    if self.pressed then
+        gc_setColor(s.r,s.g,s.b,s.alpha*.626)
+        gc_rectangle('fill',-50,0,100,20)
+    else
+        local rT=self.time-self.lastReleaseTime
+        if rT<.26 then
+            local pressH=1-rT/.26
+            gc_setColor(s.r,s.g,s.b,s.alpha*pressH*.626)
+            gc_rectangle('fill',-50,0,100,pressH*20)
+        end
     end
 
     --Draw notes
