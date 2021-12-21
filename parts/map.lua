@@ -1,7 +1,7 @@
 math.randomseed("123")
 local Note=require'parts.note'
 
-local int,rnd=math.floor,math.random
+local rnd=math.random
 local ins,rem=table.insert,table.remove
 
 local Map={}
@@ -85,7 +85,7 @@ function Map.new(file)
 
     --Parse notes & animations
     local curTime,curBPM=0,180
-    local loopMark,loopEnd,loopCountDown
+    local loopStack={}
     local longBarState=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
     local trackDir={}for i=1,o.tracks do trackDir[i]=i end
@@ -111,7 +111,7 @@ function Map.new(file)
                 math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
             end
         elseif str:sub(1,1)==':'then--Time mark
-            _syntaxCheck(not loopMark,"Cannot set time in loop")
+            _syntaxCheck(not loopStack[1],"Cannot set time in loop")
 
             local stamp=str:sub(2):split(":")
             if #stamp==1 then ins(stamp,1,"0")end
@@ -232,30 +232,32 @@ function Map.new(file)
             _syntaxCheck(len>=4 and len<=10,"Invalid repeat mark length")
 
             if str:sub(1,1)=='S'then
-                _syntaxCheck(not loopMark,"Cannot start another loop in a loop")
-                loopMark=line
-                if str:sub(2)==''then
-                    loopCountDown=1
-                else
-                    loopCountDown=tonumber(str:sub(2))
-                    _syntaxCheck(loopCountDown>=2 and int(loopCountDown)==loopCountDown,"Invalid loop count")
-                    loopCountDown=loopCountDown-1
+                local cd=1
+                if str:sub(2)~=''then
+                    cd=tonumber(str:sub(2))
+                    _syntaxCheck(cd>=2 and cd%1==0,"Invalid loop count")
+                    cd=cd-1
                 end
+                ins(loopStack,{
+                    countDown=cd,
+                    startMark=line,
+                    endMark=false,
+                })
             elseif str=='E'then
-                _syntaxCheck(loopMark,"Cannot end a loop without start one")
-                if loopCountDown>0 then
-                    loopEnd=line
-                    loopCountDown=loopCountDown-1
-                    line=loopMark
+                _syntaxCheck(loopStack[1],"No loop to end")
+                local curState=loopStack[#loopStack]
+                if curState.countDown>0 then
+                    curState.endMark=line
+                    curState.countDown=curState.countDown-1
+                    line=curState.startMark
                 else
-                    loopMark=nil
-                    loopCountDown=nil
+                    rem(loopStack)
                 end
             elseif str=='M'then
-                if loopCountDown==0 then
-                    loopMark=nil
-                    loopCountDown=nil
-                    line=loopEnd
+                _syntaxCheck(loopStack[1],"No loop to break")
+                if loopStack[#loopStack].countDown==0 then
+                    line=loopStack[#loopStack].endMark
+                    rem(loopStack)
                 end
             else
                 _syntaxCheck(false,"Invalid repeat mark")
