@@ -201,6 +201,22 @@ function Map.new(file)
                     operation=opType.."Alpha",
                     args={data[2],false},
                 }
+            elseif op=='C'then--Color
+                _syntaxCheck(#data<=2,"Too many arguments")
+                local r,g,b
+                if data[2]==''then
+                    r,g,b=1,1,1
+                else
+                    _syntaxCheck(not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6,"Wrong color code")
+                    r,g,b=STRING.hexColor(data[2])
+                end
+                event={
+                    type="setTrack",
+                    time=curTime,
+                    track=id,
+                    operation=opType.."Color",
+                    args={r,g,b,false},
+                }
             elseif op=='A'then--Available
                 _syntaxCheck(opType=='set'and #data<=2 or opType=='move'and #data<=2,"Too many arguments")
                 if data[2]=='1'then

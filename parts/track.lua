@@ -39,6 +39,7 @@ function Track:setDefaultSize(kx,ky)self.defaultState.kx,self.defaultState.ky=kx
 function Track:setDefaultDropSpeed(speed)self.defaultState.dropSpeed=speed end
 function Track:setDefaultAlpha(alpha)self.defaultState.alpha=MATH.interval(alpha/100,0,1)end
 function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
+function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=MATH.interval(r,0,1),MATH.interval(g,0,1),MATH.interval(b,0,1) end
 
 function Track:movePosition(dx,dy)
     if not dx then dx=0 end if not dy then dy=0 end
@@ -61,6 +62,11 @@ function Track:moveAlpha(da)
 end
 function Track:moveAvailable()
     self:setAvailable(not self.targetState.available)
+end
+function Track:moveColor(dr,dg,db)
+    self.targetState.r=MATH.interval(self.targetState.r+(dr or 0),0,1)
+    self.targetState.g=MATH.interval(self.targetState.g+(dg or 0),0,1)
+    self.targetState.b=MATH.interval(self.targetState.b+(db or 0),0,1)
 end
 
 function Track:setPosition(x,y,force)
@@ -98,6 +104,13 @@ function Track:setAvailable(bool)
         self.pressed=false
         self.lastReleaseTime=self.time
     end
+end
+function Track:setColor(r,g,b,force)
+    if not r then r=self.defaultState.r end
+    if not g then g=self.defaultState.g end
+    if not b then b=self.defaultState.b end
+    if force then self.state.r,self.state.g,self.state.b=r,g,b end
+    self.targetState.r,self.targetState.g,self.targetState.b=r,g,b
 end
 
 function Track:addNote(note)
