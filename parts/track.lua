@@ -156,11 +156,13 @@ local expAnimations={
     'dropSpeed',
     'r','g','b','alpha',
 }
+local approach=MATH.expApproach
 function Track:update(dt)
     local s=self.state
+    local d=dt*12
     for i=1,#expAnimations do
         local k=expAnimations[i]
-        s[k]=s[k]+(self.targetState[k]-s[k])*dt^.5
+        s[k]=approach(s[k],self.targetState[k],d)
     end
 end
 
