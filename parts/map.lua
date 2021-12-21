@@ -190,6 +190,19 @@ function Map.new(file)
                     operation=opType.."Alpha",
                     args={data[2],false},
                 }
+            elseif op=='A'then--Available
+                _syntaxCheck(opType=='set'and #data<=2 or opType=='move'and #data<=2,"Too many arguments")
+                if opType=='set'then
+                    _syntaxCheck(data[2]=='0'or data[2]=='1',"Invalid argument")
+                end
+                data[2]=data[2]=='1'
+                event={
+                    type="setTrack",
+                    time=curTime,
+                    track=id,
+                    operation=opType.."Available",
+                    args={data[2],false},
+                }
             else
                 _syntaxCheck(false,"Invalid track operation")
             end

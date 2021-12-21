@@ -151,12 +151,16 @@ local function _trigNote(deviateTime,noTailHold)
     end
 end
 local function _trackPress(k)
-    local deviateTime=tracks[k]:press()
-    if deviateTime then _trigNote(deviateTime)end
+    if tracks[k].state.available then
+        local deviateTime=tracks[k]:press()
+        if deviateTime then _trigNote(deviateTime)end
+    end
 end
 local function _trackRelease(k)
-    local deviateTime,noTailHold=tracks[k]:release()
-    if deviateTime then _trigNote(deviateTime,noTailHold)end
+    if tracks[k].state.available then
+        local deviateTime,noTailHold=tracks[k]:release()
+        if deviateTime then _trigNote(deviateTime,noTailHold)end
+    end
 end
 function scene.keyDown(key,isRep)
     if isRep then return end

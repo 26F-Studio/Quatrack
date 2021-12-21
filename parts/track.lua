@@ -23,6 +23,7 @@ function Track.new(id)
             kx=1,ky=1,
             dropSpeed=1000,
             r=1,g=1,b=1,alpha=1,
+            available=true,
         },
         defaultState=false,
         targetState=false,
@@ -37,6 +38,7 @@ function Track:setDefaultAngle(ang)self.defaultState.ang=ang end
 function Track:setDefaultSize(kx,ky)self.defaultState.kx,self.defaultState.ky=kx,ky end
 function Track:setDefaultDropSpeed(speed)self.defaultState.dropSpeed=speed end
 function Track:setDefaultAlpha(alpha)self.defaultState.alpha=MATH.interval(alpha/100,0,1)end
+function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
 
 function Track:movePosition(dx,dy)
     if not dx then dx=0 end if not dy then dy=0 end
@@ -56,6 +58,9 @@ function Track:moveDropSpeed(dds)
 end
 function Track:moveAlpha(da)
     self.targetState.alpha=MATH.interval(self.targetState.alpha+da/100,0,1)
+end
+function Track:moveAvailable()
+    self:setAvailable(not self.targetState.available)
 end
 
 function Track:setPosition(x,y,force)
@@ -80,11 +85,19 @@ function Track:setDropSpeed(dropSpeed,force)
     if force then self.state.dropSpeed=dropSpeed end
     self.targetState.dropSpeed=dropSpeed
 end
-function Track:setAlpha(alpha,force)print(alpha)
+function Track:setAlpha(alpha,force)
     if not alpha then alpha=self.defaultState.alpha*100 end
     alpha=MATH.interval(alpha/100,0,1)
     if force then self.state.alpha=alpha end
     self.targetState.alpha=alpha
+end
+function Track:setAvailable(bool)
+    if bool==nil then bool=self.defaultState.available end
+    self.state.available=bool
+    if not self.state.available and self.pressed then
+        self.pressed=false
+        self.lastReleaseTime=self.time
+    end
 end
 
 function Track:addNote(note)
