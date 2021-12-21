@@ -86,11 +86,18 @@ end
 --Init Zframework
 do--Z.setCursor
     local gc=love.graphics
+    local sin,cos=math.sin,math.cos
     Z.setCursor(function(_,x,y)
         if not SETTING.sysCursor then
             gc.setColor(1,1,1)
+            gc.circle('line',x,y,10)
+            if love.mouse.isDown(1) then gc.circle('fill',x,y,6)end
+            gc.setColor(1,1,1,.626)
             gc.setLineWidth(2)
-            gc.circle(love.mouse.isDown(1)and'fill'or'line',x,y,6)
+            local angle=TIME()
+            local s,c=sin(angle),cos(angle)
+            gc.line(x-20*c,y-20*s,x+20*c,y+20*s)
+            gc.line(x+20*s,y-20*c,x-20*s,y+20*c)
         end
     end)
 end
