@@ -1,6 +1,6 @@
 local gc=love.graphics
 
-local max,min=math.max,math.min
+local min=math.min
 local ins=table.insert
 
 local listBox=WIDGET.newListBox{name='sel',x=60,y=80,w=1160,h=480,lineH=40,drawF=function(v,_,sel)
@@ -74,8 +74,7 @@ function scene.sceneInit()
     listBox:setList(mapList)
 end
 
-function scene.keyDown(key,isRep)
-    if isRep then return end
+function scene.keyDown(key)
     if key=='return'then
         local map,errmsg=loadBeatmap(listBox:getSel().path)
         if map then
