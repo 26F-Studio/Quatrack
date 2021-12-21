@@ -96,9 +96,20 @@ function Map.new(file)
         SCline,SCstr=fileData[line][1],str--For assertion
 
         if str:sub(1,1)=='!'then--BPM mark
-            local bpm=tonumber(str:sub(2))
-            _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
-            curBPM=bpm
+            if str:sub(2,2)=='+'or str:sub(2,2)=='-'then
+                local bpm_add=str:sub(3)
+                _syntaxCheck(type(bpm_add)=='number',"Invalid BPM mark")
+                curBPM=curBPM+bpm_add
+            elseif str:sub(2,2)=='-'then
+                local bpm_sub=str:sub(3)
+                _syntaxCheck(type(bpm_sub)=='number',"Invalid BPM mark")
+                _syntaxCheck(bpm_sub<curBPM,"Decrease BPM too much")
+                curBPM=curBPM-bpm_sub
+            else
+                local bpm=tonumber(str:sub(2))
+                _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
+                curBPM=bpm
+            end
         elseif str:sub(1,1)=='@'then--Random seed mark
             if str:sub(2)==''then
                 math.randomseed(love.timer.getTime())
