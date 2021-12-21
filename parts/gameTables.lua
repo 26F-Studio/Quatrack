@@ -31,18 +31,19 @@ hitTexts={
     'MARV'
 }
 hitAccList={
-    -80,--OK
-    0,  --GOOD
-    60, --GREAT
-    99, --PERF
-    100,--MARV
+    -100,--OK
+    -20, --GOOD
+    60,  --GREAT
+    98,  --PERF
+    100, --MARV
 }
-hitLVOffsets={--Only for deviation drawing
-    {.12,.16},
-    {.08,.12},
-    {.05,.08},
-    {.03,.05},
-    {0,.03},
+hitLVOffsets={--Time judgement
+    .16,
+    .12,
+    .08,
+    .05,
+    .03,
+    0,
 }
 chainColors={
     [0]=COLOR.dH,

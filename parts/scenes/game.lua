@@ -25,11 +25,11 @@ local chainColors=chainColors
 local function _getHitLV(div)
     div=abs(div)
     return
-    div<=.03 and 5 or
-    div<=.05 and 4 or
-    div<=.08 and 3 or
-    div<=.12 and 2 or
-    div<=.16 and 1 or
+    div<=hitLVOffsets[5]and 5 or
+    div<=hitLVOffsets[4]and 4 or
+    div<=hitLVOffsets[3]and 3 or
+    div<=hitLVOffsets[2]and 2 or
+    div<=hitLVOffsets[1]and 1 or
     0
 end
 
@@ -345,10 +345,11 @@ function scene.draw()
     gc_setColor(1,1,1)gc_rectangle('fill',640-1,350-15,2,34)
     for i=1,5 do
         local c=hitColors[i]
-        local d=hitLVOffsets[i]
+        local d1=hitLVOffsets[i]
+        local d2=hitLVOffsets[i+1]
         gc_setColor(c[1]*.8+.3,c[2]*.8+.3,c[3]*.8+.3,.626)
-        gc_rectangle('fill',640-d[1]*700,350,(d[1]-d[2])*700,4)
-        gc_rectangle('fill',640+d[1]*700,350,(d[2]-d[1])*700,4)
+        gc_rectangle('fill',640-d1*700,350,(d1-d2)*700,4)
+        gc_rectangle('fill',640+d1*700,350,(d2-d1)*700,4)
     end
 
     --Draw deviate times
