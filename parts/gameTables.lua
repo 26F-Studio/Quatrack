@@ -15,11 +15,11 @@ mapMetaKeyMap={}for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
 hitColors={
     [-1]=COLOR.dRed,
     [0]=COLOR.dRed,
-    COLOR.lWine,
-    COLOR.lGreen,
-    COLOR.lBlue,
+    COLOR.lViolet,
+    COLOR.lSea,
     COLOR.lOrange,
-    COLOR.lH,
+    COLOR.lGray,
+    COLOR.white,
 }
 hitTexts={
     [-1]="MISS",
@@ -31,26 +31,26 @@ hitTexts={
     'MARV'
 }
 hitAccList={
-    -5, --OK
-    2,  --GOOD
-    6,  --GREAT
-    10, --PERF
-    10, --MARV
+    -80,--OK
+    0,  --GOOD
+    60, --GREAT
+    99, --PERF
+    100,--MARV
 }
 hitLVOffsets={--Only for deviation drawing
-    {.10,.14},
-    {.07,.10},
-    {.04,.07},
-    {.02,.04},
-    {0,.02},
+    {.12,.16},
+    {.08,.12},
+    {.05,.08},
+    {.03,.05},
+    {0,.03},
 }
 chainColors={
     [0]=COLOR.dH,
-    COLOR.wine,
-    COLOR.green,
-    COLOR.blue,
-    COLOR.orange,
-    COLOR.orange,
+    COLOR.navy,
+    COLOR.lSea,
+    COLOR.lOrange,
+    COLOR.lX,
+    COLOR.lX,
 }
 do--Userdata tables
     KEY_MAP={

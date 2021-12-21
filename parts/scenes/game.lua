@@ -25,11 +25,11 @@ local chainColors=chainColors
 local function _getHitLV(div)
     div=abs(div)
     return
-    div<=.02 and 5 or
-    div<=.04 and 4 or
-    div<=.07 and 3 or
-    div<=.10 and 2 or
-    div<=.14 and 1 or
+    div<=.03 and 5 or
+    div<=.05 and 4 or
+    div<=.08 and 3 or
+    div<=.12 and 2 or
+    div<=.16 and 1 or
     0
 end
 
@@ -121,7 +121,7 @@ end
 
 local function _trigNote(deviateTime,noTailHold)
     hitTextTime=TIME()
-    fullAcc=fullAcc+10
+    fullAcc=fullAcc+100
     hitLV=_getHitLV(deviateTime)
     if hitLV>0 and noTailHold then hitLV=5 end
     bestChain=min(bestChain,hitLV)
@@ -297,7 +297,7 @@ function scene.update(dt)
         if missCount>0 then
             hitTextTime=TIME()
             hitLV=-1
-            fullAcc=fullAcc+10*missCount
+            fullAcc=fullAcc+100*missCount
             _updateAcc()
             if combo>=10 then SFX.play('combobreak')end
             combo=0
