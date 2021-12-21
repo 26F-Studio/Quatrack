@@ -1,4 +1,3 @@
-math.randomseed("123")
 local Note=require'parts.note'
 
 local rnd=math.random
@@ -68,10 +67,10 @@ function Map.new(file)
         local str=fileData[1][2]
         SCline,SCstr=fileData[1][1],str
         if str:sub(1,1)=='$'then
-            local k=str:sub(2,str:find("=")-1)
+            local k=str:sub(2,str:find('=')-1)
             _syntaxCheck(TABLE.find(mapMetaKeys,k),"Invalid map info key '"..k.."'")
-            _syntaxCheck(str:find("="),"Syntax error (need '=')")
-            o[k]=str:sub(str:find("=")+1)
+            _syntaxCheck(str:find('='),"Syntax error (need '=')")
+            o[k]=str:sub(str:find('=')+1)
             rem(fileData,1)
         else
             break
@@ -298,7 +297,7 @@ function Map.new(file)
                 for i=1,o.tracks do l[i]=trackDir[i]end
                 for i=1,o.tracks do trackDir[i]=rem(l,rnd(#l))end
             else--Redirect tracks from presets
-                local argList=str:sub(2):split(",")
+                local argList=str:sub(2):split(',')
                 for i=1,#argList do
                     _syntaxCheck(#argList[i]==o.tracks,"Illegal redirection (track count)")
                     _syntaxCheck(not argList[i]:find('[^1-9a-zA-Z]'),"Illegal redirection (track number)")

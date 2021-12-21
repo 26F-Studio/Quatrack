@@ -6,6 +6,7 @@ local gc_rectangle=gc.rectangle
 
 local max=math.max
 local rem=table.remove
+local MATH=MATH
 
 local Track={}
 
@@ -42,17 +43,15 @@ function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
 function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=MATH.interval(r,0,1),MATH.interval(g,0,1),MATH.interval(b,0,1) end
 
 function Track:movePosition(dx,dy)
-    if not dx then dx=0 end if not dy then dy=0 end
-    self.targetState.x=self.targetState.x+dx
-    self.targetState.y=self.targetState.y+dy
+    self.targetState.x=self.targetState.x+(dx or 0)
+    self.targetState.y=self.targetState.y+(dy or 0)
 end
 function Track:moveAngle(da)
     self.targetState.ang=self.targetState.ang+da/57.29577951308232
 end
 function Track:moveSize(kx,ky)
-    if not kx then kx=1 end if not ky then ky=1 end
-    self.targetState.kx=self.targetState.kx*kx
-    self.targetState.ky=self.targetState.ky*ky
+    self.targetState.kx=self.targetState.kx+(kx or 0)
+    self.targetState.ky=self.targetState.ky+(ky or 0)
 end
 function Track:moveDropSpeed(dds)
     self.targetState.dropSpeed=self.targetState.dropSpeed+dds
