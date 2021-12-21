@@ -13,7 +13,7 @@ local unpack=unpack
 local max,min=math.max,math.min
 local sin,cos=math.sin,math.cos
 
-local int,abs=math.floor,math.abs
+local int,ceil,abs=math.floor,math.ceil,math.abs
 local ins,rem=table.insert,table.remove
 
 local hitColors=hitColors
@@ -306,10 +306,9 @@ function scene.update(dt)
         end
     end
 
-    --Update score animation
+    --Update displaying score
     if score<score0 then
-        score=int(score*.7+score0*.3)
-        if score<score0 then score=score+1 end
+        score=score+(score0-score)*dt^.26
     end
 end
 
@@ -374,7 +373,7 @@ function scene.draw()
     --Draw score & accuracy
     gc_replaceTransform(SCR.xOy_ur)
     gc_setColor(1,1,1)
-    setFont(60)gc_printf(score,-1010,-10,1000,'right')
+    setFont(60)gc_printf(ceil(score),-1010,-10,1000,'right')
     setFont(40)gc_printf(accText,-1010,50,1000,'right')
 
     --Draw map info
