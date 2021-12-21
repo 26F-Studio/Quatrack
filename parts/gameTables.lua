@@ -49,8 +49,8 @@ chainColors={
     COLOR.navy,
     COLOR.lSea,
     COLOR.lOrange,
-    COLOR.lX,
-    COLOR.lX,
+    COLOR.lYellow,
+    COLOR.lYellow,
 }
 do--Userdata tables
     KEY_MAP={
