@@ -110,6 +110,14 @@ Z.setOnFnKeys({
     function()for k,v in next,_G do print(k,v)end end,
     function()if love["_openConsole"]then love["_openConsole"]()end end,
 })
+Z.setOnFocus(function(f)
+    if f then
+        applyFPS()
+    elseif SETTING.slowUnfocus then
+        Z.setMaxFPS(20)
+        Z.setFrameMul(100)
+    end
+end)
 
 --Load settings and statistics
 TABLE.update(loadFile('conf/settings','-canSkip')or{},SETTING)

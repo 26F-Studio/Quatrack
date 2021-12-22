@@ -83,6 +83,7 @@ do--Userdata tables
         --System
         sysCursor=false,
         locale='zh',
+        slowUnfocus=true,
 
         --Game
         musicDelay=260,

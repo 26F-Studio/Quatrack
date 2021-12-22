@@ -109,8 +109,6 @@ do--function applySettings()
         BGM.setVol(SETTING.bgm)
         SFX.setVol(SETTING.sfx)
         VOC.setVol(SETTING.voc)
-        Z.setMaxFPS(SETTING.maxFPS)
-        Z.setFrameMul(SETTING.frameMul)
 
         --Apply language
         text=LANG.get(SETTING.locale)
@@ -149,6 +147,15 @@ do--function applySettings()
                 BG.lock()
             end
         end
+    end
+end
+function applyFPS()
+    if SCN.cur=='game'then
+        Z.setMaxFPS(SETTING.maxFPS)
+        Z.setFrameMul(SETTING.frameMul)
+    else
+        Z.setMaxFPS(math.min(SETTING.maxFPS,90))
+        Z.setFrameMul(SETTING.frameMul)
     end
 end
 
