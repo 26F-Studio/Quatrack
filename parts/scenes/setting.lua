@@ -37,11 +37,12 @@ scene.widgetList={
     WIDGET.newSlider{name='sfx',        x=200, y=570,w=420,lim=140,disp=SETval('sfx'),     code=function(v)SETTING.sfx=v SFX.setVol(SETTING.sfx)end},
     WIDGET.newSlider{name='stereo',     x=200, y=630,w=420,lim=140,disp=SETval('stereo'),  code=function(v)SETTING.stereo=v SFX.setStereo(SETTING.stereo)end,hideF=function()return SETTING.sfx==0 end},
 
-    WIDGET.newSwitch{name='sysCursor',  x=1100,y=120,lim=360,disp=SETval('sysCursor'),     code=function()SETTING.sysCursor=not SETTING.sysCursor applySettings()end},
+    WIDGET.newSwitch{name='sysCursor',  x=1100,y=140,lim=360,disp=SETval('sysCursor'),     code=function()SETTING.sysCursor=not SETTING.sysCursor applySettings()end},
     WIDGET.newSwitch{name='clickFX',    x=1100,y=200,lim=360,disp=SETval('clickFX'),       code=function()SETTING.clickFX=not SETTING.clickFX applySettings()end},
-    WIDGET.newSwitch{name='power',      x=1100,y=280,lim=360,disp=SETval('powerInfo'),     code=function()SETTING.powerInfo=not SETTING.powerInfo applySettings()end},
-    WIDGET.newSwitch{name='clean',      x=1100,y=360,lim=360,disp=SETval('cleanCanvas'),   code=function()SETTING.cleanCanvas=not SETTING.cleanCanvas applySettings()end},
-    WIDGET.newSwitch{name='fullscreen', x=1100,y=440,lim=360,disp=SETval('fullscreen'),    code=function()SETTING.fullscreen=not SETTING.fullscreen applySettings()end},
+    WIDGET.newSwitch{name='power',      x=1100,y=260,lim=360,disp=SETval('powerInfo'),     code=function()SETTING.powerInfo=not SETTING.powerInfo applySettings()end},
+    WIDGET.newSwitch{name='clean',      x=1100,y=320,lim=360,disp=SETval('cleanCanvas'),   code=function()SETTING.cleanCanvas=not SETTING.cleanCanvas applySettings()end},
+    WIDGET.newSwitch{name='fullscreen', x=1100,y=380,lim=360,disp=SETval('fullscreen'),    code=function()SETTING.fullscreen=not SETTING.fullscreen applySettings()end},
+    WIDGET.newSwitch{name='slowUnfocus',x=1100,y=440,lim=360,disp=SETval('slowUnfocus'),   code=SETrev('slowUnfocus')},
 
     WIDGET.newSlider{name='maxFPS',     x=860,y=500,w=360,lim=180,unit=10,disp=function()return(SETTING.maxFPS-60)/30 end, show=sliderShow_fps,code=function(v)SETTING.maxFPS=v*30+60 applyFPS()end},
     WIDGET.newSlider{name='frameMul',   x=860,y=560,w=360,lim=180,unit=8,disp=function()return(SETTING.frameMul-20)/10 end,show=sliderShow_mul,code=function(v)SETTING.frameMul=v*10+20 applyFPS()end},

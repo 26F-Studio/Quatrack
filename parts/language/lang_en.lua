@@ -85,6 +85,7 @@ return{
             power="Battery Info",
             clean="Quick Draw",
             fullscreen="Fullscreen",
+            slowUnfocus="Slow when unfocused",
 
             maxFPS="Max FPS",
             frameMul="Frame draw rate",
