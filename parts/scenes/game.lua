@@ -22,6 +22,8 @@ local hitAccList=hitAccList
 local hitLVOffsets=hitLVOffsets
 local chainColors=chainColors
 
+local needSaveDropSpeed
+
 local function _getHitLV(div)
     div=abs(div)
     return
@@ -105,6 +107,8 @@ function scene.sceneInit()
 
     hitLV,hitTextTime=false,1e-99
 
+    needSaveDropSpeed=false
+
     touches={}
 
     tracks={}
@@ -129,6 +133,10 @@ local function _trigNote(deviateTime,noTailHold)
     if hitLV>0 then
         curAcc=curAcc+hitAccList[hitLV]
         score0=score0+int(hitLV*(10000+combo)^.5)
+        if needSaveDropSpeed then
+            saveSettings()
+            needSaveDropSpeed=false
+        end
         combo=combo+1
         if combo>maxCombo then
             maxCombo=combo
@@ -185,6 +193,7 @@ function scene.keyDown(key,isRep)
             if score0==0 then
                 SETTING.dropSpeed=max(SETTING.dropSpeed-1,0)
                 MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
+                needSaveDropSpeed=true
             else
                 MES.new('warn',text.cannotAdjustDropSpeed,0)
             end
@@ -192,6 +201,7 @@ function scene.keyDown(key,isRep)
             if score0==0 then
                 SETTING.dropSpeed=min(SETTING.dropSpeed+1,16)
                 MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
+                needSaveDropSpeed=true
             else
                 MES.new('warn',text.cannotAdjustDropSpeed,0)
             end
