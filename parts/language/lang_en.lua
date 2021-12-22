@@ -18,8 +18,8 @@ return{
     pauseCount="Pauses",
     chainTexts={
         "NO BREAK",
-        "ALL COMBO",
-        "Full COMBO",
+        "NO BREAK+",
+        "PERFECT",
         "ALL PERFECT",
         "MARVELOUS",
     },

@@ -47,9 +47,9 @@ hitLVOffsets={--Time judgement
 }
 chainColors={
     [0]=COLOR.dH,
-    COLOR.navy,
     COLOR.lSea,
-    COLOR.lOrange,
+    COLOR.lSea,
+    COLOR.lFire,
     COLOR.lYellow,
     COLOR.lYellow,
 }
