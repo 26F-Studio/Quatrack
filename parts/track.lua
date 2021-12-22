@@ -49,9 +49,9 @@ end
 function Track:moveAngle(da)
     self.targetState.ang=self.targetState.ang+da/57.29577951308232
 end
-function Track:moveSize(kx,ky)
-    self.targetState.kx=self.targetState.kx+(kx or 0)
-    self.targetState.ky=self.targetState.ky+(ky or 0)
+function Track:moveSize(dkx,dky)
+    self.targetState.kx=self.targetState.kx+(dkx or 0)
+    self.targetState.ky=self.targetState.ky+(dky or 0)
 end
 function Track:moveDropSpeed(dds)
     self.targetState.dropSpeed=self.targetState.dropSpeed+dds
@@ -59,7 +59,7 @@ end
 function Track:moveAlpha(da)
     self.targetState.alpha=MATH.interval(self.targetState.alpha+da/100,0,1)
 end
-function Track:moveAvailable()
+function Track:moveAvailable()--wtf
     self:setAvailable(not self.targetState.available)
 end
 function Track:moveColor(dr,dg,db)
@@ -159,10 +159,11 @@ local expAnimations={
 local approach=MATH.expApproach
 function Track:update(dt)
     local s=self.state
+    local t=self.targetState
     local d=dt*12
     for i=1,#expAnimations do
         local k=expAnimations[i]
-        s[k]=approach(s[k],self.targetState[k],d)
+        s[k]=approach(s[k],t[k],d)
     end
 end
 
