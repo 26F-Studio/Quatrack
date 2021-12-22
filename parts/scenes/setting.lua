@@ -44,8 +44,8 @@ scene.widgetList={
     WIDGET.newSwitch{name='fullscreen', x=1100,y=380,lim=360,disp=SETval('fullscreen'),    code=function()SETTING.fullscreen=not SETTING.fullscreen applySettings()end},
     WIDGET.newSwitch{name='slowUnfocus',x=1100,y=440,lim=360,disp=SETval('slowUnfocus'),   code=SETrev('slowUnfocus')},
 
-    WIDGET.newSlider{name='maxFPS',     x=860,y=500,w=360,lim=180,unit=10,disp=function()return(SETTING.maxFPS-60)/30 end, show=sliderShow_fps,code=function(v)SETTING.maxFPS=v*30+60 applyFPS()end},
-    WIDGET.newSlider{name='frameMul',   x=860,y=560,w=360,lim=180,unit=8,disp=function()return(SETTING.frameMul-20)/10 end,show=sliderShow_mul,code=function(v)SETTING.frameMul=v*10+20 applyFPS()end},
+    WIDGET.newSlider{name='maxFPS',     x=860,y=500,w=360,lim=180,unit=10,disp=function()return(SETTING.maxFPS-60)/30 end, show=sliderShow_fps,code=function(v)SETTING.maxFPS=v*30+60 applyFPS(false)end},
+    WIDGET.newSlider{name='frameMul',   x=860,y=560,w=360,lim=180,unit=8,disp=function()return(SETTING.frameMul-20)/10 end,show=sliderShow_mul,code=function(v)SETTING.frameMul=v*10+20 applyFPS(false)end},
 
     WIDGET.newButton{name='back',x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
 }

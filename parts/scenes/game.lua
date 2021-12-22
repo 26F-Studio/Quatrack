@@ -117,10 +117,13 @@ function scene.sceneInit()
         tracks[id]:setDefaultPosition(70*(2*id-map.tracks-1),320)
         tracks[id]:setPosition(nil,nil,true)
     end
+
+    applyFPS(true)
 end
 
 function scene.sceneBack()
     BGM.stop()
+    applyFPS(false)
 end
 
 local function _trigNote(deviateTime,noTailHold)

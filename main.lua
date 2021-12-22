@@ -112,7 +112,7 @@ Z.setOnFnKeys({
 })
 Z.setOnFocus(function(f)
     if f then
-        applyFPS()
+        applyFPS(SCN.cur=='game')
     elseif SETTING.slowUnfocus then
         Z.setMaxFPS(20)
         Z.setFrameMul(100)

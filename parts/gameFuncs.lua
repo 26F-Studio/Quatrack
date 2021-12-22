@@ -149,8 +149,8 @@ do--function applySettings()
         end
     end
 end
-function applyFPS()
-    if SCN.cur=='game'then
+function applyFPS(inGame)
+    if inGame then
         Z.setMaxFPS(SETTING.maxFPS)
         Z.setFrameMul(SETTING.frameMul)
     else
