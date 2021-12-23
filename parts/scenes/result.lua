@@ -31,6 +31,18 @@ function scene.sceneInit()
     }
     results.mapName=gc.newText(getFont(80,'mono'),results.map.mapName)
     results.mapDifficulty=gc.newText(getFont(30,'mono'),results.map.mapDifficulty)
+    local acc=tonumber(results.accText:sub(1,-2))
+    results.rank=gc.newText(getFont(100,'mono'),
+        acc==101 and'X'or
+        acc>=100 and'U'or
+        acc>=97 and'S'or
+        acc>=94 and'A'or
+        acc>=90 and'B'or
+        acc>=85 and'C'or
+        acc>=80 and'D'or
+        acc>=70 and'E'or
+        'F'
+    )
 
     BGM.play('result')
     BG.set()
@@ -55,63 +67,70 @@ end
 
 local _stencilX
 local function _marvStencil()
-    gc.rectangle('fill',_stencilX,175,100,50)
+    gc.rectangle('fill',_stencilX,210,100,100)
 end
 function scene.draw()
     gc.setColor(COLOR.Z)
     gc.push('transform')
-        gc.translate(640,150)
+        gc.translate(640,100)
         gc.scale(min(900/results.mapName:getWidth(),1))
-        posterizedDraw(results.mapName,0,0)
+        mText(results.mapName,0,0)
     gc.pop()
-    posterizedDraw(results.mapDifficulty,640,200)
+    mText(results.mapDifficulty,640,200)
 
     gc.push('transform')
     gc.translate(240,255)
 
     --Draw score & accuracy & combo
     gc.setColor(COLOR.Z)
+    gc.push('transform')
+    gc.scale(2.2)
+    posterizedDraw(results.rank,28,48)
+    gc.pop()
     setFont(60)
-    gc.print(results.score,0,0)
+    gc.print(results.score,140,0)
     setFont(50)
-    gc.print(results.accText,0,60)
+    gc.print(results.accText,140,60)
     setFont(15)
-    gc.print(results.averageDeviate,5,120)
+    gc.print(results.averageDeviate,145,120)
     setFont(40)
-    gc.print(results.maxCombo.."x",0,245)
+    gc.print(results.maxCombo.."x",140,135)
 
     --Draw trophy
     if results.bestChain>0 then
         local t=TIME()
         local c=results.bestChain
         local trophy=text.chainTexts[c]
-        setFont(55)
+        setFont(80)
+        local clr=chainColors[c]
+        for i=0,420,10 do
+            gc.setColor(clr[1],clr[2],clr[3],.45-(i/1000))
+            gc.rectangle('fill',i,215,10,70)
+        end
+        gc.setColor(clr)
         if c==1 then
-            gc.setColor(chainColors[c])
-            gc.print(trophy,0,160)
+            gc.print(trophy,0,195)
             gc.setColor(1,1,1,.626)
-            gc.print(trophy,0,160)
+            gc.print(trophy,0,195)
         elseif c==2 then
-            gc.setColor(chainColors[c])
-            gc.print(trophy,0,160)
+            gc.print(trophy,0,195)
             gc.setColor(1,1,1,.626+.0626*sin(t*62.6))
-            gc.print(trophy,0,160)
+            gc.print(trophy,0,195)
         elseif c==3 then
-            gc.setColor(chainColors[3])
-            gc.print(trophy,0,160)
+            gc.print(trophy,0,195)
             gc.setColor(1,1,1,.85+.15*sin(t*62.6))
-            gc.print(trophy,0,160)
+            gc.print(trophy,0,195)
         elseif c>=4 then
             for i=0,10 do
                 _stencilX=100*i
                 gc.stencil(_marvStencil,'replace',1)
                 gc.setStencilTest('equal',1)
-                gc.setColor(COLOR.rainbow_light(t*(c==4 and 2.6 or 6.26)-i))
-                gc.print(trophy,sin(t*355)*((c==4 and 1.26 or 2.6)+.6*sin(t*.626)),160+1.6*sin(t*260))
+                gc.setColor(COLOR.rainbow(t*(c==4 and 2.6 or 6.26)-i))
+                gc.print(trophy,sin(t*355)*((c==4 and 1 or 2.6)+.6*sin(t*.626)),195+1.6*sin(t*260))
                 gc.setStencilTest()
             end
             gc.setColor(1,1,1,.9)
-            gc.print(trophy,0,160)
+            gc.print(trophy,0,195)
         end
     end
     gc.pop()
