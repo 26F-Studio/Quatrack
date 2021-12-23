@@ -81,6 +81,7 @@ return{
             holdAlpha="长条不透明度",
             holdWidth="长条宽度",
             scaleX="X轴缩放",
+            trackW="轨道宽度缩放",
 
             sysCursor="使用系统光标",
             clickFX="点按特效",

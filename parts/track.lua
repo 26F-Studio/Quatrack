@@ -210,7 +210,7 @@ function Track:draw(map)
     --Set coordinate for single track
     gc_translate(s.x*SETTING.scaleX,s.y)
     gc_rotate(s.ang)
-    gc_scale(s.kx,s.ky)
+    gc_scale(s.kx*SETTING.trackW,s.ky)
 
     --Draw track line
     gc_setColor(s.r,s.g,s.b,s.alpha)

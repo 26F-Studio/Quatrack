@@ -92,6 +92,7 @@ do--Userdata tables
         holdAlpha=.26,
         holdWidth=.8,
         scaleX=1,
+        trackW=1,
 
         --Sound
         autoMute=true,
