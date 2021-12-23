@@ -223,6 +223,7 @@ end
 function scene.touchDown(x,y,id)
     x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
     local minD2,closestTrackID=1e99,false
+    x=x/SETTING.scaleX
     for i=1,#tracks do
         local D2=abs(cos(tracks[i].state.ang)*(tracks[i].state.x-x)-sin(tracks[i].state.ang)*(tracks[i].state.y-y))
         if D2<minD2 then minD2,closestTrackID=D2,i end
