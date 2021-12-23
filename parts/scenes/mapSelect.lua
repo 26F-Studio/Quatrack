@@ -8,21 +8,16 @@ local listBox=WIDGET.newListBox{name='sel',x=60,y=80,w=1160,h=480,lineH=40,drawF
         gc.setColor(COLOR.X)
         gc.rectangle('fill',0,0,1160,40)
     end
-    setFont(30)
-    gc.setColor(
-        v.source=='game'and COLOR.Z or
-        v.source=='outside'and COLOR.lY or
-        COLOR.D
-    )
+    gc.setColor(1,1,1)
     gc.draw(v.mapName,10,-1,nil,min(800/v.mapName:getWidth(),1),1)
     gc.setColor(COLOR.Z)
-    gc.printf(v.mapAuth,0,0,1000,'right')
+    gc.draw(v.mapAuth,980,-1,nil,min(150/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
 
     setFont(30,'mono')
     gc.setColor(v.difficultyColor)
-    gc.draw(v.difficulty,1105-v.difficulty:getWidth(),0)
+    gc.draw(v.difficulty,1105-v.difficulty:getWidth(),2)
     gc.setColor(COLOR.lS)
-    gc.printf(v.tracks,0,0,1150,'right')
+    mStr(v.tracks,1132,0)
 end}
 
 local lastFreshTime=0
@@ -55,13 +50,14 @@ local function _freshSongList()
                         end
                     end
                 end
+                local color=source=='game'and COLOR.Z or source=='outside'and COLOR.lY or COLOR.lD
                 local dText=metaData.mapDifficulty
                 ins(mapList,{
                     path=path..'/'..fileName,
                     source=source,
-                    mapName=gc.newText(getFont(30),metaData.mapName.." - "..metaData.musicAuth),
-                    mapAuth=metaData.mapAuth,
-                    difficulty=gc.newText(getFont(30),dText),
+                    mapName=gc.newText(getFont(30),{color,metaData.mapName,COLOR.dH," - "..metaData.musicAuth}),
+                    mapAuth=gc.newText(getFont(30),metaData.mapAuth),
+                    difficulty=gc.newText(getFont(25),dText),
                     difficultyColor=
                         dText:sub(1,1)=='E'and COLOR.lG or
                         dText:sub(1,1)=='N'and COLOR.lY or
