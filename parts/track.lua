@@ -243,24 +243,21 @@ function Track:draw(map)
     local thick=SETTING.noteThick
     for i=1,#self.notes do
         local note=self.notes[i]
+        local headH=(note.time-self.time)*dropSpeed
         if note.type=='tap'then
             gc_setColor(note.color)
-            gc_rectangle('fill',-50,-(note.time-self.time)*dropSpeed-thick,100,thick)
+            gc_rectangle('fill',-50,-headH-thick,100,thick)
         elseif note.type=='hold'then
+            local tailH=(note.etime-self.time)*dropSpeed
+
             --Body
             gc_setColor(note.color[1],note.color[2],note.color[3],note.color[4]*SETTING.holdAlpha)
-            gc_rectangle('fill',-50*SETTING.holdWidth,-(note.etime-self.time)*dropSpeed,100*SETTING.holdWidth,(note.etime-note.time)*dropSpeed+(note.pressed and 0 or -thick))
+            gc_rectangle('fill',-50*SETTING.holdWidth,-tailH,100*SETTING.holdWidth,tailH-headH+(note.pressed and 0 or -thick))
 
-            --Head
+            --Head & Tail
             gc_setColor(note.color)
-            if not note.pressed then
-                gc_rectangle('fill',-50,-(note.time-self.time)*dropSpeed-thick,100,thick)
-            end
-
-            --Tail
-            if note.tail then
-                gc_rectangle('fill',-50,-(note.etime-self.time)*dropSpeed-thick/2,100,thick/2)
-            end
+            if not note.pressed then gc_rectangle('fill',-50,-headH-thick,100,thick)end
+            if note.tail then gc_rectangle('fill',-50,-tailH-thick/2,100,thick/2)end
         end
     end
 
