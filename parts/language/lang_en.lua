@@ -77,6 +77,7 @@ return{
         setting={
             musicDelay="Music Delay",
             dropSpeed="Scrolling speed",
+            noteThick="Note thickness",
             holdAlpha="Hold note alpha",
             holdWidth="Hold note width",
 
