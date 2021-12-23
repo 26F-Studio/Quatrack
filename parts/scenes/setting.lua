@@ -37,8 +37,8 @@ scene.widgetList={
     WIDGET.newSlider{name='noteThick',  x=200, y=250,w=420,lim=160,unit=10,                disp=function()return(SETTING.noteThick-10)/4 end,show=sliderShow_thick,code=function(v)SETTING.noteThick=v*4+10 end},
     WIDGET.newSlider{name='holdAlpha',  x=200, y=300,w=420,lim=160,unit=1,                 disp=SETval('holdAlpha'),code=SETsto('holdAlpha')},
     WIDGET.newSlider{name='holdWidth',  x=200, y=350,w=420,lim=160,unit=1,                 disp=SETval('holdWidth'),code=SETsto('holdWidth')},
-    WIDGET.newSlider{name='scaleX',     x=200, y=400,w=420,lim=160,unit=.5,smooth=true,    disp=function()return SETTING.scaleX-.8 end,show=sliderShow_scale,code=function(v)SETTING.scaleX=v+.8 end},
-    WIDGET.newSlider{name='trackW',     x=200, y=450,w=420,lim=160,unit=.5,smooth=true,    disp=function()return SETTING.trackW-.8 end,show=sliderShow_scale,code=function(v)SETTING.trackW=v+.8 end},
+    WIDGET.newSlider{name='scaleX',     x=200, y=400,w=420,lim=160,unit=.7,smooth=true,    disp=function()return SETTING.scaleX-.8 end,show=sliderShow_scale,code=function(v)SETTING.scaleX=v+.8 end},
+    WIDGET.newSlider{name='trackW',     x=200, y=450,w=420,lim=160,unit=.7,smooth=true,    disp=function()return SETTING.trackW-.8 end,show=sliderShow_scale,code=function(v)SETTING.trackW=v+.8 end},
 
     WIDGET.newSlider{name='mainVol',    x=200, y=520,w=420,lim=160,disp=SETval('mainVol'), code=function(v)SETTING.mainVol=v love.audio.setVolume(SETTING.mainVol)end},
     WIDGET.newSlider{name='bgm',        x=200, y=570,w=420,lim=160,disp=SETval('bgm'),     code=function(v)SETTING.bgm=v BGM.setVol(SETTING.bgm)end},
