@@ -141,11 +141,14 @@ local function _trigNote(deviateTime,noTailHold)
             needSaveDropSpeed=false
         end
         combo=combo+1
-        if combo>maxCombo then
-            maxCombo=combo
-        end
+        if combo>maxCombo then maxCombo=combo end
         if not noTailHold then
             SFX.play('hit')
+            if abs(deviateTime)>.16 then deviateTime=deviateTime>0 and .16 or -.16 end
+            ins(hitOffests,1,deviateTime)
+            hitCount=hitCount+1
+            totalDeviateTime=totalDeviateTime+deviateTime
+            hitOffests[27]=nil
         end
     else
         if combo>=10 then SFX.play('combobreak')end
@@ -153,13 +156,6 @@ local function _trigNote(deviateTime,noTailHold)
         bestChain=0
     end
     _updateAcc()
-    if not noTailHold then
-        if abs(deviateTime)>.14 then deviateTime=deviateTime>0 and .14 or -.14 end
-        ins(hitOffests,1,deviateTime)
-        hitCount=hitCount+1
-        totalDeviateTime=totalDeviateTime+deviateTime
-        hitOffests[27]=nil
-    end
 end
 local function _trackPress(k)
     if tracks[k].state.available then
