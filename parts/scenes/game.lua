@@ -404,17 +404,19 @@ function scene.draw()
         mText(texts.mapAuth,640,240)
     end
 
-    gc_replaceTransform(SCR.xOy_ur)
-    gc_translate(-SCR.safeX/SCR.k,0)
     gc_setColor(1,1,1)
 
+    gc_replaceTransform(SCR.xOy_ur)
+    gc_translate(-SCR.safeX/SCR.k,0)
     --Draw score & accuracy
     setFont(60)gc_printf(ceil(score),-1010,-10,1000,'right')
     setFont(40)gc_printf(accText,-1010,50,1000,'right')
 
+    gc_replaceTransform(SCR.xOy_dr)
+    gc_translate(-SCR.safeX/SCR.k,0)
     --Draw map info
-    setFont(30)gc_printf(map.mapName,-1010,720-45,1000,'right')
-    setFont(25)gc_printf(map.mapDifficulty,-1010,720-75,1000,'right')
+    setFont(30)gc_printf(map.mapName,-1010,-45,1000,'right')
+    setFont(25)gc_printf(map.mapDifficulty,-1010,-75,1000,'right')
 
     gc_replaceTransform(SCR.xOy)
 end
