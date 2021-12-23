@@ -1,7 +1,7 @@
 local gc=love.graphics
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
-local gc_printf=gc.printf
+local gc_draw,gc_printf=gc.draw,gc.printf
 local gc_replaceTransform=gc.replaceTransform
 
 local kbIsDown=love.keyboard.isDown
@@ -35,14 +35,14 @@ local function _getHitLV(div)
     0
 end
 
-local playSongTime
+local playSongTime,songLength
+local texts={}
 
 local map,tracks
 local hitLV--Hit level (-1~5)
 local hitTextTime--Time stamp, for hitText fading-out animation
 
-local isSongPlaying
-local time,songLength
+local time,isSongPlaying
 local hitOffests
 local curAcc,fullAcc,accText
 local combo,maxCombo,score,score0
@@ -85,6 +85,13 @@ function scene.sceneInit()
 
     playSongTime=map.songOffset+(SETTING.musicDelay-260)/1000
     songLength=map.songLength
+
+    texts={
+        mapName=gc.newText(getFont(80),map.mapName),
+        musicAuth=gc.newText(getFont(40),'Music: '..map.musicAuth),
+        mapAuth=gc.newText(getFont(40),'Map: '..map.mapAuth),
+    }
+
     if love.filesystem.getInfo('parts/levels/'..map.songFile..'.ogg')then
         BGM.load(map.songFile,'parts/levels/'..map.songFile..'.ogg')
     elseif love.filesystem.getInfo('songs/'..map.songFile..'.ogg')then
@@ -381,13 +388,11 @@ function scene.draw()
     --Draw map info at start
     if time<0 then
         local a=3.6-2*abs(time+1.8)
-        setFont(70)
         gc_setColor(1,1,1,a)
-        mStr(map.mapName,640,100)
+        gc_draw(texts.mapName,640,100,nil,min(1200/texts.mapName:getWidth(),1),1,texts.mapName:getWidth()*.5)
         gc_setColor(.7,.7,.7,a)
-        setFont(40)
-        mStr(map.musicAuth,640,200)
-        mStr(map.mapAuth,640,240)
+        mText(texts.musicAuth,640,200)
+        mText(texts.mapAuth,640,240)
     end
 
     --Draw score & accuracy
@@ -398,8 +403,8 @@ function scene.draw()
 
     --Draw map info
     gc_replaceTransform(SCR.xOy_dr)
-    setFont(30)gc_printf(map.mapName,-1010,-55,1000,'right')
-    setFont(25)gc_printf(map.mapDifficulty,-1010,-85,1000,'right')
+    setFont(30)gc_printf(map.mapName,-1010,-45,1000,'right')
+    setFont(25)gc_printf(map.mapDifficulty,-1010,-75,1000,'right')
 
     gc_replaceTransform(SCR.xOy)
 end
