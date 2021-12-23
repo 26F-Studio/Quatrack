@@ -180,41 +180,39 @@ local function _trackRelease(k)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
-    local k=KEY_MAP[map.tracks][key]
-    if k then
-        if type(k)=='number'then
-            _trackPress(k)
-        elseif k=='skip'then
-            if map.finished then
-                _tryGoResult()
-            end
-        elseif k=='restart'then
-            local m,errmsg=loadBeatmap(map.qbpFilePath)
-            if m then
-                SCN.args[1]=m
-                BGM.stop('-s')
-                scene.sceneInit()
-            else
-                MES.new('error',errmsg)
-            end
-        elseif k=='dropSlower'then
-            if score0==0 then
-                SETTING.dropSpeed=max(SETTING.dropSpeed-1,0)
-                MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
-                needSaveDropSpeed=true
-            else
-                MES.new('warn',text.cannotAdjustDropSpeed,0)
-            end
-        elseif k=='dropFaster'then
-            if score0==0 then
-                SETTING.dropSpeed=min(SETTING.dropSpeed+1,16)
-                MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
-                needSaveDropSpeed=true
-            else
-                MES.new('warn',text.cannotAdjustDropSpeed,0)
-            end
+    local k=KEY_MAP[map.tracks][key]or key
+    if type(k)=='number'then
+        _trackPress(k)
+    elseif k=='skip'then
+        if map.finished then
+            _tryGoResult()
         end
-    elseif key=='escape'then
+    elseif k=='restart'then
+        local m,errmsg=loadBeatmap(map.qbpFilePath)
+        if m then
+            SCN.args[1]=m
+            BGM.stop('-s')
+            scene.sceneInit()
+        else
+            MES.new('error',errmsg)
+        end
+    elseif k=='dropSlower'then
+        if score0==0 then
+            SETTING.dropSpeed=max(SETTING.dropSpeed-1,0)
+            MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
+            needSaveDropSpeed=true
+        else
+            MES.new('warn',text.cannotAdjustDropSpeed,0)
+        end
+    elseif k=='dropFaster'then
+        if score0==0 then
+            SETTING.dropSpeed=min(SETTING.dropSpeed+1,16)
+            MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
+            needSaveDropSpeed=true
+        else
+            MES.new('warn',text.cannotAdjustDropSpeed,0)
+        end
+    elseif k=='escape'then
         SCN.back()
     end
 end
@@ -422,6 +420,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.newKey{name="pause", x=40,y=60,w=50,fText="| |",code=backScene},
+    WIDGET.newKey{name="restart", x=100,y=60,w=50,fText=CHAR.icon.retry_spin,code=pressKey'restart'},
+    WIDGET.newKey{name="pause", x=40,y=60,w=50,fText=CHAR.icon.back,code=backScene},
 }
 return scene
