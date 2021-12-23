@@ -1,6 +1,6 @@
 local gc=love.graphics
 local gc_push,gc_pop=gc.push,gc.pop
-local gc_translate,gc_scale,gc_rotate=gc.translate,gc.scale,gc.rotate
+local gc_translate,gc_rotate=gc.translate,gc.rotate
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
@@ -212,7 +212,6 @@ function Track:draw(map)
     --Set coordinate for single track
     gc_translate(s.x*SETTING.scaleX,s.y)
     gc_rotate(s.ang)
-
     local trackW=50*s.kx*SETTING.trackW
     local ky=s.ky
 
