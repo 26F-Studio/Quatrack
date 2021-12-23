@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Freedom Dive Remix
 $musicAuth=ZipperKim
 $mapAuth=Ykzl
-$mapDifficulty=N5
+$mapDifficulty=Normal-5
 
 $songFile=freedomdivezipper
 $songOffset=-0.33
