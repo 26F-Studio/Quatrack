@@ -21,6 +21,9 @@ end
 local function sliderShow_thick(S)
     return S.disp()*2+10
 end
+local function sliderShow_kx(S)
+    return("x%.2f"):format(S.disp()+.8)
+end
 local function sliderShow_fps(S)
     return(S.disp()*30+60).." FPS"
 end
@@ -30,16 +33,17 @@ end
 
 -- scene.widgetScrollHeight=720
 scene.widgetList={
-    WIDGET.newSlider{name='musicDelay', x=200, y=170,w=420,lim=160,unit=520,smooth=true,disp=SETval('musicDelay'),show=sliderShow_time,code=SETsto('musicDelay')},
-    WIDGET.newSlider{name='dropSpeed',  x=200, y=230,w=420,lim=160,unit=16,disp=SETval('dropSpeed'),show=sliderShow_exp,code=SETsto('dropSpeed')},
-    WIDGET.newSlider{name='noteThick',  x=200, y=290,w=420,lim=160,unit=20,disp=function()return(SETTING.noteThick-10)/2 end,show=sliderShow_thick,code=function(v)SETTING.noteThick=v*2+10 end},
-    WIDGET.newSlider{name='holdAlpha',  x=200, y=350,w=420,lim=160,unit=1,disp=SETval('holdAlpha'),code=SETsto('holdAlpha')},
-    WIDGET.newSlider{name='holdWidth',  x=200, y=410,w=420,lim=160,unit=1,disp=SETval('holdWidth'),code=SETsto('holdWidth')},
+    WIDGET.newSlider{name='musicDelay', x=200, y=150,w=420,lim=160,unit=520,smooth=true,   disp=SETval('musicDelay'),show=sliderShow_time,code=SETsto('musicDelay')},
+    WIDGET.newSlider{name='dropSpeed',  x=200, y=210,w=420,lim=160,unit=16,                disp=SETval('dropSpeed'),show=sliderShow_exp,code=SETsto('dropSpeed')},
+    WIDGET.newSlider{name='noteThick',  x=200, y=270,w=420,lim=160,unit=20,                disp=function()return(SETTING.noteThick-10)/2 end,show=sliderShow_thick,code=function(v)SETTING.noteThick=v*2+10 end},
+    WIDGET.newSlider{name='holdAlpha',  x=200, y=330,w=420,lim=160,unit=1,                 disp=SETval('holdAlpha'),code=SETsto('holdAlpha')},
+    WIDGET.newSlider{name='holdWidth',  x=200, y=390,w=420,lim=160,unit=1,                 disp=SETval('holdWidth'),code=SETsto('holdWidth')},
+    WIDGET.newSlider{name='scaleX',     x=200, y=440,w=420,lim=160,unit=.5,smooth=true,    disp=function()return SETTING.scaleX-.8 end,show=sliderShow_kx,code=function(v)SETTING.scaleX=v+.8 end},
 
-    WIDGET.newSlider{name='mainVol',    x=200, y=470,w=420,lim=160,disp=SETval('mainVol'), code=function(v)SETTING.mainVol=v love.audio.setVolume(SETTING.mainVol)end},
-    WIDGET.newSlider{name='bgm',        x=200, y=530,w=420,lim=160,disp=SETval('bgm'),     code=function(v)SETTING.bgm=v BGM.setVol(SETTING.bgm)end},
-    WIDGET.newSlider{name='sfx',        x=200, y=590,w=420,lim=160,disp=SETval('sfx'),     code=function(v)SETTING.sfx=v SFX.setVol(SETTING.sfx)end},
-    WIDGET.newSlider{name='stereo',     x=200, y=650,w=420,lim=160,disp=SETval('stereo'),  code=function(v)SETTING.stereo=v SFX.setStereo(SETTING.stereo)end,hideF=function()return SETTING.sfx==0 end},
+    WIDGET.newSlider{name='mainVol',    x=200, y=520,w=420,lim=160,disp=SETval('mainVol'), code=function(v)SETTING.mainVol=v love.audio.setVolume(SETTING.mainVol)end},
+    WIDGET.newSlider{name='bgm',        x=200, y=570,w=420,lim=160,disp=SETval('bgm'),     code=function(v)SETTING.bgm=v BGM.setVol(SETTING.bgm)end},
+    WIDGET.newSlider{name='sfx',        x=200, y=620,w=420,lim=160,disp=SETval('sfx'),     code=function(v)SETTING.sfx=v SFX.setVol(SETTING.sfx)end},
+    WIDGET.newSlider{name='stereo',     x=200, y=670,w=420,lim=160,disp=SETval('stereo'),  code=function(v)SETTING.stereo=v SFX.setStereo(SETTING.stereo)end,hideF=function()return SETTING.sfx==0 end},
 
     WIDGET.newSwitch{name='sysCursor',  x=1100,y=140,lim=360,disp=SETval('sysCursor'),     code=function()SETTING.sysCursor=not SETTING.sysCursor applySettings()end},
     WIDGET.newSwitch{name='clickFX',    x=1100,y=200,lim=360,disp=SETval('clickFX'),       code=function()SETTING.clickFX=not SETTING.clickFX applySettings()end},

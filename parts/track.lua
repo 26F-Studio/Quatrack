@@ -208,7 +208,7 @@ function Track:draw(map)
     gc_push('transform')
 
     --Set coordinate for single track
-    gc_translate(s.x,s.y)
+    gc_translate(s.x*SETTING.scaleX,s.y)
     gc_rotate(s.ang)
     gc_scale(s.kx,s.ky)
 

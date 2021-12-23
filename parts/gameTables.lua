@@ -91,6 +91,7 @@ do--Userdata tables
         noteThick=26,
         holdAlpha=.26,
         holdWidth=.8,
+        scaleX=1,
 
         --Sound
         autoMute=true,

@@ -80,6 +80,7 @@ return{
             noteThick="Note thickness",
             holdAlpha="Hold note alpha",
             holdWidth="Hold note width",
+            scaleX="Scale X",
 
             sysCursor="System cursor",
             clickFX="Click FX",
