@@ -50,7 +50,7 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    local k=KEY_MAP[key]
+    local k=KEY_MAP[key]or key
     if k then
         if k=='restart'then
             local map,errmsg=loadBeatmap(results.map.qbpFilePath)
@@ -147,6 +147,7 @@ function scene.draw()
 end
 
 scene.widgetList={
+    WIDGET.newButton{name="again",x=940,y=640,w=170,h=80,font=60,fText=CHAR.icon.retry_spin,code=pressKey'restart'},
     WIDGET.newButton{name="back", x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
 }
 return scene
