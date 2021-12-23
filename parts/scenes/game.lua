@@ -354,21 +354,28 @@ function scene.draw()
     end
 
     --Draw deviate indicator
-    gc_setColor(1,1,1)gc_rectangle('fill',640-1,350-15,2,34)
+    gc_setColor(1,1,1)gc_rectangle('fill',640-2,350-13,4,30)
     for i=1,5 do
         local c=hitColors[i]
         local d1=hitLVOffsets[i]
         local d2=hitLVOffsets[i+1]
         gc_setColor(c[1]*.8+.3,c[2]*.8+.3,c[3]*.8+.3,.626)
-        gc_rectangle('fill',640-d1*700,350,(d1-d2)*700,4)
-        gc_rectangle('fill',640+d1*700,350,(d2-d1)*700,4)
+        gc_rectangle('fill',640-d1*688,350,(d1-d2)*688,4)
+        gc_rectangle('fill',640+d1*688,350,(d2-d1)*688,4)
+    end
+
+    --Draw time
+    if time>0 then
+        setFont(10)
+        gc_setColor(1,1,1)
+        gc_rectangle('fill',530,369,220*MATH.interval(time/songLength,0,1),3)
     end
 
     --Draw deviate times
     for i=1,#hitOffests do
         local c=hitColors[_getHitLV(hitOffests[i])]
         gc_setColor(c[1],c[2],c[3],.4)
-        gc_rectangle('fill',640+hitOffests[i]*700-1,350-8,3,20)
+        gc_rectangle('fill',640+hitOffests[i]*688-1,350-8,3,20)
     end
 
     --Draw map info at start
@@ -393,18 +400,6 @@ function scene.draw()
     gc_replaceTransform(SCR.xOy_dr)
     setFont(30)gc_printf(map.mapName,-1010,-55,1000,'right')
     setFont(25)gc_printf(map.mapDifficulty,-1010,-85,1000,'right')
-
-    --Draw progress bar
-    gc_replaceTransform(SCR.xOy_dl)
-    if time>0 then
-        gc_setColor(COLOR.rainbow_light(TIME()*12.6,.8))
-        gc_rectangle('fill',0,-10,SCR.w*time/songLength,6)
-        local d=time-songLength
-        if d>0 then
-            gc_setColor(.92,.86,0,min(d,1))
-            gc_rectangle('fill',0,-10,SCR.w,6)
-        end
-    end
 
     gc_replaceTransform(SCR.xOy)
 end
