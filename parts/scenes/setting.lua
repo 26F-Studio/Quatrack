@@ -32,7 +32,7 @@ local function sliderShow_mul(S)
 end
 
 scene.widgetList={
-    WIDGET.newSlider{name='musicDelay', x=200, y=150,w=420,lim=160,unit=520,smooth=true,   disp=SETval('musicDelay'),show=sliderShow_time,code=SETsto('musicDelay')},
+    WIDGET.newSlider{name='musicDelay', x=200, y=150,w=420,lim=160,unit=520,smooth=true,   disp=SETval('musicDelay'),show=sliderShow_time,code=function(v)SETTING.musicDelay=math.floor(v+.5)end},
     WIDGET.newSlider{name='dropSpeed',  x=200, y=200,w=420,lim=160,unit=16,                disp=SETval('dropSpeed'),show=sliderShow_exp,code=SETsto('dropSpeed')},
     WIDGET.newSlider{name='noteThick',  x=200, y=250,w=420,lim=160,unit=10,                disp=function()return(SETTING.noteThick-10)/4 end,show=sliderShow_thick,code=function(v)SETTING.noteThick=v*4+10 end},
     WIDGET.newSlider{name='holdAlpha',  x=200, y=300,w=420,lim=160,unit=1,                 disp=SETval('holdAlpha'),code=SETsto('holdAlpha')},
