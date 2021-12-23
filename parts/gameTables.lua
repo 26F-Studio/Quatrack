@@ -32,10 +32,10 @@ hitTexts={
 }
 hitAccList={
     -100,--OK
-    -20, --GOOD
-    60,  --GREAT
-    98,  --PERF
-    100, --MARV
+    -26, --GOOD
+    62,  --GREAT
+    100,  --PERF
+    101, --MARV
 }
 hitLVOffsets={--Time judgement
     .16,
