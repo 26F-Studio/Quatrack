@@ -241,7 +241,16 @@ end
 function scene.touchUp(_,_,id)
     for i=1,#touches do
         if touches[i][1]==id then
-            _trackRelease(touches[i][2])
+            local allReleased=true
+            for j=1,#touches do
+                if i~=j and touches[j][2]==touches[i][2]then
+                    allReleased=false
+                    break
+                end
+            end
+            if allReleased then
+                _trackRelease(touches[i][2])
+            end
             rem(touches,i)
             return
         end
