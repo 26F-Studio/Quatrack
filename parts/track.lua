@@ -122,11 +122,11 @@ function Track:press()
     self.lastPressTime=self.time
 
     --Check first note
-    local note=self.notes[1]
-    if note then
+    for i=1,#self.notes do
+        local note=self.notes[i]
         if self.time>note.time-note.trigTime then
             if note.type=='tap'then--Press tap note
-                rem(self.notes,1)
+                rem(self.notes,i)
                 return self.time-note.time
             elseif note.type=='hold'then--Press hold note
                 if not note.pressed then
@@ -134,6 +134,8 @@ function Track:press()
                     return self.time-note.time
                 end
             end
+        else
+            break
         end
     end
 end
