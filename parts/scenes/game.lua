@@ -244,7 +244,7 @@ function scene.mouseUp(_,_,k)scene.touchUp(_,_,k)end
 
 function scene.update(dt)
     if kbIsDown'lctrl'and kbIsDown('o','p','[',']')then
-        dt=dt*(kbIsDown'o'and .4 or kbIsDown'p'and .75 or kbIsDown'['and 6 or 32)
+        dt=dt*(kbIsDown'o'and .4 or kbIsDown'p'and .75 or kbIsDown'['and 6 or 128)
         if time-dt-playSongTime>0 then
             BGM.seek(time-dt-playSongTime)
         end
