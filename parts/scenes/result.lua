@@ -6,7 +6,7 @@ local sin=math.sin
 
 local hitColors=hitColors
 local hitTexts=hitTexts
-
+local rankColors=rankColors
 local results
 
 local scene={}
@@ -33,15 +33,15 @@ function scene.sceneInit()
     results.mapDifficulty=gc.newText(getFont(30,'mono'),results.map.mapDifficulty)
     local acc=tonumber(results.accText:sub(1,-2))
     results.rank=gc.newText(getFont(100,'mono'),
-        acc==101 and'X'or
-        acc>=100 and'U'or
-        acc>=97 and'S'or
-        acc>=94 and'A'or
-        acc>=90 and'B'or
-        acc>=85 and'C'or
-        acc>=80 and'D'or
-        acc>=70 and'E'or
-        'F'
+        acc==101 and{rankColors[1],'X'}or
+        acc>=100 and{rankColors[2],'U'}or
+        acc>=97 and{rankColors[3],'S'}or
+        acc>=94 and{rankColors[4],'A'}or
+        acc>=90 and{rankColors[5],'B'}or
+        acc>=85 and{rankColors[6],'C'}or
+        acc>=80 and{rankColors[7],'D'}or
+        acc>=70 and{rankColors[8],'E'}or
+        {rankColors[9],'F'}
     )
 
     BGM.play('result')
@@ -85,7 +85,7 @@ function scene.draw()
     gc.setColor(COLOR.Z)
     gc.push('transform')
     gc.scale(2.2)
-    posterizedDraw(results.rank,28,48)
+    posterizedDraw(results.rank,28,45)
     gc.pop()
     setFont(60)
     gc.print(results.score,140,0)
@@ -105,7 +105,7 @@ function scene.draw()
         local clr=chainColors[c]
         for i=0,420,10 do
             gc.setColor(clr[1],clr[2],clr[3],.45-(i/1000))
-            gc.rectangle('fill',i,215,10,70)
+            gc.rectangle('fill',i-2,216,10,70)
         end
         gc.setColor(clr)
         if c==1 then

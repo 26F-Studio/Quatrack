@@ -53,6 +53,17 @@ chainColors={
     COLOR.lYellow,
     COLOR.lYellow,
 }
+rankColors={
+    COLOR.lMagenta,
+    COLOR.lFire,
+    COLOR.lYellow,
+    COLOR.lGreen,
+    COLOR.lBlue,
+    COLOR.dMagenta,
+    COLOR.dGray,
+    COLOR.dSea,
+    COLOR.dRed,
+}for i=1,#rankColors do rankColors[i]={.6+rankColors[i][1]*.4,.6+rankColors[i][2]*.4,.6+rankColors[i][3]*.4} end
 do--Userdata tables
     KEY_MAP={
         {space=1},
