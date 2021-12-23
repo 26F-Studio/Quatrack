@@ -88,7 +88,7 @@ do--Userdata tables
         --Game
         musicDelay=260,
         dropSpeed=8,
-        noteThick=26,
+        noteThick=22,
         holdAlpha=.26,
         holdWidth=.8,
         scaleX=1,

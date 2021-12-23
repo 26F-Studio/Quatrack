@@ -179,6 +179,8 @@ table.insert(_LOADTIMELIST_,("Load Files: %.3fs"):format(TIME()-_LOADTIME_))
 FIRSTLAUNCH=STAT.run==0
 if FIRSTLAUNCH and MOBILE then
     SETTING.cleanCanvas=true
+    SETTING.scaleX=1.3
+    SETTING.trackW=1.3
 end
 
 --Apply system setting
