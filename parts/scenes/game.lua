@@ -126,7 +126,7 @@ function scene.sceneBack()
     applyFPS(false)
 end
 
-local function _trigNote(deviateTime,noTailHold)
+local function _trigNote(deviateTime,k,noTailHold)
     hitTextTime=TIME()
     fullAcc=fullAcc+100
     hitLV=_getHitLV(deviateTime)
@@ -143,7 +143,9 @@ local function _trigNote(deviateTime,noTailHold)
         combo=combo+1
         if combo>maxCombo then maxCombo=combo end
         if not noTailHold then
-            SFX.play('hit')
+            if k then
+                SFX.play('hit',1,tracks[k].state.x/420)
+            end
             if abs(deviateTime)>.16 then deviateTime=deviateTime>0 and .16 or -.16 end
             ins(hitOffests,1,deviateTime)
             hitCount=hitCount+1
@@ -160,13 +162,13 @@ end
 local function _trackPress(k)
     if tracks[k].state.available then
         local deviateTime=tracks[k]:press()
-        if deviateTime then _trigNote(deviateTime)end
+        if deviateTime then _trigNote(deviateTime,k)end
     end
 end
 local function _trackRelease(k)
     if tracks[k].state.available then
         local deviateTime,noTailHold=tracks[k]:release()
-        if deviateTime then _trigNote(deviateTime,noTailHold)end
+        if deviateTime then _trigNote(deviateTime,k,noTailHold)end
     end
 end
 function scene.keyDown(key,isRep)
@@ -300,7 +302,7 @@ function scene.update(dt)
         local missCount,marvCount=tracks[i]:updateLogic(time)
         if marvCount>0 then
             for _=1,marvCount do
-                _trigNote(0,true)
+                _trigNote(0,i,true)
             end
         end
         if missCount>0 then
