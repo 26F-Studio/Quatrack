@@ -19,8 +19,8 @@ return{
     chainTexts={
         "NO BREAK",
         "NO BREAK+",
-        "PERFECT",
         "ALL PERFECT",
+        "ALL PERFECT+",
         "MARVELOUS",
     },
 
