@@ -155,7 +155,7 @@ function applyFPS(inGame)
         Z.setFrameMul(SETTING.frameMul)
     else
         Z.setMaxFPS(math.min(SETTING.maxFPS,90))
-        Z.setFrameMul(SETTING.frameMul)
+        Z.setFrameMul(100)
     end
 end
 
