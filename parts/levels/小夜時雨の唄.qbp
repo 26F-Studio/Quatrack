@@ -2,7 +2,7 @@ $version=1.0
 $mapName=小夜時雨の唄
 $musicAuth=LCA
 $mapAuth=Ykzl
-$mapDifficulty=LV.?
+$mapDifficulty=L1
 
 $songFile=shigure
 $songOffset=-0.380

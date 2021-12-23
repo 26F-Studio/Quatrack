@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Monochrome Butterfly
 $musicAuth=藍月なくる
 $mapAuth=Ykzl
-$mapDifficulty=LV.?
+$mapDifficulty=H1
 
 $songFile=monochromebutterfly
 $songOffset=-0.62
