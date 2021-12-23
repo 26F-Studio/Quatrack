@@ -248,7 +248,7 @@ function Track:draw(map)
         elseif note.type=='hold'then
             --Body
             gc_setColor(note.color[1],note.color[2],note.color[3],note.color[4]*SETTING.holdAlpha)
-            gc_rectangle('fill',-50*SETTING.holdWidth,-(note.etime-self.time)*dropSpeed,100*SETTING.holdWidth,(note.etime-note.time)*dropSpeed)
+            gc_rectangle('fill',-50*SETTING.holdWidth,-(note.etime-self.time)*dropSpeed,100*SETTING.holdWidth,(note.etime-note.time)*dropSpeed+(note.pressed and 0 or -26))
 
             --Head
             gc_setColor(note.color)
