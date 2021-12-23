@@ -210,54 +210,57 @@ function Track:draw(map)
     --Set coordinate for single track
     gc_translate(s.x*SETTING.scaleX,s.y)
     gc_rotate(s.ang)
-    gc_scale(s.kx*SETTING.trackW,s.ky)
+
+    local trackW=50*s.kx*SETTING.trackW
+    local ky=s.ky
 
     --Draw track line
+    local unitY=26*ky
     gc_setColor(s.r,s.g,s.b,s.alpha)
-    gc_rectangle('fill',-54,0,108,4)
+    gc_rectangle('fill',-trackW-4,0,2*trackW+8,4)
     for i=0,25 do
-        gc_setColor(s.r,s.g,s.b,s.alpha*(1-i/26))
-        gc_rectangle('fill',-50,-i*26,-4,-26)
-        gc_rectangle('fill',50,-i*26,4,-26)
+        gc_setColor(s.r,s.g,s.b,s.alpha*(1-i/unitY))
+        gc_rectangle('fill',-trackW,-i*unitY,-4,-unitY)
+        gc_rectangle('fill',trackW,-i*unitY,4,-unitY)
         if self.pressed then
-            gc_setColor(s.r,s.g,s.b,s.alpha*((1-i/26)/6))
-            gc_rectangle('fill',-50,-i*26-26,100,26)
+            gc_setColor(s.r,s.g,s.b,s.alpha*((1-i/unitY)/6))
+            gc_rectangle('fill',-trackW,-i*unitY-unitY,2*trackW,unitY)
         end
     end
 
     --Draw press effect
     if self.pressed then
         gc_setColor(s.r,s.g,s.b,s.alpha*.626)
-        gc_rectangle('fill',-50,0,100,20)
+        gc_rectangle('fill',-trackW,0,2*trackW,20)
     else
         local rT=self.time-self.lastReleaseTime
         if rT<.26 then
             local pressH=1-rT/.26
             gc_setColor(s.r,s.g,s.b,s.alpha*pressH*.626)
-            gc_rectangle('fill',-50,0,100,pressH*20)
+            gc_rectangle('fill',-trackW,0,2*trackW,pressH*20)
         end
     end
 
     --Draw notes
-    local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed-8 or 1))
-    local thick=SETTING.noteThick
+    local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed-8 or 1))*ky
+    local thick=SETTING.noteThick*ky
     for i=1,#self.notes do
         local note=self.notes[i]
         local headH=(note.time-self.time)*dropSpeed
         if note.type=='tap'then
             gc_setColor(note.color)
-            gc_rectangle('fill',-50,-headH-thick,100,thick)
+            gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
         elseif note.type=='hold'then
             local tailH=(note.etime-self.time)*dropSpeed
 
             --Body
             gc_setColor(note.color[1],note.color[2],note.color[3],note.color[4]*SETTING.holdAlpha)
-            gc_rectangle('fill',-50*SETTING.holdWidth,-tailH,100*SETTING.holdWidth,tailH-headH+(note.pressed and 0 or -thick))
+            gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.pressed and 0 or -thick))
 
             --Head & Tail
             gc_setColor(note.color)
-            if not note.pressed then gc_rectangle('fill',-50,-headH-thick,100,thick)end
-            if note.tail then gc_rectangle('fill',-50,-tailH-thick/2,100,thick/2)end
+            if not note.pressed then gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)end
+            if note.tail then gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)end
         end
     end
 
