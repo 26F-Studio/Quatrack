@@ -79,6 +79,10 @@ function scene.sceneInit()
     listBox:setList(mapList)
 end
 
+function scene.wheelMoved(_,y)
+    listBox:scroll(-y)
+end
+
 function scene.keyDown(key)
     if key=='return'then
         local map,errmsg=loadBeatmap(listBox:getSel().path)
