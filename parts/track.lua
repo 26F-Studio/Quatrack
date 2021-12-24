@@ -222,6 +222,8 @@ function Track:updateLogic(time)
                             marvCount=marvCount+1
                         end
                     end
+                elseif self.time>note.etime then
+                    rem(self.notes,i)
                 end
             end
         end
