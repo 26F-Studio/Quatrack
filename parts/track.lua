@@ -112,8 +112,29 @@ function Track:setColor(r,g,b,force)
     self.targetState.r,self.targetState.g,self.targetState.b=r,g,b
 end
 
-function Track:addNote(note)
+function Track:addItem(note)
     table.insert(self.notes,note)
+end
+function Track:pollNote(mode)
+    local l=self.notes
+    if mode=='note'then
+        for i=1,#l do
+            if
+                l[i].type=='tap'or
+                l[i].type=='hold'and l[i].active and l[i].head
+            then
+                return i,l[i]
+            end
+        end
+    elseif mode=='hold'then
+        for i=1,#l do
+            if
+                l[i].type=='hold'and l[i].active
+            then
+                return i,l[i]
+            end
+        end
+    end
 end
 
 function Track:press()
@@ -122,20 +143,16 @@ function Track:press()
     self.lastPressTime=self.time
 
     --Check first note
-    for i=1,#self.notes do
-        local note=self.notes[i]
-        if self.time>note.time-note.trigTime then
-            if note.type=='tap'then--Press tap note
-                rem(self.notes,i)
+    local i,note=self:pollNote('note')
+    if note and self.time>note.time-note.trigTime then
+        if note.type=='tap'then--Press tap note
+            rem(self.notes,i)
+            return self.time-note.time
+        elseif note.type=='hold'then--Press hold note
+            if note.head then
+                note.head=false
                 return self.time-note.time
-            elseif note.type=='hold'then--Press hold note
-                if not note.pressed then
-                    note.pressed=true
-                    return self.time-note.time
-                end
             end
-        else
-            break
         end
     end
 end
@@ -143,9 +160,13 @@ end
 function Track:release()
     self.pressed=false
     self.lastReleaseTime=self.time
-    local note=self.notes[1]
-    if note and note.type=='hold'and note.pressed then--Release hold note
-        rem(self.notes,1)
+    local i,note=self:pollNote('hold')
+    if note and note.type=='hold'and not note.head then--Release hold note
+        if self.time>note.etime-note.trigTime then
+            rem(self.notes,i)
+        else
+            note.active=false
+        end
         return note.etime-self.time,not note.tail
     end
 end
@@ -181,22 +202,25 @@ function Track:updateLogic(time)
                 missCount=missCount+1
             end
         elseif note.type=='hold'then
-            if not note.pressed then--Hold not pressed, miss whole when head missed
-                if self.time>note.time+note.lostTime then
-                    rem(self.notes,i)
-                    missCount=missCount+1
+            if note.head then--Hold not pressed, miss whole when head missed
+                if note.active and self.time>note.time+note.lostTime then
+                    note.active=false
+                    note.head=false
+                    missCount=missCount+2
                 end
             else--Pressed, miss tail when tail missed
                 note.time=max(note.time,self.time)
-                if note.tail then
-                    if self.time>note.etime+note.lostTime then
-                        rem(self.notes,i)
-                        missCount=missCount+1
-                    end
-                else
-                    if self.time>note.etime then
-                        rem(self.notes,i)
-                        marvCount=marvCount+1
+                if note.active then
+                    if note.tail then
+                        if self.time>note.etime+note.lostTime then
+                            rem(self.notes,i)
+                            missCount=missCount+1
+                        end
+                    else
+                        if self.time>note.etime then
+                            rem(self.notes,i)
+                            marvCount=marvCount+1
+                        end
                     end
                 end
             end
@@ -255,12 +279,14 @@ function Track:draw(map)
             local tailH=(note.etime-self.time)*dropSpeed
 
             --Body
-            gc_setColor(note.color[1],note.color[2],note.color[3],note.color[4]*SETTING.holdAlpha)
-            gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.pressed and 0 or -thick))
+            local alpha=note.color[4]*SETTING.holdAlpha
+            if not note.active then alpha=alpha*.5 end
+            gc_setColor(note.color[1],note.color[2],note.color[3],alpha)
+            gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.head and -thick or 0))
 
             --Head & Tail
             gc_setColor(note.color)
-            if not note.pressed then gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)end
+            if note.head then gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)end
             if note.tail then gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)end
         end
     end

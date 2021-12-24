@@ -13,6 +13,7 @@ local noteColor={
 
 local function _copyColor(i)return{i[1],i[2],i[3],i[4]}end
 function Note.new(d)
+    d.active=true
     d.lostTime=.16
     d.trigTime=.2
     d.color=_copyColor(noteColor[d.color or'W'])

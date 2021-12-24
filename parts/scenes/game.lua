@@ -57,7 +57,7 @@ end
 
 local function _tryGoResult()
     for i=1,#tracks do
-        if tracks[i].notes[1]then return end
+        if #tracks[i].notes>0 then return end
     end
     SCN.swapTo('result',nil,{
         map=map,
@@ -283,7 +283,7 @@ function scene.update(dt)
     while true do
         local n=map:poll('note')
         if not n then break end
-        tracks[n.track]:addNote(n)
+        tracks[n.track]:addItem(n)
     end
     while true do
         local n=map:poll('event')
@@ -297,18 +297,18 @@ function scene.update(dt)
     --Update tracks (check too-late miss)
     for i=1,map.tracks do
         if kbIsDown('tab')then
-            local n=tracks[i].notes[1]
-            if n then
-                if n.type=='tap'then
-                    if time>=n.time then
+            local _,note=tracks[i]:pollNote('note')
+            if note then
+                if note.type=='tap'then
+                    if time>=note.time then
                         _trackPress(i)
                         _trackRelease(i)
                     end
-                elseif n.type=='hold'then
-                    if not n.pressed then
-                        if time>=n.time then _trackPress(i)end
+                elseif note.type=='hold'then
+                    if note.head then
+                        if time>=note.time then _trackPress(i)end
                     else
-                        if time>=n.etime then _trackRelease(i)end
+                        if time>=note.etime then _trackRelease(i)end
                     end
                 end
             end

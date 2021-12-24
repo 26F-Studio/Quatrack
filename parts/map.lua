@@ -334,6 +334,7 @@ function Map.new(file)
                                 track=trackDir[curTrack],
                                 time=curTime,
                                 etime=false,
+                                head=true,
                                 tail=false,
                             }
                             ins(o.noteQueue,b)
