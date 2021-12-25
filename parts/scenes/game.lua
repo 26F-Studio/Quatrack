@@ -83,7 +83,7 @@ local scene={}
 function scene.sceneInit()
     map=SCN.args[1]
 
-    playSongTime=map.songOffset+(SETTING.musicDelay-260)/1000
+    playSongTime=map.songOffset+SETTING.musicDelay/1000
     songLength=map.songLength
 
     texts={
