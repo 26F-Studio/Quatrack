@@ -9,7 +9,7 @@ end
 
 function scene.draw()
     setFont(80)
-    posterizedText('SETTING',640,25)
+    posterizedText('SETTINGS',326,10)
 end
 
 local function sliderShow_time(S)
@@ -39,11 +39,12 @@ scene.widgetList={
     WIDGET.newSlider{name='sfx',        x=200, y=620,w=420,lim=160,disp=SETval('sfx'),           code=function(v)SETTING.sfx=v SFX.setVol(SETTING.sfx)end},
     WIDGET.newSlider{name='stereo',     x=200, y=670,w=420,lim=160,disp=SETval('stereo'),        code=function(v)SETTING.stereo=v SFX.setStereo(SETTING.stereo)end,hideF=function()return SETTING.sfx==0 end},
 
-    WIDGET.newSwitch{name='sysCursor',  x=1160,y=140,lim=360,disp=SETval('sysCursor'),           code=function()SETTING.sysCursor=not SETTING.sysCursor applySettings()end},
-    WIDGET.newSwitch{name='clickFX',    x=1160,y=200,lim=360,disp=SETval('clickFX'),             code=function()SETTING.clickFX=not SETTING.clickFX applySettings()end},
-    WIDGET.newSwitch{name='power',      x=1160,y=260,lim=360,disp=SETval('powerInfo'),           code=function()SETTING.powerInfo=not SETTING.powerInfo applySettings()end},
-    WIDGET.newSwitch{name='clean',      x=1160,y=320,lim=360,disp=SETval('cleanCanvas'),         code=function()SETTING.cleanCanvas=not SETTING.cleanCanvas applySettings()end},
-    WIDGET.newSwitch{name='fullscreen', x=1160,y=380,lim=360,disp=SETval('fullscreen'),          code=function()SETTING.fullscreen=not SETTING.fullscreen applySettings()end},
+    WIDGET.newSwitch{name='sysCursor',  x=1160,y=80,lim=360,disp=SETval('sysCursor'),            code=function()SETTING.sysCursor=not SETTING.sysCursor applySettings()end},
+    WIDGET.newSwitch{name='clickFX',    x=1160,y=140,lim=360,disp=SETval('clickFX'),             code=function()SETTING.clickFX=not SETTING.clickFX applySettings()end},
+    WIDGET.newSwitch{name='power',      x=1160,y=200,lim=360,disp=SETval('powerInfo'),           code=function()SETTING.powerInfo=not SETTING.powerInfo applySettings()end},
+    WIDGET.newSwitch{name='clean',      x=1160,y=260,lim=360,disp=SETval('cleanCanvas'),         code=function()SETTING.cleanCanvas=not SETTING.cleanCanvas applySettings()end},
+    WIDGET.newSwitch{name='fullscreen', x=1160,y=320,lim=360,disp=SETval('fullscreen'),          code=function()SETTING.fullscreen=not SETTING.fullscreen applySettings()end},
+    WIDGET.newSwitch{name='autoMute',   x=1160,y=380,lim=360,disp=SETval('autoMute'),            code=SETrev('autoMute')},
     WIDGET.newSwitch{name='slowUnfocus',x=1160,y=440,lim=360,disp=SETval('slowUnfocus'),         code=SETrev('slowUnfocus')},
 
     WIDGET.newSlider{name='maxFPS',     x=860,y=500,w=360,lim=180,axis={60,360,10},smooth=true,  disp=SETval('maxFPS'),show=sliderShow_fps,code=SETsto('maxFPS')},

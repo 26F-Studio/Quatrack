@@ -110,14 +110,46 @@ Z.setOnFnKeys({
     function()for k,v in next,_G do print(k,v)end end,
     function()if love["_openConsole"]then love["_openConsole"]()end end,
 })
-Z.setOnFocus(function(f)
-    if f then
-        applyFPS(SCN.cur=='game')
-    elseif SETTING.slowUnfocus then
-        Z.setMaxFPS(20)
-        Z.setFrameMul(100)
+do--Z.setOnFocus
+    local function task_autoSoundOff()
+        while true do
+            coroutine.yield()
+            local v=love.audio.getVolume()
+            love.audio.setVolume(math.max(v-.05,0))
+            if v==0 then return end
+        end
     end
-end)
+    local function task_autoSoundOn()
+        while true do
+            coroutine.yield()
+            local v=love.audio.getVolume()
+            if v<SETTING.mainVol then
+                love.audio.setVolume(math.min(v+.05,SETTING.mainVol,1))
+            else
+                return
+            end
+        end
+    end
+    Z.setOnFocus(function(f)
+        if f then
+            applyFPS(SCN.cur=='game')
+            love.timer.step()
+            if SETTING.autoMute then
+                TASK.removeTask_code(task_autoSoundOff)
+                TASK.new(task_autoSoundOn)
+            end
+        else
+            if SETTING.slowUnfocus then
+                Z.setMaxFPS(20)
+                Z.setFrameMul(100)
+            end
+            if SETTING.autoMute then
+                TASK.removeTask_code(task_autoSoundOn)
+                TASK.new(task_autoSoundOff)
+            end
+        end
+    end)
+end
 
 --Load settings and statistics
 TABLE.update(loadFile('conf/settings','-canSkip')or{},SETTING)

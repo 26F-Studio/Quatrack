@@ -88,6 +88,7 @@ return{
             power="电量显示",
             clean="绘制优化",
             fullscreen="全屏",
+            autoMute="失去焦点自动静音",
             slowUnfocus="挂后台节约性能",
 
             maxFPS="最大FPS",

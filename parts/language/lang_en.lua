@@ -88,6 +88,7 @@ return{
             power="Battery Info",
             clean="Quick Draw",
             fullscreen="Fullscreen",
+            autoMute="Mute while unfocused",
             slowUnfocus="Slow when unfocused",
 
             maxFPS="Max FPS",
