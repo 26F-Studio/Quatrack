@@ -624,8 +624,8 @@ function slider:release(x)
 end
 function slider:scroll(n)
     local p=self.disp()
-    local u=self.unit and 1 or .01
-    local P=n==-1 and max(p-u,0)or min(p+u,self.unit)
+    local u=self.unit or .01
+    local P=MATH.interval(p+u*n,self.rangeL,self.rangeR)
     if p==P or not P then return end
     self.code(P)
     if self.change and timer()-self.lastTime>.18 then
