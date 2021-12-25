@@ -258,12 +258,14 @@ function scene.mouseDown(x,y,k)scene.touchDown(x,y,k)end
 function scene.mouseUp(_,_,k)scene.touchUp(_,_,k)end
 
 function scene.update(dt)
+    --Speed up with special keys
     if kbIsDown'lctrl'and kbIsDown('o','p','[',']')then
         dt=dt*(kbIsDown'o'and .4 or kbIsDown'p'and .75 or kbIsDown'['and 6 or 128)
         if time-dt-playSongTime>0 then
             BGM.seek(time-dt-playSongTime)
         end
     end
+
     --Try play bgm
     if not isSongPlaying then
         if time<=playSongTime and time+dt>playSongTime then
@@ -304,12 +306,15 @@ function scene.update(dt)
                         _trackPress(i)
                         _trackRelease(i)
                     end
-                elseif note.type=='hold'then
-                    if note.head then
-                        if time>=note.time then _trackPress(i)end
-                    else
-                        if time>=note.etime then _trackRelease(i)end
-                    end
+                end
+            end
+            note=tracks[i].notes[1]
+            if note.type=='hold'then
+                if note.head then
+                    if time>=note.time then _trackPress(i)end
+                else
+                    print(time-note.etime)
+                    if time>=note.etime then _trackRelease(i)end
                 end
             end
         end
