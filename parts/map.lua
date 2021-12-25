@@ -218,11 +218,8 @@ function Map.new(file)
                 }
             elseif op=='A'then--Available
                 _syntaxCheck(opType=='set'and #data<=2 or opType=='move'and #data<=2,"Too many arguments")
-                if data[2]=='1'then
-                    data=true
-                elseif data[2]=='0'then
-                    data=false
-                end
+                _syntaxCheck(data[2]=='true'or data[2]=='false',"Invalid option (need true/false)")
+                data[2]=data[2]=='true'
                 event={
                     type="setTrack",
                     time=curTime,
