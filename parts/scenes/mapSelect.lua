@@ -68,7 +68,13 @@ local function _freshSongList()
             end
         end
     end
-    table.sort(mapList,function(a,b) return a.path<b.path end)
+    table.sort(mapList,function(a,b)
+        if a.source~=b.source then
+            return a.source=='outside'
+        else
+            return a.path<b.path
+        end
+    end)
 end
 
 local scene={}
@@ -77,10 +83,6 @@ function scene.sceneInit()
     _freshSongList()
     BGM.play()
     listBox:setList(mapList)
-end
-
-function scene.wheelMoved(_,y)
-    listBox:scroll(-y)
 end
 
 function scene.keyDown(key)
@@ -93,7 +95,13 @@ function scene.keyDown(key)
             MES.new('error',errmsg)
         end
     elseif key=='up'or key=='down'then
-        listBox:arrowKey(key)
+        if key=='up'and listBox.selected==1 then
+            listBox:select(listBox:getLen())
+        elseif key=='down'and listBox.selected==listBox:getLen()then
+            listBox:select(1)
+        else
+            listBox:arrowKey(key)
+        end
     elseif key=='escape'then
         SCN.back()
     end
