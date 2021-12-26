@@ -104,5 +104,16 @@ return{
             vib="振动",
             voc="语音",
         },
+        setting_key={
+            restart="重开",
+            skip="跳过",
+            auto="自动模式",
+            sfxVolDn="音效音量-",
+            sfxVolUp="音效音量+",
+            musicVolDn="音乐音量-",
+            musicVolUp="音乐音量+",
+            dropSpdDn="下落速度-",
+            dropSpdUp="下落速度+",
+        },
     },
 }

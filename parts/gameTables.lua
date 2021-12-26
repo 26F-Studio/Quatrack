@@ -81,14 +81,34 @@ trackNames={
     R1=true,R2=true,R3=true,R4=true,R5=true,
     C=true,
 }
+actionNames={
+    'L5','L4','L3','L2','L1',
+    'C',
+    'R1','R2','R3','R4','R5',
+    'restart',
+    'auto',
+    'skip',
+    'sfxVolDn',
+    'sfxVolUp',
+    'musicVolDn',
+    'musicVolUp',
+    'dropSpdDn',
+    'dropSpdUp',
+}
 do--Userdata tables
     KEY_MAP={
         f='L1',d='L2',s='L3',a='L4',lshift='L5',
         space='C',
         j='R1',k='R2',l='R3',[';']='R4',['/']='R5',
-        R='restart',
-        ['-']='dropSlower',
-        ['=']='dropFaster',
+        r='restart',
+        ['return']='skip',
+        f5='auto',
+        f1='sfxVolDn',
+        f2='sfxVolUp',
+        f3='musicVolDn',
+        f4='musicVolUp',
+        ['-']='dropSpdDn',
+        ['=']='dropSpdUp',
     }
     for i=1,#KEY_MAP do
         setmetatable(KEY_MAP[i],{__index=KEY_MAP})

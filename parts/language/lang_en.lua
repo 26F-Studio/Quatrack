@@ -104,5 +104,16 @@ return{
             vib="Vibrations",
             voc="Voices",
         },
+        setting_key={
+            restart="restart",
+            skip="skip",
+            auto="auto",
+            sfxVolDn="SFX Vol-",
+            sfxVolUp="SFX Vol+",
+            musicVolDn="Music Vol-",
+            musicVolUp="Music Vol+",
+            dropSpdDn="Scroll Slower",
+            dropSpdUp="Scroll Faster",
+        },
     },
 }

@@ -224,8 +224,12 @@ function scene.keyDown(key,isRep)
         end
     elseif k=='escape'then
         SCN.back()
-    elseif k=='f2'then
-        autoPlay=true
+    elseif k=='auto'then
+        autoPlay=not autoPlay
+        if autoPlay then
+            curAcc=-1e99
+            fullAcc=1e99
+        end
     end
 end
 function scene.keyUp(key)
@@ -313,17 +317,17 @@ function scene.update(dt)
             if note then
                 if note.type=='tap'then
                     if time>=note.time then
-                        _trackPress(i)
-                        _trackRelease(i)
+                        _trackPress(tracks[i].name)
+                        _trackRelease(tracks[i].name)
                     end
                 end
             end
             note=tracks[i].notes[1]
             if note and note.type=='hold'then
                 if note.head then
-                    if time>=note.time then _trackPress(i)end
+                    if time>=note.time then _trackPress(tracks[i].name)end
                 else
-                    if time>=note.etime then _trackRelease(i)end
+                    if time>=note.etime then _trackRelease(tracks[i].name)end
                 end
             end
         end
