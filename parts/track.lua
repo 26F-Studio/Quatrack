@@ -258,13 +258,13 @@ function Track:draw(map)
     --Draw press effect
     if self.pressed then
         gc_setColor(s.r,s.g,s.b,s.alpha*.626)
-        gc_rectangle('fill',-trackW,0,2*trackW,20)
+        gc_rectangle('fill',-trackW,0,2*trackW,ky*20)
     else
         local rT=self.time-self.lastReleaseTime
         if rT<.26 then
             local pressH=1-rT/.26
             gc_setColor(s.r,s.g,s.b,s.alpha*pressH*.626)
-            gc_rectangle('fill',-trackW,0,2*trackW,pressH*20)
+            gc_rectangle('fill',-trackW,0,2*trackW,ky*pressH*20)
         end
     end
 
