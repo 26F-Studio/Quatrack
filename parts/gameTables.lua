@@ -59,11 +59,10 @@ rankColors={
     COLOR.lYellow,
     COLOR.lGreen,
     COLOR.lBlue,
-    COLOR.dMagenta,
+    COLOR.dViolet,
+    COLOR.dWine,
     COLOR.dGray,
-    COLOR.dSea,
-    COLOR.dRed,
-}for i=1,#rankColors do rankColors[i]={.6+rankColors[i][1]*.4,.6+rankColors[i][2]*.4,.6+rankColors[i][3]*.4} end
+}for i=1,#rankColors do rankColors[i]={.4+rankColors[i][1]*.6,.4+rankColors[i][2]*.6,.4+rankColors[i][3]*.6} end
 do--Userdata tables
     KEY_MAP={
         {space=1},
