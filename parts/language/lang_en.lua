@@ -52,12 +52,13 @@ return{
         "Powered by LÖVE",
         "",
         "Program: MrZ",
+        "Rule design: MrZ, 蕴空之灵",
+        "Music: T6735, T0722",
         "Art: MrZ",
-        "Music:  T6735, T0722",
         "Sound: MrZ",
         "",
         "Special Thanks:",
-        "蕴空之灵, Big_True",
+        "Big_True",
     },
     WidgetText={
         main={
