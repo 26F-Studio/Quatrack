@@ -231,9 +231,19 @@ function Map.new(file)
                     args={r,g,b,false},
                 }
             elseif op=='A'then--Available
-                _syntaxCheck(opType=='set'and #data<=2 or opType=='move'and #data<=2,"Too many arguments")
-                _syntaxCheck(data[2]=='true'or data[2]=='false',"Invalid option (need true/false)")
-                data[2]=data[2]=='true'
+                if opType=='set'then
+                    if data[2]then
+                        _syntaxCheck(data[2]=='true'or data[2]=='false',"Invalid option (need true/false)")
+                        _syntaxCheck(#data<=2,"Too many arguments")
+                    end
+                elseif opType=='move'then
+                    _syntaxCheck(#data<=1,"Too many arguments")
+                end
+                if data[2]=='true'then
+                    data[2]=true
+                elseif data[2]=='false'then
+                    data[2]=false
+                end
                 event={
                     type="setTrack",
                     time=curTime,

@@ -60,7 +60,7 @@ function Track:moveAlpha(da)
     self.targetState.alpha=MATH.interval(self.targetState.alpha+da/100,0,1)
 end
 function Track:moveAvailable()--wtf
-    self:setAvailable(not self.targetState.available)
+    self:setAvailable(not self.state.available)
 end
 function Track:moveColor(dr,dg,db)
     self.targetState.r=MATH.interval(self.targetState.r+(dr or 0),0,1)
@@ -96,7 +96,7 @@ function Track:setAlpha(alpha,force)
     if force then self.state.alpha=alpha end
     self.targetState.alpha=alpha
 end
-function Track:setAvailable(bool)
+function Track:setAvailable(bool)print(bool)
     if bool==nil then bool=self.defaultState.available end
     self.state.available=bool
     if not self.state.available and self.pressed then
