@@ -9,9 +9,9 @@ local listBox=WIDGET.newListBox{name='sel',x=60,y=80,w=1160,h=480,lineH=40,drawF
         gc.rectangle('fill',0,0,1160,40)
     end
     gc.setColor(1,1,1)
-    gc.draw(v.mapName,10,-1,nil,min(800/v.mapName:getWidth(),1),1)
+    gc.draw(v.mapName,10,-1,nil,min(770/v.mapName:getWidth(),1),1)
     gc.setColor(COLOR.Z)
-    gc.draw(v.mapAuth,980,-1,nil,min(150/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
+    gc.draw(v.mapAuth,980,-1,nil,min(200/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
 
     setFont(30,'mono')
     gc.setColor(v.difficultyColor)
@@ -65,7 +65,8 @@ local function _freshSongList()
                         dText:sub(1,1)=='N'and COLOR.lY or
                         dText:sub(1,1)=='H'and COLOR.lR or
                         dText:sub(1,1)=='L'and COLOR.lM or
-                        COLOR.H,
+                        dText:sub(1,1)=='O'and COLOR.lH or
+                        COLOR.lX,
                     tracks=metaData.tracks,
                 })
             end
