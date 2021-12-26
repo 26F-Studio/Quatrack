@@ -103,10 +103,6 @@ return{
             warn="Warning SFX",
             vib="Vibrations",
             voc="Voices",
-
-            sfxPack="SFX Pack",
-            vocPack="Voice Pack",
-            apply="Apply",
         },
     },
 }

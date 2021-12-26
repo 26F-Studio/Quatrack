@@ -105,9 +105,7 @@ do--Userdata tables
         trackW=1,
 
         --Sound
-        autoMute=true,
-        sfxPack='chiptune',
-        vocPack='miya',
+        autoMute=false,
         mainVol=1,
         sfx=1,
         sfx_spawn=0,

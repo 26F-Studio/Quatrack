@@ -103,10 +103,6 @@ return{
             warn="危险警告",
             vib="振动",
             voc="语音",
-
-            sfxPack="音效包",
-            vocPack="语音包",
-            apply="应用",
         },
     },
 }
