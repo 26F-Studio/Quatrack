@@ -18,23 +18,23 @@ hitColors={
     COLOR.lViolet,
     COLOR.lSea,
     COLOR.lOrange,
-    COLOR.white,
+    COLOR.lGray,
     COLOR.white,
 }
 hitTexts={
     [-1]="MISS",
     [0]="BAD",
-    'OK',
     'WELL',
     'GOOD',
     'PERF',
+    'PREC',
     'MARV'
 }
 hitAccList={
-    -100,--OK
-    -26, --WELL
-    62,  --GOOD
-    100, --PERF
+    -100,--WELL
+    -33, --GOOD
+    66,  --PERF
+    100, --PREC
     101, --MARV
 }
 hitLVOffsets={--Time judgement
