@@ -309,11 +309,10 @@ function scene.update(dt)
                 end
             end
             note=tracks[i].notes[1]
-            if note.type=='hold'then
+            if note and note.type=='hold'then
                 if note.head then
                     if time>=note.time then _trackPress(i)end
                 else
-                    print(time-note.etime)
                     if time>=note.etime then _trackRelease(i)end
                 end
             end
