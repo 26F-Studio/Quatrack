@@ -125,13 +125,13 @@ jobs:
         type: Snapshot
         apkCode: ${{ needs.get-info.outputs.apkCode }}
         name: ${{ needs.get-info.outputs.name }}
+        commit: ${{ needs.get-info.outputs.commit }}
         file-path: Quatrack_Snapshot.apk
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
         KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         ALIAS: ${{ secrets.ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        name: ${{ needs.get-info.outputs.name }}
-        commit: ${{ needs.get-info.outputs.commit }}
+
     - name: Upload
       uses: actions/upload-artifact@v2
       with:

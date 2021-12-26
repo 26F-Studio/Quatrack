@@ -12,6 +12,11 @@ inputs:
     required: true
   icon:
     required: true
+  name:
+    required: true
+  commit:
+    required: true
+
 runs:
   using: "composite"
   steps:

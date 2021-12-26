@@ -1,11 +1,14 @@
 name: 'Build Android'
 description: 'Build Android package.'
+
 inputs:
   type:
     required: true
   apkCode:
     required: true
   name:
+    required: true
+  commit:
     required: true
   file-path:
     required: true
@@ -17,6 +20,7 @@ inputs:
     required: true
   KEY_PASSWORD:
     required: true
+
 runs:
   using: "composite"
   steps:
