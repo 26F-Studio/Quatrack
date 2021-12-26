@@ -449,6 +449,10 @@ function Map.new(file)
         line=line-1
     end
 
+    for i=1,#longBarState do
+        _syntaxCheck(not longBarState[i],("Long bar not ended (Track $1)"):repD(i))
+    end
+
     --Reset two pointers
     o.notePtr,o.animePtr=1,1
 
