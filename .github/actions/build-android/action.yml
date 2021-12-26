@@ -43,11 +43,11 @@ runs:
         if '${{ inputs.type }}' == 'Release':
           appName = 'Quatrack'
           packageName = 'org.love2d.MrZ.Quatrack'
-          edition = 'release'
+          edition = 'quatrack_release'
         elif '${{ inputs.type }}' == 'Snapshot':
           appName = 'Quatrack_Snapshot'
           packageName = 'org.love2d.MrZ.Quatrack.Snapshot'
-          edition = 'snapshot'
+          edition = 'quatrack_snapshot'
         with open('./love-android/app/src/main/AndroidManifest.xml', "r+", encoding='utf-8') as file:
           data = file.read()
           data = data\
