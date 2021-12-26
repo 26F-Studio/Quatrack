@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Infinity Heaven
 $musicAuth=HyuN
 $mapAuth=AcSier
-$mapDifficulty=Normal.1
+$mapDifficulty=Normal-1
 
 $songFile=infinityheaven
 $songOffset=0.17
