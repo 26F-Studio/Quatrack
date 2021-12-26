@@ -137,14 +137,42 @@ function scene.draw()
     gc.pop()
 
     --Draw hits
-    setFont(40)
-    for i=-1,5 do
-        gc.setColor(hitColors[i])
-        gc.printf(hitTexts[i],725,460-40*i,200,'right')
-        gc.print(results.hits[i],960,460-40*i)
-        gc.setColor(1,1,1,.626)
-        gc.print(results.hits[i],960,460-40*i)
-    end
+    local hits=results.hits
+    setFont(100)
+    gc.setColor(.92,.82,.65)
+    gc.printf(hits[3]+hits[4]+hits[5],0,240,960,'right')
+
+    setFont(80)
+    gc.setColor(.58,.65,.96)
+    gc.printf(hits[1]+hits[2],0,340,960,'right')
+
+    gc.setColor(.5,.1,.1)
+    gc.printf(hits[-1]+hits[0],0,420,960,'right')
+
+    setFont(25)
+    gc.setColor(hitColors[5])
+    gc.printf(hitTexts[5],0,267,1045,'right')
+    gc.print(hits[5],1055,267)
+    gc.setColor(hitColors[4])
+    gc.printf(hitTexts[4],0,292,1045,'right')
+    gc.print(hits[4],1055,292)
+    gc.setColor(hitColors[3])
+    gc.printf(hitTexts[3],0,317,1045,'right')
+    gc.print(hits[3],1055,317)
+
+    gc.setColor(hitColors[2])
+    gc.printf(hitTexts[2],0,360+3,1045,'right')
+    gc.print(hits[2],1055,363)
+    gc.setColor(hitColors[1])
+    gc.printf(hitTexts[1],0,390+3,1045,'right')
+    gc.print(hits[1],1055,393)
+
+    gc.setColor(hitColors[0])
+    gc.printf(hitTexts[0],0,440+3,1045,'right')
+    gc.print(hits[0],1055,443)
+    gc.setColor(hitColors[-1])
+    gc.printf(hitTexts[-1],0,470+3,1045,'right')
+    gc.print(hits[-1],1055,473)
 end
 
 scene.widgetList={
