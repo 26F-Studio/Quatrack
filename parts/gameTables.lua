@@ -62,7 +62,7 @@ rankColors={
     COLOR.dViolet,
     COLOR.dWine,
     COLOR.dGray,
-}for i=1,#rankColors do rankColors[i]={.4+rankColors[i][1]*.6,.4+rankColors[i][2]*.6,.4+rankColors[i][3]*.6} end
+}for i=1,#rankColors do rankColors[i]={.3+rankColors[i][1]*.7,.3+rankColors[i][2]*.7,.3+rankColors[i][3]*.7} end
 defaultTrackNames={
     {'C'},
     {'L1','R1'},
