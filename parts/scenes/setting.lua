@@ -12,6 +12,12 @@ function scene.draw()
     posterizedText('SETTINGS',350,10)
 end
 
+local function _updateSFXvol()
+    if math.abs(SETTING.musicDelay)>50 then
+        SETTING.sfx=0
+        SFX.setVol(0)
+    end
+end
 local function sliderShow_time(S)
     return("%.0f"):format(S.disp()).." ms"
 end
@@ -26,7 +32,7 @@ local function sliderShow_mul(S)
 end
 
 scene.widgetList={
-    WIDGET.newSlider{name='musicDelay', x=200, y=150,w=420,lim=160,axis={-260,260,1},smooth=true,disp=SETval('musicDelay'),show=sliderShow_time,code=SETsto('musicDelay')},
+    WIDGET.newSlider{name='musicDelay', x=200, y=150,w=420,lim=160,axis={-260,260,1},smooth=true,disp=SETval('musicDelay'),show=sliderShow_time,code=function(v)SETTING.musicDelay=v;_updateSFXvol()end},
     WIDGET.newSlider{name='dropSpeed',  x=200, y=200,w=420,lim=160,axis={-8,8,1},                disp=SETval('dropSpeed'),code=SETsto('dropSpeed')},
     WIDGET.newSlider{name='noteThick',  x=200, y=250,w=420,lim=160,axis={10,50,4},               disp=SETval('noteThick'),code=SETsto('noteThick')},
     WIDGET.newSlider{name='holdAlpha',  x=200, y=300,w=420,lim=160,axis={.2,.8},                 disp=SETval('holdAlpha'),code=SETsto('holdAlpha')},
@@ -50,7 +56,9 @@ scene.widgetList={
     WIDGET.newSlider{name='maxFPS',     x=860,y=500,w=360,lim=180,axis={60,360,10},smooth=true,  disp=SETval('maxFPS'),show=sliderShow_fps,code=SETsto('maxFPS')},
     WIDGET.newSlider{name='frameMul',   x=860,y=560,w=360,lim=180,axis={20,100,10},              disp=SETval('frameMul'),show=sliderShow_mul,code=SETsto('frameMul')},
 
-    WIDGET.newButton{name='back',x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
+    WIDGET.newButton{name='keymapping', x=900,y=640,w=170,h=80,font=60,fText=CHAR.key.keyboard,code=goScene'setting_key'},
+
+    WIDGET.newButton{name='back',       x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
 }
 
 return scene

@@ -63,18 +63,30 @@ rankColors={
     COLOR.dWine,
     COLOR.dGray,
 }for i=1,#rankColors do rankColors[i]={.4+rankColors[i][1]*.6,.4+rankColors[i][2]*.6,.4+rankColors[i][3]*.6} end
+defaultTrackNames={
+    {'C'},
+    {'L1','R1'},
+    {'L1','C','R1'},
+    {'L2','L1','R1','R2'},
+    {'L2','L1','C','R1','R2'},
+    {'L3','L2','L1','R1','R2','R3'},
+    {'L3','L2','L1','C','R1','R2','R3'},
+    {'L4','L3','L2','L1','R1','R2','R3','R4'},
+    {'L4','L3','L2','L1','C','R1','R2','R3','R4'},
+    {'L5','L4','L3','L2','L1','R1','R2','R3','R4','R5'},
+    {'L5','L4','L3','L2','L1','C','R1','R2','R3','R4','R5'},
+}
+trackNames={
+    L1=true,L2=true,L3=true,L4=true,L5=true,
+    R1=true,R2=true,R3=true,R4=true,R5=true,
+    C=true,
+}
 do--Userdata tables
     KEY_MAP={
-        {space=1},
-        {d=1,f=1,j=2,k=2},
-        {d=1,f=1,v=2,n=2,j=3,k=3},
-        {d=1,f=2,j=3,k=4},
-        {d=1,f=2,v=3,n=3,j=4,k=5},
-        {s=1,d=2,f=3,j=4,k=5,l=6},
-        {s=1,d=2,f=3,space=4,j=5,k=6,l=7},
-        {a=1,s=2,d=3,f=4,j=5,k=6,l=7,[';']=8},
-        space='skip',
-        ['`']='restart',
+        f='L1',d='L2',s='L3',a='L4',lshift='L5',
+        space='C',
+        j='R1',k='R2',l='R3',[';']='R4',['/']='R5',
+        R='restart',
         ['-']='dropSlower',
         ['=']='dropFaster',
     }

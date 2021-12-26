@@ -13,6 +13,7 @@ local Track={}
 function Track.new(id)
     local track={
         id=id,
+        name=false,--Must set a name later!
         pressed=false,
         lastPressTime=-1e99,
         lastReleaseTime=-1e99,
@@ -32,6 +33,10 @@ function Track.new(id)
     track.defaultState=TABLE.copy(track.state)
     track.targetState=TABLE.copy(track.state)
     return setmetatable(track,{__index=Track})
+end
+
+function Track:rename(name)
+    self.name=name
 end
 
 function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,y end

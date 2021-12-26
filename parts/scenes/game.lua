@@ -21,6 +21,7 @@ local hitTexts=hitTexts
 local hitAccList=hitAccList
 local hitLVOffsets=hitLVOffsets
 local chainColors=chainColors
+local trackNames=trackNames
 
 local needSaveDropSpeed
 
@@ -35,6 +36,7 @@ local function _getHitLV(div)
     0
 end
 
+local autoPlay
 local playSongTime,songLength
 local texts={}
 
@@ -82,6 +84,8 @@ end
 local scene={}
 
 function scene.sceneInit()
+    autoPlay=false
+
     map=SCN.args[1]
 
     playSongTime=map.songOffset+SETTING.musicDelay/1000
@@ -124,6 +128,7 @@ function scene.sceneInit()
         tracks[id]=require'parts.track'.new(id)
         tracks[id]:setDefaultPosition(70*(2*id-map.tracks-1),320)
         tracks[id]:setPosition(nil,nil,true)
+        tracks[id]:rename(defaultTrackNames[map.tracks][id])
     end
 
     applyFPS(true)
@@ -134,7 +139,7 @@ function scene.sceneBack()
     applyFPS(false)
 end
 
-local function _trigNote(deviateTime,k,noTailHold)
+local function _trigNote(deviateTime,track,noTailHold)
     hitTextTime=TIME()
     fullAcc=fullAcc+100
     hitLV=_getHitLV(deviateTime)
@@ -151,8 +156,8 @@ local function _trigNote(deviateTime,k,noTailHold)
         combo=combo+1
         if combo>maxCombo then maxCombo=combo end
         if not noTailHold then
-            if k then
-                SFX.play('hit',1,tracks[k].state.x/420)
+            if track then
+                SFX.play('hit',1,track.state.x/420)
             end
             if abs(deviateTime)>.16 then deviateTime=deviateTime>0 and .16 or -.16 end
             ins(hitOffests,1,deviateTime)
@@ -168,21 +173,25 @@ local function _trigNote(deviateTime,k,noTailHold)
     _updateAcc()
 end
 local function _trackPress(k)
-    if tracks[k].state.available then
-        local deviateTime=tracks[k]:press()
-        if deviateTime then _trigNote(deviateTime,k)end
+    for i=1,#tracks do
+        if tracks[i].state.available and tracks[i].name==k then
+            local deviateTime=tracks[i]:press()
+            if deviateTime then _trigNote(deviateTime,tracks[i])end
+        end
     end
 end
 local function _trackRelease(k)
-    if tracks[k].state.available then
-        local deviateTime,noTailHold=tracks[k]:release()
-        if deviateTime then _trigNote(deviateTime,k,noTailHold)end
+    for i=1,#tracks do
+        if tracks[i].state.available and tracks[i].name==k then
+            local deviateTime,noTailHold=tracks[i]:release()
+            if deviateTime then _trigNote(deviateTime,tracks[i],noTailHold)end
+        end
     end
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
-    local k=KEY_MAP[map.tracks][key]or key
-    if type(k)=='number'then
+    local k=KEY_MAP[key]or key
+    if trackNames[k]then
         _trackPress(k)
     elseif k=='skip'then
         if map.finished then
@@ -215,14 +224,14 @@ function scene.keyDown(key,isRep)
         end
     elseif k=='escape'then
         SCN.back()
+    elseif k=='f2'then
+        autoPlay=true
     end
 end
 function scene.keyUp(key)
-    local k=KEY_MAP[map.tracks][key]
-    if k then
-        if type(k)=='number'then
-            _trackRelease(k)
-        end
+    local k=KEY_MAP[key]
+    if trackNames[k]then
+        _trackRelease(k)
     end
 end
 
@@ -299,7 +308,7 @@ function scene.update(dt)
 
     --Update tracks (check too-late miss)
     for i=1,map.tracks do
-        if kbIsDown('tab')then
+        if autoPlay then
             local _,note=tracks[i]:pollNote('note')
             if note then
                 if note.type=='tap'then
@@ -322,7 +331,7 @@ function scene.update(dt)
         local missCount,marvCount=tracks[i]:updateLogic(time)
         if marvCount>0 then
             for _=1,marvCount do
-                _trigNote(0,i,true)
+                _trigNote(0,tracks[i],true)
             end
         end
         if missCount>0 then
