@@ -64,7 +64,8 @@ local function _freshSongList()
                         dText:sub(1,1)=='E'and COLOR.lG or
                         dText:sub(1,1)=='N'and COLOR.lY or
                         dText:sub(1,1)=='H'and COLOR.lR or
-                        dText:sub(1,1)=='L'and COLOR.lM,
+                        dText:sub(1,1)=='L'and COLOR.lM or
+                        COLOR.H,
                     tracks=metaData.tracks,
                 })
             end
