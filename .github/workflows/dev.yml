@@ -66,7 +66,7 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows64
+        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows_64
         path: love
 
   build-windows-x86:
@@ -90,7 +90,7 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows32
+        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows_32
         path: love
 
   build-linux:
