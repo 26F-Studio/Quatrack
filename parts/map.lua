@@ -212,8 +212,16 @@ function Map.new(file)
                 if data[2]==''then
                     r,g,b=1,1,1
                 else
+                    local neg
+                    if data[2]:sub(1,1)=='-'then
+                        neg=true
+                        data[2]=data[2]:sub(2)
+                    end
                     _syntaxCheck(not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6,"Wrong color code")
                     r,g,b=STRING.hexColor(data[2])
+                    if neg then
+                        r,g,b=-r,-g,-b
+                    end
                 end
                 event={
                     type="setTrack",
