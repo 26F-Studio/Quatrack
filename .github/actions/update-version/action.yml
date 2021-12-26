@@ -1,0 +1,41 @@
+name: 'Update version'
+description: 'Common update logic for Snapshot and Release.'
+
+inputs:
+  commit:
+    required: false
+  type:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Update version
+      shell: python
+      run: |
+        import re
+        with open('version.lua', 'r+', encoding='utf-8') as file:
+          commitHash = '${{ inputs.commit }}'
+          if commitHash != '':
+            commitHash = '@' + commitHash[0:4]
+          data = file.read()
+          data = re.sub('(\d)"', r'\1' + commitHash + '"', data, 1)
+          file.seek(0)
+          file.truncate()
+          file.flush()
+          file.write(data)
+        exit()
+    - name: Update Snapshot saving folder
+      shell: python
+      run: |
+        if '${{ inputs.type }}' == 'snapshot':
+          with open('conf.lua', 'r+', encoding='utf-8') as file:
+            data = file.read()
+            data = data.replace("t.identity='Quatrack'--Saving folder", "t.identity='Quatrack_Snapshot'--Saving folder")
+            file.seek(0)
+            file.truncate()
+            file.flush()
+            file.write(data)
+          exit()
+        else:
+          exit()

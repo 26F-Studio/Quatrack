@@ -1,0 +1,20 @@
+name: 'Get and Unzip'
+description: 'Downloads zip and unzips it.'
+inputs:
+  url:
+    required: true
+  dir:
+    required: false
+    default: '.'
+  temp-file:
+    required: false
+    default: temp.zip
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        curl -L ${{ inputs.url }} -o ${{ inputs.temp-file }}
+    - shell: bash
+      run: |
+        7z x ${{ inputs.temp-file }} -o${{ inputs.dir }}
