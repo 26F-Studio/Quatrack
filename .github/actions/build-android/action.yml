@@ -31,7 +31,7 @@ runs:
     - name: Get love pack
       uses: actions/download-artifact@v2
       with:
-        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Love
+        name: Quatrack_${{ inputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ inputs.commit }}_Love
         path: love-android/app/src/main/assets
     - name: Update Android information
       shell: python

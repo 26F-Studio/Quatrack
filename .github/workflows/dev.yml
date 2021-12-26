@@ -61,6 +61,8 @@ jobs:
         arch: win64
         version: ${{ needs.get-info.outputs.name }}
         icon: .\.github\build\Windows\icon_snapshot.ico
+        name: ${{ needs.get-info.outputs.name }}
+        commit: ${{ needs.get-info.outputs.commit }}
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
@@ -83,6 +85,8 @@ jobs:
         arch: win32
         version: ${{ needs.get-info.outputs.name }}
         icon: .\.github\build\Windows\icon_snapshot.ico
+        name: ${{ needs.get-info.outputs.name }}
+        commit: ${{ needs.get-info.outputs.commit }}
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
@@ -126,6 +130,8 @@ jobs:
         KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         ALIAS: ${{ secrets.ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        name: ${{ needs.get-info.outputs.name }}
+        commit: ${{ needs.get-info.outputs.commit }}
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
