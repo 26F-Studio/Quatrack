@@ -35,7 +35,7 @@ local function _freshSongList()
                     mapName="*"..fileName,
                     musicAuth="?",
                     mapAuth="?",
-                    mapDifficulty="LV.?",
+                    mapDifficulty="?-?",
                     tracks="?",
                 }
                 while true do
