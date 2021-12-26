@@ -444,6 +444,7 @@ function Map.new(file)
                 ::CONTINUE_nextState::
             end
             lastLineState=trackUsed
+            o.songLength=curTime
             curTime=curTime+60/curBPM*step
         end
         line=line-1
@@ -455,13 +456,6 @@ function Map.new(file)
 
     --Reset two pointers
     o.notePtr,o.animePtr=1,1
-
-    local lastNote=o.noteQueue[#o.noteQueue]
-    if lastNote.type=='tap'then
-        o.songLength=lastNote.time
-    elseif lastNote.type=='hold'then
-        o.songLength=lastNote.etime
-    end
 
     return setmetatable(o,{__index=Map})
 end
