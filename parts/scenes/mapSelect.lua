@@ -30,7 +30,8 @@ local function _freshSongList()
         for _,fileName in next,love.filesystem.getDirectoryItems(path)do
             if fileName:sub(-4)=='.qbp'then
                 local fullPath=path..'/'..fileName
-                local iterator=love.filesystem.newFile(fullPath):lines()
+                local file=love.filesystem.newFile(fullPath)
+                local iterator=file:lines()
                 local metaData={
                     mapName="*"..fileName,
                     musicAuth="?",
@@ -50,6 +51,7 @@ local function _freshSongList()
                         end
                     end
                 end
+                file:close()
                 local color=source=='game'and COLOR.Z or source=='outside'and COLOR.lY or COLOR.lD
                 local dText=metaData.mapDifficulty
                 ins(mapList,{
@@ -75,6 +77,7 @@ local function _freshSongList()
             return a.path<b.path
         end
     end)
+    listBox:setList(mapList)
 end
 
 local scene={}
@@ -82,7 +85,6 @@ local scene={}
 function scene.sceneInit()
     _freshSongList()
     BGM.play()
-    listBox:setList(mapList)
 end
 
 function scene.keyDown(key)
