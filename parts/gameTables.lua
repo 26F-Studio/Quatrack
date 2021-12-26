@@ -88,8 +88,8 @@ do--Userdata tables
         powerInfo=true,
         cleanCanvas=false,
         fullscreen=true,
-        maxFPS=180,
-        frameMul=50,
+        maxFPS=300,
+        frameMul=30,
 
         --System
         sysCursor=false,
@@ -97,8 +97,8 @@ do--Userdata tables
         slowUnfocus=true,
 
         --Game
-        musicDelay=260,
-        dropSpeed=8,
+        musicDelay=0,
+        dropSpeed=0,
         noteThick=22,
         holdAlpha=.26,
         holdWidth=.8,

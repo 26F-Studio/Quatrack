@@ -269,7 +269,7 @@ function Track:draw(map)
     end
 
     --Draw notes
-    local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed-8 or 1))*ky
+    local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed or 0))*ky
     local thick=SETTING.noteThick*ky
     for i=1,#self.notes do
         local note=self.notes[i]

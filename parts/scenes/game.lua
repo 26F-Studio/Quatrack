@@ -198,16 +198,16 @@ function scene.keyDown(key,isRep)
         end
     elseif k=='dropSlower'then
         if score0==0 then
-            SETTING.dropSpeed=max(SETTING.dropSpeed-1,0)
-            MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
+            SETTING.dropSpeed=max(SETTING.dropSpeed-1,-8)
+            MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
             needSaveDropSpeed=true
         else
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
     elseif k=='dropFaster'then
         if score0==0 then
-            SETTING.dropSpeed=min(SETTING.dropSpeed+1,16)
-            MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed-8),0)
+            SETTING.dropSpeed=min(SETTING.dropSpeed+1,8)
+            MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
             needSaveDropSpeed=true
         else
             MES.new('warn',text.cannotAdjustDropSpeed,0)
