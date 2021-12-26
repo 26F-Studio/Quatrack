@@ -331,6 +331,29 @@ function Map.new(file)
                     trackDir[i]=l[id]
                 end
             end
+        elseif str:sub(1,1)=='%'then--Rename tracks
+            local nameList=str:sub(2):split(',')
+            _syntaxCheck(#nameList==o.tracks,"Track names not match track count")
+            for id=1,#nameList do
+                local name=nameList[id]
+                _syntaxCheck(name=='x'or trackNames[name],"Wrong track name")
+                ins(o.eventQueue,{
+                    type="setTrack",
+                    time=curTime,
+                    track=id,
+                    operation='rename',
+                    args={name},
+                })
+                if name=='x'then
+                    ins(o.eventQueue,{
+                        type="setTrack",
+                        time=curTime,
+                        track=id,
+                        operation='setAvailable',
+                        args={false},
+                    })
+                end
+            end
         else--Notes
             local readState='note'
             local trackUsed=TABLE.new(false,o.tracks)
