@@ -52,7 +52,8 @@ local hits={}
 local touches
 
 local function _updateAcc()
-    accText=("%.2f%%"):format(100*max(curAcc,0)/max(fullAcc,1))
+    local acc=int(10000*curAcc/max(fullAcc,1))/100
+    accText=("%.2f%%"):format(acc)
 end
 
 local function _tryGoResult()
