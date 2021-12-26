@@ -242,16 +242,16 @@ function Track:draw(map)
     local ky=s.ky
 
     --Draw track line
-    local unitY=26*ky
+    local unitY=620*ky
     gc_setColor(s.r,s.g,s.b,s.alpha)
     gc_rectangle('fill',-trackW-4,0,2*trackW+8,4)
-    for i=0,25 do
-        gc_setColor(s.r,s.g,s.b,s.alpha*(1-i/unitY))
-        gc_rectangle('fill',-trackW,-i*unitY,-4,-unitY)
-        gc_rectangle('fill',trackW,-i*unitY,4,-unitY)
+    for i=0,.99,.01 do
+        gc_setColor(s.r,s.g,s.b,s.alpha*(1-i))
+        gc_rectangle('fill',-trackW,-i*unitY,-4,-unitY*.01)
+        gc_rectangle('fill',trackW,-i*unitY,4,-unitY*.01)
         if self.pressed then
-            gc_setColor(s.r,s.g,s.b,s.alpha*((1-i/unitY)/6))
-            gc_rectangle('fill',-trackW,-i*unitY-unitY,2*trackW,unitY)
+            gc_setColor(s.r,s.g,s.b,s.alpha*(1-i)/6)
+            gc_rectangle('fill',-trackW,-i*unitY,2*trackW,-unitY*.01)
         end
     end
 
