@@ -248,7 +248,7 @@ function scene.touchDown(x,y,id)
         if D2<minD2 then minD2,closestTrackID=D2,i end
     end
     ins(touches,{id,closestTrackID})
-    _trackPress(closestTrackID)
+    _trackPress(tracks[closestTrackID].name)
 end
 function scene.touchUp(_,_,id)
     for i=1,#touches do
@@ -261,7 +261,7 @@ function scene.touchUp(_,_,id)
                 end
             end
             if allReleased then
-                _trackRelease(touches[i][2])
+                _trackRelease(tracks[touches[i][2]].name)
             end
             rem(touches,i)
             return
