@@ -27,6 +27,7 @@ function Map.new(file)
         tracks=4,
         freeSpeed=true,
 
+        valid=nil,
         qbpFilePath=file,
         songLength=nil,
 
@@ -37,7 +38,12 @@ function Map.new(file)
         animePtr=0,
         finished=false,
     }
-    if not file then return setmetatable(o,{__index=Map})end
+    if file then
+        o.valid=true
+    else
+        o.valid=false
+        return setmetatable(o,{__index=Map})
+    end
 
     --Read file
     local fileData={}do

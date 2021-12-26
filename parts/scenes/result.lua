@@ -13,6 +13,7 @@ local scene={}
 
 function scene.sceneInit()
     results=SCN.args[1]or{
+        fake=true,
         map=require'parts.map'.new(),
         score=62600,
         maxCombo=260,
@@ -52,11 +53,13 @@ function scene.keyDown(key,isRep)
     if isRep then return end
     local k=KEY_MAP[key]or key
     if k=='restart'then
-        local map,errmsg=loadBeatmap(results.map.qbpFilePath)
-        if map then
-            SCN.swapTo('game',nil,map)
-        else
-            MES.new('error',errmsg)
+        if results.map.valid then
+            local map,errmsg=loadBeatmap(results.map.qbpFilePath)
+            if map then
+                SCN.swapTo('game',nil,map)
+            else
+                MES.new('error',errmsg)
+            end
         end
     elseif k=='escape'then
         SCN.back()
