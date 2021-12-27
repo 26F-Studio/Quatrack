@@ -247,29 +247,19 @@ function Track:draw(map)
     local ky=s.ky
 
     --Draw track line
+    gc_setColor(s.r,s.g,s.b,s.alpha*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
+    gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
+
+    --Draw sides
     local unitY=620*ky
-    gc_setColor(s.r,s.g,s.b,s.alpha)
-    gc_rectangle('fill',-trackW-4,0,2*trackW+8,4)
-    for i=0,.99,.01 do
+    for i=0,99 do
+        i=i*.01
         gc_setColor(s.r,s.g,s.b,s.alpha*(1-i))
-        gc_rectangle('fill',-trackW,-i*unitY,-4,-unitY*.01)
-        gc_rectangle('fill',trackW,-i*unitY,4,-unitY*.01)
+        gc_rectangle('fill',-trackW,4-i*unitY,-4,-unitY*.01)
+        gc_rectangle('fill',trackW,4-i*unitY,4,-unitY*.01)
         if self.pressed then
             gc_setColor(s.r,s.g,s.b,s.alpha*(1-i)/6)
             gc_rectangle('fill',-trackW,-i*unitY,2*trackW,-unitY*.01)
-        end
-    end
-
-    --Draw press effect
-    if self.pressed then
-        gc_setColor(s.r,s.g,s.b,s.alpha*.626)
-        gc_rectangle('fill',-trackW,0,2*trackW,ky*20)
-    else
-        local rT=self.time-self.lastReleaseTime
-        if rT<.26 then
-            local pressH=1-rT/.26
-            gc_setColor(s.r,s.g,s.b,s.alpha*pressH*.626)
-            gc_rectangle('fill',-trackW,0,2*trackW,ky*pressH*20)
         end
     end
 
