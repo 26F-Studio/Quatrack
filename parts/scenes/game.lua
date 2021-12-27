@@ -23,8 +23,6 @@ local hitLVOffsets=hitLVOffsets
 local chainColors=chainColors
 local trackNames=trackNames
 
-local needSaveDropSpeed
-local autoPlayText
 local function _getHitLV(div)
     div=abs(div)
     return
@@ -35,8 +33,13 @@ local function _getHitLV(div)
     div<=hitLVOffsets[1]and 1 or
     0
 end
+local function _showVolMes(v)
+    needSaveSetting=true
+    MES.new('info',('$1%'):repD(('%d'):format(v*100)),0)
+end
 
-local autoPlay
+local needSaveSetting
+local autoPlay,autoPlayTextObj
 local playSongTime,songLength
 local texts={}
 
@@ -62,6 +65,7 @@ local function _tryGoResult()
     for i=1,#tracks do
         if #tracks[i].notes>0 then return end
     end
+    if needSaveSetting then saveSettings()end
     SCN.swapTo('result',nil,{
         map=map,
         score=score0,
@@ -85,7 +89,7 @@ local scene={}
 
 function scene.sceneInit()
     autoPlay=false
-    autoPlayText=autoPlayText or gc.newText(getFont(100),'AUTO')
+    autoPlayTextObj=autoPlayTextObj or gc.newText(getFont(100),'AUTO')
 
     map=SCN.args[1]
 
@@ -120,7 +124,7 @@ function scene.sceneInit()
 
     hitLV,hitTextTime=false,1e-99
 
-    needSaveDropSpeed=false
+    needSaveSetting=false
 
     touches={}
 
@@ -138,6 +142,7 @@ end
 function scene.sceneBack()
     BGM.stop()
     applyFPS(false)
+    if needSaveSetting then saveSettings()end
 end
 
 local function _trigNote(deviateTime,track,noTailHold)
@@ -150,10 +155,6 @@ local function _trigNote(deviateTime,track,noTailHold)
     if hitLV>0 then
         curAcc=curAcc+hitAccList[hitLV]
         score0=score0+int(hitLV*(10000+combo)^.5)
-        if needSaveDropSpeed then
-            saveSettings()
-            needSaveDropSpeed=false
-        end
         combo=combo+1
         if combo>maxCombo then maxCombo=combo end
         if not noTailHold then
@@ -207,11 +208,15 @@ function scene.keyDown(key,isRep)
         else
             MES.new('error',errmsg)
         end
+    elseif k=='sfxVolDn'then SETTING.sfx=max(SETTING.sfx-.1,0)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
+    elseif k=='sfxVolUp'then SETTING.sfx=min(SETTING.sfx+.1,1)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
+    elseif k=='musicVolDn'then SETTING.bgm=max(SETTING.bgm-.1,0)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
+    elseif k=='musicVolUp'then SETTING.bgm=min(SETTING.bgm+.1,1)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
     elseif k=='dropSlower'then
         if score0==0 then
             SETTING.dropSpeed=max(SETTING.dropSpeed-1,-8)
             MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
-            needSaveDropSpeed=true
+            needSaveSetting=true
         else
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
@@ -219,7 +224,7 @@ function scene.keyDown(key,isRep)
         if score0==0 then
             SETTING.dropSpeed=min(SETTING.dropSpeed+1,8)
             MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
-            needSaveDropSpeed=true
+            needSaveSetting=true
         else
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
@@ -362,14 +367,14 @@ function scene.update(dt)
     end
 end
 
-local SCC={1,1,1}
+local SCC={1,1,1}--Super chain color
 function scene.draw()
     gc_replaceTransform(SCR.xOy_m)
 
     --Draw auto mark
     if autoPlay then
         gc_setColor(1,1,1,.0626)
-        mDraw(autoPlayText,nil,nil,nil,3.55)
+        mDraw(autoPlayTextObj,nil,nil,nil,3.55)
     end
 
     --Draw tracks
