@@ -244,11 +244,16 @@ function scene.touchDown(x,y,id)
     local minD2,closestTrackID=1e99,false
     x=x/SETTING.scaleX
     for i=1,#tracks do
-        local D2=abs(cos(tracks[i].state.ang)*(tracks[i].state.x-x)-sin(tracks[i].state.ang)*(tracks[i].state.y-y))
-        if D2<minD2 then minD2,closestTrackID=D2,i end
+        local t=tracks[i]
+        if t.state.available then
+            local D2=abs(cos(t.state.ang)*(t.state.x-x)-sin(t.state.ang)*(t.state.y-y))
+            if D2<minD2 then minD2,closestTrackID=D2,i end
+        end
     end
-    ins(touches,{id,closestTrackID})
-    _trackPress(tracks[closestTrackID].name)
+    if closestTrackID then
+        ins(touches,{id,closestTrackID})
+        _trackPress(tracks[closestTrackID].name)
+    end
 end
 function scene.touchUp(_,_,id)
     for i=1,#touches do
