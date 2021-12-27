@@ -86,8 +86,8 @@ actionNames={
     'C',
     'R1','R2','R3','R4','R5',
     'restart',
-    'auto',
     'skip',
+    'auto',
     'sfxVolDn',
     'sfxVolUp',
     'musicVolDn',
@@ -98,10 +98,10 @@ actionNames={
 do--Userdata tables
     KEY_MAP={
         f='L1',d='L2',s='L3',a='L4',lshift='L5',
-        space='C',
+        b='C',
         j='R1',k='R2',l='R3',[';']='R4',['/']='R5',
-        r='restart',
-        ['return']='skip',
+        ['`']='restart',
+        space='skip',
         f5='auto',
         f1='sfxVolDn',
         f2='sfxVolUp',
