@@ -246,6 +246,11 @@ function Track:draw(map)
     local trackW=50*s.kx*SETTING.trackW
     local ky=s.ky
 
+    --Available indicator for testing
+    -- gc_setColor(1,1,1)
+    -- gc.setLineWidth(2)
+    -- gc.circle(self.state.available and'fill'or'line',0,0,16)
+
     --Draw track line
     gc_setColor(s.r,s.g,s.b,s.alpha*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
     gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
