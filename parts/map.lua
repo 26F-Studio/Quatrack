@@ -126,7 +126,7 @@ function Map.new(file)
                 math.randomseed(love.timer.getTime())
                 math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
             end
-        elseif str:sub(1,1)==':'then--Time mark
+        elseif str:sub(1,1)=='>'then--Time mark
             _syntaxCheck(not loopStack[1],"Cannot set time in loop")
 
             local stamp=str:sub(2):split(":")
@@ -136,7 +136,6 @@ function Map.new(file)
                 _syntaxCheck(type(stamp[i])=='number'and stamp[i]>=0,"Invalid time mark")
             end
             stamp=stamp[1]*60+stamp[2]
-            _syntaxCheck(stamp>curTime,"Cannot warp to past")
 
             curTime=stamp
         elseif str:sub(1,1)=='['then--Animation: set track states
