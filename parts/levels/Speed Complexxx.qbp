@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Speed Complexxx
 $musicAuth=Kobaryo / Srezcat
 $mapAuth=XMiao
-$mapDifficulty=Lunatic-2
+$mapDifficulty=Hard-9
 
 $songFile=SpeedComplexxx
 $songOffset=0.286
@@ -18,16 +18,22 @@ O-----O|
 --O-O--|
 -O---O-|
 --O-O--|
+
+-------
 [A]T,100;[A]A,true;[4]r,-0.4;[4]P
+[5]t,-20;[6]t,-20;[7]t,-20
 ====E
 -------;[5]t,-20;[6]t,-20;[7]t,-20
+====M
 ---O---;[4]r,-51.4;[5]t,20;[6]t,20;[7]t,20
 -------;[1]t,-20;[2]t,-20;[3]t,-20
 ---O---;[4]r,-51.4;[1]t,20;[2]t,20;[3]t,20
-====S7;[4]p,,-300
+====S7
+[4]p,,-300
 [4]A,true
-[A]a
+[A]A,false
 [1]T,5;[2]T,5;[3]T,5;[5]T,5;[6]T,5;[7]T,5
+
 ---H-O-
 -----O-
 -----O-
