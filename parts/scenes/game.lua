@@ -24,7 +24,7 @@ local chainColors=chainColors
 local trackNames=trackNames
 
 local needSaveDropSpeed
-
+local autoPlayText
 local function _getHitLV(div)
     div=abs(div)
     return
@@ -85,6 +85,7 @@ local scene={}
 
 function scene.sceneInit()
     autoPlay=false
+    autoPlayText=autoPlayText or gc.newText(getFont(100),'AUTO')
 
     map=SCN.args[1]
 
@@ -363,8 +364,15 @@ end
 
 local SCC={1,1,1}
 function scene.draw()
-    --Draw tracks
     gc_replaceTransform(SCR.xOy_m)
+
+    --Draw auto mark
+    if autoPlay then
+        gc_setColor(1,1,1,.0626)
+        mDraw(autoPlayText,nil,nil,nil,3.55)
+    end
+
+    --Draw tracks
     for i=1,map.tracks do
         tracks[i]:draw(map)
     end
