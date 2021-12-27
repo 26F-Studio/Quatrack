@@ -32,8 +32,8 @@ hitTexts={
 }
 hitAccList={
     -100,--WELL
-    -33, --GOOD
-    66,  --PERF
+    0,   --GOOD
+    75,  --PERF
     100, --PREC
     101, --MARV
 }
