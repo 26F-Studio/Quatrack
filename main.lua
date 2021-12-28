@@ -157,6 +157,11 @@ end
 
 --Load settings and statistics
 TABLE.update(loadFile('conf/settings','-canSkip')or{},SETTING)
+local savedKey=loadFile('conf/key','-canSkip')
+if savedKey then
+    KEY_MAP=savedKey
+    KEY_MAP_inv:_update()
+end
 
 --Initialize media modules
 IMG.init{
