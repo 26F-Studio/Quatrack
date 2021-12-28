@@ -110,9 +110,16 @@ do--Userdata tables
         ['-']='dropSpdDn',
         ['=']='dropSpdUp',
     }
-    for i=1,#KEY_MAP do
-        setmetatable(KEY_MAP[i],{__index=KEY_MAP})
-    end
+    KEY_MAP_inv={--For show key name
+        _update=function(self)
+            local _f=self._update
+            TABLE.clear(self)
+            self._update=_f
+            for k,v in next,KEY_MAP do
+                self[v]=k
+            end
+        end,
+    }
     SETTING={--Settings
         --Framework
         clickFX=true,

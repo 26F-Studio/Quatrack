@@ -273,7 +273,7 @@ function Track:draw(map)
     if s.nameTime>0 then
         setFont(40)
         gc_setColor(s.r,s.g,s.b,s.alpha*.626*min(2*s.nameTime,1))
-        mStr(TABLE.search(KEY_MAP,self.name),0,-60)
+        mStr(KEY_MAP_inv[self.name],0,-60)
     end
 
     --Draw track line

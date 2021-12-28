@@ -3,7 +3,6 @@ local mStr=GC.mStr
 
 local scene={}
 
-local invMap
 local selected--if waiting for key
 
 local keyNames={
@@ -84,16 +83,9 @@ local keyNames={
     },
 }setmetatable(keyNames.apple,{__index=keyNames.normal})
 
-local function _freshInvMap()
-    invMap={}
-    for i=1,20 do
-        invMap[i]=TABLE.search(KEY_MAP,actionNames[i])or'[X]'
-    end
-end
-
 function scene.sceneInit()
     selected=false
-    _freshInvMap()
+    KEY_MAP_inv:_update()
     BG.set('none')
 end
 function scene.sceneBack()
@@ -115,7 +107,7 @@ function scene.keyDown(key,isRep)
     elseif key=='backspace'then
         if selected then
             KEY_MAP[TABLE.search(KEY_MAP,selected)]=nil
-            _freshInvMap()
+            KEY_MAP_inv:_update()
             selected=false
         end
     elseif selected then
@@ -123,7 +115,7 @@ function scene.keyDown(key,isRep)
             local oldKey=TABLE.search(KEY_MAP,selected)
             if oldKey then KEY_MAP[oldKey]=nil end
             KEY_MAP[key]=selected
-            _freshInvMap()
+            KEY_MAP_inv:_update()
             selected=false
         end
     else
@@ -148,9 +140,9 @@ function scene.draw()
         local W=scene.widgetList[i]
         local x,y=W:getCenter()
         if i<=11 then
-            mStr(invMap[i],x,y-90)
+            mStr(KEY_MAP_inv[actionNames[i]],x,y-90)
         else
-            mStr(invMap[i],x+140,y-25)
+            mStr(KEY_MAP_inv[actionNames[i]],x+140,y-25)
         end
     end
 end

@@ -88,6 +88,7 @@ end
 local scene={}
 
 function scene.sceneInit()
+    KEY_MAP_inv:_update()
     autoPlay=false
     autoPlayTextObj=autoPlayTextObj or gc.newText(getFont(100),'AUTO')
 
