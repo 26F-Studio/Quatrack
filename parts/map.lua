@@ -159,20 +159,20 @@ function Map.new(file)
                 data[2]=tonumber(data[2])
                 data[3]=tonumber(data[3])
                 event={
-                    type="setTrack",
+                    type='setTrack',
                     time=curTime,
                     track=id,
-                    operation=opType.."Position",
+                    operation=opType..'Position',
                     args={data[2],data[3],false},
                 }
             elseif op=='R'then--Rotate
                 _syntaxCheck(#data<=2,"Too many arguments")
                 data[2]=tonumber(data[2])
                 event={
-                    type="setTrack",
+                    type='setTrack',
                     time=curTime,
                     track=id,
-                    operation=opType.."Angle",
+                    operation=opType..'Angle',
                     args={data[2],false},
                 }
             elseif op=='S'then--Size
@@ -180,30 +180,30 @@ function Map.new(file)
                 data[2]=tonumber(data[2])
                 data[3]=tonumber(data[3])
                 event={
-                    type="setTrack",
+                    type='setTrack',
                     time=curTime,
                     track=id,
-                    operation=opType.."Size",
+                    operation=opType..'Size',
                     args={data[2],data[3],false},
                 }
             elseif op=='D'then--Drop speed
                 _syntaxCheck(#data<=2,"Too many arguments")
                 data[2]=tonumber(data[2])
                 event={
-                    type="setTrack",
+                    type='setTrack',
                     time=curTime,
                     track=id,
-                    operation=opType.."DropSpeed",
+                    operation=opType..'DropSpeed',
                     args={data[2],false},
                 }
             elseif op=='T'then--Transparent
                 _syntaxCheck(#data<=2,"Too many arguments")
                 data[2]=tonumber(data[2])
                 event={
-                    type="setTrack",
+                    type='setTrack',
                     time=curTime,
                     track=id,
-                    operation=opType.."Alpha",
+                    operation=opType..'Alpha',
                     args={data[2],false},
                 }
             elseif op=='C'then--Color
@@ -224,10 +224,10 @@ function Map.new(file)
                     end
                 end
                 event={
-                    type="setTrack",
+                    type='setTrack',
                     time=curTime,
                     track=id,
-                    operation=opType.."Color",
+                    operation=opType..'Color',
                     args={r,g,b,false},
                 }
             elseif op=='A'then--Available
@@ -245,11 +245,21 @@ function Map.new(file)
                     data[2]=false
                 end
                 event={
-                    type="setTrack",
+                    type='setTrack',
                     time=curTime,
                     track=id,
-                    operation=opType.."Available",
+                    operation=opType..'Available',
                     args={data[2],false},
+                }
+            elseif op=='N'then--Show track name
+                local time=tonumber(data[2])
+                _syntaxCheck(time and time>0,"Invalid time")
+                event={
+                    type='setTrack',
+                    time=curTime,
+                    track=id,
+                    operation='setNameTime',
+                    args={time,false},
                 }
             else
                 _syntaxCheck(false,"Invalid track operation")
@@ -338,7 +348,7 @@ function Map.new(file)
                 local name=nameList[id]
                 _syntaxCheck(name=='x'or trackNames[name],"Wrong track name")
                 ins(o.eventQueue,{
-                    type="setTrack",
+                    type='setTrack',
                     time=curTime,
                     track=id,
                     operation='rename',
@@ -346,7 +356,7 @@ function Map.new(file)
                 })
                 if name=='x'then
                     ins(o.eventQueue,{
-                        type="setTrack",
+                        type='setTrack',
                         time=curTime,
                         track=id,
                         operation='setAvailable',

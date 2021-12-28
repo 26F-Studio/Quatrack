@@ -4,7 +4,7 @@ local gc_translate,gc_rotate=gc.translate,gc.rotate
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
-local max=math.max
+local max,min=math.max,math.min
 local rem=table.remove
 local MATH=MATH
 
@@ -26,6 +26,7 @@ function Track.new(id)
             dropSpeed=1000,
             r=1,g=1,b=1,alpha=1,
             available=true,
+            nameTime=0,
         },
         defaultState=false,
         targetState=false,
@@ -116,6 +117,11 @@ function Track:setColor(r,g,b,force)
     if force then self.state.r,self.state.g,self.state.b=r,g,b end
     self.targetState.r,self.targetState.g,self.targetState.b=r,g,b
 end
+function Track:setNameTime(nameTime,force)
+    if not nameTime then nameTime=self.defaultState.nameTime end
+    if force then self.state.nameTime=nameTime end
+    self.targetState.nameTime=nameTime
+end
 
 function Track:addItem(note)
     table.insert(self.notes,note)
@@ -188,10 +194,22 @@ local approach=MATH.expApproach
 function Track:update(dt)
     local s=self.state
     local t=self.targetState
-    local d=dt*12
+
+    if t.nameTime>0 then
+        t.nameTime=max(t.nameTime-dt,0)
+    end
+    if s.nameTime~=t.nameTime then
+        if s.nameTime<t.nameTime then
+            s.nameTime=min(s.nameTime+2.6*dt,t.nameTime)
+        else
+            s.nameTime=max(s.nameTime-dt,t.nameTime)
+        end
+    end
+
+    local d12=dt*12
     for i=1,#expAnimations do
         local k=expAnimations[i]
-        s[k]=approach(s[k],t[k],d)
+        s[k]=approach(s[k],t[k],d12)
     end
 end
 
@@ -250,6 +268,13 @@ function Track:draw(map)
     -- gc_setColor(1,1,1)
     -- gc.setLineWidth(2)
     -- gc.circle(self.state.available and'fill'or'line',0,0,16)
+
+    --Draw track name
+    if s.nameTime>0 then
+        setFont(40)
+        gc_setColor(s.r,s.g,s.b,s.alpha*.626*min(2*s.nameTime,1))
+        mStr(self.name,0,-60)
+    end
 
     --Draw track line
     gc_setColor(s.r,s.g,s.b,s.alpha*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))

@@ -134,6 +134,7 @@ function scene.sceneInit()
         tracks[id]:setDefaultPosition(70*(2*id-map.tracks-1),320)
         tracks[id]:setPosition(nil,nil,true)
         tracks[id]:rename(defaultTrackNames[map.tracks][id])
+        tracks[id]:setNameTime(2)
     end
 
     applyFPS(true)
