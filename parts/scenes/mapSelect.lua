@@ -9,9 +9,9 @@ local listBox=WIDGET.newListBox{name='sel',x=60,y=80,w=1160,h=480,lineH=40,drawF
         gc.rectangle('fill',0,0,1160,40)
     end
     gc.setColor(1,1,1)
-    gc.draw(v.mapName,10,-1,nil,min(770/v.mapName:getWidth(),1),1)
+    gc.draw(v.mapName,10,-1,nil,min(720/v.mapName:getWidth(),1),1)
     gc.setColor(COLOR.Z)
-    gc.draw(v.mapAuth,980,-1,nil,min(200/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
+    gc.draw(v.mapAuth,980,-1,nil,min(250/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
 
     setFont(30,'mono')
     gc.setColor(v.difficultyColor)
