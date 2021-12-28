@@ -128,16 +128,17 @@ function Map.new(file)
             end
         elseif str:sub(1,1)=='>'then--Time mark
             _syntaxCheck(not loopStack[1],"Cannot set time in loop")
-
-            local stamp=str:sub(2):split(":")
-            if #stamp==1 then ins(stamp,1,"0")end
-            for i=1,2 do
-                stamp[i]=tonumber(stamp[i])
-                _syntaxCheck(type(stamp[i])=='number'and stamp[i]>=0,"Invalid time mark")
+            if str:sub(2)=='start'then
+                curTime=-3.6
+            else
+                local stamp=str:sub(2):split(":")
+                if #stamp==1 then ins(stamp,1,"0")end
+                for i=1,2 do
+                    stamp[i]=tonumber(stamp[i])
+                    _syntaxCheck(type(stamp[i])=='number',"Invalid time mark")
+                end
+                curTime=stamp[1]*60+stamp[2]
             end
-            stamp=stamp[1]*60+stamp[2]
-
-            curTime=stamp
         elseif str:sub(1,1)=='['then--Animation: set track states
             local t=str:find(']')
             _syntaxCheck(t,"Syntax error (need ']')")
