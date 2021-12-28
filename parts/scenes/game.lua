@@ -214,7 +214,7 @@ function scene.keyDown(key,isRep)
     elseif k=='sfxVolUp'then SETTING.sfx=min(SETTING.sfx+.1,1)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
     elseif k=='musicVolDn'then SETTING.bgm=max(SETTING.bgm-.1,0)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
     elseif k=='musicVolUp'then SETTING.bgm=min(SETTING.bgm+.1,1)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
-    elseif k=='dropSlower'then
+    elseif k=='dropSpdDn'then
         if score0==0 then
             SETTING.dropSpeed=max(SETTING.dropSpeed-1,-8)
             MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
@@ -222,7 +222,7 @@ function scene.keyDown(key,isRep)
         else
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
-    elseif k=='dropFaster'then
+    elseif k=='dropSpdUp'then
         if score0==0 then
             SETTING.dropSpeed=min(SETTING.dropSpeed+1,8)
             MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
