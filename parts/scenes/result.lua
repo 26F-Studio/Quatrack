@@ -12,6 +12,7 @@ local results
 local scene={}
 
 function scene.sceneInit()
+    applyFPS(false)
     results=SCN.args[1]or{
         fake=true,
         map=require'parts.map'.new(),
