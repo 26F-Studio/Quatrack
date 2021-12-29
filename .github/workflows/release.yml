@@ -12,6 +12,7 @@ jobs:
       versionName: ${{ steps.actual-get-info.outputs.versionName }}
       versionCode: ${{ steps.actual-get-info.outputs.versionCode }}
       apkCode: ${{ steps.actual-get-info.outputs.apkCode }}
+      commit: ${{ steps.actual-get-info.outputs.commit }}
       # updateTitle: ${{ steps.actual-get-info.outputs.updateTitle }}
       # updateNote: ${{ steps.actual-get-info.outputs.updateNote }}
     steps:
@@ -29,6 +30,7 @@ jobs:
           echo "::set-output name=versionName::$(lua .github/workflows/getVersion.lua -versionName)"
           echo "::set-output name=versionCode::$(lua .github/workflows/getVersion.lua -versionCode)"
           echo "::set-output name=apkCode::$(lua .github/workflows/getVersion.lua -apkCode)"
+          echo "::set-output name=commit::$(git rev-parse --short ${{ GITHUB.SHA }})"
           # echo "::set-output name=updateTitle::$(lua .github/workflows/getVersion.lua -updateTitle)"
           # echo "::set-output name=updateNote::$UPDATE_NOTE"
 
