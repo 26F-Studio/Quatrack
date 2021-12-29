@@ -1,4 +1,4 @@
---Welcome to Techmino
+--Welcome to Quatrack
 local gc=love.graphics
 local sin=math.sin
 local back={}
@@ -7,7 +7,7 @@ local t
 local textObj
 function back.init()
     t=math.random()*2600
-    textObj=gc.newText(getFont(80),"Welcome To Techmino")
+    textObj=gc.newText(getFont(80),"Welcome To Quatrack")
 end
 function back.update(dt)
     t=t+dt

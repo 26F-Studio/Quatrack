@@ -12,7 +12,7 @@ return{
     sureReset="Press again to reset",
     newDay="A new day, a new beginning!",
     playedLong="You have been playing for a long time. Time to a break!",
-    playedTooMuch="You have been playing for far too long! Techmino is fun, but remember to have some rests!",
+    playedTooMuch="You have been playing for far too long! Quatrack is fun, but remember to have some rests!",
 
     pause="Pause",
     pauseCount="Pauses",
