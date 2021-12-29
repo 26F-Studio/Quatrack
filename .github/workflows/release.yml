@@ -81,12 +81,13 @@ jobs:
           icon: .\.github\build\Windows\icon.ico
           versionName: ${{ needs.get-info.outputs.versionName }}
           versionCode: ${{ needs.get-info.outputs.versionCode }}
+          filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win64.zip
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ github.ref_name }}
           # name: ${{ needs.get-info.outputs.updateTitle }}
-          files: needs.get-info.outputs.versionCode }}_Win64.zip
+          files: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win64.zip
 
   build-windows-x86:
     runs-on: windows-latest
@@ -100,6 +101,7 @@ jobs:
           icon: .\.github\build\Windows\icon.ico
           versionName: ${{ needs.get-info.outputs.versionName }}
           versionCode: ${{ needs.get-info.outputs.versionCode }}
+          filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win32.zip
       - name: Release
         uses: softprops/action-gh-release@v1
         with:

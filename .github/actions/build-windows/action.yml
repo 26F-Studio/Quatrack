@@ -14,6 +14,8 @@ inputs:
     required: true
   commit:
     required: false
+  filePath:
+    required: false
 
 runs:
   using: "composite"
@@ -69,4 +71,4 @@ runs:
       if: ${{ GITHUB.REF_TYPE }} == "tag"
       shell: pwsh
       run: |
-        7z a -tzip .\Quatrack_a${{ needs.get-info.outputs.release }}_Win64.zip .\love
+        7z a -tzip ${{ inputs.filePath }} .\love
