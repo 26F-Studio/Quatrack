@@ -178,7 +178,7 @@ local function _trigNote(deviateTime,track,noTailHold)
 end
 local function _trackPress(k)
     for i=1,#tracks do
-        if tracks[i].state.available and tracks[i].name==k then
+        if tracks[i].state.available and tracks[i].name:find(k)then
             local deviateTime=tracks[i]:press()
             if deviateTime then _trigNote(deviateTime,tracks[i])end
         end
@@ -186,7 +186,7 @@ local function _trackPress(k)
 end
 local function _trackRelease(k)
     for i=1,#tracks do
-        if tracks[i].state.available and tracks[i].name==k then
+        if tracks[i].state.available and tracks[i].name:find(k)then
             local deviateTime,noTailHold=tracks[i]:release()
             if deviateTime then _trigNote(deviateTime,tracks[i],noTailHold)end
         end

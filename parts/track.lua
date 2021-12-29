@@ -37,7 +37,7 @@ function Track.new(id)
 end
 
 function Track:rename(name)
-    self.name=name
+    self.name=name.." "
 end
 
 function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,y end
@@ -273,7 +273,10 @@ function Track:draw(map)
     if s.nameTime>0 then
         setFont(40)
         gc_setColor(s.r,s.g,s.b,s.alpha*.626*min(2*s.nameTime,1))
-        mStr(KEY_MAP_inv[self.name]:upper(),0,-60)
+        local showName=self.name
+        if showName:find(" ")then showName=showName:sub(1,showName:find(" ")-1)end
+        showName=KEY_MAP_inv[showName]:upper()
+        mStr(showName,0,-60)
     end
 
     --Draw track line

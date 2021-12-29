@@ -346,7 +346,14 @@ function Map.new(file)
             _syntaxCheck(#nameList==o.tracks,"Track names not match track count")
             for id=1,#nameList do
                 local name=nameList[id]
-                _syntaxCheck(name=='x'or trackNames[name],"Wrong track name")
+                if name:find(' ')then
+                    local multiNameList=name:split(' ')
+                    for i=1,#multiNameList do
+                        _syntaxCheck(trackNames[multiNameList[i]],"Wrong track name")
+                    end
+                else
+                    _syntaxCheck(name=='x'or trackNames[name],"Wrong track name")
+                end
                 ins(o.eventQueue,{
                     type='setTrack',
                     time=curTime,
