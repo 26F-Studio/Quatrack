@@ -2,10 +2,9 @@ name: 'Build Linux'
 description: 'Build Linux package.'
 
 inputs:
-  file-path:
-    required: false
-    default: Quatrack.AppImage
   icon:
+    required: true
+  filePath:
     required: true
 
 runs:
@@ -36,4 +35,4 @@ runs:
         chmod 777 squashfs-root/love
         mkdir -p squashfs-root/usr/share/Quatrack
         mv media parts Zframework conf.lua main.lua version.lua squashfs-root/usr/share/Quatrack
-        ./appimagetool-x86_64.AppImage squashfs-root ${{ inputs.file-path }}
+        ./appimagetool-x86_64.AppImage squashfs-root ${{ inputs.filePath }}

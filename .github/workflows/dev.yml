@@ -10,9 +10,9 @@ jobs:
   get-info:
     runs-on: ubuntu-20.04
     outputs:
-      name: ${{ steps.actual-get-info.outputs.name }}
+      versionName: ${{ steps.actual-get-info.outputs.versionName }}
+      versionCode: ${{ steps.actual-get-info.outputs.versionCode }}
       apkCode: ${{ steps.actual-get-info.outputs.apkCode }}
-      code: ${{ steps.actual-get-info.outputs.code }}
       commit: ${{ steps.actual-get-info.outputs.commit }}
     steps:
     - uses: actions/checkout@v2
@@ -22,9 +22,9 @@ jobs:
     - name: Get Version
       id: actual-get-info
       run: |
-        echo "::set-output name=name::$(lua .github/workflows/getVersion.lua -name)"
+        echo "::set-output name=versionName::$(lua .github/workflows/getVersion.lua -versionName)"
+        echo "::set-output name=versionCode::$(lua .github/workflows/getVersion.lua -versionCode)"
         echo "::set-output name=apkCode::$(lua .github/workflows/getVersion.lua -apkCode)"
-        echo "::set-output name=code::$(lua .github/workflows/getVersion.lua -code)"
         echo "::set-output name=commit::$(git rev-parse --short ${{ GITHUB.SHA }})"
 
   build-love:
@@ -34,64 +34,16 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ./.github/actions/update-version
       with:
+        type: Snapshot
         commit: ${{ needs.get-info.outputs.commit }}
-        type: snapshot
     - uses: ./.github/actions/build-love
       with:
-        file-path: Quatrack.love
+        filePath: Quatrack.love
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Love
+        name: Quatrack_${{ needs.get-info.outputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Love
         path: Quatrack.love
-
-  build-windows-x64:
-    runs-on: windows-latest
-    needs: [get-info, build-love]
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/actions/update-version
-      with:
-        commit: ${{ needs.get-info.outputs.commit }}
-        type: snapshot
-    - uses: ./.github/actions/build-windows
-      with:
-        love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
-        love-dir: love-11.3-win64
-        arch: win64
-        version: ${{ needs.get-info.outputs.name }}
-        icon: .\.github\build\Windows\icon_snapshot.ico
-        name: ${{ needs.get-info.outputs.name }}
-        commit: ${{ needs.get-info.outputs.commit }}
-    - name: Upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows_64
-        path: love
-
-  build-windows-x86:
-    runs-on: windows-latest
-    needs: [get-info, build-love]
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/actions/update-version
-      with:
-        commit: ${{ needs.get-info.outputs.commit }}
-        type: snapshot
-    - uses: ./.github/actions/build-windows
-      with:
-        love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win32.zip
-        love-dir: love-11.3-win32
-        arch: win32
-        version: ${{ needs.get-info.outputs.name }}
-        icon: .\.github\build\Windows\icon_snapshot.ico
-        name: ${{ needs.get-info.outputs.name }}
-        commit: ${{ needs.get-info.outputs.commit }}
-    - name: Upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows_32
-        path: love
 
   build-linux:
     runs-on: ubuntu-20.04
@@ -100,40 +52,74 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ./.github/actions/update-version
       with:
+        type: Snapshot
         commit: ${{ needs.get-info.outputs.commit }}
-        type: snapshot
     - uses: ./.github/actions/build-linux
       with:
         icon: .github/build/Linux/icon_snapshot.png
+        filePath: Quatrack.AppImage
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Linux
+        name: Quatrack_${{ needs.get-info.outputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Linux
         path: Quatrack.AppImage
+
+  build-windows-x64:
+    runs-on: windows-latest
+    needs: [get-info, build-love]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/actions/build-windows
+      with:
+        love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
+        love-dir: love-11.3-win64
+        icon: .\.github\build\Windows\icon_snapshot.ico
+        versionName: ${{ needs.get-info.outputs.versionName }}
+        versionCode: ${{ needs.get-info.outputs.versionCode }}
+        commit: ${{ needs.get-info.outputs.commit }}
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: Quatrack_${{ needs.get-info.outputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows_64
+        path: love
+
+  build-windows-x86:
+    runs-on: windows-latest
+    needs: [get-info, build-love]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/actions/build-windows
+      with:
+        love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win32.zip
+        love-dir: love-11.3-win32
+        icon: .\.github\build\Windows\icon_snapshot.ico
+        versionName: ${{ needs.get-info.outputs.versionName }}
+        versionCode: ${{ needs.get-info.outputs.versionCode }}
+        commit: ${{ needs.get-info.outputs.commit }}
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: Quatrack_${{ needs.get-info.outputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Windows_32
+        path: love
 
   build-android:
     runs-on: ubuntu-20.04
     needs: [get-info, build-love]
     steps:
     - uses: actions/checkout@v2
-    - uses: ./.github/actions/update-version
-      with:
-        commit: ${{ needs.get-info.outputs.commit }}
-        type: snapshot
     - uses: ./.github/actions/build-android
       with:
-        type: Snapshot
         apkCode: ${{ needs.get-info.outputs.apkCode }}
-        name: ${{ needs.get-info.outputs.name }}
+        versionName: ${{ needs.get-info.outputs.versionName }}
+        versionCode: ${{ needs.get-info.outputs.versionCode }}
         commit: ${{ needs.get-info.outputs.commit }}
-        file-path: Quatrack_Snapshot.apk
+        filePath: Quatrack_Snapshot.apk
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
         KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         ALIAS: ${{ secrets.ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: Quatrack_${{ needs.get-info.outputs.name }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Android
+        name: Quatrack_${{ needs.get-info.outputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Android
         path: Quatrack_Snapshot.apk

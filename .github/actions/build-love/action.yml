@@ -2,13 +2,12 @@ name: 'Build love'
 description: 'Build love file.'
 
 inputs:
-  file-path:
+  filePath:
     required: true
-    default: Quatrack.love
 
 runs:
   using: "composite"
   steps:
     - shell: bash
       run: |
-        7z a -tzip ${{ inputs.file-path }} media parts Zframework conf.lua main.lua version.lua
+        7z a -tzip ${{ inputs.filePath }} media parts Zframework conf.lua main.lua version.lua

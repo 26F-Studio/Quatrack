@@ -2,10 +2,10 @@ name: 'Update version'
 description: 'Common update logic for Snapshot and Release.'
 
 inputs:
-  commit:
-    required: false
   type:
     required: true
+  commit:
+    required: false
 
 runs:
   using: "composite"
@@ -28,7 +28,7 @@ runs:
     - name: Update Snapshot saving folder
       shell: python
       run: |
-        if '${{ inputs.type }}' == 'snapshot':
+        if '${{ inputs.type }}' == 'Snapshot':
           with open('conf.lua', 'r+', encoding='utf-8') as file:
             data = file.read()
             data = data.replace("t.identity='Quatrack'--Saving folder", "t.identity='Quatrack_Snapshot'--Saving folder")
@@ -37,5 +37,8 @@ runs:
             file.flush()
             file.write(data)
           exit()
-        else:
+        elif '${{ inputs.type }}' == 'Release':
           exit()
+        else:
+          print ('Unknown type')
+          exit(1)

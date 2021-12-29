@@ -1,14 +1,11 @@
 local arg=arg[1]
 if arg=="-apkCode"then
-    local code=require"version".apkCode
-    print(code)
-elseif arg=="-code"then
-    local str=require"version".code
+    local str=require"version".apkCode
     print(str)
-elseif arg=="-name"then
+elseif arg=="-versionName"then
     local str=require"version".string
     print(str)
-elseif arg=="-release"then
+elseif arg=="-versionCode"then
     local str=require"version".string:gsub("V","",1)
     print(str)
 --elseif arg=="-updateTitle"then
