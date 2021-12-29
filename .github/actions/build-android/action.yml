@@ -33,13 +33,13 @@ runs:
       run: |
         git clone --recurse-submodules https://github.com/26F-Studio/love-android -b CI --depth 1 --shallow-submodules
     - name: Get love pack
-      if: ${{ GITHUB.REF_TYPE }} == "branch"
+      if: ${{ GITHUB.REF_TYPE  == "branch" }}
       uses: actions/download-artifact@v2
       with:
         name: Quatrack_${{ inputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ inputs.commit }}_Love
         path: love-android/app/src/main/assets
     - name: Get love pack
-      if: ${{ GITHUB.REF_TYPE }} == "tag"
+      if: ${{ GITHUB.REF_TYPE  == "tag" }}
       shell: bash
       run: |
         curl -O https://github.com/26F-Studio/Quatrack/releases/latest/download/Quatrack_a${{ inputs.versionCode }}_Love.love
