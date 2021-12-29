@@ -2,8 +2,7 @@ $version=1.0
 $mapName=FULi AUTO SHOOTER
 $musicAuth=MYUKKE.
 $mapAuth=AcSier & MrZ
-$mapDifficulty=Normal??
-$mapDifficulty=Hard-5
+$mapDifficulty=Normal-5
 
 $songFile=fuli
 $songOffset=0.42
