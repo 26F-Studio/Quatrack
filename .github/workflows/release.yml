@@ -58,6 +58,7 @@ jobs:
         with:
           name: Quatrack_${{ needs.get-info.outputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Love
           path: Quatrack.love
+          retention-days: 1
 
   build-linux:
     runs-on: ubuntu-20.04
