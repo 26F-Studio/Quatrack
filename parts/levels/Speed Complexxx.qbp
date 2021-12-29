@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Speed Complexxx
 $musicAuth=Kobaryo / Srezcat
 $mapAuth=XMiao
-$mapDifficulty=Hard-9
+$mapDifficulty=Hard-4
 
 $songFile=SpeedComplexxx
 $songOffset=0.286
