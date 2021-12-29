@@ -44,7 +44,7 @@ runs:
     - name: Update Windows template
       shell: python
       run: |
-        Version = ${{ inputs.versionCode }}
+        Version = '${{ inputs.versionCode }}'
         FileVersion = (f"{Version.replace('.', ',')},0")
         with open('./.github/build/Windows/Quatrack.rc.template', 'r', encoding='utf8') as file:
           data = file.read()
