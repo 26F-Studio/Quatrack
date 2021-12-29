@@ -64,7 +64,7 @@ runs:
     - name: Compression Quatrack
       shell: pwsh
       run: |
-        if(${{ GITHUB.REF_TYPE }} -eq "tag")
+        if("${{ GITHUB.REF_TYPE }}" -eq "tag")
         {
           7z a -tzip ${{ inputs.filePath }} .\love
         }
