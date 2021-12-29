@@ -49,6 +49,15 @@ jobs:
           name: ${{ github.ref_name }}
           # name: ${{ needs.get-info.outputs.updateTitle }}
           files: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Love.love
+      - name: Rename
+        shell: bash
+        run: |
+          mv Quatrack_a${{ needs.get-info.outputs.versionCode }}_Love.love Quatrack.love
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Quatrack_${{ needs.get-info.outputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Love
+          path: Quatrack.love
 
   build-linux:
     runs-on: ubuntu-20.04

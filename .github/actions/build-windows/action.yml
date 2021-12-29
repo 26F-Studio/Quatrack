@@ -32,15 +32,9 @@ runs:
       with:
         url: http://www.angusj.com/resourcehacker/resource_hacker.zip
     - name: Get love pack
-      if: ${{ GITHUB.REF_TYPE == "branch" }}
       uses: actions/download-artifact@v2
       with:
         name: Quatrack_${{ inputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ inputs.commit }}_Love
-    - name: Get love pack
-      if: ${{ GITHUB.REF_TYPE == "tag" }}
-      shell: bash
-      run: |
-        curl -O https://github.com/26F-Studio/Quatrack/releases/latest/download/Quatrack_a${{ inputs.versionCode }}_Love.love
     - name: Update Windows template
       shell: python
       run: |
@@ -53,7 +47,7 @@ runs:
             .replace('@Version', Version)
         with open('Quatrack.rc', 'w+', encoding='utf8') as file:
           file.write(data)
-    - name: Build Quatrack
+    - name: Pack Quatrack
       shell: pwsh
       run: |
         cmd /c copy /b .\love\love.exe + .\Quatrack.love .\love\Quatrack.exe
@@ -67,8 +61,14 @@ runs:
         cmd /c '.\ResourceHacker.exe -open .\Quatrack.rc -save .\Quatrack.res -action compile'
         cmd /c '.\ResourceHacker.exe -open .\love\Quatrack.exe -save .\love\Quatrack.exe -action addoverwrite -res "${{ inputs.icon }}" -mask ICONGROUP,1,'
         cmd /c '.\ResourceHacker.exe -open .\love\Quatrack.exe -save .\love\Quatrack.exe -action addoverwrite -res ".\Quatrack.res" -mask VERSIONINFO,1,'
-    - name: Pack Quatrack
-      if: ${{ GITHUB.REF_TYPE == "tag" }}
+    - name: Compression Quatrack
       shell: pwsh
       run: |
-        7z a -tzip ${{ inputs.filePath }} .\love
+        if(${{ GITHUB.REF_TYPE }} -eq "tag")
+        {
+          7z a -tzip ${{ inputs.filePath }} .\love
+        }
+        else
+        {
+          echo "Not a Release, skip compression"
+        }
