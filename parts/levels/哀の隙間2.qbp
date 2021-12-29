@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Normal-7
 
 $songFile=ainosukima
-$songOffset=0
+$songOffset=0.01
 $tracks=4
 
 --O-;>104.052
