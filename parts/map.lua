@@ -13,6 +13,13 @@ local function _syntaxCheck(cond,msg)
         error(("[$1] $2: $3"):repD(SCline,SCstr,msg))
     end
 end
+local function _insert(self,obj)
+    local len=#self
+    while len>0 and self[len].time>obj.time do
+        len=len-1
+    end
+    ins(self,len+1,obj)
+end
 
 function Map.new(file)
     local o={
@@ -32,8 +39,8 @@ function Map.new(file)
         songLength=nil,
 
         time=0,
-        noteQueue={},
-        eventQueue={},
+        noteQueue={insert=_insert},
+        eventQueue={insert=_insert},
         notePtr=0,
         animePtr=0,
         finished=false,
@@ -276,10 +283,10 @@ function Map.new(file)
                 for k=i,j do
                     local E=TABLE.copy(event)
                     E.track=k
-                    ins(o.eventQueue,E)
+                    o.eventQueue:insert(E)
                 end
             else
-                ins(o.eventQueue,event)
+                o.eventQueue:insert(event)
             end
         elseif str:sub(1,1)=='='then--Repeat mark
             local len=0
@@ -354,21 +361,21 @@ function Map.new(file)
                 else
                     _syntaxCheck(name=='x'or trackNames[name],"Wrong track name")
                 end
-                ins(o.eventQueue,{
+                o.eventQueue:insert{
                     type='setTrack',
                     time=curTime,
                     track=id,
                     operation='rename',
                     args={name},
-                })
+                }
                 if name=='x'then
-                    ins(o.eventQueue,{
+                    o.eventQueue:insert{
                         type='setTrack',
                         time=curTime,
                         track=id,
                         operation='setAvailable',
                         args={false},
-                    })
+                    }
                 end
             end
         else--Notes
@@ -383,11 +390,11 @@ function Map.new(file)
                     c=str:sub(1,1)
                     if c~='-'then--Space
                         if c=='O'then--Tap note
-                            ins(o.noteQueue,{
+                            o.noteQueue:insert{
                                 type='tap',
                                 time=curTime,
                                 track=trackDir[curTrack],
-                            })
+                            }
                         elseif c=='U'then--Hold note start
                             _syntaxCheck(not longBarState[curTrack],"Cannot start a long bar in a long bar")
                             local b={
@@ -398,7 +405,7 @@ function Map.new(file)
                                 head=true,
                                 tail=false,
                             }
-                            ins(o.noteQueue,b)
+                            o.noteQueue:insert(b)
                             longBarState[curTrack]=b
                         elseif c=='A'or c=='H'then--Long bar stop
                             _syntaxCheck(longBarState[curTrack],"No long bar to stop")
@@ -447,11 +454,11 @@ function Map.new(file)
                     end
                     _syntaxCheck(#available>0,"No space to place notes")
                     curTrack=available[rnd(#available)]
-                    ins(o.noteQueue,{
+                    o.noteQueue:insert{
                         type='tap',
                         time=curTime,
                         track=trackDir[curTrack],
-                    })
+                    }
                     trackUsed[curTrack]=true
                     str=str:sub(2)
                 elseif readState=='time'then
