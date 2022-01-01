@@ -150,10 +150,28 @@ function Map.new(file)
             local t=str:find(']')
             _syntaxCheck(t,"Syntax error (need ']')")
 
-            id=str:sub(2,t-1)
-            if not(id=='A'or id=='L'or id=='R')then
-                id=tonumber(id)
-                _syntaxCheck(id and id%1==0 and id>=1 and id<=o.tracks,"Wrong track ID")
+            local trackList={}
+
+            local trackStr=str:sub(2,t-1)
+            if trackStr=='A'or trackStr=='L'or trackStr=='R'then
+                local i,j
+                if trackStr=='A'then
+                    i,j=1,o.tracks
+                elseif trackStr=='L'then
+                    i,j=1,(o.tracks+1)*.5
+                elseif trackStr=='R'then
+                    i,j=o.tracks*.5+1,o.tracks
+                end
+                for n=0,j-i do
+                    trackList[n+1]=i+n
+                end
+            else
+                trackList=trackStr:split(',')
+                for i=1,#trackList do
+                    local id=tonumber(trackList[i])
+                    _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track number")
+                    trackList[i]=id
+                end
             end
 
             local data=str:sub(t+1):split(",")
@@ -168,7 +186,7 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=id,
+                    track=nil,
                     operation=opType..'Position',
                     args={data[2],data[3],false},
                 }
@@ -178,7 +196,7 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=id,
+                    track=nil,
                     operation=opType..'Angle',
                     args={data[2],false},
                 }
@@ -189,7 +207,7 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=id,
+                    track=nil,
                     operation=opType..'Size',
                     args={data[2],data[3],false},
                 }
@@ -199,7 +217,7 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=id,
+                    track=nil,
                     operation=opType..'DropSpeed',
                     args={data[2],false},
                 }
@@ -209,7 +227,7 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=id,
+                    track=nil,
                     operation=opType..'Alpha',
                     args={data[2],false},
                 }
@@ -233,7 +251,7 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=id,
+                    track=nil,
                     operation=opType..'Color',
                     args={r,g,b,false},
                 }
@@ -254,7 +272,7 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=id,
+                    track=nil,
                     operation=opType..'Available',
                     args={data[2],false},
                 }
@@ -264,29 +282,17 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=id,
+                    track=nil,
                     operation='setNameTime',
                     args={time,false},
                 }
             else
                 _syntaxCheck(false,"Invalid track operation")
             end
-            if id=='A'or id=='L'or id=='R'then
-                local i,j
-                if id=='A'then
-                    i,j=1,o.tracks
-                elseif id=='L'then
-                    i,j=1,(o.tracks+1)*.5
-                elseif id=='R'then
-                    i,j=o.tracks*.5+1,o.tracks
-                end
-                for k=i,j do
-                    local E=TABLE.copy(event)
-                    E.track=k
-                    o.eventQueue:insert(E)
-                end
-            else
-                o.eventQueue:insert(event)
+            for i=1,#trackList do
+                local E=TABLE.copy(event)
+                E.track=trackList[i]
+                o.eventQueue:insert(E)
             end
         elseif str:sub(1,1)=='='then--Repeat mark
             local len=0
