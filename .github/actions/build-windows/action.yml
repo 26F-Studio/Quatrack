@@ -1,0 +1,74 @@
+name: 'Build Windows'
+description: 'Build Windows package.'
+
+inputs:
+  love-url:
+    required: true
+  love-dir:
+    required: true
+  icon:
+    required: true
+  versionName:
+    required: true
+  versionCode:
+    required: true
+  commit:
+    required: false
+  filePath:
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download love
+      uses: ./.github/actions/get-unzip
+      with:
+        url: ${{ inputs.love-url }}
+    - name: Move love
+      shell: bash
+      run: mv ${{ inputs.love-dir }} love
+    - name: Download ResourceHacker
+      uses: ./.github/actions/get-unzip
+      with:
+        url: http://www.angusj.com/resourcehacker/resource_hacker.zip
+    - name: Get love pack
+      uses: actions/download-artifact@v2
+      with:
+        name: Quatrack_${{ inputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ inputs.commit }}_Love
+    - name: Update Windows template
+      shell: python
+      run: |
+        Version = '${{ inputs.versionCode }}'
+        FileVersion = (f"{Version.replace('.', ',')},0")
+        with open('./.github/build/Windows/Quatrack.rc.template', 'r', encoding='utf8') as file:
+          data = file.read()
+          data = data\
+            .replace('@FileVersion', FileVersion)\
+            .replace('@Version', Version)
+        with open('Quatrack.rc', 'w+', encoding='utf8') as file:
+          file.write(data)
+    - name: Pack Quatrack
+      shell: pwsh
+      run: |
+        cmd /c copy /b .\love\love.exe + .\Quatrack.love .\love\Quatrack.exe
+        del .\love\love.exe
+        del .\love\lovec.exe
+        del .\love\game.ico
+        del .\love\love.ico
+        del .\love\changes.txt
+        del .\love\readme.txt
+        cmd /c '.\ResourceHacker.exe -open .\love\Quatrack.exe -save .\love\Quatrack.exe -action delete -mask ICONGROUP,,'
+        cmd /c '.\ResourceHacker.exe -open .\Quatrack.rc -save .\Quatrack.res -action compile'
+        cmd /c '.\ResourceHacker.exe -open .\love\Quatrack.exe -save .\love\Quatrack.exe -action addoverwrite -res "${{ inputs.icon }}" -mask ICONGROUP,1,'
+        cmd /c '.\ResourceHacker.exe -open .\love\Quatrack.exe -save .\love\Quatrack.exe -action addoverwrite -res ".\Quatrack.res" -mask VERSIONINFO,1,'
+    - name: Compression Quatrack
+      shell: pwsh
+      run: |
+        if("${{ GITHUB.REF_TYPE }}" -eq "tag")
+        {
+          7z a -tzip ${{ inputs.filePath }} .\love
+        }
+        else
+        {
+          echo "Not a Release, skip compression"
+        }

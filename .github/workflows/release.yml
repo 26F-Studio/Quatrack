@@ -1,0 +1,155 @@
+name: Quatrack Release CI
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  get-info:
+    runs-on: ubuntu-20.04
+    outputs:
+      versionName: ${{ steps.actual-get-info.outputs.versionName }}
+      versionCode: ${{ steps.actual-get-info.outputs.versionCode }}
+      apkCode: ${{ steps.actual-get-info.outputs.apkCode }}
+      commit: ${{ steps.actual-get-info.outputs.commit }}
+      # updateTitle: ${{ steps.actual-get-info.outputs.updateTitle }}
+      # updateNote: ${{ steps.actual-get-info.outputs.updateNote }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install lua
+        run: |
+          sudo apt-get install lua5.3 -y
+      - name: Get Version
+        id: actual-get-info
+        run: |
+          # UPDATE_NOTE=$(lua .github/workflows/getVersion.lua -updateNote)
+          # UPDATE_NOTE="${UPDATE_NOTE//'%'/'%25'}"
+          # UPDATE_NOTE="${UPDATE_NOTE//$'\n'/'%0A'}"
+          # UPDATE_NOTE="${UPDATE_NOTE//$'\r'/'%0D'}"
+          echo "::set-output name=versionName::$(lua .github/workflows/getVersion.lua -versionName)"
+          echo "::set-output name=versionCode::$(lua .github/workflows/getVersion.lua -versionCode)"
+          echo "::set-output name=apkCode::$(lua .github/workflows/getVersion.lua -apkCode)"
+          echo "::set-output name=commit::$(git rev-parse --short ${{ GITHUB.SHA }})"
+          # echo "::set-output name=updateTitle::$(lua .github/workflows/getVersion.lua -updateTitle)"
+          # echo "::set-output name=updateNote::$UPDATE_NOTE"
+
+  build-love:
+    runs-on: ubuntu-20.04
+    needs: get-info
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/update-version
+        with:
+          type: Release
+      - uses: ./.github/actions/build-love
+        with:
+          filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Love.love
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref_name }}
+          # name: ${{ needs.get-info.outputs.updateTitle }}
+          files: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Love.love
+      - name: Rename
+        shell: bash
+        run: |
+          mv Quatrack_a${{ needs.get-info.outputs.versionCode }}_Love.love Quatrack.love
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Quatrack_${{ needs.get-info.outputs.versionName }}_${{ GITHUB.RUN_NUMBER }}_${{ needs.get-info.outputs.commit }}_Love
+          path: Quatrack.love
+          retention-days: 1
+
+  build-linux:
+    runs-on: ubuntu-20.04
+    needs: get-info
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/update-version
+        with:
+          type: Release
+      - uses: ./.github/actions/build-linux
+        with:
+          icon: .github/build/Linux/icon.png
+          filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Linux.AppImage
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref_name }}
+          # name: ${{ needs.get-info.outputs.updateTitle }}
+          files: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Linux.AppImage
+
+  build-windows-x64:
+    runs-on: windows-latest
+    needs: [get-info, build-love]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/build-windows
+        with:
+          love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
+          love-dir: love-11.3-win64
+          icon: .\.github\build\Windows\icon.ico
+          versionName: ${{ needs.get-info.outputs.versionName }}
+          versionCode: ${{ needs.get-info.outputs.versionCode }}
+          filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win64.zip
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref_name }}
+          # name: ${{ needs.get-info.outputs.updateTitle }}
+          files: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win64.zip
+
+  build-windows-x86:
+    runs-on: windows-latest
+    needs: [get-info, build-love]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/build-windows
+        with:
+          love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win32.zip
+          love-dir: love-11.3-win32
+          icon: .\.github\build\Windows\icon.ico
+          versionName: ${{ needs.get-info.outputs.versionName }}
+          versionCode: ${{ needs.get-info.outputs.versionCode }}
+          filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win32.zip
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref_name }}
+          # name: ${{ needs.get-info.outputs.updateTitle }}
+          files: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win32.zip
+
+  build-android:
+    runs-on: ubuntu-20.04
+    needs: [get-info, build-love]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/build-android
+        with:
+          apkCode: ${{ needs.get-info.outputs.apkCode }}
+          versionName: ${{ needs.get-info.outputs.versionName }}
+          versionCode: ${{ needs.get-info.outputs.versionCode }}
+          filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Android.apk
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref_name }}
+          # name: ${{ needs.get-info.outputs.updateTitle }}
+          files: Quatrack_a${{ needs.get-info.outputs.release }}_Android.apk
+
+#  Add-Release-note:
+#    runs-on: ubuntu-20.04
+#    needs: get-info
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          name: ${{ needs.get-info.outputs.updateTitle }}
+#          body: ${{ needs.get-info.outputs.updateNote }}
