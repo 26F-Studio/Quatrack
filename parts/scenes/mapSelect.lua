@@ -20,10 +20,12 @@ local listBox=WIDGET.newListBox{name='sel',x=60,y=80,w=1160,h=480,lineH=40,drawF
     mStr(v.tracks,1132,0)
 end}
 
+local mapLoaded=false
 local lastFreshTime=0
 
 local mapList
 local function _freshSongList()
+    mapLoaded=true
     lastFreshTime=TIME()
     mapList={}
     for source,path in next,{game='parts/levels',outside='songs'}do
@@ -85,7 +87,7 @@ end
 local scene={}
 
 function scene.sceneInit()
-    _freshSongList()
+    if not mapLoaded then _freshSongList()end
     BGM.play()
 end
 
