@@ -100,6 +100,8 @@ function Map.new(file)
     local longBarState=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
     local trackDir={}for i=1,o.tracks do trackDir[i]=i end
+    local trackNoteColor={}for i=1,o.tracks do trackNoteColor[i]={'FFFFFF','FFFFFF'}end
+    local trackNoteAlpha={}for i=1,o.tracks do trackNoteAlpha[i]={.8,.8}end
     local line=#fileData
     while line>0 do
         local str=fileData[line][2]
@@ -293,6 +295,66 @@ function Map.new(file)
                 E.track=trackList[i]
                 o.eventQueue:insert(E)
             end
+        elseif str:sub(1,1)=='('then--Note state: color & alpha
+            local t=str:find(')')
+            _syntaxCheck(t,"Syntax error (need ')')")
+
+            local trackList={}
+
+            local trackStr=str:sub(2,t-1)
+            if trackStr=='A'or trackStr=='L'or trackStr=='R'then
+                local i,j
+                if trackStr=='A'then
+                    i,j=1,o.tracks
+                elseif trackStr=='L'then
+                    i,j=1,(o.tracks+1)*.5
+                elseif trackStr=='R'then
+                    i,j=o.tracks*.5+1,o.tracks
+                end
+                for n=0,j-i do
+                    trackList[n+1]=i+n
+                end
+            else
+                trackList=trackStr:split(',')
+                for i=1,#trackList do
+                    local id=tonumber(trackList[i])
+                    _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track id")
+                    trackList[i]=id
+                end
+            end
+
+            local data=str:sub(t+1):split(',')
+            local op=data[1]:upper()
+            if op=='T'then--Transparent
+                _syntaxCheck(#data>=3,"Too few arguments (least 2)" )
+                local a={}
+                for i=2,#data do
+                    a[i-1]=tonumber(data[i])
+                    _syntaxCheck(a[i-1]and a[i-1]>=0 and a[i-1]<=100,"Invalid alpha value")
+                end
+                for i=1,#trackList do
+                    trackNoteAlpha[trackList[i]]=a
+                end
+            elseif op=='C'then--Color
+                local c1,c2
+                if not data[2]then
+                    c1,c2='FFFFFF','FFFFFF'
+                else
+                    _syntaxCheck(#data==3,"Invalid arguments")
+                    _syntaxCheck(
+                        not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6 and
+                        not data[3]:find("[^0-9a-fA-F]")and #data[3]<=6,
+                        "Invalid color code"
+                    )
+                    c1,c2=data[2],data[3]
+                end
+                local c={c1,c2}
+                for i=1,#trackList do
+                    trackNoteColor[trackList[i]]=c
+                end
+            else
+                _syntaxCheck(false,"Invalid note operation")
+            end
         elseif str:sub(1,1)=='='then--Repeat mark
             local len=0
             repeat
@@ -399,6 +461,8 @@ function Map.new(file)
                                 type='tap',
                                 time=curTime,
                                 track=trackDir[curTrack],
+                                color=trackNoteColor[curTrack],
+                                alpha=trackNoteAlpha[curTrack],
                             }
                         elseif c=='U'then--Hold note start
                             _syntaxCheck(not longBarState[curTrack],"Cannot start a long bar in a long bar")
@@ -409,6 +473,8 @@ function Map.new(file)
                                 etime=false,
                                 head=true,
                                 tail=false,
+                                color=trackNoteColor[curTrack],
+                                alpha=trackNoteAlpha[curTrack],
                             }
                             o.noteQueue:insert(b)
                             longBarState[curTrack]=b
@@ -463,6 +529,8 @@ function Map.new(file)
                         type='tap',
                         time=curTime,
                         track=trackDir[curTrack],
+                        color=trackNoteColor[curTrack],
+                        alpha=trackNoteAlpha[curTrack],
                     }
                     trackUsed[curTrack]=true
                     str=str:sub(2)

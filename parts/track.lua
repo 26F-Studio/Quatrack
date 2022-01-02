@@ -6,7 +6,7 @@ local gc_rectangle=gc.rectangle
 
 local max,min=math.max,math.min
 local rem=table.remove
-local MATH=MATH
+local interval,lerp,listLerp=MATH.interval,MATH.lerp,MATH.listLerp
 
 local Track={}
 
@@ -44,9 +44,9 @@ function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,
 function Track:setDefaultAngle(ang)self.defaultState.ang=ang end
 function Track:setDefaultSize(kx,ky)self.defaultState.kx,self.defaultState.ky=kx,ky end
 function Track:setDefaultDropSpeed(speed)self.defaultState.dropSpeed=speed end
-function Track:setDefaultAlpha(alpha)self.defaultState.alpha=MATH.interval(alpha/100,0,1)end
+function Track:setDefaultAlpha(alpha)self.defaultState.alpha=interval(alpha/100,0,1)end
 function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
-function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=MATH.interval(r,0,1),MATH.interval(g,0,1),MATH.interval(b,0,1) end
+function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=interval(r,0,1),interval(g,0,1),interval(b,0,1) end
 
 function Track:movePosition(dx,dy)
     self.targetState.x=self.targetState.x+(dx or 0)
@@ -63,15 +63,15 @@ function Track:moveDropSpeed(dds)
     self.targetState.dropSpeed=self.targetState.dropSpeed+dds
 end
 function Track:moveAlpha(da)
-    self.targetState.alpha=MATH.interval(self.targetState.alpha+da/100,0,1)
+    self.targetState.alpha=interval(self.targetState.alpha+da/100,0,1)
 end
 function Track:moveAvailable()--wtf
     self:setAvailable(not self.state.available)
 end
 function Track:moveColor(dr,dg,db)
-    self.targetState.r=MATH.interval(self.targetState.r+(dr or 0),0,1)
-    self.targetState.g=MATH.interval(self.targetState.g+(dg or 0),0,1)
-    self.targetState.b=MATH.interval(self.targetState.b+(db or 0),0,1)
+    self.targetState.r=interval(self.targetState.r+(dr or 0),0,1)
+    self.targetState.g=interval(self.targetState.g+(dg or 0),0,1)
+    self.targetState.b=interval(self.targetState.b+(db or 0),0,1)
 end
 
 function Track:setPosition(x,y,force)
@@ -98,11 +98,11 @@ function Track:setDropSpeed(dropSpeed,force)
 end
 function Track:setAlpha(alpha,force)
     if not alpha then alpha=self.defaultState.alpha*100 end
-    alpha=MATH.interval(alpha/100,0,1)
+    alpha=interval(alpha/100,0,1)
     if force then self.state.alpha=alpha end
     self.targetState.alpha=alpha
 end
-function Track:setAvailable(bool)print(bool)
+function Track:setAvailable(bool)
     if bool==nil then bool=self.defaultState.available end
     self.state.available=bool
     if not self.state.available and self.pressed then
@@ -301,21 +301,33 @@ function Track:draw(map)
     local thick=SETTING.noteThick*ky
     for i=1,#self.notes do
         local note=self.notes[i]
-        local headH=(note.time-self.time)*dropSpeed
+        local timeRemain=note.time-self.time
+        local headH=timeRemain*dropSpeed
+        local color=note.color
+        local r=lerp(color[2][1],color[1][1],timeRemain/2.6)
+        local g=lerp(color[2][2],color[1][2],timeRemain/2.6)
+        local b=lerp(color[2][3],color[1][3],timeRemain/2.6)
+        local a
+        do
+            if #note.alpha==2 and note.alpha[1]==note.alpha[2]then
+                a=note.alpha[1]
+            else
+                a=listLerp(note.alpha,1-timeRemain/2)*.01
+            end
+        end
+
         if note.type=='tap'then
-            gc_setColor(note.color)
+            gc_setColor(r,g,b,a)
             gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
         elseif note.type=='hold'then
             local tailH=(note.etime-self.time)*dropSpeed
 
             --Body
-            local alpha=note.color[4]*SETTING.holdAlpha
-            if not note.active then alpha=alpha*.5 end
-            gc_setColor(note.color[1],note.color[2],note.color[3],alpha)
+            gc_setColor(r,g,b,(note.active and a or a*.5)*SETTING.holdAlpha)
             gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.head and -thick or 0))
 
             --Head & Tail
-            gc_setColor(note.color)
+            gc_setColor(r,g,b,a)
             if note.head then gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)end
             if note.tail then gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)end
         end
