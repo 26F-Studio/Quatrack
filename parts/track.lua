@@ -6,7 +6,7 @@ local gc_rectangle=gc.rectangle
 
 local max,min=math.max,math.min
 local rem=table.remove
-local interval,lerp,listLerp=MATH.interval,MATH.lerp,MATH.listLerp
+local interval,listLerp=MATH.interval,MATH.listLerp
 
 local Track={}
 
@@ -303,16 +303,15 @@ function Track:draw(map)
         local note=self.notes[i]
         local timeRemain=note.time-self.time
         local headH=timeRemain*dropSpeed
-        local color=note.color
-        local r=lerp(color[2][1],color[1][1],timeRemain/2.6)
-        local g=lerp(color[2][2],color[1][2],timeRemain/2.6)
-        local b=lerp(color[2][3],color[1][3],timeRemain/2.6)
+        local r=listLerp(note.color[1],1-timeRemain/2.6)
+        local g=listLerp(note.color[2],1-timeRemain/2.6)
+        local b=listLerp(note.color[3],1-timeRemain/2.6)
         local a
         do
             if #note.alpha==2 and note.alpha[1]==note.alpha[2]then
                 a=note.alpha[1]
             else
-                a=listLerp(note.alpha,1-timeRemain/2)*.01
+                a=listLerp(note.alpha,1-timeRemain/2.6)*.01
             end
         end
 

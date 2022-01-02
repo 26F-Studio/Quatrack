@@ -100,8 +100,8 @@ function Map.new(file)
     local longBarState=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
     local trackDir={}for i=1,o.tracks do trackDir[i]=i end
-    local trackNoteColor={}for i=1,o.tracks do trackNoteColor[i]={'FFFFFF','FFFFFF'}end
-    local trackNoteAlpha={}for i=1,o.tracks do trackNoteAlpha[i]={.8,.8}end
+    local trackNoteColor=TABLE.new({{1},{1},{1}},o.tracks)
+    local trackNoteAlpha={}for i=1,o.tracks do trackNoteAlpha[i]={80}end
     local line=#fileData
     while line>0 do
         local str=fileData[line][2]
@@ -326,31 +326,36 @@ function Map.new(file)
             local data=str:sub(t+1):split(',')
             local op=data[1]:upper()
             if op=='T'then--Transparent
-                _syntaxCheck(#data>=3,"Too few arguments (least 2)" )
                 local a={}
-                for i=2,#data do
-                    a[i-1]=tonumber(data[i])
-                    _syntaxCheck(a[i-1]and a[i-1]>=0 and a[i-1]<=100,"Invalid alpha value")
+                if data[2]then
+                    for i=2,#data do
+                        local alpha=tonumber(data[i])
+                        _syntaxCheck(alpha and alpha>=0 and alpha<=100,"Invalid alpha value")
+                        a[i-1]=alpha
+                    end
+                else
+                    a[1]=80
                 end
                 for i=1,#trackList do
                     trackNoteAlpha[trackList[i]]=a
                 end
             elseif op=='C'then--Color
-                local c1,c2
+                local codes={}
                 if not data[2]then
-                    c1,c2='FFFFFF','FFFFFF'
+                    codes[1]='FFFFFF'
                 else
-                    _syntaxCheck(#data==3,"Invalid arguments")
-                    _syntaxCheck(
-                        not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6 and
-                        not data[3]:find("[^0-9a-fA-F]")and #data[3]<=6,
-                        "Invalid color code"
-                    )
-                    c1,c2=data[2],data[3]
+                    for i=2,#data do
+                        local code=data[i]
+                        _syntaxCheck(not code:find("[^0-9a-fA-F]")and #code<=6,"Invalid color code")
+                        codes[i-1]=code
+                    end
                 end
-                local c={c1,c2}
+                local color={{},{},{}}
+                for i=1,#codes do
+                    color[1][i],color[2][i],color[3][i]=STRING.hexColor(codes[i])
+                end
                 for i=1,#trackList do
-                    trackNoteColor[trackList[i]]=c
+                    trackNoteColor[trackList[i]]=color
                 end
             else
                 _syntaxCheck(false,"Invalid note operation")
