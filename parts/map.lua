@@ -56,7 +56,6 @@ function Map.new(file)
     local fileData={}do
         local lineNum=1
         for l in love.filesystem.lines(file)do
-            l=l:trim()
             if l:find(';')then
                 l=l:split(';')
                 for i=1,#l do
@@ -138,7 +137,7 @@ function Map.new(file)
             if str:sub(2)=='start'then
                 curTime=-3.6
             else
-                local stamp=str:sub(2):split(":")
+                local stamp=str:sub(2):split(':')
                 if #stamp==1 then ins(stamp,1,"0")end
                 for i=1,2 do
                     stamp[i]=tonumber(stamp[i])
@@ -169,12 +168,12 @@ function Map.new(file)
                 trackList=trackStr:split(',')
                 for i=1,#trackList do
                     local id=tonumber(trackList[i])
-                    _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track number")
+                    _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track id")
                     trackList[i]=id
                 end
             end
 
-            local data=str:sub(t+1):split(",")
+            local data=str:sub(t+1):split(',')
             local op=data[1]:upper()
             local opType=data[1]==data[1]:upper()and'set'or'move'
 
@@ -242,7 +241,7 @@ function Map.new(file)
                         neg=true
                         data[2]=data[2]:sub(2)
                     end
-                    _syntaxCheck(not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6,"Wrong color code")
+                    _syntaxCheck(not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6,"Invalid color code")
                     r,g,b=STRING.hexColor(data[2])
                     if neg then
                         r,g,b=-r,-g,-b
@@ -362,10 +361,10 @@ function Map.new(file)
                 if name:find(' ')then
                     local multiNameList=name:split(' ')
                     for i=1,#multiNameList do
-                        _syntaxCheck(trackNames[multiNameList[i]],"Wrong track name")
+                        _syntaxCheck(trackNames[multiNameList[i]],"Invalid track name")
                     end
                 else
-                    _syntaxCheck(name=='x'or trackNames[name],"Wrong track name")
+                    _syntaxCheck(name=='x'or trackNames[name],"Invalid track name")
                 end
                 o.eventQueue:insert{
                     type='setTrack',
@@ -490,12 +489,12 @@ function Map.new(file)
                         end
                     elseif str:sub(1,1)=='*'then--Multiply time by any number
                         local mul=tonumber(str:sub(2))
-                        _syntaxCheck(type(mul)=='number',"Wrong scale num")
+                        _syntaxCheck(type(mul)=='number',"Invalid scale num")
                         step=step*mul
                         break
                     elseif str:sub(1,1)=='/'then--Divide time by any number
                         local div=tonumber(str:sub(2))
-                        _syntaxCheck(type(div)=='number',"Wrong scale num")
+                        _syntaxCheck(type(div)=='number',"Invalid scale num")
                         step=step/div
                         break
                     elseif str==''then
