@@ -30,6 +30,7 @@ function Map.new(file)
         mapDifficulty='[mapDifficulty]',
 
         songFile="[songFile]",
+        songImage=false,
         songOffset=0,
         tracks=4,
         freeSpeed=true,

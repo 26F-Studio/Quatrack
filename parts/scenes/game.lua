@@ -111,7 +111,22 @@ function scene.sceneInit()
     BGM.play(map.songFile,'-preLoad')
 
     BGM.stop()
-    BG.set('none')
+    if map.songImage then
+        local image
+        if love.filesystem.getInfo('parts/levels')then
+            image=gc.newImage('parts/levels/'..map.songImage)
+        elseif love.filesystem.getInfo('songs/'..map.songImage)then
+            image=gc.newImage('songs/'..map.songImage)
+        end
+        if image then
+            BG.set('custom')
+            BG.send(.1626,image)
+        else
+            BG.set('none')
+        end
+    else
+        BG.set('none')
+    end
 
     isSongPlaying=false
     time=-3.6

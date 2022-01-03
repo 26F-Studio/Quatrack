@@ -5,6 +5,7 @@ $mapAuth=MrZ
 $mapDifficulty=Hard-1
 
 $songFile=goodrage
+$songImage=goodrage.png
 $songOffset=-0.14
 $tracks=4
 

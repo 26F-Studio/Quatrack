@@ -7,6 +7,7 @@ mapMetaKeys={
     "mapDifficulty",
 
     "songFile",
+    "songImage",
     "songOffset",
     "tracks",
     "freeSpeed",
