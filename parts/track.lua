@@ -8,6 +8,8 @@ local max,min=math.max,math.min
 local rem=table.remove
 local interval,listLerp=MATH.interval,MATH.listLerp
 
+local SETTING=SETTING
+
 local Track={}
 
 function Track.new(id)
@@ -264,6 +266,8 @@ function Track:draw(map)
     local trackW=50*s.kx*SETTING.trackW
     local ky=s.ky
 
+    local noteDX,noteDY=SETTING.scaleX,s.ky*s.dropSpeed/50
+
     --Available indicator for testing
     -- gc_setColor(1,1,1)
     -- gc.setLineWidth(2)
@@ -284,15 +288,15 @@ function Track:draw(map)
     gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
 
     --Draw sides
-    local unitY=620*ky
+    local unitY=626*ky
     for i=0,99 do
         i=i*.01
         gc_setColor(s.r,s.g,s.b,s.alpha*(1-i))
-        gc_rectangle('fill',-trackW,4-i*unitY,-4,-unitY*.01)
-        gc_rectangle('fill',trackW,4-i*unitY,4,-unitY*.01)
+        gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
+        gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
         if self.pressed then
             gc_setColor(s.r,s.g,s.b,s.alpha*(1-i)/6)
-            gc_rectangle('fill',-trackW,-i*unitY,2*trackW,-unitY*.01)
+            gc_rectangle('fill',-trackW,-unitY*i,2*trackW,-unitY*.01)
         end
     end
 
@@ -303,6 +307,7 @@ function Track:draw(map)
         local note=self.notes[i]
         local timeRemain=note.time-self.time
         local headH=timeRemain*dropSpeed
+
         local r=listLerp(note.color[1],1-timeRemain/2.6)
         local g=listLerp(note.color[2],1-timeRemain/2.6)
         local b=listLerp(note.color[3],1-timeRemain/2.6)
@@ -315,7 +320,15 @@ function Track:draw(map)
             end
         end
 
+        local dx=listLerp(note.xOffset,1-timeRemain/2.6)*noteDX
+        local dy=listLerp(note.yOffset,1-timeRemain/2.6)*noteDY
+
+        gc_translate(dx,dy)
         if note.type=='tap'then
+            if SETTING.chordAlpha>0 and note.chordCount>1 then
+                gc_setColor(1,1,0,SETTING.chordAlpha)
+                gc_rectangle('fill',-trackW-6,-headH-thick-6,2*trackW+12,thick+6)
+            end
             gc_setColor(r,g,b,a)
             gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
         elseif note.type=='hold'then
@@ -326,10 +339,24 @@ function Track:draw(map)
             gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.head and -thick or 0))
 
             --Head & Tail
-            gc_setColor(r,g,b,a)
-            if note.head then gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)end
-            if note.tail then gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)end
+            if note.head then
+                if SETTING.chordAlpha>0 and note.chordCount_head>1 then
+                    gc_setColor(1,1,0,SETTING.chordAlpha)
+                    gc_rectangle('fill',-trackW-6,-headH-thick-6,2*trackW+12,thick+6)
+                end
+                gc_setColor(r,g,b,a)
+                gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
+            end
+            if note.tail then
+                if SETTING.chordAlpha>0 and note.chordCount_tail>1 then
+                    gc_setColor(1,1,0,SETTING.chordAlpha)
+                    gc_rectangle('fill',-trackW-6,-tailH-thick/2-6,2*trackW+12,thick/2+6)
+                end
+                gc_setColor(r,g,b,a)
+                gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)
+            end
         end
+        gc_translate(-dx,-dy)
     end
 
     gc_pop()

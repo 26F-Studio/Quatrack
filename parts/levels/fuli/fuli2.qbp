@@ -1,7 +1,8 @@
 $version=1.0
 $mapName=FULi AUTO SHOOTER
 $musicAuth=MYUKKE.
-$mapAuth=AcSier & MrZ
+$mapAuth=AcSier
+$mapAuth2=720969 & MrZ
 $mapDifficulty=Normal-5
 
 $songFile=fuli

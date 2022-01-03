@@ -60,33 +60,35 @@ local function _freshSongList()
                         file:close()
                         local color=source=='game'and COLOR.Z or source=='outside'and COLOR.lY or COLOR.lD
                         local dText=metaData.mapDifficulty
+                        local difficultyNum=(
+                            dText:sub(1,4)=='Easy'and 0 or
+                            dText:sub(1,4)=='Norm'and 1 or
+                            dText:sub(1,4)=='Hard'and 2 or
+                            dText:sub(1,4)=='Luna'and 3 or
+                            dText:sub(1,4)=='Over'and 4 or
+                            5)*10+metaData.mapDifficulty:sub(-1)
                         ins(mapList,{
-                            path=path..'/'..itemName,
+                            path=fullPath,
                             source=source,
                             mapName=gc.newText(getFont(30),{color,metaData.mapName,COLOR.dH," - "..metaData.musicAuth}),
                             mapAuth=gc.newText(getFont(30),metaData.mapAuth),
                             difficulty=gc.newText(getFont(25),dText),
                             difficultyColor=
-                                dText:sub(1,1)=='E'and COLOR.lG or
-                                dText:sub(1,1)=='N'and COLOR.lY or
-                                dText:sub(1,1)=='H'and COLOR.lR or
-                                dText:sub(1,1)=='L'and COLOR.lM or
-                                dText:sub(1,1)=='O'and COLOR.lH or
+                                dText:sub(1,4)=='Easy'and COLOR.lG or
+                                dText:sub(1,4)=='Norm'and COLOR.lY or
+                                dText:sub(1,4)=='Hard'and COLOR.lR or
+                                dText:sub(1,4)=='Luna'and COLOR.lM or
+                                dText:sub(1,4)=='Over'and COLOR.lH or
                                 COLOR.lX,
                             tracks=metaData.tracks,
+                            sortName=(source=='outside'and'0'or'1')..metaData.tracks..difficultyNum..metaData.mapName
                         })
                     end
                 end
             end
         end
     end
-    table.sort(mapList,function(a,b)
-        if a.source~=b.source then
-            return a.source=='outside'
-        else
-            return a.path<b.path
-        end
-    end)
+    table.sort(mapList,function(a,b)return a.sortName<b.sortName end)
     listBox:setList(mapList)
 end
 

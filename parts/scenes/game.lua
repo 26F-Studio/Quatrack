@@ -103,20 +103,17 @@ function scene.sceneInit()
         mapAuth=gc.newText(getFont(40),'Map: '..map.mapAuth),
     }
 
-    if love.filesystem.getInfo('parts/levels/'..map.songFile..'.ogg')then
-        BGM.load(map.songFile,'parts/levels/'..map.songFile..'.ogg')
-    elseif love.filesystem.getInfo('songs/'..map.songFile..'.ogg')then
-        BGM.load(map.songFile,'songs/'..map.songFile..'.ogg')
+    local dirPath=map.qbpFilePath:sub(1,#map.qbpFilePath-map.qbpFilePath:reverse():find("/")+1)
+    if love.filesystem.getInfo(dirPath..map.songFile..'.ogg')then
+        BGM.load(map.songFile,dirPath..map.songFile..'.ogg')
     end
     BGM.play(map.songFile,'-preLoad')
 
     BGM.stop()
     if map.songImage then
         local image
-        if love.filesystem.getInfo('parts/levels')then
-            image=gc.newImage('parts/levels/'..map.songImage)
-        elseif love.filesystem.getInfo('songs/'..map.songImage)then
-            image=gc.newImage('songs/'..map.songImage)
+        if love.filesystem.getInfo('parts/levels')or love.filesystem.getInfo('songs/'..map.songImage)then
+            image=gc.newImage(dirPath..map.songImage)
         end
         if image then
             BG.set('custom')
@@ -246,7 +243,11 @@ function scene.keyDown(key,isRep)
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
     elseif k=='escape'then
-        SCN.back()
+        if map.finished then
+            _tryGoResult()
+        else
+            SCN.back()
+        end
     elseif k=='auto'then
         autoPlay=not autoPlay
         if autoPlay then
@@ -390,7 +391,7 @@ function scene.draw()
 
     --Draw auto mark
     if autoPlay then
-        gc_setColor(1,1,1,.0626)
+        gc_setColor(1,1,1,.126)
         mDraw(autoPlayTextObj,nil,nil,nil,3.55)
     end
 

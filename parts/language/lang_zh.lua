@@ -79,6 +79,7 @@ return{
             musicDelay="音乐延迟",
             dropSpeed="音符流速",
             noteThick="音符厚度",
+            chordAlpha="多押指示不透明度",
             holdAlpha="长条不透明度",
             holdWidth="长条宽度",
             scaleX="X轴缩放",

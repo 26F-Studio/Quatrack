@@ -4,6 +4,7 @@ mapMetaKeys={
     "mapName",
     "musicAuth",
     "mapAuth",
+    "mapAuth2",
     "mapDifficulty",
 
     "songFile",
@@ -99,10 +100,10 @@ actionNames={
 do--Userdata tables
     KEY_MAP={
         f='L1',d='L2',s='L3',a='L4',lshift='L5',
-        b='C',
+        space='C',
         j='R1',k='R2',l='R3',[';']='R4',['/']='R5',
         ['`']='restart',
-        space='skip',
+        ['return']='skip',
         f5='auto',
         f1='sfxVolDn',
         f2='sfxVolUp',
@@ -139,6 +140,7 @@ do--Userdata tables
         musicDelay=0,
         dropSpeed=0,
         noteThick=22,
+        chordAlpha=.8,
         holdAlpha=.26,
         holdWidth=.8,
         scaleX=1,

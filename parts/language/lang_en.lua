@@ -79,6 +79,7 @@ return{
             musicDelay="Music Delay",
             dropSpeed="Scrolling speed",
             noteThick="Note thickness",
+            chordAlpha="Chord key alpha",
             holdAlpha="Hold note alpha",
             holdWidth="Hold note width",
             scaleX="Scale X",
