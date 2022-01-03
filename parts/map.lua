@@ -22,30 +22,17 @@ local function _insert(self,obj)
 end
 
 function Map.new(file)
-    local o={
-        version="1.0",
-        mapName='[mapName]',
-        musicAuth='[musicAuth]',
-        mapAuth='[mapAuth]',
-        mapDifficulty='[mapDifficulty]',
+    local o=TABLE.copy(mapTemplate)
 
-        songFile="[songFile]",
-        songImage=false,
-        songOffset=0,
-        tracks=4,
-        freeSpeed=true,
+    o.qbpFilePath=file
 
-        valid=nil,
-        qbpFilePath=file,
-        songLength=nil,
+    o.time=0
+    o.noteQueue={insert=_insert}
+    o.eventQueue={insert=_insert}
+    o.notePtr=0
+    o.animePtr=0
+    o.finished=false
 
-        time=0,
-        noteQueue={insert=_insert},
-        eventQueue={insert=_insert},
-        notePtr=0,
-        animePtr=0,
-        finished=false,
-    }
     if file then
         o.valid=true
     else
@@ -90,7 +77,9 @@ function Map.new(file)
         end
     end
 
-    --Parse non-string metadata
+    --Parse metadata
+    SCline=0
+    SCstr='[metadata]'
     if type(o.tracks)=='string'then o.tracks=tonumber(o.tracks)end
     if type(o.songOffset)=='string'then o.songOffset=tonumber(o.songOffset)end
     if type(o.freeSpeed)=='string'then o.freeSpeed=o.freeSpeed=='true'end
@@ -192,7 +181,6 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=nil,
                     operation=opType..'Position',
                     args={data[2],data[3],false},
                 }
@@ -202,7 +190,6 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=nil,
                     operation=opType..'Angle',
                     args={data[2],false},
                 }
@@ -213,7 +200,6 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=nil,
                     operation=opType..'Size',
                     args={data[2],data[3],false},
                 }
@@ -223,7 +209,6 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=nil,
                     operation=opType..'DropSpeed',
                     args={data[2],false},
                 }
@@ -233,14 +218,13 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=nil,
                     operation=opType..'Alpha',
                     args={data[2],false},
                 }
             elseif op=='C'then--Color
                 _syntaxCheck(#data<=2,"Too many arguments")
                 local r,g,b
-                if data[2]==''then
+                if not data[2]then
                     r,g,b=1,1,1
                 else
                     local neg
@@ -257,7 +241,6 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=nil,
                     operation=opType..'Color',
                     args={r,g,b,false},
                 }
@@ -278,7 +261,6 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=nil,
                     operation=opType..'Available',
                     args={data[2],false},
                 }
@@ -288,7 +270,6 @@ function Map.new(file)
                 event={
                     type='setTrack',
                     time=curTime,
-                    track=nil,
                     operation='setNameTime',
                     args={time,false},
                 }
@@ -440,6 +421,21 @@ function Map.new(file)
                     trackDir[i]=l[id]
                 end
             end
+        elseif str:sub(1,1)=='^'then--Set chord color
+            local c=str:sub(2):split(',')
+            if #c==0 then
+                c=defaultChordColor
+            else
+                for i=1,#c do
+                    _syntaxCheck(not c[i]:find("[^0-9a-fA-F]")and #c[i]<=6,"Invalid color code")
+                    c[i]={STRING.hexColor(c[i])}
+                end
+            end
+            o.eventQueue:insert{
+                type='setChordColor',
+                time=curTime,
+                color=c,
+            }
         elseif str:sub(1,1)=='%'then--Rename tracks
             local nameList=str:sub(2):split(',')
             _syntaxCheck(#nameList==o.tracks,"Track names not match track count")

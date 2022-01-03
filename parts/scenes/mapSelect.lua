@@ -38,13 +38,7 @@ local function _freshSongList()
                         local fullPath=dirPath..'/'..itemName
                         local file=love.filesystem.newFile(fullPath)
                         local iterator=file:lines()
-                        local metaData={
-                            mapName="*"..itemName,
-                            musicAuth="?",
-                            mapAuth="?",
-                            mapDifficulty="?-?",
-                            tracks="?",
-                        }
+                        local metaData=TABLE.copy(mapTemplate)
                         while true do
                             local line=iterator()
                             if not line then break end

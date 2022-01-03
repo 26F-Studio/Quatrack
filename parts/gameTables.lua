@@ -14,6 +14,25 @@ mapMetaKeys={
     "freeSpeed",
 }
 mapMetaKeyMap={}for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
+defaultChordColor={
+    {STRING.hexColor("FFFF00")},
+    {STRING.hexColor("FFC000")},
+    {STRING.hexColor("FF6000")},
+    {STRING.hexColor("FF0000")},
+}
+mapTemplate={
+    version="1.0",
+    mapName='[mapName]',
+    musicAuth='[musicAuth]',
+    mapAuth='[mapAuth]',
+    mapDifficulty='[mapDifficulty]',
+
+    songFile="[songFile]",
+    songImage=false,
+    songOffset=0,
+    tracks=4,
+    freeSpeed=true,
+}
 hitColors={
     [-1]=COLOR.dRed,
     [0]=COLOR.dRed,

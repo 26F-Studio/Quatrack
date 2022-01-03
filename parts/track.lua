@@ -15,7 +15,8 @@ local Track={}
 function Track.new(id)
     local track={
         id=id,
-        name=false,--Must set a name later!
+        name=false,--Must set one later!
+        chordColor=defaultChordColor,
         pressed=false,
         lastPressTime=-1e99,
         lastReleaseTime=-1e99,
@@ -40,6 +41,10 @@ end
 
 function Track:rename(name)
     self.name=name.." "
+end
+
+function Track:setChordColor(chordColor)
+    self.chordColor=chordColor
 end
 
 function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,y end
@@ -303,6 +308,9 @@ function Track:draw(map)
     --Draw notes
     local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed or 0))*ky
     local thick=SETTING.noteThick*ky
+    local chordColor=self.chordColor
+    local chordAlpha=SETTING.chordAlpha
+    if chordAlpha==0 then chordAlpha=false end
     for i=1,#self.notes do
         local note=self.notes[i]
         local timeRemain=note.time-self.time
@@ -325,9 +333,11 @@ function Track:draw(map)
 
         gc_translate(dx,dy)
         if note.type=='tap'then
-            if SETTING.chordAlpha>0 and note.chordCount>1 then
-                gc_setColor(1,1,0,SETTING.chordAlpha)
-                gc_rectangle('fill',-trackW-6,-headH-thick-6,2*trackW+12,thick+6)
+            if chordAlpha and note.chordCount>1 then
+                local c=chordColor[note.chordCount-1]
+                c[4]=chordAlpha
+                gc_setColor(c)
+                gc_rectangle('fill',-trackW-5,-headH-thick-6,2*trackW+10,thick+6)
             end
             gc_setColor(r,g,b,a)
             gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
@@ -340,17 +350,21 @@ function Track:draw(map)
 
             --Head & Tail
             if note.head then
-                if SETTING.chordAlpha>0 and note.chordCount_head>1 then
-                    gc_setColor(1,1,0,SETTING.chordAlpha)
-                    gc_rectangle('fill',-trackW-6,-headH-thick-6,2*trackW+12,thick+6)
+                if chordAlpha and note.chordCount_head>1 then
+                    local c=chordColor[note.chordCount_head-1]
+                    c[4]=chordAlpha
+                    gc_setColor(c)
+                    gc_rectangle('fill',-trackW-5,-headH-thick-6,2*trackW+10,thick+6)
                 end
                 gc_setColor(r,g,b,a)
                 gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
             end
             if note.tail then
-                if SETTING.chordAlpha>0 and note.chordCount_tail>1 then
-                    gc_setColor(1,1,0,SETTING.chordAlpha)
-                    gc_rectangle('fill',-trackW-6,-tailH-thick/2-6,2*trackW+12,thick/2+6)
+                if chordAlpha and note.chordCount_tail>1 then
+                    local c=chordColor[note.chordCount_tail-1]
+                    c[4]=chordAlpha
+                    gc_setColor(c)
+                    gc_rectangle('fill',-trackW-5,-tailH-thick/2-6,2*trackW+10,thick/2+6)
                 end
                 gc_setColor(r,g,b,a)
                 gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)

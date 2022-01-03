@@ -147,6 +147,7 @@ function scene.sceneInit()
         tracks[id]:setDefaultPosition(70*(2*id-map.tracks-1),320)
         tracks[id]:setPosition(nil,nil,true)
         tracks[id]:rename(defaultTrackNames[map.tracks][id])
+        tracks[id]:setChordColor(defaultChordColor)
         tracks[id]:setNameTime(2)
     end
 
@@ -336,6 +337,10 @@ function scene.update(dt)
         if n.type=='setTrack'then
             local t=tracks[n.track]
             t[n.operation](t,unpack(n.args))
+        elseif n.type=='setChordColor'then
+            for i=1,#tracks do
+                tracks[i]:setChordColor(n.color)
+            end
         end
     end
 
