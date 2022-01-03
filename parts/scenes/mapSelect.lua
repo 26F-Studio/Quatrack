@@ -61,7 +61,7 @@ local function _freshSongList()
                         local color=source=='game'and COLOR.Z or source=='outside'and COLOR.lY or COLOR.lD
                         local dText=metaData.mapDifficulty
                         ins(mapList,{
-                            path=path..'/'..itemName,
+                            path=fullPath,
                             source=source,
                             mapName=gc.newText(getFont(30),{color,metaData.mapName,COLOR.dH," - "..metaData.musicAuth}),
                             mapAuth=gc.newText(getFont(30),metaData.mapAuth),

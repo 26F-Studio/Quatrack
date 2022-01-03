@@ -103,20 +103,17 @@ function scene.sceneInit()
         mapAuth=gc.newText(getFont(40),'Map: '..map.mapAuth),
     }
 
-    if love.filesystem.getInfo('parts/levels/'..map.songFile..'.ogg')then
-        BGM.load(map.songFile,'parts/levels/'..map.songFile..'.ogg')
-    elseif love.filesystem.getInfo('songs/'..map.songFile..'.ogg')then
-        BGM.load(map.songFile,'songs/'..map.songFile..'.ogg')
+    local dirPath=map.qbpFilePath:sub(1,#map.qbpFilePath-map.qbpFilePath:reverse():find("/")+1)
+    if love.filesystem.getInfo(dirPath..map.songFile..'.ogg')then
+        BGM.load(map.songFile,dirPath..map.songFile..'.ogg')
     end
     BGM.play(map.songFile,'-preLoad')
 
     BGM.stop()
     if map.songImage then
         local image
-        if love.filesystem.getInfo('parts/levels')then
-            image=gc.newImage('parts/levels/'..map.songImage)
-        elseif love.filesystem.getInfo('songs/'..map.songImage)then
-            image=gc.newImage('songs/'..map.songImage)
+        if love.filesystem.getInfo('parts/levels')or love.filesystem.getInfo('songs/'..map.songImage)then
+            image=gc.newImage(dirPath..map.songImage)
         end
         if image then
             BG.set('custom')
