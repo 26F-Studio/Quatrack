@@ -286,15 +286,15 @@ function Track:draw(map)
     gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
 
     --Draw sides
-    local unitY=620*ky
+    local unitY=626*ky
     for i=0,99 do
         i=i*.01
         gc_setColor(s.r,s.g,s.b,s.alpha*(1-i))
-        gc_rectangle('fill',-trackW,4-i*unitY,-4,-unitY*.01)
-        gc_rectangle('fill',trackW,4-i*unitY,4,-unitY*.01)
+        gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
+        gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
         if self.pressed then
             gc_setColor(s.r,s.g,s.b,s.alpha*(1-i)/6)
-            gc_rectangle('fill',-trackW,-i*unitY,2*trackW,-unitY*.01)
+            gc_rectangle('fill',-trackW,-unitY*i,2*trackW,-unitY*.01)
         end
     end
 
