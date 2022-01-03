@@ -139,6 +139,7 @@ do--Userdata tables
         musicDelay=0,
         dropSpeed=0,
         noteThick=22,
+        chordAlpha=.8,
         holdAlpha=.26,
         holdWidth=.8,
         scaleX=1,

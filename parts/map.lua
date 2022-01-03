@@ -99,7 +99,7 @@ function Map.new(file)
     local curTime,curBPM=0,180
     local loopStack={}
     local trackDir={}for i=1,o.tracks do trackDir[i]=i end
-    local longBarState=TABLE.new(false,o.tracks)
+    local lastLongBar=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
     local noteState={
         color=TABLE.new({{.9},{.9},{.9}},o.tracks),
@@ -472,7 +472,7 @@ function Map.new(file)
             end
         else--Notes
             local readState='note'
-            local trackUsed=TABLE.new(false,o.tracks)
+            local lastNote=TABLE.new(false,o.tracks)
             local curTrack=1
             local step=1
 
@@ -482,7 +482,7 @@ function Map.new(file)
                     c=str:sub(1,1)
                     if c~='-'then--Space
                         if c=='O'then--Tap note
-                            o.noteQueue:insert{
+                            local b={
                                 type='tap',
                                 time=curTime,
                                 track=trackDir[curTrack],
@@ -491,8 +491,10 @@ function Map.new(file)
                                 xOffset=noteState.xOffset[curTrack],
                                 yOffset=noteState.yOffset[curTrack],
                             }
+                            o.noteQueue:insert(b)
+                            lastNote[curTrack]=b
                         elseif c=='U'then--Hold note start
-                            _syntaxCheck(not longBarState[curTrack],"Cannot start a long bar in a long bar")
+                            _syntaxCheck(not lastLongBar[curTrack],"Cannot start a long bar in a long bar")
                             local b={
                                 type='hold',
                                 track=trackDir[curTrack],
@@ -506,18 +508,21 @@ function Map.new(file)
                                 yOffset=noteState.yOffset[curTrack],
                             }
                             o.noteQueue:insert(b)
-                            longBarState[curTrack]=b
+                            lastLongBar[curTrack]=b
+                            lastNote[curTrack]=b
                         elseif c=='A'or c=='H'then--Long bar stop
-                            _syntaxCheck(longBarState[curTrack],"No long bar to stop")
-                            longBarState[curTrack].etime=curTime
-                            longBarState[curTrack].tail=c=='A'
-                            longBarState[curTrack]=false
+                            _syntaxCheck(lastLongBar[curTrack],"No long bar to stop")
+                            if c=='A'then
+                                lastNote[curTrack]=lastLongBar[curTrack]
+                            end
+                            lastLongBar[curTrack].etime=curTime
+                            lastLongBar[curTrack].tail=c=='A'
+                            lastLongBar[curTrack]=false
                         else
                             _syntaxCheck(curTrack==o.tracks+1,"Too few notes in one line")
                             readState='rnd'
                             goto CONTINUE_nextState
                         end
-                        trackUsed[curTrack]=true
                     end
                     _syntaxCheck(curTrack<=o.tracks,"Too many notes in one line")
                     curTrack=curTrack+1
@@ -527,7 +532,7 @@ function Map.new(file)
                     local available={}
                     for i=1,o.tracks do available[i]=i end
                     for i=#available,1,-1 do
-                        if trackUsed[available[i]]then
+                        if lastNote[available[i]]then
                             rem(available,i)
                         end
                     end
@@ -554,7 +559,7 @@ function Map.new(file)
                     end
                     _syntaxCheck(#available>0,"No space to place notes")
                     curTrack=available[rnd(#available)]
-                    o.noteQueue:insert{
+                    local b={
                         type='tap',
                         time=curTime,
                         track=trackDir[curTrack],
@@ -563,7 +568,8 @@ function Map.new(file)
                         xOffset=noteState.xOffset[curTrack],
                         yOffset=noteState.yOffset[curTrack],
                     }
-                    trackUsed[curTrack]=true
+                    o.noteQueue:insert(b)
+                    lastNote[curTrack]=b
                     str=str:sub(2)
                 elseif readState=='time'then
                     if str:sub(1,1)=='|'then--Shorten 1/2 for each
@@ -604,15 +610,32 @@ function Map.new(file)
                 end
                 ::CONTINUE_nextState::
             end
-            lastLineState=trackUsed
+
+            local chordCount=0
+            for i=1,o.tracks do if lastNote[i]then chordCount=chordCount+1 end end
+            for i=1,o.tracks do
+                if lastNote[i]then
+                    local n=lastNote[i]
+                    if n.type=='tap'then
+                        n.chordCount=chordCount
+                    elseif n.type=='hold'then
+                        if n.etime then
+                            n.chordCount_tail=chordCount
+                        else
+                            n.chordCount_head=chordCount
+                        end
+                    end
+                end
+            end
+            lastLineState=lastNote
             o.songLength=curTime
             curTime=curTime+60/curBPM*step
         end
         line=line-1
     end
 
-    for i=1,#longBarState do
-        _syntaxCheck(not longBarState[i],("Long bar not ended (Track $1)"):repD(i))
+    for i=1,#lastLongBar do
+        _syntaxCheck(not lastLongBar[i],("Long bar not ended (Track $1)"):repD(i))
     end
 
     --Reset two pointers
