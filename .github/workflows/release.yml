@@ -17,6 +17,8 @@ jobs:
       # updateNote: ${{ steps.actual-get-info.outputs.updateNote }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - name: Install lua
         run: |
           sudo apt-get install lua5.3 -y
@@ -39,6 +41,8 @@ jobs:
     needs: get-info
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - uses: ./.github/actions/update-version
         with:
           type: Release
@@ -67,6 +71,8 @@ jobs:
     needs: get-info
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - uses: ./.github/actions/update-version
         with:
           type: Release
@@ -86,6 +92,8 @@ jobs:
     needs: [get-info, build-love]
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - uses: ./.github/actions/build-windows
         with:
           love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
@@ -94,6 +102,7 @@ jobs:
           versionName: ${{ needs.get-info.outputs.versionName }}
           versionCode: ${{ needs.get-info.outputs.versionCode }}
           filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win64.zip
+          commit: ${{ needs.get-info.outputs.commit }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -106,6 +115,8 @@ jobs:
     needs: [get-info, build-love]
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - uses: ./.github/actions/build-windows
         with:
           love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win32.zip
@@ -114,6 +125,7 @@ jobs:
           versionName: ${{ needs.get-info.outputs.versionName }}
           versionCode: ${{ needs.get-info.outputs.versionCode }}
           filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win32.zip
+          commit: ${{ needs.get-info.outputs.commit }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -126,12 +138,15 @@ jobs:
     needs: [get-info, build-love]
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - uses: ./.github/actions/build-android
         with:
           apkCode: ${{ needs.get-info.outputs.apkCode }}
           versionName: ${{ needs.get-info.outputs.versionName }}
           versionCode: ${{ needs.get-info.outputs.versionCode }}
           filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Android.apk
+          commit: ${{ needs.get-info.outputs.commit }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           ALIAS: ${{ secrets.ALIAS }}
@@ -148,6 +163,8 @@ jobs:
 #    needs: get-info
 #    steps:
 #      - uses: actions/checkout@v2
+#         with:
+#           submodules: 'recursive'
 #      - name: Release
 #        uses: softprops/action-gh-release@v1
 #        with:

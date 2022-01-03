@@ -9,7 +9,7 @@ inputs:
   versionCode:
     required: true
   commit:
-    required: false
+    required: true
   filePath:
     required: true
   SIGNING_KEY:

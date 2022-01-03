@@ -16,6 +16,8 @@ jobs:
       commit: ${{ steps.actual-get-info.outputs.commit }}
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
     - name: Install lua
       run: |
         sudo apt-get install lua5.3 -y
@@ -32,6 +34,8 @@ jobs:
     needs: get-info
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
     - uses: ./.github/actions/update-version
       with:
         type: Snapshot
@@ -50,6 +54,8 @@ jobs:
     needs: get-info
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
     - uses: ./.github/actions/update-version
       with:
         type: Snapshot
@@ -69,6 +75,8 @@ jobs:
     needs: [get-info, build-love]
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
     - uses: ./.github/actions/build-windows
       with:
         love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
@@ -88,6 +96,8 @@ jobs:
     needs: [get-info, build-love]
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
     - uses: ./.github/actions/build-windows
       with:
         love-url: https://github.com/love2d/love/releases/download/11.3/love-11.3-win32.zip
@@ -107,6 +117,8 @@ jobs:
     needs: [get-info, build-love]
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
     - uses: ./.github/actions/build-android
       with:
         apkCode: ${{ needs.get-info.outputs.apkCode }}
