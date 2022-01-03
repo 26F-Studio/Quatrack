@@ -123,9 +123,6 @@ function Map.new(file)
                 curBPM=bpm
             end
             if signStr then
-                if curBeat then
-                    _syntaxCheck(int(curBeat*2048+.5)/2048%signature==0,"Unfinished bar")
-                end
                 local sign=tonumber(signStr)
                 _syntaxCheck(type(sign)=='number'and sign>0 and sign%1==0,"Invalid time signature")
                 curBeat,signature=0,sign
