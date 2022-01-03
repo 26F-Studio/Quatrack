@@ -98,11 +98,15 @@ function Map.new(file)
     --Parse notes & animations
     local curTime,curBPM=0,180
     local loopStack={}
+    local trackDir={}for i=1,o.tracks do trackDir[i]=i end
     local longBarState=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
-    local trackDir={}for i=1,o.tracks do trackDir[i]=i end
-    local trackNoteColor=TABLE.new({{1},{1},{1}},o.tracks)
-    local trackNoteAlpha={}for i=1,o.tracks do trackNoteAlpha[i]={80}end
+    local noteState={
+        color=TABLE.new({{1},{1},{1}},o.tracks),
+        alpha=TABLE.new({80},o.tracks),
+        xOffset=TABLE.new({0},o.tracks),
+        yOffset=TABLE.new({0},o.tracks),
+    }
     local line=#fileData
     while line>0 do
         local str=fileData[line][2]
@@ -338,7 +342,7 @@ function Map.new(file)
                     a[1]=80
                 end
                 for i=1,#trackList do
-                    trackNoteAlpha[trackList[i]]=a
+                    noteState.alpha[trackList[i]]=a
                 end
             elseif op=='C'then--Color
                 local codes={}
@@ -356,7 +360,22 @@ function Map.new(file)
                     color[1][i],color[2][i],color[3][i]=STRING.hexColor(codes[i])
                 end
                 for i=1,#trackList do
-                    trackNoteColor[trackList[i]]=color
+                    noteState.color[trackList[i]]=color
+                end
+            elseif op=='X'or op=='Y'then--X/Y offset
+                local o={}
+                if data[2]then
+                    for i=2,#data do
+                        local offset=tonumber(data[i])
+                        _syntaxCheck(offset,"Invalid alpha value")
+                        o[i-1]=offset
+                    end
+                else
+                    o[1]=0
+                end
+                local state=op=='X'and noteState.xOffset or noteState.yOffset
+                for i=1,#trackList do
+                    state[trackList[i]]=o
                 end
             else
                 _syntaxCheck(false,"Invalid note operation")
@@ -467,8 +486,10 @@ function Map.new(file)
                                 type='tap',
                                 time=curTime,
                                 track=trackDir[curTrack],
-                                color=trackNoteColor[curTrack],
-                                alpha=trackNoteAlpha[curTrack],
+                                color=noteState.color[curTrack],
+                                alpha=noteState.alpha[curTrack],
+                                xOffset=noteState.xOffset[curTrack],
+                                yOffset=noteState.yOffset[curTrack],
                             }
                         elseif c=='U'then--Hold note start
                             _syntaxCheck(not longBarState[curTrack],"Cannot start a long bar in a long bar")
@@ -479,8 +500,10 @@ function Map.new(file)
                                 etime=false,
                                 head=true,
                                 tail=false,
-                                color=trackNoteColor[curTrack],
-                                alpha=trackNoteAlpha[curTrack],
+                                color=noteState.color[curTrack],
+                                alpha=noteState.alpha[curTrack],
+                                xOffset=noteState.xOffset[curTrack],
+                                yOffset=noteState.yOffset[curTrack],
                             }
                             o.noteQueue:insert(b)
                             longBarState[curTrack]=b
@@ -535,8 +558,10 @@ function Map.new(file)
                         type='tap',
                         time=curTime,
                         track=trackDir[curTrack],
-                        color=trackNoteColor[curTrack],
-                        alpha=trackNoteAlpha[curTrack],
+                        color=noteState.color[curTrack],
+                        alpha=noteState.alpha[curTrack],
+                        xOffset=noteState.xOffset[curTrack],
+                        yOffset=noteState.yOffset[curTrack],
                     }
                     trackUsed[curTrack]=true
                     str=str:sub(2)

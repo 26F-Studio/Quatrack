@@ -303,6 +303,7 @@ function Track:draw(map)
         local note=self.notes[i]
         local timeRemain=note.time-self.time
         local headH=timeRemain*dropSpeed
+
         local r=listLerp(note.color[1],1-timeRemain/2.6)
         local g=listLerp(note.color[2],1-timeRemain/2.6)
         local b=listLerp(note.color[3],1-timeRemain/2.6)
@@ -315,6 +316,10 @@ function Track:draw(map)
             end
         end
 
+        local dx=listLerp(note.xOffset,1-timeRemain/2.6)
+        local dy=listLerp(note.yOffset,1-timeRemain/2.6)
+
+        gc_translate(dx,dy)
         if note.type=='tap'then
             gc_setColor(r,g,b,a)
             gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
@@ -330,6 +335,7 @@ function Track:draw(map)
             if note.head then gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)end
             if note.tail then gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)end
         end
+        gc_translate(-dx,-dy)
     end
 
     gc_pop()
