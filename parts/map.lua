@@ -1,6 +1,6 @@
 local Note=require'parts.note'
 
-local rnd=math.random
+local int,rnd=math.floor,math.random
 local ins,rem=table.insert,table.remove
 
 local Map={}
@@ -86,6 +86,7 @@ function Map.new(file)
 
     --Parse notes & animations
     local curTime,curBPM=0,180
+    local curBeat,signature=false,false
     local loopStack={}
     local trackDir={}for i=1,o.tracks do trackDir[i]=i end
     local lastLongBar=TABLE.new(false,o.tracks)
@@ -103,19 +104,46 @@ function Map.new(file)
         SCline,SCstr=fileData[line][1],str--For assertion
 
         if str:sub(1,1)=='!'then--BPM mark
-            if str:sub(2,2)=='+'or str:sub(2,2)=='-'then
-                local bpm_add=str:sub(3)
+            local data=str:sub(2):split(',')
+            _syntaxCheck(data[1],"Need BPM mark")
+            _syntaxCheck(#data<=2,"Too many arguments")
+            local bpmStr,signStr=data[1],data[2]
+            if bpmStr=='+'then
+                local bpm_add=tonumber(bpmStr:sub(2))
                 _syntaxCheck(type(bpm_add)=='number',"Invalid BPM mark")
                 curBPM=curBPM+bpm_add
-            elseif str:sub(2,2)=='-'then
-                local bpm_sub=str:sub(3)
+            elseif bpmStr=='-'then
+                local bpm_sub=tonumber(c:sub(2))
                 _syntaxCheck(type(bpm_sub)=='number',"Invalid BPM mark")
                 _syntaxCheck(bpm_sub<curBPM,"Decrease BPM too much")
                 curBPM=curBPM-bpm_sub
             else
-                local bpm=tonumber(str:sub(2))
+                local bpm=tonumber(bpmStr)
                 _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
                 curBPM=bpm
+            end
+            if signStr then
+                if curBeat then
+                    _syntaxCheck(int(curBeat*2048+.5)/2048%signature==0,"Unfinished bar")
+                end
+                local sign=tonumber(signStr)
+                _syntaxCheck(type(sign)=='number'and sign>0 and sign%1==0,"Invalid time signature")
+                curBeat,signature=0,sign
+            else
+                curBeat=false
+                signature=false
+            end
+        elseif str:sub(1,1)=='+'then--Bar separator
+            local len=0
+            repeat
+                len=len+1
+                str=str:sub(2)
+            until str:sub(1,1)~='+'
+            _syntaxCheck(len>=4 and len<=10,"Invalid bar mark length")
+            if curBeat then
+                _syntaxCheck(int(curBeat*2048+.5)/2048%signature==0,"Unfinished bar")
+            else
+                _syntaxCheck(signature,"No signature to check")
             end
         elseif str:sub(1,1)=='@'then--Random seed mark
             if str:sub(2)==''then
@@ -626,6 +654,9 @@ function Map.new(file)
             lastLineState=lastNote
             o.songLength=curTime
             curTime=curTime+60/curBPM*step
+            if curBeat then
+                curBeat=curBeat+step
+            end
         end
         line=line-1
     end
