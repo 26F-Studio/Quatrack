@@ -116,37 +116,6 @@ do--function applySettings()
 
         --Apply cursor
         love.mouse.setVisible(SETTING.sysCursor)
-
-        --Apply BG
-        if SETTING.bg=='on'then
-            BG.unlock()
-            BG.set()
-        elseif SETTING.bg=='off'then
-            BG.unlock()
-            BG.set('gray')
-            BG.send(SETTING.bgAlpha)
-            BG.lock()
-        elseif SETTING.bg=='custom'then
-            if love.filesystem.getInfo('conf/customBG')then
-                local res,image=pcall(gc.newImage,love.filesystem.newFile('conf/customBG'))
-                if res then
-                    BG.unlock()
-                    BG.set('custom')
-                    gc.setDefaultFilter('linear','linear')
-                    BG.send(SETTING.bgAlpha,image)
-                    gc.setDefaultFilter('nearest','nearest')
-                    BG.lock()
-                else
-                    MES.new('error',text.customBGloadFailed)
-                end
-            else--Switch off when custom BG not found
-                SETTING.bg='off'
-                BG.unlock()
-                BG.set('gray')
-                BG.send(SETTING.bgAlpha)
-                BG.lock()
-            end
-        end
     end
 end
 function applyFPS(inGame)

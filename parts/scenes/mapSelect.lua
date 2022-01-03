@@ -29,48 +29,54 @@ local function _freshSongList()
     lastFreshTime=TIME()
     mapList={}
     for source,path in next,{game='parts/levels',outside='songs'}do
-        for _,fileName in next,love.filesystem.getDirectoryItems(path)do
-            if fileName:sub(-4)=='.qbp'then
-                local fullPath=path..'/'..fileName
-                local file=love.filesystem.newFile(fullPath)
-                local iterator=file:lines()
-                local metaData={
-                    mapName="*"..fileName,
-                    musicAuth="?",
-                    mapAuth="?",
-                    mapDifficulty="?-?",
-                    tracks="?",
-                }
-                while true do
-                    local line=iterator()
-                    if not line then break end
-                    line=line:trim()
-                    if line~=''and line:sub(1,1)~='#'then
-                        if line:sub(1,1)~='$'then break end
-                        local key,value=line:match('^%$(.-)=(.+)')
-                        if key and value and mapMetaKeyMap[key]then
-                            metaData[key]=value
+        for _,dirName in next,love.filesystem.getDirectoryItems(path)do
+            local dirPath=path..'/'..dirName
+            local info=love.filesystem.getInfo(dirPath)
+            if info and info.type=='directory'then
+                for _,itemName in next,love.filesystem.getDirectoryItems(dirPath)do
+                    if itemName:sub(-4)=='.qbp'then
+                        local fullPath=dirPath..'/'..itemName
+                        local file=love.filesystem.newFile(fullPath)
+                        local iterator=file:lines()
+                        local metaData={
+                            mapName="*"..itemName,
+                            musicAuth="?",
+                            mapAuth="?",
+                            mapDifficulty="?-?",
+                            tracks="?",
+                        }
+                        while true do
+                            local line=iterator()
+                            if not line then break end
+                            line=line:trim()
+                            if line~=''and line:sub(1,1)~='#'then
+                                if line:sub(1,1)~='$'then break end
+                                local key,value=line:match('^%$(.-)=(.+)')
+                                if key and value and mapMetaKeyMap[key]then
+                                    metaData[key]=value
+                                end
+                            end
                         end
+                        file:close()
+                        local color=source=='game'and COLOR.Z or source=='outside'and COLOR.lY or COLOR.lD
+                        local dText=metaData.mapDifficulty
+                        ins(mapList,{
+                            path=path..'/'..itemName,
+                            source=source,
+                            mapName=gc.newText(getFont(30),{color,metaData.mapName,COLOR.dH," - "..metaData.musicAuth}),
+                            mapAuth=gc.newText(getFont(30),metaData.mapAuth),
+                            difficulty=gc.newText(getFont(25),dText),
+                            difficultyColor=
+                                dText:sub(1,1)=='E'and COLOR.lG or
+                                dText:sub(1,1)=='N'and COLOR.lY or
+                                dText:sub(1,1)=='H'and COLOR.lR or
+                                dText:sub(1,1)=='L'and COLOR.lM or
+                                dText:sub(1,1)=='O'and COLOR.lH or
+                                COLOR.lX,
+                            tracks=metaData.tracks,
+                        })
                     end
                 end
-                file:close()
-                local color=source=='game'and COLOR.Z or source=='outside'and COLOR.lY or COLOR.lD
-                local dText=metaData.mapDifficulty
-                ins(mapList,{
-                    path=path..'/'..fileName,
-                    source=source,
-                    mapName=gc.newText(getFont(30),{color,metaData.mapName,COLOR.dH," - "..metaData.musicAuth}),
-                    mapAuth=gc.newText(getFont(30),metaData.mapAuth),
-                    difficulty=gc.newText(getFont(25),dText),
-                    difficultyColor=
-                        dText:sub(1,1)=='E'and COLOR.lG or
-                        dText:sub(1,1)=='N'and COLOR.lY or
-                        dText:sub(1,1)=='H'and COLOR.lR or
-                        dText:sub(1,1)=='L'and COLOR.lM or
-                        dText:sub(1,1)=='O'and COLOR.lH or
-                        COLOR.lX,
-                    tracks=metaData.tracks,
-                })
             end
         end
     end
