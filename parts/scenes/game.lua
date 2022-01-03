@@ -391,7 +391,7 @@ function scene.draw()
 
     --Draw auto mark
     if autoPlay then
-        gc_setColor(1,1,1,.0626)
+        gc_setColor(1,1,1,.126)
         mDraw(autoPlayTextObj,nil,nil,nil,3.55)
     end
 
