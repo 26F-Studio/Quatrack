@@ -243,7 +243,11 @@ function scene.keyDown(key,isRep)
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
     elseif k=='escape'then
-        SCN.back()
+        if map.finished then
+            _tryGoResult()
+        else
+            SCN.back()
+        end
     elseif k=='auto'then
         autoPlay=not autoPlay
         if autoPlay then
