@@ -6,8 +6,6 @@ $mapDifficulty=Normal-1
 
 $songFile=infinityheaven
 $songOffset=0.17
-$tracks=4
-$freeSpeed=true
 
 H--H
 -O--*2;[A]T,0

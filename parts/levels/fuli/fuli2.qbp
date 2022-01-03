@@ -7,8 +7,6 @@ $mapDifficulty=Normal-5
 
 $songFile=fuli
 $songOffset=0.42
-$tracks=4
-$freeSpeed=true
 
 HHHH;[A]T,0
 -U--/2;[A]D,4200

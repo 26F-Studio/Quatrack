@@ -6,8 +6,6 @@ $mapDifficulty=Hard-1
 
 $songFile=about_the_universe
 $songOffset=0.26
-$tracks=4
-$freeSpeed=true
 
 --OH
 O---/4;[A]S;[A]C,FFFFFF

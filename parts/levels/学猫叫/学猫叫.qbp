@@ -6,7 +6,6 @@ $mapDifficulty=Easy-5
 
 $songFile=xuemaojiao
 $songOffset=0.38
-$tracks=4
 
 [A]C,FFFFFF
 -H--/2

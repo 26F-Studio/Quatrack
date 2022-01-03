@@ -6,7 +6,6 @@ $mapDifficulty=Normal-6
 
 $songFile=logicalstimulus
 $songOffset=-0.011
-$tracks=4
 
 O--O;>117.106
 --A-;>117.025
