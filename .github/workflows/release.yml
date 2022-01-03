@@ -151,9 +151,6 @@ jobs:
 #    runs-on: ubuntu-20.04
 #    needs: get-info
 #    steps:
-#      - uses: actions/checkout@v2
-#         with:
-#           submodules: 'recursive'
 #      - name: Release
 #        uses: softprops/action-gh-release@v1
 #        with:
