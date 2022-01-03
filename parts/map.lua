@@ -102,8 +102,8 @@ function Map.new(file)
     local longBarState=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
     local noteState={
-        color=TABLE.new({{1},{1},{1}},o.tracks),
-        alpha=TABLE.new({80},o.tracks),
+        color=TABLE.new({{.9},{.9},{.9}},o.tracks),
+        alpha=TABLE.new({100},o.tracks),
         xOffset=TABLE.new({0},o.tracks),
         yOffset=TABLE.new({0},o.tracks),
     }
@@ -347,7 +347,7 @@ function Map.new(file)
             elseif op=='C'then--Color
                 local codes={}
                 if not data[2]then
-                    codes[1]='FFFFFF'
+                    codes[1]='E6E6E6'
                 else
                     for i=2,#data do
                         local code=data[i]
