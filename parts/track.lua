@@ -266,6 +266,8 @@ function Track:draw(map)
     local trackW=50*s.kx*SETTING.trackW
     local ky=s.ky
 
+    local noteDX,noteDY=SETTING.scaleX,s.ky*s.dropSpeed/50
+
     --Available indicator for testing
     -- gc_setColor(1,1,1)
     -- gc.setLineWidth(2)
@@ -318,8 +320,8 @@ function Track:draw(map)
             end
         end
 
-        local dx=listLerp(note.xOffset,1-timeRemain/2.6)
-        local dy=listLerp(note.yOffset,1-timeRemain/2.6)
+        local dx=listLerp(note.xOffset,1-timeRemain/2.6)*noteDX
+        local dy=listLerp(note.yOffset,1-timeRemain/2.6)*noteDY
 
         gc_translate(dx,dy)
         if note.type=='tap'then
