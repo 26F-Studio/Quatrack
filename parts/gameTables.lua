@@ -4,6 +4,7 @@ mapMetaKeys={
     "mapName",
     "musicAuth",
     "mapAuth",
+    "mapAuth2",
     "mapDifficulty",
 
     "songFile",
