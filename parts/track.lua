@@ -345,9 +345,9 @@ function Track:draw(map)
             gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
         elseif note.type=='hold'then
             local tailH=(note.etime-self.time)*dropSpeed
-
+            local a2=note.active and a or a*.5
             --Body
-            gc_setColor(r,g,b,(note.active and a or a*.5)*SETTING.holdAlpha)
+            gc_setColor(r,g,b,a2*SETTING.holdAlpha)
             gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.head and -thick or 0))
 
             --Head & Tail
@@ -360,9 +360,9 @@ function Track:draw(map)
             end
             if note.tail then
                 if chordAlpha and note.chordCount_tail>1 then
-                    _drawChordBox(self.chordColor[note.chordCount_tail-1],chordAlpha*a,trackW,tailH,thick/2)
+                    _drawChordBox(self.chordColor[note.chordCount_tail-1],chordAlpha*a2,trackW,tailH,thick/2)
                 end
-                gc_setColor(r,g,b,a)
+                gc_setColor(r,g,b,a2)
                 gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)
             end
         end
