@@ -63,9 +63,8 @@ local function _updateAcc()
 end
 
 local function _tryGoResult()
-    for i=1,#tracks do
-        if #tracks[i].notes>0 then return end
-    end
+    if not map.finished then return true end
+    for i=1,#tracks do if #tracks[i].notes>0 then return true end end
     if needSaveSetting then saveSettings()end
     SCN.swapTo('result',nil,{
         map=map,
@@ -211,10 +210,10 @@ function scene.keyDown(key,isRep)
             end
         end
     elseif k=='skip'then
-        if map.finished then
-            _tryGoResult()
-        elseif not isSongPlaying and time<-.8 then
+        if not isSongPlaying and time<-.8 then
             time=-.8
+        else
+            _tryGoResult()
         end
     elseif k=='restart'then
         local m,errmsg=loadBeatmap(map.qbpFilePath)
@@ -246,9 +245,7 @@ function scene.keyDown(key,isRep)
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
     elseif k=='escape'then
-        if map.finished then
-            _tryGoResult()
-        else
+        if _tryGoResult()then
             SCN.back()
         end
     elseif k=='auto'then
@@ -337,7 +334,7 @@ function scene.update(dt)
             isSongPlaying=true
         end
     else
-        if not BGM.isPlaying()and map.finished then
+        if not BGM.isPlaying()then
             _tryGoResult()
         end
     end
