@@ -5,6 +5,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
 local max,min=math.max,math.min
+local rnd=math.random
 local rem=table.remove
 local interval=MATH.interval
 
@@ -164,13 +165,15 @@ function Track:press()
     local i,note=self:pollNote('note')
     if note and self.time>note.time-note.trigTime then
         if note.type=='tap'then--Press tap note
-            SFX.play('hit',.4+.6*note:getAlpha(1),self.state.x/420)
+            SFX.play('hit_tap',.4+.6*note:getAlpha(1),self.state.x/420)
             rem(self.notes,i)
             return self.time-note.time
         elseif note.type=='hold'then--Press hold note
             if note.head then
                 note.head=false
-                SFX.play('hit',.4+.6*note:getAlpha(1),self.state.x/420)
+                local _1,_2=note:getAlpha(1),self.state.x/420
+                SFX.play('hit_tap',.4+.5*_1,_2)
+                SFX.play('hold'..rnd(4),.4+.6*_1,_2)
                 return self.time-note.time
             end
         end
@@ -184,7 +187,7 @@ function Track:release()
     if note and note.type=='hold'and not note.head then--Release hold note
         if self.time>note.etime-note.trigTime then
             if note.tail then
-                SFX.play('hit',.4+.6*note:getAlpha(1),self.state.x/420)
+                SFX.play('hit'..rnd(7,8),.4+.6*note:getAlpha(1),self.state.x/420)
             end
             rem(self.notes,i)
         else
