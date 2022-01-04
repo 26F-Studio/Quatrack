@@ -160,7 +160,7 @@ function scene.sceneBack()
     if needSaveSetting then saveSettings()end
 end
 
-local function _trigNote(deviateTime,track,noTailHold)
+local function _trigNote(deviateTime,noTailHold)
     hitTextTime=TIME()
     fullAcc=fullAcc+100
     hitLV=_getHitLV(deviateTime)
@@ -173,9 +173,6 @@ local function _trigNote(deviateTime,track,noTailHold)
         combo=combo+1
         if combo>maxCombo then maxCombo=combo end
         if not noTailHold then
-            if track then
-                SFX.play('hit',1,track.state.x/420)
-            end
             if abs(deviateTime)>.16 then deviateTime=deviateTime>0 and .16 or -.16 end
             ins(hitOffests,1,deviateTime)
             hitCount=hitCount+1
@@ -189,27 +186,28 @@ local function _trigNote(deviateTime,track,noTailHold)
     end
     _updateAcc()
 end
-local function _trackPress(k)
-    for i=1,#tracks do
-        if tracks[i].state.available and tracks[i].name:find(k)then
-            local deviateTime=tracks[i]:press()
-            if deviateTime then _trigNote(deviateTime,tracks[i])end
-        end
+local function _trackPress(id,auto)
+    local deviateTime=tracks[id]:press()
+    if not auto and deviateTime then
+        _trigNote(deviateTime)
     end
 end
-local function _trackRelease(k)
-    for i=1,#tracks do
-        if tracks[i].state.available and tracks[i].name:find(k)then
-            local deviateTime,noTailHold=tracks[i]:release()
-            if deviateTime then _trigNote(deviateTime,tracks[i],noTailHold)end
-        end
+local function _trackRelease(id,auto)
+    local deviateTime,noTailHold=tracks[id]:release()
+    if not auto and deviateTime then
+        _trigNote(deviateTime,noTailHold)
     end
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
     local k=KEY_MAP[key]or key
     if trackNames[k]then
-        _trackPress(k)
+        if autoPlay then return end
+        for id=1,map.tracks do
+            if tracks[id].name:find(k)then
+                _trackPress(id)
+            end
+        end
     elseif k=='skip'then
         if map.finished then
             _tryGoResult()
@@ -254,17 +252,24 @@ function scene.keyDown(key,isRep)
         if autoPlay then
             curAcc=-1e99
             fullAcc=1e99
+            _updateAcc()
         end
     end
 end
 function scene.keyUp(key)
     local k=KEY_MAP[key]
     if trackNames[k]then
-        _trackRelease(k)
+        if autoPlay then return end
+        for id=1,map.tracks do
+            if tracks[id].name:find(k)then
+                _trackRelease(id)
+            end
+        end
     end
 end
 
 function scene.touchDown(x,y,id)
+    if autoPlay then return end
     x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
     local minD2,closestTrackID=1e99,false
     x=x/SETTING.scaleX
@@ -277,10 +282,11 @@ function scene.touchDown(x,y,id)
     end
     if closestTrackID then
         ins(touches,{id,closestTrackID})
-        _trackPress(tracks[closestTrackID].name)
+        _trackPress(closestTrackID)
     end
 end
 function scene.touchUp(_,_,id)
+    if autoPlay then return end
     for i=1,#touches do
         if touches[i][1]==id then
             local allReleased=true
@@ -291,7 +297,7 @@ function scene.touchUp(_,_,id)
                 end
             end
             if allReleased then
-                _trackRelease(tracks[touches[i][2]].name)
+                _trackRelease(touches[i][2])
             end
             rem(touches,i)
             return
@@ -345,31 +351,32 @@ function scene.update(dt)
     end
 
     --Update tracks (check too-late miss)
-    for i=1,map.tracks do
-        if autoPlay then
-            local _,note=tracks[i]:pollNote('note')
+    for id=1,map.tracks do
+        local t=tracks[id]
+        if autoPlay or not t.state.available then
+            local _,note=t:pollNote('note')
             if note then
                 if note.type=='tap'then
                     if time>=note.time then
-                        _trackPress(tracks[i].name)
-                        _trackRelease(tracks[i].name)
+                        _trackPress(id,true)
+                        _trackRelease(id,true)
                     end
                 end
             end
-            note=tracks[i].notes[1]
+            note=t.notes[1]
             if note and note.type=='hold'then
                 if note.head then
-                    if time>=note.time then _trackPress(tracks[i].name)end
+                    if time>=note.time then _trackPress(id,true)end
                 else
-                    if time>=note.etime then _trackRelease(tracks[i].name)end
+                    if time>=note.etime then _trackRelease(id,true)end
                 end
             end
         end
-        tracks[i]:update(dt)
-        local missCount,marvCount=tracks[i]:updateLogic(time)
+        t:update(dt)
+        local missCount,marvCount=t:updateLogic(time)
         if marvCount>0 then
             for _=1,marvCount do
-                _trigNote(0,tracks[i],true)
+                _trigNote(0,true)
             end
         end
         if missCount>0 then

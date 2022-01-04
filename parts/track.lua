@@ -164,11 +164,13 @@ function Track:press()
     local i,note=self:pollNote('note')
     if note and self.time>note.time-note.trigTime then
         if note.type=='tap'then--Press tap note
+            SFX.play('hit',.4+.6*note:getAlpha(1),self.state.x/420)
             rem(self.notes,i)
             return self.time-note.time
         elseif note.type=='hold'then--Press hold note
             if note.head then
                 note.head=false
+                SFX.play('hit',.4+.6*note:getAlpha(1),self.state.x/420)
                 return self.time-note.time
             end
         end
@@ -181,6 +183,9 @@ function Track:release()
     local i,note=self:pollNote('hold')
     if note and note.type=='hold'and not note.head then--Release hold note
         if self.time>note.etime-note.trigTime then
+            if note.tail then
+                SFX.play('hit',.4+.6*note:getAlpha(1),self.state.x/420)
+            end
             rem(self.notes,i)
         else
             note.active=false
@@ -316,17 +321,8 @@ function Track:draw(map)
         local timeRemain=note.time-self.time
         local headH=timeRemain*dropSpeed
 
-        local r=listLerp(note.color[1],1-timeRemain/2.6)
-        local g=listLerp(note.color[2],1-timeRemain/2.6)
-        local b=listLerp(note.color[3],1-timeRemain/2.6)
-        local a
-        do
-            if #note.alpha==2 and note.alpha[1]==note.alpha[2]then
-                a=note.alpha[1]
-            else
-                a=listLerp(note.alpha,1-timeRemain/2.6)*.01
-            end
-        end
+        local r,g,b=note:getColor(1-timeRemain/2.6)
+        local a=note:getAlpha(1-timeRemain/2.6)
 
         local dx=listLerp(note.xOffset,1-timeRemain/2.6)*noteDX
         local dy=listLerp(note.yOffset,1-timeRemain/2.6)*noteDY
@@ -335,9 +331,11 @@ function Track:draw(map)
         if note.type=='tap'then
             if chordAlpha and note.chordCount>1 then
                 local c=chordColor[note.chordCount-1]
-                c[4]=chordAlpha
+                c[4]=chordAlpha*a
                 gc_setColor(c)
-                gc_rectangle('fill',-trackW-5,-headH-thick-6,2*trackW+10,thick+6)
+                gc_rectangle('fill',-trackW-5,-headH-thick-6,2*trackW+10,6)
+                gc_rectangle('fill',-trackW-5,-headH-thick,5,thick)
+                gc_rectangle('fill',trackW,-headH-thick,5,thick)
             end
             gc_setColor(r,g,b,a)
             gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
@@ -352,9 +350,11 @@ function Track:draw(map)
             if note.head then
                 if chordAlpha and note.chordCount_head>1 then
                     local c=chordColor[note.chordCount_head-1]
-                    c[4]=chordAlpha
+                    c[4]=chordAlpha*a
                     gc_setColor(c)
-                    gc_rectangle('fill',-trackW-5,-headH-thick-6,2*trackW+10,thick+6)
+                    gc_rectangle('fill',-trackW-5,-headH-thick-6,2*trackW+10,6)
+                    gc_rectangle('fill',-trackW-5,-headH-thick,5,thick)
+                    gc_rectangle('fill',trackW,-headH-thick,5,thick)
                 end
                 gc_setColor(r,g,b,a)
                 gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
@@ -362,9 +362,11 @@ function Track:draw(map)
             if note.tail then
                 if chordAlpha and note.chordCount_tail>1 then
                     local c=chordColor[note.chordCount_tail-1]
-                    c[4]=chordAlpha
+                    c[4]=chordAlpha*a
                     gc_setColor(c)
-                    gc_rectangle('fill',-trackW-5,-tailH-thick/2-6,2*trackW+10,thick/2+6)
+                    gc_rectangle('fill',-trackW-5,-tailH-thick/2-6,2*trackW+10,6)
+                    gc_rectangle('fill',-trackW-5,-tailH-thick/2,5,thick/2)
+                    gc_rectangle('fill',trackW,-tailH-thick/2,5,thick/2)
                 end
                 gc_setColor(r,g,b,a)
                 gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)
