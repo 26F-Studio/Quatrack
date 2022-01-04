@@ -5,7 +5,6 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
 local max,min=math.max,math.min
-local rnd=math.random
 local rem=table.remove
 local interval=MATH.interval
 
@@ -156,6 +155,13 @@ function Track:pollNote(mode)
     end
 end
 
+local holdHeadSFX={
+    'hold4',
+    'hold3',
+    'hold2',
+    'hold1',
+    'hold1',
+}
 function Track:press()
     --Animation
     self.pressed=true
@@ -164,36 +170,52 @@ function Track:press()
     --Check first note
     local i,note=self:pollNote('note')
     if note and self.time>note.time-note.trigTime then
+        local deviateTime=self.time-note.time
+        local hitLV=getHitLV(deviateTime)
+        local _1,_2,_3
+        if hitLV>0 then
+            _1,_2,_3=note:getAlpha(1),self.state.x/420,-(math.abs(hitLV-4.5)-.5)
+        end
         if note.type=='tap'then--Press tap note
-            SFX.play('hit_tap',.4+.6*note:getAlpha(1),self.state.x/420)
             rem(self.notes,i)
-            return self.time-note.time
+            if _1 then
+                SFX.play('hit_tap',.4+.6*_1,_2,_3)
+            end
         elseif note.type=='hold'then--Press hold note
-            if note.head then
-                note.head=false
-                local _1,_2=note:getAlpha(1),self.state.x/420
-                SFX.play('hit_tap',.4+.5*_1,_2)
-                SFX.play('hold'..rnd(4),.4+.6*_1,_2)
-                return self.time-note.time
+            if not note.head then return end
+            note.head=false
+            if _1 then
+                SFX.play('hit_tap',.4+.5*_1,_2,_3)
+                SFX.play(holdHeadSFX[hitLV],.4+.6*_1,_2)
             end
         end
+        return deviateTime
     end
 end
 
+local holdTailSFX={
+    'hit8',
+    'hit7',
+    'hit6',
+    'hit5',
+    'hit5',
+}
 function Track:release()
     self.pressed=false
     self.lastReleaseTime=self.time
     local i,note=self:pollNote('hold')
     if note and note.type=='hold'and not note.head then--Release hold note
+        local deviateTime=note.etime-self.time
+        local hitLV=getHitLV(deviateTime)
         if self.time>note.etime-note.trigTime then
-            if note.tail then
-                SFX.play('hit'..rnd(7,8),.4+.6*note:getAlpha(1),self.state.x/420)
+            if note.tail and hitLV>0 then
+                SFX.play(holdTailSFX[hitLV],.4+.6*note:getAlpha(1),self.state.x/420)
             end
             rem(self.notes,i)
         else
             note.active=false
         end
-        return note.etime-self.time,not note.tail
+        return deviateTime,not note.tail
     end
 end
 

@@ -1,5 +1,6 @@
 local gc=love.graphics
 local sin=math.sin
+local abs=math.abs
 
 --System
 do--function tryBack()
@@ -138,6 +139,16 @@ function loadBeatmap(path)
     else
         return false,res
     end
+end
+function getHitLV(div)
+    div=abs(div)
+    return
+    div<=hitLVOffsets[5]and 5 or
+    div<=hitLVOffsets[4]and 4 or
+    div<=hitLVOffsets[3]and 3 or
+    div<=hitLVOffsets[2]and 2 or
+    div<=hitLVOffsets[1]and 1 or
+    0
 end
 
 

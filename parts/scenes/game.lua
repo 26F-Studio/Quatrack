@@ -22,17 +22,7 @@ local hitAccList=hitAccList
 local hitLVOffsets=hitLVOffsets
 local chainColors=chainColors
 local trackNames=trackNames
-
-local function _getHitLV(div)
-    div=abs(div)
-    return
-    div<=hitLVOffsets[5]and 5 or
-    div<=hitLVOffsets[4]and 4 or
-    div<=hitLVOffsets[3]and 3 or
-    div<=hitLVOffsets[2]and 2 or
-    div<=hitLVOffsets[1]and 1 or
-    0
-end
+local getHitLV=getHitLV
 local function _showVolMes(v)
     needSaveSetting=true
     MES.new('info',('$1%'):repD(('%d'):format(v*100)),0)
@@ -164,7 +154,7 @@ end
 local function _trigNote(deviateTime,noTailHold)
     hitTextTime=TIME()
     fullAcc=fullAcc+100
-    hitLV=_getHitLV(deviateTime)
+    hitLV=getHitLV(deviateTime)
     if hitLV>0 and noTailHold then hitLV=5 end
     bestChain=min(bestChain,hitLV)
     hits[hitLV]=hits[hitLV]+1
@@ -463,7 +453,7 @@ function scene.draw()
 
     --Draw deviate times
     for i=1,#hitOffests do
-        local c=hitColors[_getHitLV(hitOffests[i])]
+        local c=hitColors[getHitLV(hitOffests[i])]
         gc_setColor(c[1],c[2],c[3],.4)
         gc_rectangle('fill',640+hitOffests[i]*688-1,350-8,3,20)
     end
