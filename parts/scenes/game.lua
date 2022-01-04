@@ -258,7 +258,7 @@ function scene.keyDown(key,isRep)
             fullAcc=1e99
             _updateAcc()
         end
-    elseif('12345'):find(key)and kbIsDown('lctrl','rctrl')and kbIsDown('lalt','ralt')then
+    elseif('12345'):find(key,1,true)and kbIsDown('lctrl','rctrl')and kbIsDown('lalt','ralt')then
         playSpeed=
             key=='1'and .25 or
             key=='2'and .5 or
