@@ -106,7 +106,10 @@ function scene.keyDown(key,isRep)
         end
     elseif key=='backspace'then
         if selected then
-            KEY_MAP[TABLE.search(KEY_MAP,selected)]=nil
+            local binded=TABLE.search(KEY_MAP,selected)
+            if binded then
+                KEY_MAP[binded]=nil
+            end
             KEY_MAP_inv:_update()
             selected=false
         end

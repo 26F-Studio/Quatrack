@@ -13,12 +13,12 @@ local function _syntaxCheck(cond,msg)
         error(("[$1] $2: $3"):repD(SCline,SCstr,msg))
     end
 end
-local function _insert(self,obj)
-    local len=#self
-    while len>0 and self[len].time>obj.time do
-        len=len-1
+local function _insert(list,obj)
+    local pos=#list
+    while pos>0 and list[pos].time>obj.time do
+        pos=pos-1
     end
-    ins(self,len+1,obj)
+    ins(list,pos+1,obj)
 end
 
 function Map.new(file)
