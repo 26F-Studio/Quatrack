@@ -323,11 +323,9 @@ function Track:draw(map)
 
         local r,g,b=note:getColor(1-timeRemain/2.6)
         local a=note:getAlpha(1-timeRemain/2.6)
+        local dx,dy=note:getOffset(1-timeRemain/2.6)
 
-        local dx=listLerp(note.xOffset,1-timeRemain/2.6)*noteDX
-        local dy=listLerp(note.yOffset,1-timeRemain/2.6)*noteDY
-
-        gc_translate(dx,dy)
+        gc_translate(dx*noteDX,dy*noteDY)
         if note.type=='tap'then
             if chordAlpha and note.chordCount>1 then
                 local c=chordColor[note.chordCount-1]
@@ -372,7 +370,7 @@ function Track:draw(map)
                 gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)
             end
         end
-        gc_translate(-dx,-dy)
+        gc_translate(-dx*noteDX,-dy*noteDY)
     end
 
     gc_pop()

@@ -20,4 +20,10 @@ function Note:getAlpha(t)
     return listLerp(self.alpha,t)*.01
 end
 
+function Note:getOffset(t)
+    return
+    listLerp(self.xOffset,t),
+    listLerp(self.yOffset,t)
+end
+
 return Note
