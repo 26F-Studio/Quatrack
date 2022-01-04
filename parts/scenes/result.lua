@@ -31,6 +31,9 @@ function scene.sceneInit()
         },
         bestChain=math.random(5),
     }
+    if results.accText:sub(1,1)=='-'then
+        results.bestChain=0
+    end
     results.mapName=gc.newText(getFont(80,'mono'),results.map.mapName)
     results.mapDifficulty=gc.newText(getFont(30,'mono'),results.map.mapDifficulty)
 

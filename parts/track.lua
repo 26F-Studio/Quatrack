@@ -6,7 +6,7 @@ local gc_rectangle=gc.rectangle
 
 local max,min=math.max,math.min
 local rem=table.remove
-local interval,listLerp=MATH.interval,MATH.listLerp
+local interval=MATH.interval
 
 local SETTING=SETTING
 
@@ -266,6 +266,13 @@ function Track:updateLogic(time)
     return missCount,marvCount
 end
 
+local function _drawChordBox(c,a,trackW,H,thick)
+    c[4]=a
+    gc_setColor(c)
+    gc_rectangle('fill',-trackW-5,-H-thick-6,2*trackW+10,6)
+    gc_rectangle('fill',-trackW-5,-H-thick,5,thick)
+    gc_rectangle('fill',trackW,-H-thick,5,thick)
+end
 function Track:draw(map)
     local s=self.state
     gc_push('transform')
@@ -298,9 +305,8 @@ function Track:draw(map)
     gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
 
     --Draw sides
-    local unitY=626*ky
-    for i=0,99 do
-        i=i*.01
+    local unitY=640*ky
+    for i=0,.99,.01 do
         gc_setColor(s.r,s.g,s.b,s.alpha*(1-i))
         gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
         gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
@@ -310,12 +316,16 @@ function Track:draw(map)
         end
     end
 
-    --Draw notes
+    --Prepare to draw notes
     local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed or 0))*ky
     local thick=SETTING.noteThick*ky
-    local chordColor=self.chordColor
+
     local chordAlpha=SETTING.chordAlpha
-    if chordAlpha==0 then chordAlpha=false end
+    if chordAlpha==0 then
+        chordAlpha=false
+    end
+
+    --Draw notes
     for i=1,#self.notes do
         local note=self.notes[i]
         local timeRemain=note.time-self.time
@@ -324,16 +334,12 @@ function Track:draw(map)
         local r,g,b=note:getColor(1-timeRemain/2.6)
         local a=note:getAlpha(1-timeRemain/2.6)
         local dx,dy=note:getOffset(1-timeRemain/2.6)
+        dx,dy=dx*noteDX,dy*noteDY
 
-        gc_translate(dx*noteDX,dy*noteDY)
+        gc_translate(dx,dy)
         if note.type=='tap'then
             if chordAlpha and note.chordCount>1 then
-                local c=chordColor[note.chordCount-1]
-                c[4]=chordAlpha*a
-                gc_setColor(c)
-                gc_rectangle('fill',-trackW-5,-headH-thick-6,2*trackW+10,6)
-                gc_rectangle('fill',-trackW-5,-headH-thick,5,thick)
-                gc_rectangle('fill',trackW,-headH-thick,5,thick)
+                _drawChordBox(self.chordColor[note.chordCount-1],chordAlpha*a,trackW,headH,thick)
             end
             gc_setColor(r,g,b,a)
             gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
@@ -347,30 +353,20 @@ function Track:draw(map)
             --Head & Tail
             if note.head then
                 if chordAlpha and note.chordCount_head>1 then
-                    local c=chordColor[note.chordCount_head-1]
-                    c[4]=chordAlpha*a
-                    gc_setColor(c)
-                    gc_rectangle('fill',-trackW-5,-headH-thick-6,2*trackW+10,6)
-                    gc_rectangle('fill',-trackW-5,-headH-thick,5,thick)
-                    gc_rectangle('fill',trackW,-headH-thick,5,thick)
+                    _drawChordBox(self.chordColor[note.chordCount_head-1],chordAlpha*a,trackW,headH,thick)
                 end
                 gc_setColor(r,g,b,a)
                 gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
             end
             if note.tail then
                 if chordAlpha and note.chordCount_tail>1 then
-                    local c=chordColor[note.chordCount_tail-1]
-                    c[4]=chordAlpha*a
-                    gc_setColor(c)
-                    gc_rectangle('fill',-trackW-5,-tailH-thick/2-6,2*trackW+10,6)
-                    gc_rectangle('fill',-trackW-5,-tailH-thick/2,5,thick/2)
-                    gc_rectangle('fill',trackW,-tailH-thick/2,5,thick/2)
+                    _drawChordBox(self.chordColor[note.chordCount_tail-1],chordAlpha*a,trackW,tailH,thick/2)
                 end
                 gc_setColor(r,g,b,a)
                 gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)
             end
         end
-        gc_translate(-dx*noteDX,-dy*noteDY)
+        gc_translate(-dx,-dy)
     end
 
     gc_pop()
