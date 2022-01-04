@@ -5,6 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Easy-9
 
 $songFile=dxfullmetal
+$songImage=dxfullmetal.jpg
 $songOffset=0.6
 $tracks=8
 
