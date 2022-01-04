@@ -41,6 +41,7 @@ end
 local needSaveSetting
 local autoPlay,autoPlayTextObj
 local playSongTime,songLength
+local playSpeed
 local texts={}
 
 local map,tracks
@@ -90,6 +91,7 @@ local scene={}
 function scene.sceneInit()
     KEY_MAP_inv:_update()
     autoPlay=false
+    playSpeed=1
     autoPlayTextObj=autoPlayTextObj or gc.newText(getFont(100),'AUTO')
 
     map=SCN.args[1]
@@ -211,6 +213,8 @@ function scene.keyDown(key,isRep)
     elseif k=='skip'then
         if map.finished then
             _tryGoResult()
+        elseif not isSongPlaying and time<-.8 then
+            time=-.8
         end
     elseif k=='restart'then
         local m,errmsg=loadBeatmap(map.qbpFilePath)
@@ -254,6 +258,20 @@ function scene.keyDown(key,isRep)
             fullAcc=1e99
             _updateAcc()
         end
+    elseif('12345'):find(key)and kbIsDown('lctrl','rctrl')and kbIsDown('lalt','ralt')then
+        playSpeed=
+            key=='1'and .25 or
+            key=='2'and .5 or
+            key=='3'and 1 or
+            key=='4'and 8 or
+            key=='5'and 32
+        if playSpeed<1 then
+            curAcc=-1e99
+            fullAcc=1e99
+            _updateAcc()
+        end
+        BGM.setPitch(playSpeed)
+        BGM.seek(time-playSongTime)
     end
 end
 function scene.keyUp(key)
@@ -308,18 +326,13 @@ function scene.mouseDown(x,y,k)scene.touchDown(x,y,k)end
 function scene.mouseUp(_,_,k)scene.touchUp(_,_,k)end
 
 function scene.update(dt)
-    --Speed up with special keys
-    if kbIsDown'lctrl'and kbIsDown('o','p','[',']')then
-        dt=dt*(kbIsDown'o'and .4 or kbIsDown'p'and .75 or kbIsDown'['and 6 or 128)
-        if time-dt-playSongTime>0 then
-            BGM.seek(time-dt-playSongTime)
-        end
-    end
+    dt=dt*playSpeed
 
     --Try play bgm
     if not isSongPlaying then
         if time<=playSongTime and time+dt>playSongTime then
             BGM.play(map.songFile,'-sdin -noloop')
+            BGM.setPitch(playSpeed)
             BGM.seek(time+dt-playSongTime)
             isSongPlaying=true
         end
