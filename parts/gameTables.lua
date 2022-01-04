@@ -11,6 +11,7 @@ mapMetaKeys={
     "songImage",
     "songOffset",
     "tracks",
+    "realTracks",
     "freeSpeed",
 }
 mapMetaKeyMap={}for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
@@ -31,6 +32,7 @@ mapTemplate={
     songImage=false,
     songOffset=0,
     tracks=4,
+    realTracks=false,
     freeSpeed=true,
 }
 hitColors={

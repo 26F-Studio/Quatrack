@@ -9,15 +9,15 @@ local listBox=WIDGET.newListBox{name='sel',x=60,y=80,w=1160,h=480,lineH=40,drawF
         gc.rectangle('fill',0,0,1160,40)
     end
     gc.setColor(1,1,1)
-    gc.draw(v.mapName,10,-1,nil,min(720/v.mapName:getWidth(),1),1)
+    gc.draw(v.mapName,10,-1,nil,min(690/v.mapName:getWidth(),1),1)
     gc.setColor(COLOR.Z)
-    gc.draw(v.mapAuth,980,-1,nil,min(250/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
+    gc.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
 
     setFont(30,'mono')
     gc.setColor(v.difficultyColor)
-    gc.draw(v.difficulty,1105-v.difficulty:getWidth(),2)
+    gc.draw(v.difficulty,1050-v.difficulty:getWidth(),2)
     gc.setColor(COLOR.lS)
-    mStr(v.tracks,1132,0)
+    mStr(v.tracks,1105,0)
 end}
 
 local mapLoaded=false
@@ -74,8 +74,8 @@ local function _freshSongList()
                                 dText:sub(1,4)=='Luna'and COLOR.lM or
                                 dText:sub(1,4)=='Over'and COLOR.lH or
                                 COLOR.lX,
-                            tracks=metaData.tracks,
-                            sortName=(source=='outside'and'0'or'1')..metaData.tracks..difficultyNum..metaData.mapName
+                            tracks=metaData.realTracks and(('$1($2)'):repD(metaData.realTracks,metaData.tracks))or metaData.tracks,
+                            sortName=(source=='outside'and'0'or'1')..(metaData.realTracks or metaData.tracks)..difficultyNum..metaData.mapName
                         })
                     end
                 end

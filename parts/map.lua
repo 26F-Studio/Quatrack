@@ -81,6 +81,7 @@ function Map.new(file)
     SCline=0
     SCstr='[metadata]'
     if type(o.tracks)=='string'then o.tracks=tonumber(o.tracks)end
+    if not o.realTracks then o.realTracks=o.tracks end
     if type(o.songOffset)=='string'then o.songOffset=tonumber(o.songOffset)end
     if type(o.freeSpeed)=='string'then o.freeSpeed=o.freeSpeed=='true'end
 
