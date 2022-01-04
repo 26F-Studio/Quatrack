@@ -55,12 +55,12 @@ local function _freshSongList()
                         local color=source=='game'and COLOR.Z or source=='outside'and COLOR.lY or COLOR.lD
                         local dText=metaData.mapDifficulty
                         local difficultyNum=(
-                            dText:sub(1,4)=='Easy'and 0 or
-                            dText:sub(1,4)=='Norm'and 1 or
-                            dText:sub(1,4)=='Hard'and 2 or
-                            dText:sub(1,4)=='Luna'and 3 or
-                            dText:sub(1,4)=='Over'and 4 or
-                            5)*10+metaData.mapDifficulty:sub(-1)
+                            dText:sub(1,4)=='Easy'and'0'or
+                            dText:sub(1,4)=='Norm'and'1'or
+                            dText:sub(1,4)=='Hard'and'2'or
+                            dText:sub(1,4)=='Luna'and'3'or
+                            dText:sub(1,4)=='Over'and'4'or
+                            '5')..metaData.mapDifficulty:sub(-1)
                         ins(mapList,{
                             path=fullPath,
                             source=source,
