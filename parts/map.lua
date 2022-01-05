@@ -292,11 +292,15 @@ function Map.new(file)
                     args={r,g,b,false},
                 }
             elseif op=='A'then--Available
+                if data[2]=='true'then
+                    data[2]=true
+                elseif data[2]=='false'then
+                    data[2]=false
+                end
                 if opType=='set'then
-                    if data[2]then
-                        _syntaxCheck(data[2]=='true'or data[2]=='false',"Invalid option (need true/false)")
-                        _syntaxCheck(#data<=2,"Too many arguments")
-                    end
+                    if data[2]==nil then data[2]=true end
+                    _syntaxCheck(#data<=2,"Too many arguments")
+                    _syntaxCheck(data[2]==true or data[2]==false,"Invalid option (need true/false)")
                     for i=1,#trackList do
                         trackAvailable[trackList[i]]=data[2]
                     end
@@ -305,11 +309,6 @@ function Map.new(file)
                     for i=1,#trackList do
                         trackAvailable[trackList[i]]=not trackAvailable[trackList[i]]
                     end
-                end
-                if data[2]=='true'then
-                    data[2]=true
-                elseif data[2]=='false'then
-                    data[2]=false
                 end
                 event={
                     type='setTrack',
