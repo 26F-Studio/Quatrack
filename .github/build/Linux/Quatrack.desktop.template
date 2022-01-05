@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Quatrack Alpha
-Comment=Quatrack is fun!
+Comment=Quatrack is cool!
 Exec=wrapper-love %f
 Type=Application
 Categories=Game;

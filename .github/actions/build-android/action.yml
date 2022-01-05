@@ -9,7 +9,7 @@ inputs:
   versionCode:
     required: true
   commit:
-    required: false
+    required: true
   filePath:
     required: true
   SIGNING_KEY:
@@ -40,11 +40,11 @@ runs:
     - name: Update Android information
       shell: python
       run: |
-        if '${{ GITHUB.REF_TYPE }}' == 'branch':
+        if '${{ GITHUB.REF_TYPE }}' == 'tag':
           appName = 'Quatrack'
           packageName = 'org.love2d.MrZ.Quatrack'
           edition = 'quatrack_release'
-        elif '${{ GITHUB.REF_TYPE }}' == 'tag':
+        elif '${{ GITHUB.REF_TYPE }}' == 'branch':
           appName = 'Quatrack_Snapshot'
           packageName = 'org.love2d.MrZ.Quatrack.Snapshot'
           edition = 'quatrack_snapshot'

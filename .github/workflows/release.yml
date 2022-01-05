@@ -39,6 +39,8 @@ jobs:
     needs: get-info
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - uses: ./.github/actions/update-version
         with:
           type: Release
@@ -67,6 +69,8 @@ jobs:
     needs: get-info
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - uses: ./.github/actions/update-version
         with:
           type: Release
@@ -94,6 +98,7 @@ jobs:
           versionName: ${{ needs.get-info.outputs.versionName }}
           versionCode: ${{ needs.get-info.outputs.versionCode }}
           filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win64.zip
+          commit: ${{ needs.get-info.outputs.commit }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -114,6 +119,7 @@ jobs:
           versionName: ${{ needs.get-info.outputs.versionName }}
           versionCode: ${{ needs.get-info.outputs.versionCode }}
           filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Win32.zip
+          commit: ${{ needs.get-info.outputs.commit }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -132,6 +138,7 @@ jobs:
           versionName: ${{ needs.get-info.outputs.versionName }}
           versionCode: ${{ needs.get-info.outputs.versionCode }}
           filePath: Quatrack_a${{ needs.get-info.outputs.versionCode }}_Android.apk
+          commit: ${{ needs.get-info.outputs.commit }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           ALIAS: ${{ secrets.ALIAS }}
@@ -147,7 +154,6 @@ jobs:
 #    runs-on: ubuntu-20.04
 #    needs: get-info
 #    steps:
-#      - uses: actions/checkout@v2
 #      - name: Release
 #        uses: softprops/action-gh-release@v1
 #        with:
