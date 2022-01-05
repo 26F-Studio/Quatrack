@@ -16,6 +16,7 @@ function Track.new(id)
     local track={
         id=id,
         name=false,--Must set one later!
+        showname=false,--Automatically set
         chordColor=defaultChordColor,
         pressed=false,
         lastPressTime=-1e99,
@@ -41,6 +42,9 @@ end
 
 function Track:rename(name)
     self.name=name.." "
+    self.showName=self.name
+    if self.showName:find(" ")then self.showName=self.showName:sub(1,self.showName:find(" ")-1)end
+    self.showName=KEY_MAP_inv[self.showName]:upper()
 end
 
 function Track:setChordColor(chordColor)
@@ -319,10 +323,7 @@ function Track:draw(map)
     if s.nameTime>0 then
         setFont(40)
         gc_setColor(s.r,s.g,s.b,s.alpha*.626*min(2*s.nameTime,1))
-        local showName=self.name
-        if showName:find(" ")then showName=showName:sub(1,showName:find(" ")-1)end
-        showName=KEY_MAP_inv[showName]:upper()
-        mStr(showName,0,-60)
+        mStr(self.showName,0,-60)
     end
 
     --Draw track line
