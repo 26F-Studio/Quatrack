@@ -5,6 +5,7 @@ $mapAuth=XMiao
 $mapDifficulty=Hard-4
 
 $songFile=SpeedComplexxx
+$songImage=Speed Complexxx.jpg
 $songOffset=286ms
 $tracks=7
 
