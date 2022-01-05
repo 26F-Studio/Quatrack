@@ -93,6 +93,10 @@ return{
             holdWidth="长条宽度",
             scaleX="X轴缩放",
             trackW="轨道宽度缩放",
+            safeX="左右安全距离",
+            safeY="上下安全距离",
+            showHitLV="最高显示击打等级",
+            dvtCount="偏移条采样数量",
 
             sysCursor="使用系统光标",
             clickFX="点按特效",

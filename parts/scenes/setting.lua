@@ -1,15 +1,36 @@
+local gc=love.graphics
+
 local scene={}
 
+local boundaryDispTime
+
 function scene.sceneInit()
+    boundaryDispTime=0
     BG.set()
 end
 function scene.sceneBack()
     saveSettings()
 end
 
+function scene.update(dt)
+    if boundaryDispTime>0 then
+        boundaryDispTime=math.max(boundaryDispTime-dt,0)
+    end
+end
+
 function scene.draw()
     setFont(80)
-    posterizedText('SETTINGS',350,10)
+    posterizedText('SETTINGS',350,10-WIDGET.scrollPos)
+
+    gc.push('transform')
+    gc.origin()
+    gc.setLineWidth(2)
+    local x,y=SETTING.safeX*SCR.k,SETTING.safeY*SCR.k
+    if boundaryDispTime>0 then
+        gc.setColor(.626,1,.626,math.min(boundaryDispTime/2.6,.1626))
+        gc.rectangle('fill',x,y,SCR.w-2*x,SCR.h-2*y)
+    end
+    gc.pop()
 end
 
 local function _updateSFXvol()
@@ -30,8 +51,14 @@ end
 local function sliderShow_mul(S)
     return S.disp().."%"
 end
+local function sliderShow_px(S)
+    return S.disp()..'px'
+end
+local function sliderShow_hitLV(S)
+    return hitTexts[S.disp()]or "?"
+end
 
-scene.widgetScrollHeight=100
+scene.widgetScrollHeight=400
 scene.widgetList={
     WIDGET.newSlider{name='musicDelay', x=200, y=150,w=420,lim=160,axis={-260,260,1},smooth=true,disp=SETval('musicDelay'),show=sliderShow_time,code=function(v)SETTING.musicDelay=v;_updateSFXvol()end},
     WIDGET.newSlider{name='dropSpeed',  x=200, y=200,w=420,lim=160,axis={-8,8,1},                disp=SETval('dropSpeed'),code=SETsto('dropSpeed')},
@@ -39,13 +66,17 @@ scene.widgetList={
     WIDGET.newSlider{name='chordAlpha', x=200, y=300,w=420,lim=160,axis={0,1,.01},smooth=true,   disp=SETval('chordAlpha'),code=SETsto('chordAlpha')},
     WIDGET.newSlider{name='holdAlpha',  x=200, y=350,w=420,lim=160,axis={.2,.8},                 disp=SETval('holdAlpha'),code=SETsto('holdAlpha')},
     WIDGET.newSlider{name='holdWidth',  x=200, y=400,w=420,lim=160,axis={.2,.8},                 disp=SETval('holdWidth'),code=SETsto('holdWidth')},
-    WIDGET.newSlider{name='scaleX',     x=200, y=450,w=420,lim=160,axis={.8,1.5},                disp=SETval('scaleX'),show=sliderShow_scale,code=SETsto('scaleX')},
-    WIDGET.newSlider{name='trackW',     x=200, y=500,w=420,lim=160,axis={.8,1.5},                disp=SETval('trackW'),show=sliderShow_scale,code=SETsto('trackW')},
+    WIDGET.newSlider{name='scaleX',     x=200, y=500,w=420,lim=160,axis={.8,1.5},                disp=SETval('scaleX'),show=sliderShow_scale,code=SETsto('scaleX')},
+    WIDGET.newSlider{name='trackW',     x=200, y=550,w=420,lim=160,axis={.8,1.5},                disp=SETval('trackW'),show=sliderShow_scale,code=SETsto('trackW')},
+    WIDGET.newSlider{name='safeX',      x=200, y=600,w=420,lim=160,axis={0,120,10},              disp=SETval('safeX'),show=sliderShow_px,code=function(v)SETTING.safeX=v boundaryDispTime=2.6 end},
+    WIDGET.newSlider{name='safeY',      x=200, y=650,w=210,lim=160,axis={0,60,10},               disp=SETval('safeY'),show=sliderShow_px,code=function(v)SETTING.safeY=v boundaryDispTime=2.6 end},
+    WIDGET.newSlider{name='showHitLV',  x=200, y=750,w=260,lim=160,axis={1,5,1},                 disp=SETval('showHitLV'),show=sliderShow_hitLV,code=SETsto('showHitLV')},
+    WIDGET.newSlider{name='dvtCount',   x=200, y=800,w=420,lim=160,axis={5,50,5},                disp=SETval('dvtCount'),code=SETsto('dvtCount')},
 
-    WIDGET.newSlider{name='mainVol',    x=200, y=600,w=420,lim=160,disp=SETval('mainVol'),       code=function(v)SETTING.mainVol=v love.audio.setVolume(SETTING.mainVol)end},
-    WIDGET.newSlider{name='bgm',        x=200, y=650,w=420,lim=160,disp=SETval('bgm'),           code=function(v)SETTING.bgm=v BGM.setVol(SETTING.bgm)end},
-    WIDGET.newSlider{name='sfx',        x=200, y=700,w=420,lim=160,disp=SETval('sfx'),           code=function(v)SETTING.sfx=v SFX.setVol(SETTING.sfx)end},
-    WIDGET.newSlider{name='stereo',     x=200, y=750,w=420,lim=160,disp=SETval('stereo'),        code=function(v)SETTING.stereo=v SFX.setStereo(SETTING.stereo)end,hideF=function()return SETTING.sfx==0 end},
+    WIDGET.newSlider{name='mainVol',    x=200, y=900,w=420,lim=160,disp=SETval('mainVol'),       code=function(v)SETTING.mainVol=v love.audio.setVolume(SETTING.mainVol)end},
+    WIDGET.newSlider{name='bgm',        x=200, y=950,w=420,lim=160,disp=SETval('bgm'),           code=function(v)SETTING.bgm=v BGM.setVol(SETTING.bgm)end},
+    WIDGET.newSlider{name='sfx',        x=200, y=1000,w=420,lim=160,disp=SETval('sfx'),          code=function(v)SETTING.sfx=v SFX.setVol(SETTING.sfx)end},
+    WIDGET.newSlider{name='stereo',     x=200, y=1050,w=420,lim=160,disp=SETval('stereo'),       code=function(v)SETTING.stereo=v SFX.setStereo(SETTING.stereo)end,hideF=function()return SETTING.sfx==0 end},
 
     WIDGET.newSwitch{name='sysCursor',  x=1160,y=70, lim=360,disp=SETval('sysCursor'),           code=function()SETTING.sysCursor=not SETTING.sysCursor applySettings()end},
     WIDGET.newSwitch{name='clickFX',    x=1160,y=130,lim=360,disp=SETval('clickFX'),             code=function()SETTING.clickFX=not SETTING.clickFX applySettings()end},

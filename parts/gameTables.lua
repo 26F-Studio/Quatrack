@@ -166,6 +166,10 @@ do--Userdata tables
         holdWidth=.8,
         scaleX=1,
         trackW=1,
+        safeX=10,
+        safeY=10,
+        showHitLV=5,
+        dvtCount=20,
 
         --Sound
         autoMute=false,

@@ -16,6 +16,8 @@ local sin,cos=math.sin,math.cos
 local int,ceil,abs=math.floor,math.ceil,math.abs
 local ins,rem=table.insert,table.remove
 
+local SETTING=SETTING
+
 local hitColors=hitColors
 local hitTexts=hitTexts
 local hitAccList=hitAccList
@@ -168,7 +170,7 @@ local function _trigNote(deviateTime,noTailHold)
             ins(hitOffests,1,deviateTime)
             hitCount=hitCount+1
             totalDeviateTime=totalDeviateTime+deviateTime
-            hitOffests[27]=nil
+            hitOffests[SETTING.dvtCount+1]=nil
         end
     else
         if combo>=10 then SFX.play('combobreak')end
@@ -274,6 +276,9 @@ function scene.keyUp(key)
 end
 
 function scene.touchDown(x,y,id)
+    local _x,_y=SCR.xOy:transformPoint(x,y)
+    if _x<SETTING.safeX*SCR.k or _x>SCR.w-SETTING.safeX*SCR.k or _y<SETTING.safeY*SCR.k or _y>SCR.h-SETTING.safeY*SCR.k then return end
+
     if autoPlay then return end
     x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
     local minD2,closestTrackID=1e99,false
@@ -413,7 +418,7 @@ function scene.draw()
     gc_replaceTransform(SCR.xOy)
 
     --Draw hit text
-    if TIME()-hitTextTime<.26 then
+    if TIME()-hitTextTime<.26 and hitLV<=SETTING.showHitLV then
         local c=hitColors[hitLV]
         setFont(80,'mono')
         gc_setColor(c[1],c[2],c[3],2.6-(TIME()-hitTextTime)*10)
@@ -449,11 +454,13 @@ function scene.draw()
         gc_rectangle('fill',530,369,220*MATH.interval(time/songLength,0,1),3)
     end
 
-    --Draw deviate times
-    for i=1,#hitOffests do
+    --Draw deviate times\
+    local l=#hitOffests
+    for i=1,l do
         local c=hitColors[getHitLV(hitOffests[i])]
-        gc_setColor(c[1],c[2],c[3],.4)
-        gc_rectangle('fill',640+hitOffests[i]*688-1,350-8,3,20)
+        local r=1+(1-i/l)^1.626
+        gc_setColor(c[1],c[2],c[3],.2*r)
+        gc_rectangle('fill',640+hitOffests[i]*688-1,350-6*r,3,4+12*r)
     end
 
     --Draw map info at start
