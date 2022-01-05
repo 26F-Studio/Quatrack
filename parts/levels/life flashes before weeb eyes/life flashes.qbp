@@ -5,7 +5,7 @@ $mapAuth=tyrcs
 $mapDifficulty=Lunatic-7
 
 $songFile=life flashes
-$songOffset=1.130
+$songOffset=1130ms
 $tracks=6
 
 --HH--;>152.914

@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Normal-6
 
 $songFile=logicalstimulus
-$songOffset=-0.011
+$songOffset=-11ms
 
 O--O;>117.106
 --A-;>117.025

@@ -5,7 +5,7 @@ $mapAuth=Untitled_unrevised
 $mapDifficulty=Lunatic-6
 
 $songFile=the light
-$songOffset=-0.05
+$songOffset=-50ms
 
 #106
 ---O

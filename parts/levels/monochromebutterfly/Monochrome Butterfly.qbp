@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Hard-1
 
 $songFile=monochromebutterfly
-$songOffset=-0.62
+$songOffset=-620ms
 
 H--H
 U--U*11.5

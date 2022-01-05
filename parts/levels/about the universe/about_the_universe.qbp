@@ -5,7 +5,7 @@ $mapAuth=Circulus Charting Team
 $mapDifficulty=Hard-1
 
 $songFile=about_the_universe
-$songOffset=0.26
+$songOffset=260ms
 
 --OH
 O---/4;[A]S;[A]C,FFFFFF

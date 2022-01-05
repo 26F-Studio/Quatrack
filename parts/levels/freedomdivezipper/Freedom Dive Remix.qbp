@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Normal-5
 
 $songFile=freedomdivezipper
-$songOffset=-0.33
+$songOffset=-330ms
 
 H---
 U-O-*8;[A]d,1000

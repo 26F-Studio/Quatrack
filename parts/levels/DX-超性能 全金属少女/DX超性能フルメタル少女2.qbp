@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Hard-7
 
 $songFile=dxfullmetal
-$songOffset=0.6
+$songOffset=600ms
 $tracks=8
 
 --OO----;>111.787

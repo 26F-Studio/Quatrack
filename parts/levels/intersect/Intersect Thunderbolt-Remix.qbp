@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Hard-6
 
 $songFile=intersect
-$songOffset=-0.255
+$songOffset=-255ms
 
 HHHH
 UUUU*8

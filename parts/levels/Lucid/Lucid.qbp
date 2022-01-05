@@ -5,7 +5,7 @@ $mapAuth=tyrcs
 $mapDifficulty=Lunatic-5
 
 $songFile=Lucid
-$songOffset=1.4
+$songOffset=1400ms
 $tracks=6
 
 H-HH-H;>114.584

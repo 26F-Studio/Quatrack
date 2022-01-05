@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Lunatic-1
 
 $songFile=shigure
-$songOffset=-0.380
+$songOffset=-380ms
 $tracks=6
 
 H----H

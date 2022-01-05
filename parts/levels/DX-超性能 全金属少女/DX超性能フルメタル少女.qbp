@@ -6,7 +6,7 @@ $mapDifficulty=Easy-9
 
 $songFile=dxfullmetal
 $songImage=dxfullmetal.jpg
-$songOffset=0.6
+$songOffset=600ms
 $tracks=8
 $realTracks=4
 

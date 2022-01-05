@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Lunatic-2
 
 $songFile=entrancemetal
-$songOffset=0.224
+$songOffset=224ms
 
 OO--;[A]T,40
 --OH/3

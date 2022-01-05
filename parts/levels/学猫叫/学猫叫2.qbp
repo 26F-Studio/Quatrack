@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Normal-2
 
 $songFile=xuemaojiao
-$songOffset=0.38
+$songOffset=380ms
 
 O---;[A]C,FFFFFF
 -HO-/2

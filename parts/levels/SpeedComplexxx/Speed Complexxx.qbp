@@ -5,7 +5,7 @@ $mapAuth=XMiao
 $mapDifficulty=Hard-4
 
 $songFile=SpeedComplexxx
-$songOffset=0.286
+$songOffset=286ms
 $tracks=7
 
 ---H---

@@ -82,7 +82,27 @@ function Map.new(file)
     SCstr='[metadata]'
     if type(o.tracks)=='string'then o.tracks=tonumber(o.tracks)end
     if not o.realTracks then o.realTracks=o.tracks end
-    if type(o.songOffset)=='string'then o.songOffset=tonumber(o.songOffset)end
+    if type(o.songOffset)=='string'then
+        local unit=1
+        if o.songOffset:sub(-2)=='ms'then
+            o.songOffset=tonumber(o.songOffset:sub(1,-3))
+            unit=0.001
+        elseif o.songOffset:sub(-1)=='s'then
+            o.songOffset=tonumber(o.songOffset:sub(1,-2))
+        elseif o.songOffset:sub(-1)=='m'then
+            o.songOffset=tonumber(o.songOffset:sub(1,-2))
+            unit=60
+        elseif o.songOffset:sub(-1)=='h'then
+            o.songOffset=tonumber(o.songOffset:sub(1,-2))
+            unit=3600
+        else
+            o.songOffset=tonumber(o.songOffset)
+            _syntaxCheck(math.abs(o.songOffset)>=1,("Use $songOffset=$1ms is you sure"):repD(o.songOffset))
+            unit=0.001
+        end
+        _syntaxCheck(o.songOffset,"Invalid songOffset")
+        o.songOffset=o.songOffset*unit
+    end
     if type(o.freeSpeed)=='string'then o.freeSpeed=o.freeSpeed=='true'end
 
     --Parse notes & animations

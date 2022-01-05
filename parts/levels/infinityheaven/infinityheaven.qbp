@@ -5,7 +5,7 @@ $mapAuth=AcSier
 $mapDifficulty=Normal-1
 
 $songFile=infinityheaven
-$songOffset=0.17
+$songOffset=170ms
 
 H--H
 -O--*2;[A]T,0

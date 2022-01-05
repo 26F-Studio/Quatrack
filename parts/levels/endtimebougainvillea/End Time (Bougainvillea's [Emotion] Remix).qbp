@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Hard-8
 
 $songFile=endtimebougainvillea
-$songOffset=-0.356
+$songOffset=-356ms
 
 ---O
 O---/8
