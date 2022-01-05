@@ -359,6 +359,10 @@ function Track:draw(map)
 
         local r,g,b=note:getColor(1-timeRemain/2.6)
         local a=note:getAlpha(1-timeRemain/2.6)
+        if note.type=='tap'and timeRemain<0 then
+            a=a*(1+timeRemain/hitLVOffsets[1])
+        end
+
         local dx,dy=note:getOffset(1-timeRemain/2.6)
         dx,dy=dx*noteDX,dy*noteDY
 
