@@ -96,6 +96,13 @@ function saveSettings()
 end
 do--function applySettings()
     function applySettings()
+        --Apply language
+        text=LANG.get(SETTING.locale)
+        WIDGET.setLang(text.WidgetText)
+
+        --Apply cursor
+        love.mouse.setVisible(SETTING.sysCursor)
+
         --Apply fullscreen
         love.window.setFullscreen(SETTING.fullscreen)
         love.resize(gc.getWidth(),gc.getHeight())
@@ -110,13 +117,6 @@ do--function applySettings()
         BGM.setVol(SETTING.bgm)
         SFX.setVol(SETTING.sfx)
         VOC.setVol(SETTING.voc)
-
-        --Apply language
-        text=LANG.get(SETTING.locale)
-        WIDGET.setLang(text.WidgetText)
-
-        --Apply cursor
-        love.mouse.setVisible(SETTING.sysCursor)
     end
 end
 function applyFPS(inGame)
