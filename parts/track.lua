@@ -166,14 +166,14 @@ local holdHeadSFX={
     'hold1',
     'hold1',
 }
-function Track:press()
+function Track:press(auto)
     --Animation
     self.pressed=true
     self.lastPressTime=self.time
 
     --Check first note
     local i,note=self:pollNote('note')
-    if note and self.time>note.time-note.trigTime then
+    if note and(auto or note.available)and self.time>note.time-note.trigTime then
         local deviateTime=self.time-note.time
         local hitLV=getHitLV(deviateTime)
         local _1,_2,_3
@@ -204,11 +204,11 @@ local holdTailSFX={
     'hit5',
     'hit5',
 }
-function Track:release()
+function Track:release(auto)
     self.pressed=false
     self.lastReleaseTime=self.time
     local i,note=self:pollNote('hold')
-    if note and note.type=='hold'and not note.head then--Release hold note
+    if note and(auto or note.available)and note.type=='hold'and not note.head then--Release hold note
         local deviateTime=note.etime-self.time
         local hitLV=getHitLV(deviateTime)
         if self.time>note.etime-note.trigTime then

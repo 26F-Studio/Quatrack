@@ -178,13 +178,13 @@ local function _trigNote(deviateTime,noTailHold)
     _updateAcc()
 end
 local function _trackPress(id,auto)
-    local deviateTime=tracks[id]:press()
+    local deviateTime=tracks[id]:press(auto)
     if not auto and deviateTime then
         _trigNote(deviateTime)
     end
 end
 local function _trackRelease(id,auto)
-    local deviateTime,noTailHold=tracks[id]:release()
+    local deviateTime,noTailHold=tracks[id]:release(auto)
     if not auto and deviateTime then
         _trigNote(deviateTime,noTailHold)
     end
@@ -353,18 +353,16 @@ function scene.update(dt)
     --Update tracks (check too-late miss)
     for id=1,map.tracks do
         local t=tracks[id]
-        if autoPlay or not t.state.available then
+        do--Auto play and invalid notes' auto hitting
             local _,note=t:pollNote('note')
-            if note then
-                if note.type=='tap'then
-                    if time>=note.time then
-                        _trackPress(id,true)
-                        _trackRelease(id,true)
-                    end
+            if note and(not note.available or autoPlay)and note.type=='tap'then
+                if time>=note.time then
+                    _trackPress(id,true)
+                    _trackRelease(id,true)
                 end
             end
             note=t.notes[1]
-            if note and note.type=='hold'then
+            if note and(not note.available or autoPlay)and note.type=='hold'then
                 if note.head then
                     if time>=note.time then _trackPress(id,true)end
                 else

@@ -110,6 +110,7 @@ function Map.new(file)
     local curBeat,signature=false,false
     local loopStack={}
     local trackDir={}for i=1,o.tracks do trackDir[i]=i end
+    local trackAvailable={}for i=1,o.tracks do trackAvailable[i]=true end
     local lastLongBar=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
     local noteState={
@@ -296,8 +297,14 @@ function Map.new(file)
                         _syntaxCheck(data[2]=='true'or data[2]=='false',"Invalid option (need true/false)")
                         _syntaxCheck(#data<=2,"Too many arguments")
                     end
+                    for i=1,#trackList do
+                        trackAvailable[trackList[i]]=data[2]
+                    end
                 elseif opType=='move'then
                     _syntaxCheck(#data<=1,"Too many arguments")
+                    for i=1,#trackList do
+                        trackAvailable[trackList[i]]=not trackAvailable[trackList[i]]
+                    end
                 end
                 if data[2]=='true'then
                     data[2]=true
@@ -510,6 +517,7 @@ function Map.new(file)
                         operation='setAvailable',
                         args={false},
                     }
+                    trackAvailable[id]=false
                 end
             end
         else--Notes
@@ -528,6 +536,7 @@ function Map.new(file)
                                 type='tap',
                                 time=curTime,
                                 track=trackDir[curTrack],
+                                available=trackAvailable[trackDir[curTrack]],
                                 color=noteState.color[curTrack],
                                 alpha=noteState.alpha[curTrack],
                                 xOffset=noteState.xOffset[curTrack],
@@ -540,6 +549,7 @@ function Map.new(file)
                             local b={
                                 type='hold',
                                 track=trackDir[curTrack],
+                                available=trackAvailable[trackDir[curTrack]],
                                 time=curTime,
                                 etime=false,
                                 head=true,
@@ -605,6 +615,7 @@ function Map.new(file)
                         type='tap',
                         time=curTime,
                         track=trackDir[curTrack],
+                        available=trackAvailable[trackDir[curTrack]],
                         color=noteState.color[curTrack],
                         alpha=noteState.alpha[curTrack],
                         xOffset=noteState.xOffset[curTrack],
@@ -654,7 +665,11 @@ function Map.new(file)
             end
 
             local chordCount=0
-            for i=1,o.tracks do if lastNote[i]then chordCount=chordCount+1 end end
+            for i=1,o.tracks do
+                if lastNote[i]and lastNote[i].available then
+                    chordCount=chordCount+1
+                end
+            end
             for i=1,o.tracks do
                 if lastNote[i]then
                     local n=lastNote[i]
