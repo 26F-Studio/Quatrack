@@ -135,7 +135,7 @@ function Map.new(file)
                 _syntaxCheck(type(bpm_add)=='number',"Invalid BPM mark")
                 curBPM=curBPM+bpm_add
             elseif bpmStr=='-'then
-                local bpm_sub=tonumber(c:sub(2))
+                local bpm_sub=tonumber(bpmStr:sub(2))
                 _syntaxCheck(type(bpm_sub)=='number',"Invalid BPM mark")
                 _syntaxCheck(bpm_sub<curBPM,"Decrease BPM too much")
                 curBPM=curBPM-bpm_sub
@@ -397,19 +397,19 @@ function Map.new(file)
                     noteState.color[trackList[i]]=color
                 end
             elseif op=='X'or op=='Y'then--X/Y offset
-                local o={}
+                local offset={}
                 if data[2]then
                     for i=2,#data do
-                        local offset=tonumber(data[i])
-                        _syntaxCheck(offset,"Invalid alpha value")
-                        o[i-1]=offset
+                        data[i]=tonumber(data[i])
+                        _syntaxCheck(data[i],"Invalid alpha value")
+                        offset[i-1]=data[i]
                     end
                 else
-                    o[1]=0
+                    offset[1]=0
                 end
                 local state=op=='X'and noteState.xOffset or noteState.yOffset
                 for i=1,#trackList do
-                    state[trackList[i]]=o
+                    state[trackList[i]]=offset
                 end
             else
                 _syntaxCheck(false,"Invalid note operation")
