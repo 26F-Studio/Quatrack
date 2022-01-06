@@ -20,7 +20,13 @@ defaultChordColor={
     {STRING.hexColor("FFC000")},
     {STRING.hexColor("FF6000")},
     {STRING.hexColor("FF0000")},
-}
+}setmetatable(defaultChordColor,{__index=function(self,k)
+    local l=#self
+    for i=l+1,k do
+        self[i]=self[l]
+    end
+    return self[l]
+end})
 mapTemplate={
     version="1.0",
     mapName='[mapName]',

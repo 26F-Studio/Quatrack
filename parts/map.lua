@@ -482,6 +482,8 @@ function Map.new(file)
                     _syntaxCheck(not c[i]:find("[^0-9a-fA-F]")and #c[i]<=6,"Invalid color code")
                     c[i]={STRING.hexColor(c[i])}
                 end
+                if #c>o.tracks-1 then _syntaxCheck(false,"Too many colors")end
+                setmetatable(c,getmetatable(defaultChordColor))
             end
             o.eventQueue:insert{
                 type='setChordColor',
