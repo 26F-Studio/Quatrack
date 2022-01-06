@@ -80,7 +80,7 @@ chainColors={
     COLOR.lSea,
     COLOR.lFire,
     COLOR.lYellow,
-    COLOR.lYellow,
+    COLOR.Z,
 }
 rankColors={
     COLOR.lMagenta,

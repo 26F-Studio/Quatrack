@@ -31,9 +31,8 @@ function scene.sceneInit()
         },
         bestChain=math.random(5),
     }
-    if results.accText:sub(1,1)=='-'then
-        results.bestChain=0
-    end
+    if results.accText:sub(1,1)=='-'then results.bestChain=0 end
+    if results.averageDeviate:sub(1,1)~='-'then results.averageDeviate='+'..results.averageDeviate end
     results.mapName=gc.newText(getFont(80,'mono'),results.map.mapName)
     results.mapDifficulty=gc.newText(getFont(30,'mono'),results.map.mapDifficulty)
 
@@ -167,7 +166,7 @@ function scene.draw()
     gc.setColor(.58,.65,.96)
     gc.printf(hits[1]+hits[2],0,340,960,'right')
 
-    gc.setColor(.5,.1,.1)
+    gc.setColor(.6,.1,.1)
     gc.printf(hits[-1]+hits[0],0,420,960,'right')
 
     setFont(25)
