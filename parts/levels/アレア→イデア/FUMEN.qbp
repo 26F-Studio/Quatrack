@@ -5,6 +5,7 @@ $mapAuth=tyrcs
 $mapDifficulty=Lunatic-1
 
 $songFile=artoidN
+$songOffset=-20ms
 $tracks=6
 
 -----O;>148.953

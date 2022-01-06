@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Hard-3
 
 $songFile=holdinon
-$songOffset=-160ms
+$songOffset=-150ms
 
 O--H
 --O-*2
