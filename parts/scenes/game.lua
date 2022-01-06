@@ -409,6 +409,11 @@ end
 
 local SCC={1,1,1}--Super chain color
 function scene.draw()
+    if time<-2 then
+        gc.origin()
+        drawSafeArea(SETTING.safeX,SETTING.safeY,-time-2)
+    end
+
     gc_replaceTransform(SCR.xOy_m)
 
     --Draw auto mark

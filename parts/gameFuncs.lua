@@ -185,6 +185,23 @@ do--function posterizedText(str,x,y)
         gc.pop()
     end
 end
+function drawSafeArea(x,y,time,alpha)
+    x,y=x*SCR.k-4,y*SCR.k-4
+    gc.setColor(1,.626,.626,(alpha or 1)*math.min(.5,time)/5)
+    gc.rectangle('fill',0,0,x,SCR.h)
+    gc.rectangle('fill',SCR.w,0,-x,SCR.h)
+    gc.rectangle('fill',x,0,SCR.w-2*x,y)
+    gc.rectangle('fill',x,SCR.h,SCR.w-2*x,-y)
+    gc.setColor(1,.1,.1,(alpha or 1)*math.min(.5,time)/2)
+    gc.setLineWidth(4)
+    x,y=x+1,y+1
+    gc.line(0,0,x,y)
+    gc.line(SCR.w,0,SCR.w-x,y)
+    gc.line(0,SCR.h,x,SCR.h-y)
+    gc.line(SCR.w,SCR.h,SCR.w-x,SCR.h-y)
+    x,y=x+1,y+1
+    gc.rectangle('line',x,y,SCR.w-2*x,SCR.h-2*y)
+end
 
 
 

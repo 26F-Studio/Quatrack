@@ -22,15 +22,12 @@ function scene.draw()
     setFont(80)
     posterizedText('SETTINGS',350,10-WIDGET.scrollPos)
 
-    gc.push('transform')
-    gc.origin()
-    gc.setLineWidth(2)
-    local x,y=SETTING.safeX*SCR.k,SETTING.safeY*SCR.k
     if boundaryDispTime>0 then
-        gc.setColor(.626,1,.626,math.min(boundaryDispTime/2.6,.1626))
-        gc.rectangle('fill',x,y,SCR.w-2*x,SCR.h-2*y)
+        gc.push('transform')
+        gc.origin()
+        drawSafeArea(SETTING.safeX,SETTING.safeY,boundaryDispTime,2.6)
+        gc.pop()
     end
-    gc.pop()
 end
 
 local function _updateSFXvol()
@@ -51,9 +48,6 @@ end
 local function sliderShow_mul(S)
     return S.disp().."%"
 end
-local function sliderShow_px(S)
-    return S.disp()..'px'
-end
 local function sliderShow_hitLV(S)
     return hitTexts[S.disp()]or "?"
 end
@@ -68,8 +62,8 @@ scene.widgetList={
     WIDGET.newSlider{name='holdWidth',  x=200, y=400,w=420,lim=160,axis={.2,.8},                 disp=SETval('holdWidth'),code=SETsto('holdWidth')},
     WIDGET.newSlider{name='scaleX',     x=200, y=500,w=420,lim=160,axis={.8,1.5},                disp=SETval('scaleX'),show=sliderShow_scale,code=SETsto('scaleX')},
     WIDGET.newSlider{name='trackW',     x=200, y=550,w=420,lim=160,axis={.8,1.5},                disp=SETval('trackW'),show=sliderShow_scale,code=SETsto('trackW')},
-    WIDGET.newSlider{name='safeX',      x=200, y=600,w=420,lim=160,axis={0,120,10},              disp=SETval('safeX'),show=sliderShow_px,code=function(v)SETTING.safeX=v boundaryDispTime=2.6 end},
-    WIDGET.newSlider{name='safeY',      x=200, y=650,w=210,lim=160,axis={0,60,10},               disp=SETval('safeY'),show=sliderShow_px,code=function(v)SETTING.safeY=v boundaryDispTime=2.6 end},
+    WIDGET.newSlider{name='safeX',      x=200, y=600,w=420,lim=160,axis={0,120,10},              disp=SETval('safeX'),code=function(v)SETTING.safeX=v boundaryDispTime=2.6 end},
+    WIDGET.newSlider{name='safeY',      x=200, y=650,w=210,lim=160,axis={0,60,10},               disp=SETval('safeY'),code=function(v)SETTING.safeY=v boundaryDispTime=2.6 end},
     WIDGET.newSlider{name='showHitLV',  x=200, y=750,w=260,lim=160,axis={1,5,1},                 disp=SETval('showHitLV'),show=sliderShow_hitLV,code=SETsto('showHitLV')},
     WIDGET.newSlider{name='dvtCount',   x=200, y=800,w=420,lim=160,axis={5,50,5},                disp=SETval('dvtCount'),code=SETsto('dvtCount')},
 
