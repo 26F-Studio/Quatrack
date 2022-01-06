@@ -97,7 +97,7 @@ function Map.new(file)
             unit=3600
         else
             o.songOffset=tonumber(o.songOffset)
-            _syntaxCheck(math.abs(o.songOffset)>=1,("Use $songOffset=$1ms is you sure"):repD(o.songOffset))
+            _syntaxCheck(o.songOffset==0 or math.abs(o.songOffset)>=1,("Use $songOffset=$1ms is you sure"):repD(o.songOffset))
             unit=0.001
         end
         _syntaxCheck(o.songOffset,"Invalid songOffset")
