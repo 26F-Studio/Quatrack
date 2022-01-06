@@ -74,7 +74,7 @@ local function _freshSongList()
                                 dText:sub(1,4)=='Luna'and COLOR.lM or
                                 dText:sub(1,4)=='Over'and COLOR.lH or
                                 COLOR.lX,
-                            tracks=metaData.realTracks and(('$1($2)'):repD(metaData.realTracks,metaData.tracks))or metaData.tracks,
+                            tracks=metaData.realTracks and metaData.realTracks~=metaData.tracks and(('$1($2)'):repD(metaData.realTracks,metaData.tracks))or metaData.tracks,
                             sortName=(source=='outside'and'0'or'1')..(metaData.realTracks or metaData.tracks)..difficultyNum..metaData.mapName
                         })
                     end

@@ -80,8 +80,21 @@ function Map.new(file)
     --Parse metadata
     SCline=0
     SCstr='[metadata]'
+    _syntaxCheck(o.version=='1.0',"Invalid map version")
+    if o.songFile then o.songFile=o.songFile:trim()end
+    _syntaxCheck(#o.songFile>0,"Invalid $songFile")
+    if o.songImage then
+        o.songImage=o.songImage:trim()
+        _syntaxCheck(#o.songImage>0,"Invalid $songImage")
+    end
+
     if type(o.tracks)=='string'then o.tracks=tonumber(o.tracks)end
-    if not o.realTracks then o.realTracks=o.tracks end
+    _syntaxCheck(o.tracks,"Invalid $tracks value (need number)")
+    if o.realTracks then
+        if type(o.realTracks)=='string'then o.realTracks=tonumber(o.realTracks)end
+        _syntaxCheck(o.realTracks,"Invalid $realTracks value (need number)")
+    end
+
     if type(o.songOffset)=='string'then
         local unit=1
         if o.songOffset:sub(-2)=='ms'then

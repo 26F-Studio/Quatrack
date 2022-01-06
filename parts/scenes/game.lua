@@ -99,6 +99,8 @@ function scene.sceneInit()
     local dirPath=map.qbpFilePath:sub(1,#map.qbpFilePath-map.qbpFilePath:reverse():find("/")+1)
     if love.filesystem.getInfo(dirPath..map.songFile..'.ogg')then
         BGM.load(map.songFile,dirPath..map.songFile..'.ogg')
+    else
+        MES.new('error',text.noFile)
     end
     BGM.play(map.songFile,'-preLoad')
 
@@ -106,7 +108,12 @@ function scene.sceneInit()
     if map.songImage then
         local image
         if love.filesystem.getInfo('parts/levels')or love.filesystem.getInfo('songs/'..map.songImage)then
-            image=gc.newImage(dirPath..map.songImage)
+            local success
+            success,image=pcall(gc.newImage,dirPath..map.songImage)
+            if not success then
+                MES.new('error',text.noFile)
+                image=nil
+            end
         end
         if image then
             BG.set('custom')
