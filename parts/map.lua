@@ -228,58 +228,107 @@ function Map.new(file)
                     trackList[i]=id
                 end
             end
+            str=str:sub(t+1)
 
-            local data=str:sub(t+1):split(',')
+            local animData
+            if str:sub(1,1)=='<'then
+                local t2=str:find('>')
+                _syntaxCheck(t2,"Syntax error (need '>')")
+                local animList=str:sub(2,t2-1):split(',')
+
+                str=str:sub(t2+1)
+
+                local animType=rem(animList,1)
+                _syntaxCheck(animType,"Need animation type (S/L/E/C)")
+                if animType=='S'then
+                    _syntaxCheck(#animList==0,"Invalid animation data")
+                    animData={type='S'}
+                elseif animType=='L'then
+                    _syntaxCheck(#animList==1,"Invalid animation data (need time)")
+                    local s=animList[1]
+                    local unit
+                    if s:sub(-1)=='s'then
+                        s,unit=s:sub(1,-2),1
+                    elseif s:sub(-1)=='ms'then
+                        s,unit=s:sub(1,-3),0.001
+                    elseif s:sub(-1)=='beat'then
+                        s,unit=s:sub(1,-5),60/curBPM
+                    elseif s:sub(-1)=='bar'then
+                        _syntaxCheck(signature,"No signature to calculate bar length")
+                        s,unit=s:sub(1,-5),60/curBPM*signature
+                    else--Unit default to beat
+                        unit=60/curBPM
+                    end
+                    s=tonumber(s)
+                    _syntaxCheck(s and s>0,"Invalid animation time ([number]ms/s/beat)")
+                    s=s*unit
+                    animData={type='L',start=curTime,duration=s}
+                elseif animType=='E'then
+                    _syntaxCheck(#animList==1,"Invalid animation data (need speed)")
+                    local s=tonumber(animList[1])
+                    _syntaxCheck(s and s>0,"Invalid expontial param")
+                    animData={type='E',start=curTime,speed=s}
+                elseif animType=='C'then
+                    _syntaxCheck(false,"Coming soon")
+                    animData={type='C'}
+                else
+                    _syntaxCheck(false,"Invalid animation type (need S/L/E/C)")
+                end
+            else
+                animData={type='E',start=curTime,speed=12}
+            end
+
+            local data=str:split(',')
             local op=data[1]:upper()
             local opType=data[1]==data[1]:upper()and'set'or'move'
 
             local event
             if op=='P'then--Position
                 _syntaxCheck(#data<=3,"Too many arguments")
-                data[2]=tonumber(data[2])
-                data[3]=tonumber(data[3])
+                data[2]=tonumber(data[2])or false
+                data[3]=tonumber(data[3])or false
                 event={
                     type='setTrack',
                     time=curTime,
                     operation=opType..'Position',
-                    args={data[2],data[3],false},
+                    args={animData,data[2],data[3]},
                 }
             elseif op=='R'then--Rotate
                 _syntaxCheck(#data<=2,"Too many arguments")
-                data[2]=tonumber(data[2])
+                data[2]=tonumber(data[2])or false
                 event={
                     type='setTrack',
                     time=curTime,
                     operation=opType..'Angle',
-                    args={data[2],false},
+                    args={animData,data[2]},
                 }
             elseif op=='S'then--Size
                 _syntaxCheck(#data<=3,"Too many arguments")
-                data[2]=tonumber(data[2])
-                data[3]=tonumber(data[3])
+                data[2]=tonumber(data[2])or false
+                data[3]=tonumber(data[3])or false
                 event={
                     type='setTrack',
                     time=curTime,
                     operation=opType..'Size',
-                    args={data[2],data[3],false},
+                    args={animData,data[2],data[3]},
                 }
             elseif op=='D'then--Drop speed
                 _syntaxCheck(#data<=2,"Too many arguments")
-                data[2]=tonumber(data[2])
+                data[2]=tonumber(data[2])or false
                 event={
                     type='setTrack',
                     time=curTime,
                     operation=opType..'DropSpeed',
-                    args={data[2],false},
+                    args={animData,data[2]},
                 }
             elseif op=='T'then--Transparent
                 _syntaxCheck(#data<=2,"Too many arguments")
-                data[2]=tonumber(data[2])
+                data[2]=tonumber(data[2])or false
                 event={
                     type='setTrack',
                     time=curTime,
                     operation=opType..'Alpha',
-                    args={data[2],false},
+                    args={animData,data[2]},
                 }
             elseif op=='C'then--Color
                 _syntaxCheck(#data<=2,"Too many arguments")
@@ -302,7 +351,7 @@ function Map.new(file)
                     type='setTrack',
                     time=curTime,
                     operation=opType..'Color',
-                    args={r,g,b,false},
+                    args={animData,r,g,b},
                 }
             elseif op=='A'then--Available
                 if data[2]=='true'then
@@ -327,7 +376,7 @@ function Map.new(file)
                     type='setTrack',
                     time=curTime,
                     operation=opType..'Available',
-                    args={data[2],false},
+                    args={data[2]},
                 }
             elseif op=='N'then--Show track name
                 local time=tonumber(data[2])
@@ -336,7 +385,7 @@ function Map.new(file)
                     type='setTrack',
                     time=curTime,
                     operation='setNameTime',
-                    args={time,false},
+                    args={time},
                 }
             else
                 _syntaxCheck(false,"Invalid track operation")
@@ -529,7 +578,7 @@ function Map.new(file)
                         time=curTime,
                         track=id,
                         operation='setAvailable',
-                        args={false},
+                        args={},
                     }
                     trackAvailable[id]=false
                 end

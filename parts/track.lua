@@ -4,14 +4,23 @@ local gc_translate,gc_rotate=gc.translate,gc.rotate
 local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
+local ins,rem=table.insert,table.remove
 local max,min=math.max,math.min
-local rem=table.remove
 local interval=MATH.interval
 
 local SETTING=SETTING
 
 local Track={}
 
+local function _insert(t,v)
+    for i=#t,1,-1 do
+        if t[i].mode==v.mode then
+            rem(t,i)
+            break
+        end
+    end
+    ins(t,1,v)
+end
 function Track.new(id)
     local track={
         id=id,
@@ -23,6 +32,7 @@ function Track.new(id)
         lastReleaseTime=-1e99,
         time=0,
         notes={},
+        animQueue={insert=_insert},--Current animation data
         state={
             x=0,y=0,
             ang=0,
@@ -36,6 +46,7 @@ function Track.new(id)
         targetState=false,
     }
     track.defaultState=TABLE.copy(track.state)
+    track.startState=TABLE.copy(track.state)
     track.targetState=TABLE.copy(track.state)
     return setmetatable(track,{__index=Track})
 end
@@ -59,59 +70,56 @@ function Track:setDefaultAlpha(alpha)self.defaultState.alpha=interval(alpha/100,
 function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
 function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=interval(r,0,1),interval(g,0,1),interval(b,0,1) end
 
-function Track:movePosition(dx,dy)
-    self.targetState.x=self.targetState.x+(dx or 0)
-    self.targetState.y=self.targetState.y+(dy or 0)
+function Track:movePosition(animData,dx,dy)
+    self:setPosition(animData,self.targetState.x+(dx or 0),self.targetState.y+(dy or 0))
 end
-function Track:moveAngle(da)
-    self.targetState.ang=self.targetState.ang+da/57.29577951308232
+function Track:moveAngle(animData,da)
+    self:setAngle(animData,self.targetState.ang+(da or 0))
 end
-function Track:moveSize(dkx,dky)
-    self.targetState.kx=self.targetState.kx+(dkx or 0)
-    self.targetState.ky=self.targetState.ky+(dky or 0)
+function Track:moveSize(animData,dkx,dky)
+    self:setSize(animData,self.targetState.kx+(dkx or 0),self.targetState.ky+(dky or 0))
 end
-function Track:moveDropSpeed(dds)
-    self.targetState.dropSpeed=self.targetState.dropSpeed+dds
+function Track:moveDropSpeed(animData,dds)
+    self:setDropSpeed(animData,self.targetState.dropSpeed+dds)
 end
-function Track:moveAlpha(da)
-    self.targetState.alpha=interval(self.targetState.alpha+da/100,0,1)
+function Track:moveAlpha(animData,da)
+    self:setAlpha(animData,interval(self.targetState.alpha+da/100,0,1))
 end
 function Track:moveAvailable()--wtf
     self:setAvailable(not self.state.available)
 end
-function Track:moveColor(dr,dg,db)
-    self.targetState.r=interval(self.targetState.r+(dr or 0),0,1)
-    self.targetState.g=interval(self.targetState.g+(dg or 0),0,1)
-    self.targetState.b=interval(self.targetState.b+(db or 0),0,1)
+function Track:moveColor(animData,dr,dg,db)
+    self:setColor(animData,
+        interval(self.targetState.r+(dr or 0),0,1),
+        interval(self.targetState.g+(dg or 0),0,1),
+        interval(self.targetState.b+(db or 0),0,1)
+    )
 end
 
-function Track:setPosition(x,y,force)
-    if not x then x=self.defaultState.x end
-    if not y then y=self.defaultState.y end
-    if force then self.state.x,self.state.y=x,y end
-    self.targetState.x,self.targetState.y=x,y
+function Track:setPosition(animData,x,y)
+    self.startState.x,self.startState.y=self.targetState.x,self.targetState.y
+    self.targetState.x,self.targetState.y=x or self.defaultState.x,y or self.defaultState.y
+    self.animQueue:insert{mode='position',data=animData}
 end
-function Track:setAngle(ang,force)
-    if not ang then ang=self.defaultState.ang end
-    if force then self.state.ang=ang/57.29577951308232 end
-    self.targetState.ang=ang/57.29577951308232
+function Track:setAngle(animData,ang)
+    self.startState.ang=self.targetState.ang
+    self.targetState.ang=ang or self.defaultState.ang
+    self.animQueue:insert{mode='angle',data=animData}
 end
-function Track:setSize(kx,ky,force)
-    if not kx then kx=self.defaultState.kx end
-    if not ky then ky=self.defaultState.ky end
-    if force then self.state.kx,self.state.ky=kx,ky end
-    self.targetState.kx,self.targetState.ky=kx,ky
+function Track:setSize(animData,kx,ky)
+    self.startState.kx,self.startState.ky=self.targetState.kx,self.targetState.ky
+    self.targetState.kx,self.targetState.ky=kx or self.defaultState.kx,ky or self.defaultState.ky
+    self.animQueue:insert{mode='size',data=animData}
 end
-function Track:setDropSpeed(dropSpeed,force)
-    if not dropSpeed then dropSpeed=self.defaultState.dropSpeed end
-    if force then self.state.dropSpeed=dropSpeed end
-    self.targetState.dropSpeed=dropSpeed
+function Track:setDropSpeed(animData,dropSpeed)
+    self.startState.dropSpeed=self.targetState.dropSpeed
+    self.targetState.dropSpeed=dropSpeed or self.defaultState.dropSpeed
+    self.animQueue:insert{mode='dropSpeed',data=animData}
 end
-function Track:setAlpha(alpha,force)
-    if not alpha then alpha=self.defaultState.alpha*100 end
-    alpha=interval(alpha/100,0,1)
-    if force then self.state.alpha=alpha end
-    self.targetState.alpha=alpha
+function Track:setAlpha(animData,alpha)
+    self.startState.alpha=self.targetState.alpha
+    self.targetState.alpha=alpha or self.defaultState.alpha
+    self.animQueue:insert{mode='alpha',data=animData}
 end
 function Track:setAvailable(bool)
     if bool==nil then bool=self.defaultState.available end
@@ -121,16 +129,13 @@ function Track:setAvailable(bool)
         self.lastReleaseTime=self.time
     end
 end
-function Track:setColor(r,g,b,force)
-    if not r then r=self.defaultState.r end
-    if not g then g=self.defaultState.g end
-    if not b then b=self.defaultState.b end
-    if force then self.state.r,self.state.g,self.state.b=r,g,b end
-    self.targetState.r,self.targetState.g,self.targetState.b=r,g,b
+function Track:setColor(animData,r,g,b)
+    self.startState.r,self.startState.g,self.startState.b=self.targetState.r,self.targetState.g,self.targetState.b
+    self.targetState.r,self.targetState.g,self.targetState.b=r or self.defaultState.r,g or self.defaultState.g,b or self.defaultState.b
+    self.animQueue:insert{mode='color',data=animData}
 end
-function Track:setNameTime(nameTime,force)
+function Track:setNameTime(nameTime)
     if not nameTime then nameTime=self.defaultState.nameTime end
-    if force then self.state.nameTime=nameTime end
     self.targetState.nameTime=nameTime
 end
 
@@ -223,34 +228,61 @@ function Track:release(auto)
     end
 end
 
---For animation
-local expAnimations={
-    'x','y',
-    'ang',
-    'kx','ky',
-    'dropSpeed',
-    'r','g','b','alpha',
+local approach,lerp=MATH.expApproach,MATH.lerp
+local animManager={
+    position={'x','y'},
+    angle={'ang'},
+    size={'kx','ky'},
+    dropSpeed={'dropSpeed'},
+    alpha={'alpha'},
+    color={'r','g','b'},
 }
-local approach=MATH.expApproach
 function Track:update(dt)
     local s=self.state
-    local t=self.targetState
+    local S=self.startState
+    local T=self.targetState
 
-    if t.nameTime>0 then
-        t.nameTime=max(t.nameTime-dt,0)
+    if T.nameTime>0 then
+        T.nameTime=max(T.nameTime-dt,0)
     end
-    if s.nameTime~=t.nameTime then
-        if s.nameTime<t.nameTime then
-            s.nameTime=min(s.nameTime+2.6*dt,t.nameTime)
+    if s.nameTime~=T.nameTime then
+        if s.nameTime<T.nameTime then
+            s.nameTime=min(s.nameTime+2.6*dt,T.nameTime)
         else
-            s.nameTime=max(s.nameTime-dt,t.nameTime)
+            s.nameTime=max(s.nameTime-dt,T.nameTime)
         end
     end
 
-    local d12=dt*12
-    for i=1,#expAnimations do
-        local k=expAnimations[i]
-        s[k]=approach(s[k],t[k],d12)
+    for i=#self.animQueue,1,-1 do
+        local a=self.animQueue[i]
+        local animData=a.data
+        local animKeys=animManager[a.mode]
+        if animData.type=='S'then
+            for j=1,#animKeys do
+                s[animKeys[j]]=T[animKeys[j]]
+            end
+            rem(self.animQueue,i)
+        elseif animData.type=='L'then
+            for j=1,#animKeys do
+                s[animKeys[j]]=lerp(S[animKeys[j]],T[animKeys[j]],(self.time-animData.start)/animData.duration)
+            end
+            if self.time>animData.start+animData.duration then
+                for j=1,#animKeys do
+                    s[animKeys[j]]=T[animKeys[j]]
+                end
+                rem(self.animQueue,i)
+            end
+        elseif animData.type=='E'then
+            for j=1,#animKeys do
+                s[animKeys[j]]=approach(s[animKeys[j]],T[animKeys[j]],animData.speed*dt)
+            end
+            if self.time>animData.start+10/animData.speed then
+                for j=1,#animKeys do
+                    s[animKeys[j]]=T[animKeys[j]]
+                end
+                rem(self.animQueue,i)
+            end
+        end
     end
 end
 
@@ -308,7 +340,7 @@ function Track:draw(map)
 
     --Set coordinate for single track
     gc_translate(s.x*SETTING.scaleX,s.y)
-    gc_rotate(s.ang)
+    gc_rotate(s.ang/57.29577951308232)
     local trackW=50*s.kx*SETTING.trackW
     local ky=s.ky
 

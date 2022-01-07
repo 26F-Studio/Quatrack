@@ -145,7 +145,7 @@ function scene.sceneInit()
     for id=1,map.tracks do
         tracks[id]=require'parts.track'.new(id)
         tracks[id]:setDefaultPosition(70*(2*id-map.tracks-1),320)
-        tracks[id]:setPosition(nil,nil,true)
+        tracks[id]:setPosition({type='S'},nil,nil)
         tracks[id]:rename(defaultTrackNames[map.tracks][id])
         tracks[id]:setChordColor(defaultChordColor)
         tracks[id]:setNameTime(2)
