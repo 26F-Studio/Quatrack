@@ -48,7 +48,7 @@ hitColors={
     COLOR.lSea,
     COLOR.lOrange,
     COLOR.lGray,
-    COLOR.white,
+    COLOR.lGray,
 }
 hitTexts={
     [-1]="MISS",
@@ -80,7 +80,7 @@ chainColors={
     COLOR.lSea,
     COLOR.lFire,
     COLOR.lYellow,
-    COLOR.Z,
+    COLOR.lYellow,
 }
 rankColors={
     COLOR.lMagenta,
