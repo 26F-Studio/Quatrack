@@ -193,13 +193,52 @@ function Map.new(file)
             if str:sub(2)=='start'then
                 curTime=-3.6
             else
-                local stamp=str:sub(2):split(':')
-                if #stamp==1 then ins(stamp,1,"0")end
-                for i=1,2 do
-                    stamp[i]=tonumber(stamp[i])
-                    _syntaxCheck(type(stamp[i])=='number',"Invalid time mark")
+                str=str:sub(2)
+
+                local sign
+                if str:sub(1,1)=='+'then
+                    sign='+'
+                    str=str:sub(2)
+                elseif str:sub(1,1)=='-'then
+                    sign='-'
+                    str=str:sub(2)
+                else
+                    sign=''
                 end
-                curTime=stamp[1]*60+stamp[2]
+
+                local dt
+                if str:find(':')then
+                    local time=str:split(':')
+                    time[1]=tonumber(time[1])
+                    time[2]=tonumber(time[2])
+                    _syntaxCheck(time[1]and time[2],"Invalid time mark")
+                    dt=time[1]*60+time[2]
+                else
+                    local unit
+                    if str:sub(-1)=='s'then
+                        str,unit=str:sub(1,-2),1
+                    elseif str:sub(-2)=='ms'then
+                        str,unit=str:sub(1,-3),0.001
+                    elseif str:sub(-4)=='beat'then
+                        str,unit=str:sub(1,-5),60/curBPM
+                    elseif str:sub(-3)=='bar'then
+                        _syntaxCheck(signature,"No signature to calculate bar length")
+                        str,unit=str:sub(1,-4),60/curBPM*signature
+                    else--Unit default to beat
+                        unit=60/curBPM
+                    end
+                    dt=tonumber(str)
+                    _syntaxCheck(dt,"Invalid time mark")
+                    dt=dt*unit
+                end
+
+                if sign==''then
+                    curTime=dt
+                elseif sign=='+'then
+                    curTime=curTime+dt
+                elseif sign=='-'then
+                    curTime=curTime-dt
+                end
             end
         elseif str:sub(1,1)=='['then--Animation: set track states
             local t=str:find(']')
