@@ -77,6 +77,12 @@ local function _tryGoResult()
     if SCN.swapping or not map.finished then return true end
     for i=1,#tracks do if #tracks[i].notes>0 then return true end end
     if needSaveSetting then saveSettings()end
+    if fullAcc>0 and curAcc/fullAcc>=.6 then
+        _updateStat()
+        MES.new('check',text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
+    else
+        MES.new('info',text.invalidScore)
+    end
     SCN.swapTo('result',nil,{
         map=map,
         score=score0,
@@ -94,7 +100,6 @@ local function _tryGoResult()
         },
         bestChain=bestChain,
     })
-    _updateStat()
 end
 
 local scene={}

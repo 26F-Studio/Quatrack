@@ -43,6 +43,9 @@ return{
     pasteWrongPlace="Paste at the wrong place?",
     noFile="File missing",
 
+    validScore="Score saved($1)",
+    invalidScore="Invalid score, not saved",
+
     noScore="No scores",
     modeLocked="Locked",
     unlockHint="Achieve Rank B or above in the preceding modes to unlock",

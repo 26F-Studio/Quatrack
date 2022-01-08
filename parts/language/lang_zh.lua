@@ -43,6 +43,9 @@ return{
     pasteWrongPlace="提醒:可能粘贴错地方了",
     noFile="找不到文件",
 
+    validScore="成绩保存成功($1)",
+    invalidScore="无效成绩 未保存",
+
     noScore="暂无成绩",
     modeLocked="暂未解锁",
     unlockHint="前一模式达到成绩B或以上即可解锁",
