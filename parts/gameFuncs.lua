@@ -150,6 +150,19 @@ function getHitLV(div)
     div<=hitLVOffsets[1]and 1 or
     0
 end
+function mergeStat(stat,delta)--Merge delta stat. to global stat.
+    for k,v in next,delta do
+        if type(v)=='table'then
+            if type(stat[k])=='table'then
+                mergeStat(stat[k],v)
+            end
+        else
+            if stat[k]then
+                stat[k]=stat[k]+v
+            end
+        end
+    end
+end
 
 
 

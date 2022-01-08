@@ -49,6 +49,24 @@ local bestChain
 local hits={}
 local touches
 
+local function _updateStat()
+    if fullAcc<=0 then return end
+    STAT.game=STAT.game+1
+    STAT.time=STAT.time+songLength
+    mergeStat(STAT,{
+        score=score0,
+        hits={
+            miss=hits[-1],
+            bad=hits[0],
+            well=hits[1],
+            good=hits[2],
+            perf=hits[3],
+            prec=hits[4],
+            marv=hits[5],
+        },
+    })
+end
+
 local function _updateAcc()
     local acc=int(10000*curAcc/max(fullAcc,1))/100
     accText=("%.2f%%"):format(acc)
@@ -57,6 +75,7 @@ end
 local function _tryGoResult()
     if not map.finished then return true end
     for i=1,#tracks do if #tracks[i].notes>0 then return true end end
+    _updateStat()
     if needSaveSetting then saveSettings()end
     SCN.swapTo('result',nil,{
         map=map,
@@ -216,6 +235,7 @@ function scene.keyDown(key,isRep)
             _tryGoResult()
         end
     elseif k=='restart'then
+        _updateStat()
         local m,errmsg=loadBeatmap(map.qbpFilePath)
         if m then
             SCN.args[1]=m

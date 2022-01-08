@@ -191,6 +191,16 @@ do--Userdata tables
     STAT={
         version=VERSION.code,
         run=0,game=0,time=0,
+        score=0,
+        hits={
+            miss=0,
+            bad=0,
+            well=0,
+            good=0,
+            perf=0,
+            prec=0,
+            marv=0,
+        },
         item=setmetatable({},{__index=function(self,k)
             self[k]=0
             return 0
