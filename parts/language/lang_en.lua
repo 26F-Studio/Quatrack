@@ -85,6 +85,15 @@ return{
             tas="TAS (T)",
         },
         setting={
+            mainVol="Main Volume",
+            bgm="BGM",
+            sfx="SFX",
+            stereo="Stereo",
+            spawn="Spawn SFX",
+            warn="Warning SFX",
+            vib="Vibrations",
+            voc="Voices",
+
             musicDelay="Music Delay",
             dropSpeed="Scrolling Speed",
             noteThick="Note Thickness",
@@ -108,15 +117,6 @@ return{
 
             maxFPS="Max FPS",
             frameMul="Frame draw rate",
-
-            mainVol="Main Volume",
-            bgm="BGM",
-            sfx="SFX",
-            stereo="Stereo",
-            spawn="Spawn SFX",
-            warn="Warning SFX",
-            vib="Vibrations",
-            voc="Voices",
         },
         setting_key={
             restart="restart",

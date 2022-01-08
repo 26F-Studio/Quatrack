@@ -85,6 +85,15 @@ return{
             tas="TAS (T)",
         },
         setting={
+            mainVol="总音量",
+            bgm="音乐",
+            sfx="音效",
+            stereo="立体声",
+            spawn="方块生成",
+            warn="危险警告",
+            vib="振动",
+            voc="语音",
+
             musicDelay="音乐延迟",
             dropSpeed="音符流速",
             noteThick="音符厚度",
@@ -108,15 +117,6 @@ return{
 
             maxFPS="最大FPS",
             frameMul="绘制帧率百分比",
-
-            mainVol="总音量",
-            bgm="音乐",
-            sfx="音效",
-            stereo="立体声",
-            spawn="方块生成",
-            warn="危险警告",
-            vib="振动",
-            voc="语音",
         },
         setting_key={
             restart="重开",
