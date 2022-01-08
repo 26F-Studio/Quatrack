@@ -51,9 +51,9 @@ local touches
 
 local function _updateStat()
     if fullAcc<=0 then return end
-    STAT.game=STAT.game+1
-    STAT.time=STAT.time+songLength
     mergeStat(STAT,{
+        game=1,
+        time=songLength,
         score=score0,
         hits={
             miss=hits[-1],
@@ -65,6 +65,7 @@ local function _updateStat()
             marv=hits[5],
         },
     })
+    saveStats()
 end
 
 local function _updateAcc()
@@ -73,9 +74,8 @@ local function _updateAcc()
 end
 
 local function _tryGoResult()
-    if not map.finished then return true end
+    if SCN.swapping or not map.finished then return true end
     for i=1,#tracks do if #tracks[i].notes>0 then return true end end
-    _updateStat()
     if needSaveSetting then saveSettings()end
     SCN.swapTo('result',nil,{
         map=map,
@@ -94,6 +94,7 @@ local function _tryGoResult()
         },
         bestChain=bestChain,
     })
+    _updateStat()
 end
 
 local scene={}
