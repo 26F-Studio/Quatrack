@@ -683,6 +683,14 @@ function Map.new(file)
                     str=str:sub(2)
                 elseif readState=='rnd'then
                     c=str:sub(1,1)
+                    local noJack=c==c:upper()
+                    c=c:upper()
+
+                    if not(c=='L'or c=='R'or c=='X')then
+                        readState='time'
+                        goto CONTINUE_nextState
+                    end
+
                     local available={}
                     for i=1,o.tracks do available[i]=i end
                     for i=#available,1,-1 do
@@ -690,9 +698,9 @@ function Map.new(file)
                             rem(available,i)
                         end
                     end
-                    local ifJack=c==c:upper()
-                    for i=#available,1,-1 do if ifJack==lastLineState[available[i]]then rem(available,i)end end
-                    c=c:upper()
+
+                    for i=#available,1,-1 do if not noJack==not lastLineState[available[i]]then rem(available,i)end end
+
                     if c=='L'then--Random left
                         for i=#available,1,-1 do
                             if available[i]>(o.tracks+1)*.5 then
@@ -707,12 +715,10 @@ function Map.new(file)
                         end
                     elseif c=='X'then--Random anywhere
                         --Do nothing
-                    else
-                        readState='time'
-                        goto CONTINUE_nextState
                     end
                     _syntaxCheck(#available>0,"No space to place notes")
                     curTrack=available[rnd(#available)]
+
                     local b={
                         type='tap',
                         time=curTime,
