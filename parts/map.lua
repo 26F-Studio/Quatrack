@@ -373,6 +373,7 @@ function Map.new(file)
                 _syntaxCheck(#data<=2,"Too many arguments")
                 local r,g,b
                 if not data[2]then
+                    _syntaxCheck(#data==2,"Invalid color")
                     r,g,b=1,1,1
                 else
                     local neg

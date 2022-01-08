@@ -83,7 +83,7 @@ function Track:moveDropSpeed(animData,dds)
     self:setDropSpeed(animData,self.targetState.dropSpeed+dds)
 end
 function Track:moveAlpha(animData,da)
-    self:setAlpha(animData,interval(self.targetState.alpha+da,0,1))
+    self:setAlpha(animData,self.targetState.alpha+da)
 end
 function Track:moveAvailable()--wtf
     self:setAvailable(not self.state.available)
@@ -118,7 +118,7 @@ function Track:setDropSpeed(animData,dropSpeed)
 end
 function Track:setAlpha(animData,alpha)
     self.startState.alpha=self.targetState.alpha
-    self.targetState.alpha=alpha or self.defaultState.alpha
+    self.targetState.alpha=interval(alpha or self.defaultState.alpha,0,100)
     self.animQueue:insert{mode='alpha',data=animData}
 end
 function Track:setAvailable(bool)
@@ -346,27 +346,29 @@ function Track:draw(map)
 
     local noteDX,noteDY=SETTING.scaleX,s.ky*s.dropSpeed/50
 
-    local r,g,b,a=s.r,s.g,s.b,s.alpha/100
-    --Draw track name
-    if s.nameTime>0 then
-        setFont(40)
-        gc_setColor(r,g,b,a*.626*min(2*s.nameTime,1))
-        mStr(self.showName,0,-60)
-    end
+    do--Draw track frame
+        local r,g,b,a=s.r,s.g,s.b,s.alpha/100
+        --Draw track name
+        if s.nameTime>0 then
+            setFont(40)
+            gc_setColor(r,g,b,a*.626*min(2*s.nameTime,1))
+            mStr(self.showName,0,-60)
+        end
 
-    --Draw track line
-    gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
-    gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
+        --Draw track line
+        gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
+        gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
 
-    --Draw sides
-    local unitY=640*ky
-    for i=0,.99,.01 do
-        gc_setColor(r,g,b,a*(1-i))
-        gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
-        gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
-        if self.pressed then
-            gc_setColor(r,g,b,a*(1-i)/6)
-            gc_rectangle('fill',-trackW,-unitY*i,2*trackW,-unitY*.01)
+        --Draw sides
+        local unitY=640*ky
+        for i=0,.99,.01 do
+            gc_setColor(r,g,b,a*(1-i))
+            gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
+            gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
+            if self.pressed then
+                gc_setColor(r,g,b,a*(1-i)/6)
+                gc_rectangle('fill',-trackW,-unitY*i,2*trackW,-unitY*.01)
+            end
         end
     end
 
