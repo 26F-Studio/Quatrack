@@ -348,35 +348,37 @@ function Track:draw(map)
 
     do--Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
-        --Draw track name
-        if s.nameTime>0 then
-            setFont(40)
-            gc_setColor(r,g,b,a*.626*min(2*s.nameTime,1))
-            mStr(self.showName,0,-60)
-        end
-
-        --Draw sides
-        local unitY=640*ky
-        for i=0,.99,.01 do
-            gc_setColor(r,g,b,a*(1-i))
-            gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
-            gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
-        end
-
-        --Draw filling light
-        local pressA=
-            self.pressed and 1 or
-            self.time-self.lastReleaseTime<.1 and(.1-(self.time-self.lastReleaseTime))/.1
-        if pressA then
-            for i=0,.99,.01 do
-                gc_setColor(r,g,b,a*(1-i)*pressA/6)
-                gc_rectangle('fill',-trackW*pressA,-unitY*i,2*trackW*pressA,-unitY*.01)
+        if a>0 then
+            --Draw track name
+            if s.nameTime>0 then
+                setFont(40)
+                gc_setColor(r,g,b,a*.626*min(2*s.nameTime,1))
+                mStr(self.showName,0,-60)
             end
-        end
 
-        --Draw track line
-        gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
-        gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
+            --Draw sides
+            local unitY=640*ky
+            for i=0,.99,.01 do
+                gc_setColor(r,g,b,a*(1-i))
+                gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
+                gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
+            end
+
+            --Draw filling light
+            local pressA=
+                self.pressed and 1 or
+                self.time-self.lastReleaseTime<.1 and(.1-(self.time-self.lastReleaseTime))/.1
+            if pressA then
+                for i=0,.99,.01 do
+                    gc_setColor(r,g,b,a*(1-i)*pressA/6)
+                    gc_rectangle('fill',-trackW*pressA,-unitY*i,2*trackW*pressA,-unitY*.01)
+                end
+            end
+
+            --Draw track line
+            gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
+            gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
+        end
     end
 
     --Prepare to draw notes
@@ -399,41 +401,42 @@ function Track:draw(map)
         if note.type=='tap'and timeRemain<0 then
             a=a*(1+timeRemain/hitLVOffsets[1])
         end
+        if a >0 then
+            local dx,dy=note:getOffset(1-timeRemain/2.6)
+            dx,dy=dx*noteDX,dy*noteDY
 
-        local dx,dy=note:getOffset(1-timeRemain/2.6)
-        dx,dy=dx*noteDX,dy*noteDY
-
-        gc_translate(dx,dy)
-        if note.type=='tap'then
-            if chordAlpha and note.chordCount>1 then
-                _drawChordBox(self.chordColor[note.chordCount-1],chordAlpha*a,trackW,headH,thick)
-            end
-            gc_setColor(r,g,b,a)
-            gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
-        elseif note.type=='hold'then
-            local tailH=(note.etime-self.time)*dropSpeed
-            local a2=note.active and a or a*.5
-            --Body
-            gc_setColor(r,g,b,a2*SETTING.holdAlpha)
-            gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.head and -thick or 0))
-
-            --Head & Tail
-            if note.head then
-                if chordAlpha and note.chordCount_head>1 then
-                    _drawChordBox(self.chordColor[note.chordCount_head-1],chordAlpha*a,trackW,headH,thick)
+            gc_translate(dx,dy)
+            if note.type=='tap'then
+                if chordAlpha and note.chordCount>1 then
+                    _drawChordBox(self.chordColor[note.chordCount-1],chordAlpha*a,trackW,headH,thick)
                 end
                 gc_setColor(r,g,b,a)
                 gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
-            end
-            if note.tail then
-                if chordAlpha and note.chordCount_tail>1 then
-                    _drawChordBox(self.chordColor[note.chordCount_tail-1],chordAlpha*a2,trackW,tailH,thick/2)
+            elseif note.type=='hold'then
+                local tailH=(note.etime-self.time)*dropSpeed
+                local a2=note.active and a or a*.5
+                --Body
+                gc_setColor(r,g,b,a2*SETTING.holdAlpha)
+                gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.head and -thick or 0))
+
+                --Head & Tail
+                if note.head then
+                    if chordAlpha and note.chordCount_head>1 then
+                        _drawChordBox(self.chordColor[note.chordCount_head-1],chordAlpha*a,trackW,headH,thick)
+                    end
+                    gc_setColor(r,g,b,a)
+                    gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
                 end
-                gc_setColor(r,g,b,a2)
-                gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)
+                if note.tail then
+                    if chordAlpha and note.chordCount_tail>1 then
+                        _drawChordBox(self.chordColor[note.chordCount_tail-1],chordAlpha*a2,trackW,tailH,thick/2)
+                    end
+                    gc_setColor(r,g,b,a2)
+                    gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)
+                end
             end
+            gc_translate(-dx,-dy)
         end
-        gc_translate(-dx,-dy)
     end
 
     gc_pop()
