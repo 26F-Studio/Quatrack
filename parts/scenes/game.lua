@@ -243,7 +243,6 @@ function scene.keyDown(key,isRep)
             _tryGoResult()
         end
     elseif k=='restart'then
-        _updateStat()
         local m,errmsg=loadBeatmap(map.qbpFilePath)
         if m then
             SCN.args[1]=m
