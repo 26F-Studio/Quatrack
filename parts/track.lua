@@ -38,7 +38,7 @@ function Track.new(id)
             ang=0,
             kx=1,ky=1,
             dropSpeed=1000,
-            r=1,g=1,b=1,alpha=1,
+            r=1,g=1,b=1,alpha=100,
             available=true,
             nameTime=0,
         },
@@ -66,7 +66,7 @@ function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,
 function Track:setDefaultAngle(ang)self.defaultState.ang=ang end
 function Track:setDefaultSize(kx,ky)self.defaultState.kx,self.defaultState.ky=kx,ky end
 function Track:setDefaultDropSpeed(speed)self.defaultState.dropSpeed=speed end
-function Track:setDefaultAlpha(alpha)self.defaultState.alpha=interval(alpha/100,0,1)end
+function Track:setDefaultAlpha(alpha)self.defaultState.alpha=interval(alpha,0,100)end
 function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
 function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=interval(r,0,1),interval(g,0,1),interval(b,0,1) end
 
@@ -83,7 +83,7 @@ function Track:moveDropSpeed(animData,dds)
     self:setDropSpeed(animData,self.targetState.dropSpeed+dds)
 end
 function Track:moveAlpha(animData,da)
-    self:setAlpha(animData,interval(self.targetState.alpha+da/100,0,1))
+    self:setAlpha(animData,interval(self.targetState.alpha+da,0,1))
 end
 function Track:moveAvailable()--wtf
     self:setAvailable(not self.state.available)
@@ -346,30 +346,26 @@ function Track:draw(map)
 
     local noteDX,noteDY=SETTING.scaleX,s.ky*s.dropSpeed/50
 
-    --Available indicator for testing
-    -- gc_setColor(1,1,1)
-    -- gc.setLineWidth(2)
-    -- gc.circle(self.state.available and'fill'or'line',0,0,16)
-
+    local r,g,b,a=s.r,s.g,s.b,s.alpha/100
     --Draw track name
     if s.nameTime>0 then
         setFont(40)
-        gc_setColor(s.r,s.g,s.b,s.alpha*.626*min(2*s.nameTime,1))
+        gc_setColor(r,g,b,a*.626*min(2*s.nameTime,1))
         mStr(self.showName,0,-60)
     end
 
     --Draw track line
-    gc_setColor(s.r,s.g,s.b,s.alpha*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
+    gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
     gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
 
     --Draw sides
     local unitY=640*ky
     for i=0,.99,.01 do
-        gc_setColor(s.r,s.g,s.b,s.alpha*(1-i))
+        gc_setColor(r,g,b,a*(1-i))
         gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
         gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
         if self.pressed then
-            gc_setColor(s.r,s.g,s.b,s.alpha*(1-i)/6)
+            gc_setColor(r,g,b,a*(1-i)/6)
             gc_rectangle('fill',-trackW,-unitY*i,2*trackW,-unitY*.01)
         end
     end
