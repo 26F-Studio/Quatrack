@@ -24,8 +24,8 @@ end
 function Track.new(id)
     local track={
         id=id,
-        name=false,--Must set one later!
-        showname=false,--Automatically set
+        name='',
+        showname='',
         chordColor=defaultChordColor,
         pressed=false,
         lastPressTime=-1e99,

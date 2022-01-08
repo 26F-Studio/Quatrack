@@ -142,11 +142,12 @@ function scene.sceneInit()
     touches={}
 
     tracks={}
+    local trackNameList=defaultTrackNames[map.tracks]
     for id=1,map.tracks do
         tracks[id]=require'parts.track'.new(id)
         tracks[id]:setDefaultPosition(70*(2*id-map.tracks-1),320)
         tracks[id]:setPosition({type='S'},nil,nil)
-        tracks[id]:rename(defaultTrackNames[map.tracks][id])
+        tracks[id]:rename(trackNameList and trackNameList[id]or'')
         tracks[id]:setChordColor(defaultChordColor)
         tracks[id]:setNameTime(2)
     end
