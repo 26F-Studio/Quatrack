@@ -355,21 +355,28 @@ function Track:draw(map)
             mStr(self.showName,0,-60)
         end
 
-        --Draw track line
-        gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
-        gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
-
         --Draw sides
         local unitY=640*ky
         for i=0,.99,.01 do
             gc_setColor(r,g,b,a*(1-i))
             gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
             gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
-            if self.pressed then
-                gc_setColor(r,g,b,a*(1-i)/6)
-                gc_rectangle('fill',-trackW,-unitY*i,2*trackW,-unitY*.01)
+        end
+
+        --Draw filling light
+        local pressA=
+            self.pressed and 1 or
+            self.time-self.lastReleaseTime<.1 and(.1-(self.time-self.lastReleaseTime))/.1
+        if pressA then
+            for i=0,.99,.01 do
+                gc_setColor(r,g,b,a*(1-i)*pressA/6)
+                gc_rectangle('fill',-trackW*pressA,-unitY*i,2*trackW*pressA,-unitY*.01)
             end
         end
+
+        --Draw track line
+        gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
+        gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
     end
 
     --Prepare to draw notes
