@@ -288,13 +288,13 @@ function Map.new(file)
                     local unit
                     if s:sub(-1)=='s'then
                         s,unit=s:sub(1,-2),1
-                    elseif s:sub(-1)=='ms'then
+                    elseif s:sub(-2)=='ms'then
                         s,unit=s:sub(1,-3),0.001
-                    elseif s:sub(-1)=='beat'then
+                    elseif s:sub(-4)=='beat'then
                         s,unit=s:sub(1,-5),60/curBPM
-                    elseif s:sub(-1)=='bar'then
+                    elseif s:sub(-3)=='bar'then
                         _syntaxCheck(signature,"No signature to calculate bar length")
-                        s,unit=s:sub(1,-5),60/curBPM*signature
+                        s,unit=s:sub(1,-4),60/curBPM*signature
                     else--Unit default to beat
                         unit=60/curBPM
                     end
