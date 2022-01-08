@@ -157,6 +157,7 @@ end
 
 --Load settings and statistics
 TABLE.update(loadFile('conf/settings','-canSkip')or{},SETTING)
+TABLE.coverR(loadFile('conf/data','-canSkip')or{},STAT)
 local savedKey=loadFile('conf/key','-canSkip')
 if savedKey then
     KEY_MAP=savedKey

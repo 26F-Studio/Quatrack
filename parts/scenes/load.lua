@@ -17,6 +17,8 @@ local loadingThread=coroutine.wrap(function()
     YIELD('loadVoice')VOC.load('media/vocal/')
     YIELD('loadFont')for i=1,17 do getFont(15+5*i)end
 
+    STAT.run=STAT.run+1
+    saveStats()
     LOADED=true
     return'finish'
 end)
@@ -32,7 +34,12 @@ end
 
 function scene.mouseDown()
     if LOADED then
-        SCN.swapTo(SETTING.simpMode and'main_simple'or'main')
+        if FIRSTLAUNCH then
+            SCN.push('main')
+            SCN.swapTo('lang')
+        else
+            SCN.swapTo('main')
+        end
     end
 end
 scene.touchDown=scene.mouseDown
