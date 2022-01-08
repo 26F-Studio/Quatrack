@@ -56,6 +56,12 @@ return{
 
     errorMsg="Quatrack遭受了雷击,需要重新启动.\n我们已收集了一些错误信息,你可以向作者进行反馈.",
 
+    stat={
+        "启动次数:",
+        "游玩曲数:",
+        "游玩时间:",
+        "总分数:",
+    },
     staff={
         "作者: MrZ  邮箱: 1046101471@qq.com",
         "使用LÖVE引擎",
@@ -75,14 +81,8 @@ return{
             setting="设置",
             editor="编辑器",
         },
-        pause={
-            setting="设置(S)",
-            replay="回放(P)",
-            save="保存(O)",
-            resume="继续(esc)",
-            restart="重新开始(R)",
-            quit="退出(Q)",
-            tas="TAS (T)",
+        stat={
+            path="打开存档文件夹",
         },
         setting={
             mainVol="总音量",

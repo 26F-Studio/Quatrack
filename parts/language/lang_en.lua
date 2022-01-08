@@ -56,6 +56,12 @@ return{
 
     errorMsg="Quatrack ran into a problem and needs to restart.\nYou can send the error log to the developers.",
 
+    stat={
+        "Game run:",
+        "Game played:",
+        "Time played:",
+        "Total score:",
+    },
     staff={
         "Author: MrZ  Email: 1046101471@qq.com",
         "Powered by LÖVE",
@@ -75,14 +81,8 @@ return{
             setting="Setting",
             editor="Editor",
         },
-        pause={
-            setting="Settings (S)",
-            replay="Replay (P)",
-            save="Save (O)",
-            resume="Resume (esc)",
-            restart="Retry (R)",
-            quit="Quit (Q)",
-            tas="TAS (T)",
+        stat={
+            path="Open save directory",
         },
         setting={
             mainVol="Main Volume",

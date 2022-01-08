@@ -22,11 +22,12 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.newButton{name='lang',   x=240,y=80,w=100,        color='lN',code=goScene'lang',font=70,fText=CHAR.icon.language},
+    WIDGET.newButton{name='lang',   x=240,y=80,w=100,        color='lN',font=70,code=goScene'lang',fText=CHAR.icon.language},
     WIDGET.newButton{name="play",   x=240,y=450,w=280,h=120, color="lR",font=45,code=goScene'mapSelect'},
     WIDGET.newButton{name="setting",x=640,y=450,w=280,h=120, color="lB",font=45,code=goScene'setting'},
-    WIDGET.newButton{name="editor", x=1040,y=450,w=280,h=120,color="D",font=45,code=function()MES.new('warn',"Coming soon")end},
-    WIDGET.newButton{name="manual", x=1040,y=600,w=95,color="G",font=60,fText=CHAR.icon.zBook,code=function()love.system.openURL("https://github.com/26F-Studio/Quatrack/wiki/beatmap")end},
+    WIDGET.newButton{name="stat",   x=240,y=600,w=95,        color="lY",font=70,code=goScene'stat',fText=CHAR.key.winMenu},
+    WIDGET.newButton{name="editor", x=1040,y=450,w=280,h=120,color="D",font=45,code=function()MES.new('info',"Coming soon")end},
+    WIDGET.newButton{name="manual", x=1040,y=600,w=95,       color="G",font=60,fText=CHAR.icon.zBook,code=function()love.system.openURL("https://github.com/26F-Studio/Quatrack/wiki/beatmap")end},
 }
 
 return scene
