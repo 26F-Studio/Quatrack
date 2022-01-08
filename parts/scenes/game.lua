@@ -149,7 +149,7 @@ function scene.sceneInit()
         tracks[id]:setPosition({type='S'},nil,nil)
         tracks[id]:rename(trackNameList and trackNameList[id]or'')
         tracks[id]:setChordColor(defaultChordColor)
-        tracks[id]:setNameTime(2)
+        tracks[id]:setNameTime()
     end
 
     applyFPS(true)

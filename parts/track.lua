@@ -40,7 +40,7 @@ function Track.new(id)
             dropSpeed=1000,
             r=1,g=1,b=1,alpha=100,
             available=true,
-            nameTime=0,
+            nameTime=2,
         },
         defaultState=false,
         targetState=false,
