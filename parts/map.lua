@@ -419,13 +419,15 @@ function Map.new(file)
                     args={data[2]},
                 }
             elseif op=='N'then--Show track name
-                local time=tonumber(data[2])
-                _syntaxCheck(time and time>0,"Invalid time")
+                if data[2]then
+                    data[2]=tonumber(data[2])
+                    _syntaxCheck(data[2] and data[2]>0,"Invalid time")
+                end
                 event={
                     type='setTrack',
                     time=curTime,
                     operation='setNameTime',
-                    args={time},
+                    args={data[2]},
                 }
             else
                 _syntaxCheck(false,"Invalid track operation")
