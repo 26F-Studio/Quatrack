@@ -169,12 +169,14 @@ function scene.sceneInit()
     tracks={}
     local trackNameList=defaultTrackNames[map.tracks]
     for id=1,map.tracks do
-        tracks[id]=require'parts.track'.new(id)
-        tracks[id]:setDefaultPosition(70*(2*id-map.tracks-1),320)
-        tracks[id]:setPosition({type='S'},nil,nil)
-        tracks[id]:rename(trackNameList and trackNameList[id]or'')
-        tracks[id]:setChordColor(defaultChordColor)
-        tracks[id]:setNameTime()
+        local t=require'parts.track'.new(id)
+        t:setDefaultPosition(70*(2*id-map.tracks-1),320)
+        t:setPosition({type='S'},nil,nil)
+        t:rename(trackNameList and trackNameList[id]or'')
+        t:setChordColor(defaultChordColor)
+        t:setNameTime()
+        t:updateLogic(time)
+        tracks[id]=t
     end
 
     applyFPS(true)
