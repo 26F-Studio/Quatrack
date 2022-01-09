@@ -97,6 +97,7 @@ return{
             vib="振动",
             voc="语音",
 
+            bgAlpha="背景亮度",
             musicDelay="音乐延迟",
             dropSpeed="音符流速",
             noteThick="音符厚度",

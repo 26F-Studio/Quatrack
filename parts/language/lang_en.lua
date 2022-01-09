@@ -97,6 +97,7 @@ return{
             vib="Vibrations",
             voc="Voices",
 
+            bgAlpha="Background Brightness",
             musicDelay="Music Delay",
             dropSpeed="Scrolling Speed",
             noteThick="Note Thickness",

@@ -142,7 +142,7 @@ function scene.sceneInit()
         end
         if image then
             BG.set('custom')
-            BG.send(.1626,image)
+            BG.send(SETTING.bgAlpha,image)
         else
             BG.set('none')
         end
