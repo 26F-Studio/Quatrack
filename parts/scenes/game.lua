@@ -321,8 +321,22 @@ function scene.touchDown(x,y,id)
     for i=1,#tracks do
         local t=tracks[i]
         if t.state.available then
-            local D2=abs(cos(t.state.ang)*(t.state.x-x)-sin(t.state.ang)*(t.state.y-y))
-            if D2<minD2 then minD2,closestTrackID=D2,i end
+            local angle=math.atan2(y-t.state.y,x-t.state.x)
+            if t.state.ky<0 then angle=angle+3.141592653589793 end
+            angle=angle-t.state.ang/57.29577951308232
+            angle=angle+1.5707963267948966
+            angle=angle%6.283185307179586
+
+            local D
+            if abs(angle-3.141592653589793)>=1.5707963267948966 then
+                if angle>3.141592653589793 then angle=6.283185307179586-angle end
+                D=abs(cos(t.state.ang/57.29577951308232)*(x-t.state.x)+sin(t.state.ang/57.29577951308232)*(y-t.state.y))
+                print(i,'line',D)
+            else
+                D=((y-t.state.y)^2+(x-t.state.x)^2)^.5
+                print(i,'point',D)
+            end
+            if D<minD2 then minD2,closestTrackID=D,i end
         end
     end
     if closestTrackID then
