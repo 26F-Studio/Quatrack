@@ -215,10 +215,10 @@ function Map.new(file)
                     dt=time[1]*60+time[2]
                 else
                     local unit
-                    if str:sub(-1)=='s'then
-                        str,unit=str:sub(1,-2),1
-                    elseif str:sub(-2)=='ms'then
+                    if str:sub(-2)=='ms'then
                         str,unit=str:sub(1,-3),0.001
+                    elseif str:sub(-1)=='s'then
+                        str,unit=str:sub(1,-2),1
                     elseif str:sub(-4)=='beat'then
                         str,unit=str:sub(1,-5),60/curBPM
                     elseif str:sub(-3)=='bar'then
@@ -286,10 +286,10 @@ function Map.new(file)
                     _syntaxCheck(#animList==1,"Invalid animation data (need time)")
                     local s=animList[1]
                     local unit
-                    if s:sub(-1)=='s'then
-                        s,unit=s:sub(1,-2),1
-                    elseif s:sub(-2)=='ms'then
+                    if s:sub(-2)=='ms'then
                         s,unit=s:sub(1,-3),0.001
+                    elseif s:sub(-1)=='s'then
+                        s,unit=s:sub(1,-2),1
                     elseif s:sub(-4)=='beat'then
                         s,unit=s:sub(1,-5),60/curBPM
                     elseif s:sub(-3)=='bar'then
