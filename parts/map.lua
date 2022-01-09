@@ -620,7 +620,7 @@ function Map.new(file)
                         time=curTime,
                         track=id,
                         operation='setAvailable',
-                        args={},
+                        args={false},
                     }
                     trackAvailable[id]=false
                 end
