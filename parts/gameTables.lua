@@ -125,7 +125,7 @@ actionNames={
     'dropSpdUp',
 }
 do--Userdata tables
-    KEY_MAP={
+    KEY_MAP={--Keys-Function map, for convert direct key input
         f='L1',d='L2',s='L3',a='L4',lshift='L5',
         space='C',
         j='R1',k='R2',l='R3',[';']='R4',['/']='R5',
@@ -139,7 +139,7 @@ do--Userdata tables
         ['-']='dropSpdDn',
         ['=']='dropSpdUp',
     }
-    KEY_MAP_inv={--For show key name
+    KEY_MAP_inv={--Function-Keys map, for show key name
         _update=function(self)
             local _f=self._update
             TABLE.clear(self)
