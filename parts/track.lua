@@ -25,7 +25,8 @@ function Track.new(id)
     local track={
         id=id,
         name='',
-        showname='',
+        showname=false,
+        nameList=false,
         chordColor=defaultChordColor,
         pressed=false,
         lastPressTime=-1e99,
@@ -52,10 +53,13 @@ function Track.new(id)
 end
 
 function Track:rename(name)
-    self.name=name.." "
-    self.showName=self.name
-    if self.showName:find(" ")then self.showName=self.showName:sub(1,self.showName:find(" ")-1)end
-    self.showName=KEY_MAP_inv[self.showName]:upper()
+    self.name=name
+    if name=='x'then name=''end
+    self.nameList=name:split(' ')
+    self.showName=TABLE.shift(self.nameList)
+    for i=1,#self.showName do
+        self.showName[i]=KEY_MAP_inv[self.showName[i]]:upper()
+    end
 end
 
 function Track:setChordColor(chordColor)
@@ -353,7 +357,9 @@ function Track:draw(map)
             if s.nameTime>0 then
                 setFont(40)
                 gc_setColor(r,g,b,a*.626*min(2*s.nameTime,1))
-                mStr(self.showName,0,-60)
+                for i=1,#self.showName do
+                    mStr(self.showName[i],0,-20-40*i)
+                end
             end
 
             --Draw sides

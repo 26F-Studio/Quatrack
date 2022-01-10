@@ -304,7 +304,7 @@ function scene.keyUp(key)
         if autoPlay then return end
         for id=1,map.tracks do
             if tracks[id].name:find(k)then
-                local s=tracks[id].name:split(' ')
+                local s=tracks[id].nameList
                 for i=1,#s do
                     if kbIsDown(KEY_MAP_inv[s[i]])then
                         return
