@@ -418,7 +418,10 @@ function scene.update(dt)
             if note and(not note.available or autoPlay)and note.type=='tap'then
                 if time>=note.time then
                     _trackPress(id,true)
-                    _trackRelease(id,true)
+                    note=t.notes[1]
+                    if not(note and note.type=='hold')then
+                        _trackRelease(id)
+                    end
                 end
             end
             note=t.notes[1]
