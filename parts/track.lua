@@ -41,7 +41,7 @@ function Track.new(id)
             dropSpeed=1000,
             r=1,g=1,b=1,alpha=100,
             available=true,
-            nameTime=2,
+            nameAlpha=0,
         },
         defaultState=false,
         targetState=false,
@@ -99,6 +99,9 @@ function Track:moveColor(animData,dr,dg,db)
         interval(self.targetState.b+(db or 0),0,1)
     )
 end
+function Track:moveNameAlpha(animData,dna)
+    self:setNameAlpha(animData,self.targetState.nameAlpha+dna)
+end
 
 function Track:setPosition(animData,x,y)
     self.startState.x,self.startState.y=self.targetState.x,self.targetState.y
@@ -138,17 +141,18 @@ function Track:setColor(animData,r,g,b)
     self.targetState.r,self.targetState.g,self.targetState.b=r or self.defaultState.r,g or self.defaultState.g,b or self.defaultState.b
     self.animQueue:insert{mode='color',data=animData}
 end
-function Track:setNameTime(nameTime)
-    if not nameTime then nameTime=self.defaultState.nameTime end
-    self.targetState.nameTime=nameTime
+function Track:setNameAlpha(animData,nameAlpha)
+    self.startState.nameAlpha=self.targetState.nameAlpha
+    self.targetState.nameAlpha=interval(nameAlpha or self.defaultState.nameAlpha,0,100)
+    self.animQueue:insert{mode='nameAlpha',data=animData}
 end
 
 function Track:addItem(note)
     table.insert(self.notes,note)
 end
-function Track:pollNote(mode)
+function Track:pollNote(noteType)
     local l=self.notes
-    if mode=='note'then
+    if noteType=='note'then
         for i=1,#l do
             if
                 l[i].type=='tap'or
@@ -157,7 +161,7 @@ function Track:pollNote(mode)
                 return i,l[i]
             end
         end
-    elseif mode=='hold'then
+    elseif noteType=='hold'then
         for i=1,#l do
             if
                 l[i].type=='hold'and l[i].active
@@ -240,22 +244,12 @@ local animManager={
     dropSpeed={'dropSpeed'},
     alpha={'alpha'},
     color={'r','g','b'},
+    nameAlpha={'nameAlpha'},
 }
 function Track:update(dt)
     local s=self.state
     local S=self.startState
     local T=self.targetState
-
-    if T.nameTime>0 then
-        T.nameTime=max(T.nameTime-dt,0)
-    end
-    if s.nameTime~=T.nameTime then
-        if s.nameTime<T.nameTime then
-            s.nameTime=min(s.nameTime+2.6*dt,T.nameTime)
-        else
-            s.nameTime=max(s.nameTime-dt,T.nameTime)
-        end
-    end
 
     for i=#self.animQueue,1,-1 do
         local a=self.animQueue[i]
@@ -354,9 +348,9 @@ function Track:draw(map)
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
         if a>0 then
             --Draw track name
-            if s.nameTime>0 then
+            if s.nameAlpha>0 then
                 setFont(40)
-                gc_setColor(r,g,b,a*.626*min(2*s.nameTime,1))
+                gc_setColor(r,g,b,s.nameAlpha/100)
                 for i=1,#self.showName do
                     mStr(self.showName[i],0,-20-40*i)
                 end

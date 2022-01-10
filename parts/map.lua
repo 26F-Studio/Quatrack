@@ -421,13 +421,13 @@ function Map.new(file)
             elseif op=='N'then--Show track name
                 if data[2]then
                     data[2]=tonumber(data[2])
-                    _syntaxCheck(data[2] and data[2]>0,"Invalid time")
+                    _syntaxCheck(data[2],"Invalid alpha")
                 end
                 event={
                     type='setTrack',
                     time=curTime,
-                    operation='setNameTime',
-                    args={data[2]},
+                    operation=opType..'NameAlpha',
+                    args={animData,data[2]},
                 }
             else
                 _syntaxCheck(false,"Invalid track operation")
