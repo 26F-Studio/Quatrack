@@ -178,6 +178,25 @@ function Track:pollNote(noteType)
         end
     end
 end
+function Track:pollPressTime()
+    local l=self.notes
+    for i=1,#l do
+        if l[i].available and(l[i].type=='tap'or l[i].type=='hold'and l[i].active and l[i].head)then
+            return l[i].time
+        end
+    end
+    return 1e99
+end
+function Track:pollReleaseTime()
+    local l=self.notes
+    for i=1,#l do
+        local note=l[i]
+        if note.type=='hold'and note.available and note.active and note.tail then
+            return note.etime
+        end
+    end
+    return 1e99
+end
 
 local holdHeadSFX={
     'hold4',
@@ -186,10 +205,11 @@ local holdHeadSFX={
     'hold1',
     'hold1',
 }
-function Track:press(auto)
+function Track:press(weak,auto)print('press',weak,auto)
     --Animation
     self.pressed=true
     self.lastPressTime=self.time
+    if weak then return end
 
     --Check first note
     local i,note=self:pollNote('note')
@@ -224,8 +244,8 @@ local holdTailSFX={
     'hit5',
     'hit5',
 }
-function Track:release(auto)
-    self.pressed=false
+function Track:release(weak,auto)
+    if not weak then self.pressed=false end
     self.lastReleaseTime=self.time
     local i,note=self:pollNote('hold')
     if note and(auto or note.available)and note.type=='hold'and not note.head then--Release hold note
@@ -236,7 +256,7 @@ function Track:release(auto)
                 SFX.play(holdTailSFX[hitLV],.4+.6*note:getAlpha(1),self.state.x/420)
             end
             rem(self.notes,i)
-        else
+        elseif not weak then
             note.active=false
         end
         return deviateTime,not note.tail

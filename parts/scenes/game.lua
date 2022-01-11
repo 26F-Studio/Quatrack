@@ -215,14 +215,14 @@ local function _trigNote(deviateTime,noTailHold)
     end
     _updateAcc()
 end
-local function _trackPress(id,auto)
-    local deviateTime=tracks[id]:press(auto)
+local function _trackPress(id,weak,auto)
+    local deviateTime=tracks[id]:press(weak,auto)
     if not auto and deviateTime then
         _trigNote(deviateTime)
     end
 end
-local function _trackRelease(id,auto)
-    local deviateTime,noTailHold=tracks[id]:release(auto)
+local function _trackRelease(id,weak,auto)
+    local deviateTime,noTailHold=tracks[id]:release(weak,auto)
     if not auto and deviateTime then
         _trigNote(deviateTime,noTailHold)
     end
@@ -232,9 +232,16 @@ function scene.keyDown(key,isRep)
     local k=KEY_MAP[key]or key
     if trackNames[k]then
         if autoPlay then return end
+        local minTime=1e99
         for id=1,map.tracks do
             if tracks[id].name:find(k)then
-                _trackPress(id)
+                local t=tracks[id]:pollPressTime()
+                if t<minTime then minTime=t end
+            end
+        end
+        for id=1,map.tracks do
+            if tracks[id].name:find(k)then
+                _trackPress(id,minTime<tracks[id]:pollPressTime())
             end
         end
     elseif k=='skip'then
@@ -303,15 +310,27 @@ function scene.keyUp(key)
     local k=KEY_MAP[key]
     if trackNames[k]then
         if autoPlay then return end
+
+        local minTime=1e99
+        for id=1,map.tracks do
+            if tracks[id].name:find(k)then
+                local t=tracks[id]:pollReleaseTime()
+                if t<minTime then
+                    minTime=t
+                end
+            end
+        end
         for id=1,map.tracks do
             if tracks[id].name:find(k)then
                 local s=tracks[id].nameList
-                for i=1,#s do
-                    if kbIsDown(KEY_MAP_inv[s[i]])then
-                        return
+                for j=1,#s do
+                    if kbIsDown(KEY_MAP_inv[s[j]])then
+                        _trackRelease(id,minTime<tracks[id]:pollReleaseTime())
+                        goto BREAK_strong
                     end
                 end
-                _trackRelease(id)
+                _trackRelease(id,false)
+                ::BREAK_strong::
             end
         end
     end
@@ -346,7 +365,7 @@ function scene.touchDown(x,y,id)
     end
     if closestTrackID then
         ins(touches,{id,closestTrackID})
-        _trackPress(closestTrackID)
+        _trackPress(closestTrackID,false)
     end
 end
 function scene.touchUp(_,_,id)
@@ -416,7 +435,7 @@ function scene.update(dt)
             local _,note=t:pollNote('note')
             if note and(not note.available or autoPlay)and note.type=='tap'then
                 if time>=note.time then
-                    _trackPress(id,true)
+                    _trackPress(id,false,true)
                     note=t.notes[1]
                     if not(note and note.type=='hold')then
                         _trackRelease(id)
@@ -426,9 +445,9 @@ function scene.update(dt)
             note=t.notes[1]
             if note and(not note.available or autoPlay)and note.type=='hold'then
                 if note.head then
-                    if time>=note.time then _trackPress(id,true)end
+                    if time>=note.time then _trackPress(id,false,true)end
                 else
-                    if time>=note.etime then _trackRelease(id,true)end
+                    if time>=note.etime then _trackRelease(id,false,true)end
                 end
             end
         end
