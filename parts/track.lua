@@ -5,7 +5,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
 local ins,rem=table.insert,table.remove
-local max,min=math.max,math.min
+local max=math.max
 local interval=MATH.interval
 
 local SETTING=SETTING
@@ -14,7 +14,7 @@ local Track={}
 
 local function _insert(t,v)
     for i=#t,1,-1 do
-        if t[i].mode==v.mode then
+        if t[i].paramSet==v.paramSet then
             rem(t,i)
             break
         end
@@ -106,27 +106,27 @@ end
 function Track:setPosition(animData,x,y)
     self.startState.x,self.startState.y=self.targetState.x,self.targetState.y
     self.targetState.x,self.targetState.y=x or self.defaultState.x,y or self.defaultState.y
-    self.animQueue:insert{mode='position',data=animData}
+    self.animQueue:insert{paramSet='position',data=animData}
 end
 function Track:setAngle(animData,ang)
     self.startState.ang=self.targetState.ang
     self.targetState.ang=ang or self.defaultState.ang
-    self.animQueue:insert{mode='angle',data=animData}
+    self.animQueue:insert{paramSet='angle',data=animData}
 end
 function Track:setSize(animData,kx,ky)
     self.startState.kx,self.startState.ky=self.targetState.kx,self.targetState.ky
     self.targetState.kx,self.targetState.ky=kx or self.defaultState.kx,ky or self.defaultState.ky
-    self.animQueue:insert{mode='size',data=animData}
+    self.animQueue:insert{paramSet='size',data=animData}
 end
 function Track:setDropSpeed(animData,dropSpeed)
     self.startState.dropSpeed=self.targetState.dropSpeed
     self.targetState.dropSpeed=dropSpeed or self.defaultState.dropSpeed
-    self.animQueue:insert{mode='dropSpeed',data=animData}
+    self.animQueue:insert{paramSet='dropSpeed',data=animData}
 end
 function Track:setAlpha(animData,alpha)
     self.startState.alpha=self.targetState.alpha
     self.targetState.alpha=interval(alpha or self.defaultState.alpha,0,100)
-    self.animQueue:insert{mode='alpha',data=animData}
+    self.animQueue:insert{paramSet='alpha',data=animData}
 end
 function Track:setAvailable(bool)
     if bool==nil then bool=self.defaultState.available end
@@ -139,12 +139,12 @@ end
 function Track:setColor(animData,r,g,b)
     self.startState.r,self.startState.g,self.startState.b=self.targetState.r,self.targetState.g,self.targetState.b
     self.targetState.r,self.targetState.g,self.targetState.b=r or self.defaultState.r,g or self.defaultState.g,b or self.defaultState.b
-    self.animQueue:insert{mode='color',data=animData}
+    self.animQueue:insert{paramSet='color',data=animData}
 end
 function Track:setNameAlpha(animData,nameAlpha)
     self.startState.nameAlpha=self.targetState.nameAlpha
     self.targetState.nameAlpha=interval(nameAlpha or self.defaultState.nameAlpha,0,100)
-    self.animQueue:insert{mode='nameAlpha',data=animData}
+    self.animQueue:insert{paramSet='nameAlpha',data=animData}
 end
 
 function Track:addItem(note)
@@ -247,36 +247,38 @@ local animManager={
     nameAlpha={'nameAlpha'},
 }
 function Track:update(dt)
-    local s=self.state
+    local C=self.state
     local S=self.startState
     local T=self.targetState
 
     for i=#self.animQueue,1,-1 do
         local a=self.animQueue[i]
         local animData=a.data
-        local animKeys=animManager[a.mode]
+        local animKeys=animManager[a.paramSet]
         if animData.type=='S'then
             for j=1,#animKeys do
-                s[animKeys[j]]=T[animKeys[j]]
+                C[animKeys[j]]=T[animKeys[j]]
             end
             rem(self.animQueue,i)
         elseif animData.type=='L'then
             for j=1,#animKeys do
-                s[animKeys[j]]=lerp(S[animKeys[j]],T[animKeys[j]],(self.time-animData.start)/animData.duration)
+                local k=animKeys[j]
+                C[k]=lerp(S[k],T[k],(self.time-animData.start)/animData.duration)
             end
             if self.time>animData.start+animData.duration then
                 for j=1,#animKeys do
-                    s[animKeys[j]]=T[animKeys[j]]
+                    C[animKeys[j]]=T[animKeys[j]]
                 end
                 rem(self.animQueue,i)
             end
         elseif animData.type=='E'then
             for j=1,#animKeys do
-                s[animKeys[j]]=approach(s[animKeys[j]],T[animKeys[j]],animData.speed*dt)
+                local k=animKeys[j]
+                C[k]=approach(C[k],T[k],animData.speed*dt)
             end
             if self.time>animData.start+10/animData.speed then
                 for j=1,#animKeys do
-                    s[animKeys[j]]=T[animKeys[j]]
+                    C[animKeys[j]]=T[animKeys[j]]
                 end
                 rem(self.animQueue,i)
             end

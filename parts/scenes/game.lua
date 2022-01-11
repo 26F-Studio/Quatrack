@@ -338,10 +338,8 @@ function scene.touchDown(x,y,id)
             if abs(angle-3.141592653589793)>=1.5707963267948966 then
                 if angle>3.141592653589793 then angle=6.283185307179586-angle end
                 D=abs(cos(t.state.ang/57.29577951308232)*(x-t.state.x)+sin(t.state.ang/57.29577951308232)*(y-t.state.y))
-                print(i,'line',D)
             else
                 D=((y-t.state.y)^2+(x-t.state.x)^2)^.5
-                print(i,'point',D)
             end
             if D<minD2 then minD2,closestTrackID=D,i end
         end
