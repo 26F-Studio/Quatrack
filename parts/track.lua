@@ -104,26 +104,31 @@ function Track:moveNameAlpha(animData,dna)
 end
 
 function Track:setPosition(animData,x,y)
+    self.state.x,self.state.y=self.targetState.x,self.targetState.y
     self.startState.x,self.startState.y=self.targetState.x,self.targetState.y
     self.targetState.x,self.targetState.y=x or self.defaultState.x,y or self.defaultState.y
     self.animQueue:insert{paramSet='position',data=animData}
 end
 function Track:setAngle(animData,ang)
+    self.state.ang=self.targetState.ang
     self.startState.ang=self.targetState.ang
     self.targetState.ang=ang or self.defaultState.ang
     self.animQueue:insert{paramSet='angle',data=animData}
 end
 function Track:setSize(animData,kx,ky)
+    self.state.kx,self.state.ky=self.targetState.kx,self.targetState.ky
     self.startState.kx,self.startState.ky=self.targetState.kx,self.targetState.ky
     self.targetState.kx,self.targetState.ky=kx or self.defaultState.kx,ky or self.defaultState.ky
     self.animQueue:insert{paramSet='size',data=animData}
 end
 function Track:setDropSpeed(animData,dropSpeed)
+    self.state.dropSpeed=self.targetState.dropSpeed
     self.startState.dropSpeed=self.targetState.dropSpeed
     self.targetState.dropSpeed=dropSpeed or self.defaultState.dropSpeed
     self.animQueue:insert{paramSet='dropSpeed',data=animData}
 end
 function Track:setAlpha(animData,alpha)
+    self.state.alpha=self.targetState.alpha
     self.startState.alpha=self.targetState.alpha
     self.targetState.alpha=interval(alpha or self.defaultState.alpha,0,100)
     self.animQueue:insert{paramSet='alpha',data=animData}
@@ -137,11 +142,13 @@ function Track:setAvailable(bool)
     end
 end
 function Track:setColor(animData,r,g,b)
+    self.state.r,self.state.g,self.state.b=self.targetState.r,self.targetState.g,self.targetState.b
     self.startState.r,self.startState.g,self.startState.b=self.targetState.r,self.targetState.g,self.targetState.b
     self.targetState.r,self.targetState.g,self.targetState.b=r or self.defaultState.r,g or self.defaultState.g,b or self.defaultState.b
     self.animQueue:insert{paramSet='color',data=animData}
 end
 function Track:setNameAlpha(animData,nameAlpha)
+    self.state.nameAlpha=self.targetState.nameAlpha
     self.startState.nameAlpha=self.targetState.nameAlpha
     self.targetState.nameAlpha=interval(nameAlpha or self.defaultState.nameAlpha,0,100)
     self.animQueue:insert{paramSet='nameAlpha',data=animData}
