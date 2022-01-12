@@ -256,10 +256,11 @@ function Track:release(weak,auto)
                 SFX.play(holdTailSFX[hitLV],.4+.6*note:getAlpha(1),self.state.x/420)
             end
             rem(self.notes,i)
+            return deviateTime,not note.tail
         elseif not weak then
             note.active=false
+            return deviateTime,not note.tail
         end
-        return deviateTime,not note.tail
     end
 end
 

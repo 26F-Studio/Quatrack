@@ -189,11 +189,11 @@ function scene.sceneBack()
     if needSaveSetting then saveSettings()end
 end
 
-local function _trigNote(deviateTime,noTailHold)
+local function _trigNote(deviateTime,noTailHold,weak)
+    hitLV=getHitLV(deviateTime)
     hitTextTime=TIME()
     fullAcc=fullAcc+100
-    hitLV=getHitLV(deviateTime)
-    if hitLV>0 and noTailHold then hitLV=5 end
+    if noTailHold and(hitLV>0 or hitLV==0 and weak)then hitLV=5 end
     bestChain=min(bestChain,hitLV)
     hits[hitLV]=hits[hitLV]+1
     if hitLV>0 then
@@ -224,7 +224,7 @@ end
 local function _trackRelease(id,weak,auto)
     local deviateTime,noTailHold=tracks[id]:release(weak,auto)
     if not auto and deviateTime then
-        _trigNote(deviateTime,noTailHold)
+        _trigNote(deviateTime,noTailHold,weak)
     end
 end
 function scene.keyDown(key,isRep)
@@ -326,12 +326,14 @@ function scene.keyUp(key)
                 for j=1,#s do
                     local kbKey=KEY_MAP_inv[s[j]]
                     if kbKey and kbIsDown(kbKey)then
-                        _trackRelease(id,minTime<tracks[id]:pollReleaseTime())
-                        goto BREAK_strong
+                        if minTime==tracks[id]:pollReleaseTime()then
+                            _trackRelease(id,true)
+                            goto BREAK_weak
+                        end
                     end
                 end
                 _trackRelease(id,false)
-                ::BREAK_strong::
+                ::BREAK_weak::
             end
         end
     end
