@@ -205,7 +205,7 @@ local holdHeadSFX={
     'hold1',
     'hold1',
 }
-function Track:press(weak,auto)print('press',weak,auto)
+function Track:press(weak,auto)
     --Animation
     self.pressed=true
     self.lastPressTime=self.time
