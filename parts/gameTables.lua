@@ -13,6 +13,7 @@ mapMetaKeys={
     "tracks",
     "realTracks",
     "freeSpeed",
+    "script",
 }
 mapMetaKeyMap={}for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
 defaultChordColor={
@@ -40,6 +41,13 @@ mapTemplate={
     tracks=4,
     realTracks=false,
     freeSpeed=true,
+    script=false,
+}
+scriptTemplate={
+    init=NULL,
+    update=NULL,
+    drawBack=NULL,
+    drawFront=NULL,
 }
 hitColors={
     [-1]=COLOR.dRed,

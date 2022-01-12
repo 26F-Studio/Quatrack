@@ -129,6 +129,33 @@ function scene.sceneInit()
     end
     BGM.play(map.songFile,'-preLoad')
 
+    if map.script then
+        if love.filesystem.getInfo(dirPath..map.script..'.lua')then
+            local file=love.filesystem.read('string',dirPath..map.script..'.lua')
+            local func,err=loadstring(file)
+            map.script={}
+            if func then
+                local env={print=print}
+                setfenv(func,env)
+                local _
+                _,err=pcall(func)
+                if err then
+                    MES.new('error',err)
+                else
+                    map.script=env
+                end
+            else
+                MES.new('error',err)
+            end
+        else
+            MES.new('error',text.noFile)
+        end
+    else
+        map.script={}
+    end
+    TABLE.complete(scriptTemplate,map.script)
+    map.script.init()
+
     BGM.stop()
     if map.songImage then
         local image
@@ -477,10 +504,14 @@ function scene.update(dt)
     if score<score0 then
         score=score+(score0-score)*dt^.26
     end
+
+    map.script.update()
 end
 
 local SCC={1,1,1}--Super chain color
 function scene.draw()
+    map.script.drawBack()
+
     if time<-2 then
         gc.origin()
         drawSafeArea(SETTING.safeX,SETTING.safeY,-time-2)
@@ -572,6 +603,7 @@ function scene.draw()
     setFont(25)gc_printf(map.mapDifficulty,-1010,-75,1000,'right')
 
     gc_replaceTransform(SCR.xOy)
+    map.script.drawFront()
 end
 
 scene.widgetList={
