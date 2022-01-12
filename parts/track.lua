@@ -377,15 +377,6 @@ function Track:draw(map)
     do--Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
         if a>0 then
-            --Draw track name
-            if s.nameAlpha>0 then
-                setFont(40)
-                gc_setColor(r,g,b,s.nameAlpha/100)
-                for i=1,#self.showName do
-                    mStr(self.showName[i],0,-20-40*i)
-                end
-            end
-
             --Draw sides
             local unitY=640*ky
             for i=0,.99,.01 do
@@ -408,6 +399,15 @@ function Track:draw(map)
             --Draw track line
             gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
             gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
+        end
+
+        --Draw track name
+        if s.nameAlpha>0 then
+            setFont(40)
+            gc_setColor(r,g,b,s.nameAlpha/100)
+            for i=1,#self.showName do
+                mStr(self.showName[i],0,-20-40*i)
+            end
         end
     end
 
