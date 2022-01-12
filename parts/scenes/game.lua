@@ -135,7 +135,8 @@ function scene.sceneInit()
             local func,err=loadstring(file)
             map.script={}
             if func then
-                local env={print=print}
+                local env=TABLE.copy(mapScriptEnv)
+                env._G=env
                 setfenv(func,env)
                 local _
                 _,err=pcall(func)

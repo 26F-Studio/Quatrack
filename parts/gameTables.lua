@@ -28,6 +28,7 @@ defaultChordColor={
     end
     return self[l]
 end})
+
 mapTemplate={
     version="1.0",
     mapName='[mapName]',
@@ -49,6 +50,39 @@ scriptTemplate={
     drawBack=NULL,
     drawFront=NULL,
 }
+local gc=love.graphics
+mapScriptEnv={
+    assert=assert,error=error,
+    tonumber=tonumber,tostring=tostring,
+    select=select,next=next,
+    ipairs=ipairs,pairs=pairs,
+    type=type,
+    pcall=pcall,xpcall=xpcall,
+    rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
+    setfenv=setfenv,setmetatable=setmetatable,
+    math={},string={},table={},bit={},coroutine={},
+    debug={"No way."},package={"No way."},io={"No way."},os={"No way."},
+
+    time=TIME,
+
+    setColor=function(r,g,b,a)gc.setColor(r,g,b,a)end,
+    setLineWidth=function(w)gc.setLineWidth(w)end,
+    drawLine=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
+    drawRect=function(x,y,w,h)gc.rectangle("line",x,y,w,h)end,
+    fillRect=function(x,y,w,h)gc.rectangle("fill",x,y,w,h)end,
+    drawCircle=function(x,y,r)gc.circle("line",x,y,r)end,
+    fillCircle=function(x,y,r)gc.circle("fill",x,y,r)end,
+    setFont=function(f)setFont(f)end,
+    drawText=function(text,x,y)gc.printf(text,x-2600,y,5200,'center')end,
+
+    message=function(mes)MES.new('info',mes)end,
+}
+TABLE.complete(math,mapScriptEnv.math)
+TABLE.complete(string,mapScriptEnv.string)mapScriptEnv.string.dump=nil
+TABLE.complete(table,mapScriptEnv.table)
+TABLE.complete(bit,mapScriptEnv.bit)
+TABLE.complete(coroutine,mapScriptEnv.coroutine)
+
 hitColors={
     [-1]=COLOR.dRed,
     [0]=COLOR.dRed,
