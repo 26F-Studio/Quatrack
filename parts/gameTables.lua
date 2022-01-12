@@ -148,7 +148,7 @@ do--Userdata tables
                 self[v]=k
             end
         end,
-    }setmetatable(KEY_MAP_inv,{__index=function()return'[X]'end})
+    }
     SETTING={--Settings
         --Framework
         clickFX=true,

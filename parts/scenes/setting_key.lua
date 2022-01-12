@@ -143,9 +143,9 @@ function scene.draw()
         local W=scene.widgetList[i]
         local x,y=W:getCenter()
         if i<=11 then
-            mStr(KEY_MAP_inv[actionNames[i]],x,y-90)
+            mStr(KEY_MAP_inv[actionNames[i]]or'[X]',x,y-90)
         else
-            mStr(KEY_MAP_inv[actionNames[i]],x+140,y-25)
+            mStr(KEY_MAP_inv[actionNames[i]]or'[X]',x+140,y-25)
         end
     end
 end

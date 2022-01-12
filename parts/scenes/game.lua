@@ -324,7 +324,8 @@ function scene.keyUp(key)
             if tracks[id].name:find(k)then
                 local s=tracks[id].nameList
                 for j=1,#s do
-                    if kbIsDown(KEY_MAP_inv[s[j]])then
+                    local kbKey=KEY_MAP_inv[s[j]]
+                    if kbKey and kbIsDown(kbKey)then
                         _trackRelease(id,minTime<tracks[id]:pollReleaseTime())
                         goto BREAK_strong
                     end
