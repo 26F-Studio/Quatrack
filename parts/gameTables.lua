@@ -52,6 +52,7 @@ scriptTemplate={
 }
 local gc=love.graphics
 mapScriptEnv={
+    print=print,
     assert=assert,error=error,
     tonumber=tonumber,tostring=tostring,
     select=select,next=next,
@@ -61,17 +62,18 @@ mapScriptEnv={
     rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
     setfenv=setfenv,setmetatable=setmetatable,
     math={},string={},table={},bit={},coroutine={},
-    debug={"No way."},package={"No way."},io={"No way."},os={"No way."},
+    debug={},package={},io={},os={},
 
     time=TIME,
 
     setColor=function(r,g,b,a)gc.setColor(r,g,b,a)end,
     setLineWidth=function(w)gc.setLineWidth(w)end,
     drawLine=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
-    drawRect=function(x,y,w,h)gc.rectangle("line",x,y,w,h)end,
-    fillRect=function(x,y,w,h)gc.rectangle("fill",x,y,w,h)end,
-    drawCircle=function(x,y,r)gc.circle("line",x,y,r)end,
-    fillCircle=function(x,y,r)gc.circle("fill",x,y,r)end,
+    drawRect=function(x,y,w,h)gc.rectangle('line',x,y,w,h)end,
+    fillRect=function(x,y,w,h)gc.rectangle('fill',x,y,w,h)end,
+    drawCircle=function(x,y,r)gc.circle('line',x,y,r)end,
+    fillCircle=function(x,y,r)gc.circle('fill',x,y,r)end,
+    drawPolygon=function(mode,x,y,r,sides,phase)GC.regPolygon('line',mode,x,y,r,sides,phase)end,
     setFont=function(f)setFont(f)end,
     drawText=function(text,x,y)gc.printf(text,x-2600,y,5200,'center')end,
 
@@ -82,6 +84,11 @@ TABLE.complete(string,mapScriptEnv.string)mapScriptEnv.string.dump=nil
 TABLE.complete(table,mapScriptEnv.table)
 TABLE.complete(bit,mapScriptEnv.bit)
 TABLE.complete(coroutine,mapScriptEnv.coroutine)
+local dangerousLibMeta={__index=function()error("No way.")end}
+setmetatable(mapScriptEnv.debug,dangerousLibMeta)
+setmetatable(mapScriptEnv.package,dangerousLibMeta)
+setmetatable(mapScriptEnv.io,dangerousLibMeta)
+setmetatable(mapScriptEnv.os,dangerousLibMeta)
 
 hitColors={
     [-1]=COLOR.dRed,
