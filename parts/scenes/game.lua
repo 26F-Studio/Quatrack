@@ -1,5 +1,5 @@
 local gc=love.graphics
-local gc_setColor=gc.setColor
+local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_rectangle=gc.rectangle
 local gc_draw,gc_printf=gc.draw,gc.printf
 local gc_replaceTransform,gc_translate=gc.replaceTransform,gc.translate
@@ -9,7 +9,7 @@ local kbIsDown=love.keyboard.isDown
 local setFont=setFont
 local mStr=mStr
 
-local unpack=unpack
+local unpack,rawset=unpack,rawset
 local max,min=math.max,math.min
 local sin,cos=math.sin,math.cos
 
@@ -102,6 +102,36 @@ local function _tryGoResult()
     })
 end
 
+
+local mapEnv
+local gameArgs=setmetatable({},{__newindex=function()error("game.xxx is read only")end})
+local function freshScriptArgs()
+    rawset(gameArgs,'time',time)
+    rawset(gameArgs,'combo',combo)
+    rawset(gameArgs,'maxCombo',maxCombo)
+    rawset(gameArgs,'score',score0)
+    rawset(gameArgs,'fullAcc',fullAcc)
+    rawset(gameArgs,'curAcc',curAcc)
+    rawset(gameArgs,'hitCount',hitCount)
+    rawset(gameArgs,'totalDeviateTime',totalDeviateTime)
+    rawset(gameArgs,'bestChain',bestChain)
+end
+local errorCount
+local lastErrorTime=setmetatable({},{__index=function(self,k)self[k]=-1e99 return -1e99 end})
+local function callScriptEvent(event)
+    if map.script[event]then
+        local ok,err=pcall(map.script[event])
+        if not ok then
+            errorCount=errorCount+1
+            if TIME()-lastErrorTime[event]>=1 then
+                lastErrorTime[event]=TIME()
+                err=err:gsub('%b[]:','')
+                MES.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
+            end
+        end
+    end
+end
+
 local scene={}
 
 function scene.sceneInit()
@@ -129,21 +159,24 @@ function scene.sceneInit()
     end
     BGM.play(map.songFile,'-preLoad')
 
+    errorCount=0
+    freshScriptArgs()
     if map.script then
         if love.filesystem.getInfo(dirPath..map.script..'.lua')then
             local file=love.filesystem.read('string',dirPath..map.script..'.lua')
             local func,err=loadstring(file)
             map.script={}
             if func then
-                local env=TABLE.copy(mapScriptEnv)
-                env._G=env
-                setfenv(func,env)
+                mapEnv=TABLE.copy(mapScriptEnv)
+                mapEnv.game=gameArgs
+                mapEnv._G=mapEnv
+                setfenv(func,mapEnv)
                 local _
                 _,err=pcall(func)
                 if err then
                     MES.new('error',err)
                 else
-                    map.script=env
+                    map.script=mapEnv
                 end
             else
                 MES.new('error',err)
@@ -154,8 +187,7 @@ function scene.sceneInit()
     else
         map.script={}
     end
-    TABLE.complete(scriptTemplate,map.script)
-    map.script.init()
+    callScriptEvent('init')
 
     BGM.stop()
     if map.songImage then
@@ -506,12 +538,14 @@ function scene.update(dt)
         score=score+(score0-score)*dt^.26
     end
 
-    map.script.update()
+    freshScriptArgs()
+    if map.script.update then map.script.update()end
 end
 
 local SCC={1,1,1}--Super chain color
 function scene.draw()
-    map.script.drawBack()
+    gc_setColor(1,1,1)gc_setLineWidth(2)
+    callScriptEvent('drawBack')
 
     if time<-2 then
         gc.origin()
@@ -602,9 +636,14 @@ function scene.draw()
     --Draw map info
     setFont(30)gc_printf(map.mapName,-1010,-45,1000,'right')
     setFont(25)gc_printf(map.mapDifficulty,-1010,-75,1000,'right')
-
+    if errorCount>0 then
+        setFont(10)
+        gc_setColor(1,.26,.26)
+        gc_printf(errorCount..' error',-1010,-90,1000,'right')
+    end
     gc_replaceTransform(SCR.xOy)
-    map.script.drawFront()
+    gc_setColor(1,1,1)gc_setLineWidth(2)
+    callScriptEvent('drawFront')
 end
 
 scene.widgetList={

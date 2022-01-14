@@ -44,12 +44,6 @@ mapTemplate={
     freeSpeed=true,
     script=false,
 }
-scriptTemplate={
-    init=NULL,
-    update=NULL,
-    drawBack=NULL,
-    drawFront=NULL,
-}
 local gc=love.graphics
 mapScriptEnv={
     print=print,
@@ -63,8 +57,6 @@ mapScriptEnv={
     setfenv=setfenv,setmetatable=setmetatable,
     math={},string={},table={},bit={},coroutine={},
     debug={},package={},io={},os={},
-
-    time=TIME,
 
     setColor=function(r,g,b,a)gc.setColor(r,g,b,a)end,
     setLineWidth=function(w)gc.setLineWidth(w)end,
