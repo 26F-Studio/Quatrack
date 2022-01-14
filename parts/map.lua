@@ -160,9 +160,14 @@ function Map.new(file)
         end
 
         if str:sub(1,1)=='/'then
-            _syntaxCheck(str:find(':'),"Syntax error (need ':')")
-            local lineType=str:sub(2,str:find(':')-1):lower()
-            str=str:sub(str:find(':')+1)
+            local lineType
+            if str:find(':')then
+                lineType=str:sub(2,str:find(':')-1):lower()
+                str=str:sub(str:find(':')+1)
+            else
+                lineType=str:sub(2):lower()
+                str=''
+            end
             if lineType=='bpm'then--BPM mark
                 local data=str:split(',')
                 _syntaxCheck(data[1],"Need BPM mark")
