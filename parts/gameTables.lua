@@ -5,6 +5,7 @@ mapMetaKeys={
     "musicAuth",
     "mapAuth",
     "mapAuth2",
+    "scriptAuth",
     "mapDifficulty",
 
     "songFile",
@@ -34,6 +35,7 @@ mapTemplate={
     mapName='[mapName]',
     musicAuth='[musicAuth]',
     mapAuth='[mapAuth]',
+    scriptAuth='[scriptAuth]',
     mapDifficulty='[mapDifficulty]',
 
     songFile="[songFile]",
