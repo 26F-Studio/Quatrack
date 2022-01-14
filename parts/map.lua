@@ -21,6 +21,20 @@ local function _insert(list,obj)
     ins(list,pos+1,obj)
 end
 
+local lineTypeMarks={--Attention, [1] is lua regex, not raw string
+    {'^%!',      '/bpm:'},
+    {'^%>',      '/time:'},
+    {'^%++',     '/bar_line:'},
+    {'^%@',      '/rnd_seed:'},
+    {'^%[(.+)%]','/set_track:%1;'},
+    {'^%((.+)%)','/set_note:%1;'},
+    {'^%=+S',    '/rep_s:'},
+    {'^%=+E',    '/rep_e:'},
+    {'^%=+M',    '/rep_m:'},
+    {'^%&',      '/redirect_note:'},
+    {'^%^',      '/set_chord_color:'},
+    {'^%%',      '/rename_track:'},
+}
 function Map.new(file)
     local o=TABLE.copy(mapTemplate)
 
@@ -122,6 +136,7 @@ function Map.new(file)
     local curTime,curBPM=0,180
     local curBeat,signature=false,false
     local loopStack={}
+    local curRealTrack=o.tracks
     local trackDir={}for i=1,o.tracks do trackDir[i]=i end
     local trackAvailable={}for i=1,o.tracks do trackAvailable[i]=true end
     local lastLongBar=TABLE.new(false,o.tracks)
@@ -135,400 +150,400 @@ function Map.new(file)
     local line=#fileData
     while line>0 do
         local str=fileData[line][2]
-
         SCline,SCstr=fileData[line][1],str--For assertion
 
-        if str:sub(1,1)=='!'then--BPM mark
-            local data=str:sub(2):split(',')
-            _syntaxCheck(data[1],"Need BPM mark")
-            _syntaxCheck(#data<=2,"Too many arguments")
-            local bpmStr,signStr=data[1],data[2]
-            if bpmStr=='+'then
-                local bpm_add=tonumber(bpmStr:sub(2))
-                _syntaxCheck(type(bpm_add)=='number',"Invalid BPM mark")
-                curBPM=curBPM+bpm_add
-            elseif bpmStr=='-'then
-                local bpm_sub=tonumber(bpmStr:sub(2))
-                _syntaxCheck(type(bpm_sub)=='number',"Invalid BPM mark")
-                _syntaxCheck(bpm_sub<curBPM,"Decrease BPM too much")
-                curBPM=curBPM-bpm_sub
-            else
-                local bpm=tonumber(bpmStr)
-                _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
-                curBPM=bpm
+        for i=1,#lineTypeMarks do
+            if str:find(lineTypeMarks[i][1])then
+                str=str:gsub(lineTypeMarks[i][1],lineTypeMarks[i][2],1)
+                break
             end
-            if signStr then
-                local sign=tonumber(signStr)
-                _syntaxCheck(type(sign)=='number'and sign>0 and sign%1==0,"Invalid time signature")
-                curBeat,signature=0,sign
-            else
-                curBeat=false
-                signature=false
-            end
-        elseif str:sub(1,1)=='+'then--Bar separator
-            local len=0
-            repeat
-                len=len+1
-                str=str:sub(2)
-            until str:sub(1,1)~='+'
-            _syntaxCheck(len>=4 and len<=10,"Invalid bar mark length")
-            if curBeat then
-                _syntaxCheck(int(curBeat*2048+.5)/2048%signature==0,"Unfinished bar")
-            else
-                _syntaxCheck(signature,"No signature to check")
-            end
-        elseif str:sub(1,1)=='@'then--Random seed mark
-            if str:sub(2)==''then
-                math.randomseed(love.timer.getTime())
-            else
-                local seedList=str:sub(2):split(',')
-                for i=1,#seedList do
-                    _syntaxCheck(tonumber(seedList[i]),"Invalid seed number")
-                end
-                math.randomseed(love.timer.getTime())
-                math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
-            end
-        elseif str:sub(1,1)=='>'then--Time mark
-            _syntaxCheck(not loopStack[1],"Cannot set time in loop")
-            if str:sub(2)=='start'then
-                curTime=-3.6
-            else
-                str=str:sub(2)
+        end
 
-                local sign
-                if str:sub(1,1)=='+'then
-                    sign='+'
+        if str:sub(1,1)=='/'then
+            _syntaxCheck(str:find(':'),"Syntax error (need ':')")
+            local lineType=str:sub(2,str:find(':')-1):lower()
+            str=str:sub(str:find(':')+1)
+            if lineType=='bpm'then--BPM mark
+                local data=str:split(',')
+                _syntaxCheck(data[1],"Need BPM mark")
+                _syntaxCheck(#data<=2,"Too many arguments")
+                local bpmStr,signStr=data[1],data[2]
+                if bpmStr=='+'then
+                    local bpm_add=tonumber(bpmStr:sub(2))
+                    _syntaxCheck(type(bpm_add)=='number',"Invalid BPM mark")
+                    curBPM=curBPM+bpm_add
+                elseif bpmStr=='-'then
+                    local bpm_sub=tonumber(bpmStr:sub(2))
+                    _syntaxCheck(type(bpm_sub)=='number',"Invalid BPM mark")
+                    _syntaxCheck(bpm_sub<curBPM,"Decrease BPM too much")
+                    curBPM=curBPM-bpm_sub
+                else
+                    local bpm=tonumber(bpmStr)
+                    _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
+                    curBPM=bpm
+                end
+                if signStr then
+                    local sign=tonumber(signStr)
+                    _syntaxCheck(type(sign)=='number'and sign>0 and sign%1==0,"Invalid time signature")
+                    curBeat,signature=0,sign
+                else
+                    curBeat=false
+                    signature=false
+                end
+            elseif lineType=='time'then--Time mark
+                _syntaxCheck(not loopStack[1],"Cannot set time in loop")
+                if str=='start'then
+                    curTime=-3.6
+                else
+                    local sign
+                    if str:sub(1,1)=='+'then
+                        sign='+'
+                        str=str:sub(2)
+                    elseif str:sub(1,1)=='-'then
+                        sign='-'
+                        str=str:sub(2)
+                    else
+                        sign=''
+                    end
+
+                    local dt
+                    if str:find(':')then
+                        local time=str:split(':')
+                        time[1]=tonumber(time[1])
+                        time[2]=tonumber(time[2])
+                        _syntaxCheck(time[1]and time[2],"Invalid time mark")
+                        dt=time[1]*60+time[2]
+                    else
+                        local unit
+                        if str:sub(-2)=='ms'then
+                            str,unit=str:sub(1,-3),0.001
+                        elseif str:sub(-1)=='s'then
+                            str,unit=str:sub(1,-2),1
+                        elseif str:sub(-4)=='beat'then
+                            str,unit=str:sub(1,-5),60/curBPM
+                        elseif str:sub(-3)=='bar'then
+                            _syntaxCheck(signature,"No signature to calculate bar length")
+                            str,unit=str:sub(1,-4),60/curBPM*signature
+                        else--Unit default to beat
+                            unit=60/curBPM
+                        end
+                        dt=tonumber(str)
+                        _syntaxCheck(dt,"Invalid time mark")
+                        dt=dt*unit
+                    end
+
+                    if sign==''then
+                        curTime=dt
+                    elseif sign=='+'then
+                        curTime=curTime+dt
+                    elseif sign=='-'then
+                        curTime=curTime-dt
+                    end
+                end
+            elseif lineType=='bar_line'then--Bar separator
+                local len=0
+                repeat
+                    len=len+1
                     str=str:sub(2)
-                elseif str:sub(1,1)=='-'then
-                    sign='-'
-                    str=str:sub(2)
+                until str:sub(1,1)~='+'
+                _syntaxCheck(len>=4 and len<=10,"Invalid bar mark length")
+                if curBeat then
+                    _syntaxCheck(int(curBeat*2048+.5)/2048%signature==0,"Unfinished bar")
                 else
-                    sign=''
+                    _syntaxCheck(signature,"No signature to check")
                 end
-
-                local dt
-                if str:find(':')then
-                    local time=str:split(':')
-                    time[1]=tonumber(time[1])
-                    time[2]=tonumber(time[2])
-                    _syntaxCheck(time[1]and time[2],"Invalid time mark")
-                    dt=time[1]*60+time[2]
+            elseif lineType=='rnd_seed'then--Random seed mark
+                if str==''then
+                    math.randomseed(love.timer.getTime())
                 else
-                    local unit
-                    if str:sub(-2)=='ms'then
-                        str,unit=str:sub(1,-3),0.001
-                    elseif str:sub(-1)=='s'then
-                        str,unit=str:sub(1,-2),1
-                    elseif str:sub(-4)=='beat'then
-                        str,unit=str:sub(1,-5),60/curBPM
-                    elseif str:sub(-3)=='bar'then
-                        _syntaxCheck(signature,"No signature to calculate bar length")
-                        str,unit=str:sub(1,-4),60/curBPM*signature
-                    else--Unit default to beat
-                        unit=60/curBPM
+                    local seedList=str:split(',')
+                    for i=1,#seedList do
+                        _syntaxCheck(tonumber(seedList[i]),"Invalid seed number")
                     end
-                    dt=tonumber(str)
-                    _syntaxCheck(dt,"Invalid time mark")
-                    dt=dt*unit
+                    math.randomseed(love.timer.getTime())
+                    math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
                 end
+            elseif lineType=='set_track'then--Animation: set track states
+                local t=str:find(';')
+                _syntaxCheck(t,"Syntax error ('[x]...' or '/set_track:x;...'")
 
-                if sign==''then
-                    curTime=dt
-                elseif sign=='+'then
-                    curTime=curTime+dt
-                elseif sign=='-'then
-                    curTime=curTime-dt
-                end
-            end
-        elseif str:sub(1,1)=='['then--Animation: set track states
-            local t=str:find(']')
-            _syntaxCheck(t,"Syntax error (need ']')")
+                local trackList={}
 
-            local trackList={}
-
-            local trackStr=str:sub(2,t-1)
-            if trackStr=='A'or trackStr=='L'or trackStr=='R'then
-                local i,j
-                if trackStr=='A'then
-                    i,j=1,o.tracks
-                elseif trackStr=='L'then
-                    i,j=1,(o.tracks+1)*.5
-                elseif trackStr=='R'then
-                    i,j=o.tracks*.5+1,o.tracks
-                end
-                for n=0,j-i do
-                    trackList[n+1]=i+n
-                end
-            else
-                trackList=trackStr:split(',')
-                for i=1,#trackList do
-                    local id=tonumber(trackList[i])
-                    _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track id")
-                    trackList[i]=id
-                end
-            end
-            str=str:sub(t+1)
-
-            local animData
-            if str:sub(1,1)=='<'then
-                local t2=str:find('>')
-                _syntaxCheck(t2,"Syntax error (need '>')")
-                local animList=str:sub(2,t2-1):split(',')
-
-                str=str:sub(t2+1)
-
-                local animType=rem(animList,1)
-                _syntaxCheck(animType,"Need animation type (S/L/E/C)")
-                if animType=='S'then
-                    _syntaxCheck(#animList==0,"Invalid animation data")
-                    animData={type='S'}
-                elseif animType=='L'then
-                    _syntaxCheck(#animList==1,"Invalid animation data (need time)")
-                    local s=animList[1]
-                    local unit
-                    if s:sub(-2)=='ms'then
-                        s,unit=s:sub(1,-3),0.001
-                    elseif s:sub(-1)=='s'then
-                        s,unit=s:sub(1,-2),1
-                    elseif s:sub(-4)=='beat'then
-                        s,unit=s:sub(1,-5),60/curBPM
-                    elseif s:sub(-3)=='bar'then
-                        _syntaxCheck(signature,"No signature to calculate bar length")
-                        s,unit=s:sub(1,-4),60/curBPM*signature
-                    else--Unit default to beat
-                        unit=60/curBPM
+                local trackStr=str:sub(1,t-1)
+                if trackStr=='A'or trackStr=='L'or trackStr=='R'then
+                    local i,j
+                    if trackStr=='A'then
+                        i,j=1,o.tracks
+                    elseif trackStr=='L'then
+                        i,j=1,(o.tracks+1)*.5
+                    elseif trackStr=='R'then
+                        i,j=o.tracks*.5+1,o.tracks
                     end
-                    s=tonumber(s)
-                    _syntaxCheck(s and s>0,"Invalid animation time ([number]ms/s/beat)")
-                    s=s*unit
-                    animData={type='L',start=curTime,duration=s}
-                elseif animType=='E'then
-                    _syntaxCheck(#animList==1,"Invalid animation data (need speed)")
-                    local s=tonumber(animList[1])
-                    _syntaxCheck(s and s>0,"Invalid expontial param")
-                    animData={type='E',start=curTime,speed=s}
-                elseif animType=='C'then
-                    _syntaxCheck(false,"Coming soon")
-                    animData={type='C'}
-                else
-                    _syntaxCheck(false,"Invalid animation type (need S/L/E/C)")
-                end
-            else
-                animData={type='E',start=curTime,speed=12}
-            end
-
-            local data=str:split(',')
-            local op=data[1]:upper()
-            local opType=data[1]==data[1]:upper()and'set'or'move'
-
-            local event
-            if op=='P'then--Position
-                _syntaxCheck(#data<=3,"Too many arguments")
-                data[2]=tonumber(data[2])or false
-                data[3]=tonumber(data[3])or false
-                event={
-                    type='setTrack',
-                    time=curTime,
-                    operation=opType..'Position',
-                    args={animData,data[2],data[3]},
-                }
-            elseif op=='R'then--Rotate
-                _syntaxCheck(#data<=2,"Too many arguments")
-                data[2]=tonumber(data[2])or false
-                event={
-                    type='setTrack',
-                    time=curTime,
-                    operation=opType..'Angle',
-                    args={animData,data[2]},
-                }
-            elseif op=='S'then--Size
-                _syntaxCheck(#data<=3,"Too many arguments")
-                data[2]=tonumber(data[2])or false
-                data[3]=tonumber(data[3])or false
-                event={
-                    type='setTrack',
-                    time=curTime,
-                    operation=opType..'Size',
-                    args={animData,data[2],data[3]},
-                }
-            elseif op=='D'then--Drop speed
-                _syntaxCheck(#data<=2,"Too many arguments")
-                data[2]=tonumber(data[2])or false
-                event={
-                    type='setTrack',
-                    time=curTime,
-                    operation=opType..'DropSpeed',
-                    args={animData,data[2]},
-                }
-            elseif op=='T'then--Transparent
-                _syntaxCheck(#data<=2,"Too many arguments")
-                data[2]=tonumber(data[2])or false
-                event={
-                    type='setTrack',
-                    time=curTime,
-                    operation=opType..'Alpha',
-                    args={animData,data[2]},
-                }
-            elseif op=='C'then--Color
-                _syntaxCheck(#data<=2,"Too many arguments")
-                local r,g,b
-                if not data[2]then
-                    _syntaxCheck(opType=='set'or #data==2,"Too few arguments")
-                    r,g,b=1,1,1
-                else
-                    local neg
-                    if data[2]:sub(1,1)=='-'then
-                        neg=true
-                        data[2]=data[2]:sub(2)
+                    for n=0,j-i do
+                        trackList[n+1]=i+n
                     end
-                    _syntaxCheck(not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6,"Invalid color code")
-                    r,g,b=STRING.hexColor(data[2])
-                    if neg then
-                        r,g,b=-r,-g,-b
+                else
+                    trackList=trackStr:split(',')
+                    for i=1,#trackList do
+                        local id=tonumber(trackList[i])
+                        _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track id")
+                        trackList[i]=id
                     end
                 end
-                event={
-                    type='setTrack',
-                    time=curTime,
-                    operation=opType..'Color',
-                    args={animData,r,g,b},
-                }
-            elseif op=='A'then--Available
-                if data[2]=='true'then
-                    data[2]=true
-                elseif data[2]=='false'then
-                    data[2]=false
+                str=str:sub(t+1)
+
+                local animData
+                if str:sub(1,1)=='<'then
+                    local t2=str:find('>')
+                    _syntaxCheck(t2,"Syntax error (need '>')")
+                    local animList=str:sub(2,t2-1):split(',')
+
+                    str=str:sub(t2+1)
+
+                    local animType=rem(animList,1)
+                    _syntaxCheck(animType,"Need animation type (S/L/E/C)")
+                    if animType=='S'then
+                        _syntaxCheck(#animList==0,"Invalid animation data")
+                        animData={type='S'}
+                    elseif animType=='L'then
+                        _syntaxCheck(#animList==1,"Invalid animation data (need time)")
+                        local s=animList[1]
+                        local unit
+                        if s:sub(-2)=='ms'then
+                            s,unit=s:sub(1,-3),0.001
+                        elseif s:sub(-1)=='s'then
+                            s,unit=s:sub(1,-2),1
+                        elseif s:sub(-4)=='beat'then
+                            s,unit=s:sub(1,-5),60/curBPM
+                        elseif s:sub(-3)=='bar'then
+                            _syntaxCheck(signature,"No signature to calculate bar length")
+                            s,unit=s:sub(1,-4),60/curBPM*signature
+                        else--Unit default to beat
+                            unit=60/curBPM
+                        end
+                        s=tonumber(s)
+                        _syntaxCheck(s and s>0,"Invalid animation time ([number]ms/s/beat)")
+                        s=s*unit
+                        animData={type='L',start=curTime,duration=s}
+                    elseif animType=='E'then
+                        _syntaxCheck(#animList==1,"Invalid animation data (need speed)")
+                        local s=tonumber(animList[1])
+                        _syntaxCheck(s and s>0,"Invalid expontial param")
+                        animData={type='E',start=curTime,speed=s}
+                    elseif animType=='C'then
+                        _syntaxCheck(false,"Coming soon")
+                        animData={type='C'}
+                    else
+                        _syntaxCheck(false,"Invalid animation type (need S/L/E/C)")
+                    end
+                else
+                    animData={type='E',start=curTime,speed=12}
                 end
-                if opType=='set'then
-                    if data[2]==nil then data[2]=true end
+
+                local data=str:split(',')
+                local op=data[1]:upper()
+                local opType=data[1]==data[1]:upper()and'set'or'move'
+
+                local event
+                if op=='P'then--Position
+                    _syntaxCheck(#data<=3,"Too many arguments")
+                    data[2]=tonumber(data[2])or false
+                    data[3]=tonumber(data[3])or false
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'Position',
+                        args={animData,data[2],data[3]},
+                    }
+                elseif op=='R'then--Rotate
                     _syntaxCheck(#data<=2,"Too many arguments")
-                    _syntaxCheck(data[2]==true or data[2]==false,"Invalid option (need true/false)")
+                    data[2]=tonumber(data[2])or false
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'Angle',
+                        args={animData,data[2]},
+                    }
+                elseif op=='S'then--Size
+                    _syntaxCheck(#data<=3,"Too many arguments")
+                    data[2]=tonumber(data[2])or false
+                    data[3]=tonumber(data[3])or false
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'Size',
+                        args={animData,data[2],data[3]},
+                    }
+                elseif op=='D'then--Drop speed
+                    _syntaxCheck(#data<=2,"Too many arguments")
+                    data[2]=tonumber(data[2])or false
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'DropSpeed',
+                        args={animData,data[2]},
+                    }
+                elseif op=='T'then--Transparent
+                    _syntaxCheck(#data<=2,"Too many arguments")
+                    data[2]=tonumber(data[2])or false
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'Alpha',
+                        args={animData,data[2]},
+                    }
+                elseif op=='C'then--Color
+                    _syntaxCheck(#data<=2,"Too many arguments")
+                    local r,g,b
+                    if not data[2]then
+                        _syntaxCheck(opType=='set'or #data==2,"Too few arguments")
+                        r,g,b=1,1,1
+                    else
+                        local neg
+                        if data[2]:sub(1,1)=='-'then
+                            neg=true
+                            data[2]=data[2]:sub(2)
+                        end
+                        _syntaxCheck(not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6,"Invalid color code")
+                        r,g,b=STRING.hexColor(data[2])
+                        if neg then
+                            r,g,b=-r,-g,-b
+                        end
+                    end
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'Color',
+                        args={animData,r,g,b},
+                    }
+                elseif op=='A'then--Available
+                    if data[2]=='true'then
+                        data[2]=true
+                    elseif data[2]=='false'then
+                        data[2]=false
+                    end
+                    if opType=='set'then
+                        if data[2]==nil then data[2]=true end
+                        _syntaxCheck(#data<=2,"Too many arguments")
+                        _syntaxCheck(data[2]==true or data[2]==false,"Invalid option (need true/false)")
+                        for i=1,#trackList do
+                            trackAvailable[trackList[i]]=data[2]
+                        end
+                    elseif opType=='move'then
+                        _syntaxCheck(#data<=1,"Too many arguments")
+                        for i=1,#trackList do
+                            trackAvailable[trackList[i]]=not trackAvailable[trackList[i]]
+                        end
+                    end
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'Available',
+                        args={data[2]},
+                    }
+                elseif op=='N'then--Show track name
+                    if data[2]then
+                        data[2]=tonumber(data[2])
+                        _syntaxCheck(data[2],"Invalid alpha")
+                    end
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'NameAlpha',
+                        args={animData,data[2]},
+                    }
+                else
+                    _syntaxCheck(false,"Invalid track operation")
+                end
+                for i=1,#trackList do
+                    local E=TABLE.copy(event)
+                    E.track=trackList[i]
+                    o.eventQueue:insert(E)
+                end
+            elseif lineType=='set_note'then--Note state: color & alpha
+                local t=str:find(';')
+                _syntaxCheck(t,"Syntax error ('(x)...' or '/set_note:x;...')")
+
+                local trackList={}
+
+                local trackStr=str:sub(1,t-1)
+                if trackStr=='A'or trackStr=='L'or trackStr=='R'then
+                    local i,j
+                    if trackStr=='A'then
+                        i,j=1,o.tracks
+                    elseif trackStr=='L'then
+                        i,j=1,(o.tracks+1)*.5
+                    elseif trackStr=='R'then
+                        i,j=o.tracks*.5+1,o.tracks
+                    end
+                    for n=0,j-i do
+                        trackList[n+1]=i+n
+                    end
+                else
+                    trackList=trackStr:split(',')
                     for i=1,#trackList do
-                        trackAvailable[trackList[i]]=data[2]
+                        local id=tonumber(trackList[i])
+                        _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track id")
+                        trackList[i]=id
                     end
-                elseif opType=='move'then
-                    _syntaxCheck(#data<=1,"Too many arguments")
+                end
+
+                local data=str:sub(t+1):split(',')
+                local op=data[1]:upper()
+                if op=='T'then--Transparent
+                    local a={}
+                    if data[2]then
+                        for i=2,#data do
+                            local alpha=tonumber(data[i])
+                            _syntaxCheck(alpha and alpha>=0 and alpha<=100,"Invalid alpha value")
+                            a[i-1]=alpha
+                        end
+                    else
+                        a[1]=80
+                    end
                     for i=1,#trackList do
-                        trackAvailable[trackList[i]]=not trackAvailable[trackList[i]]
+                        noteState.alpha[trackList[i]]=a
                     end
-                end
-                event={
-                    type='setTrack',
-                    time=curTime,
-                    operation=opType..'Available',
-                    args={data[2]},
-                }
-            elseif op=='N'then--Show track name
-                if data[2]then
-                    data[2]=tonumber(data[2])
-                    _syntaxCheck(data[2],"Invalid alpha")
-                end
-                event={
-                    type='setTrack',
-                    time=curTime,
-                    operation=opType..'NameAlpha',
-                    args={animData,data[2]},
-                }
-            else
-                _syntaxCheck(false,"Invalid track operation")
-            end
-            for i=1,#trackList do
-                local E=TABLE.copy(event)
-                E.track=trackList[i]
-                o.eventQueue:insert(E)
-            end
-        elseif str:sub(1,1)=='('then--Note state: color & alpha
-            local t=str:find(')')
-            _syntaxCheck(t,"Syntax error (need ')')")
-
-            local trackList={}
-
-            local trackStr=str:sub(2,t-1)
-            if trackStr=='A'or trackStr=='L'or trackStr=='R'then
-                local i,j
-                if trackStr=='A'then
-                    i,j=1,o.tracks
-                elseif trackStr=='L'then
-                    i,j=1,(o.tracks+1)*.5
-                elseif trackStr=='R'then
-                    i,j=o.tracks*.5+1,o.tracks
-                end
-                for n=0,j-i do
-                    trackList[n+1]=i+n
-                end
-            else
-                trackList=trackStr:split(',')
-                for i=1,#trackList do
-                    local id=tonumber(trackList[i])
-                    _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track id")
-                    trackList[i]=id
-                end
-            end
-
-            local data=str:sub(t+1):split(',')
-            local op=data[1]:upper()
-            if op=='T'then--Transparent
-                local a={}
-                if data[2]then
-                    for i=2,#data do
-                        local alpha=tonumber(data[i])
-                        _syntaxCheck(alpha and alpha>=0 and alpha<=100,"Invalid alpha value")
-                        a[i-1]=alpha
+                elseif op=='C'then--Color
+                    local codes={}
+                    if not data[2]then
+                        codes[1]='E6E6E6'
+                    else
+                        for i=2,#data do
+                            local code=data[i]
+                            _syntaxCheck(not code:find("[^0-9a-fA-F]")and #code<=6,"Invalid color code")
+                            codes[i-1]=code
+                        end
+                    end
+                    local color={{},{},{}}
+                    for i=1,#codes do
+                        color[1][i],color[2][i],color[3][i]=STRING.hexColor(codes[i])
+                    end
+                    for i=1,#trackList do
+                        noteState.color[trackList[i]]=color
+                    end
+                elseif op=='X'or op=='Y'then--X/Y offset
+                    local offset={}
+                    if data[2]then
+                        for i=2,#data do
+                            data[i]=tonumber(data[i])
+                            _syntaxCheck(data[i],"Invalid alpha value")
+                            offset[i-1]=data[i]
+                        end
+                    else
+                        offset[1]=0
+                    end
+                    local state=op=='X'and noteState.xOffset or noteState.yOffset
+                    for i=1,#trackList do
+                        state[trackList[i]]=offset
                     end
                 else
-                    a[1]=80
+                    _syntaxCheck(false,"Invalid note operation")
                 end
-                for i=1,#trackList do
-                    noteState.alpha[trackList[i]]=a
-                end
-            elseif op=='C'then--Color
-                local codes={}
-                if not data[2]then
-                    codes[1]='E6E6E6'
-                else
-                    for i=2,#data do
-                        local code=data[i]
-                        _syntaxCheck(not code:find("[^0-9a-fA-F]")and #code<=6,"Invalid color code")
-                        codes[i-1]=code
-                    end
-                end
-                local color={{},{},{}}
-                for i=1,#codes do
-                    color[1][i],color[2][i],color[3][i]=STRING.hexColor(codes[i])
-                end
-                for i=1,#trackList do
-                    noteState.color[trackList[i]]=color
-                end
-            elseif op=='X'or op=='Y'then--X/Y offset
-                local offset={}
-                if data[2]then
-                    for i=2,#data do
-                        data[i]=tonumber(data[i])
-                        _syntaxCheck(data[i],"Invalid alpha value")
-                        offset[i-1]=data[i]
-                    end
-                else
-                    offset[1]=0
-                end
-                local state=op=='X'and noteState.xOffset or noteState.yOffset
-                for i=1,#trackList do
-                    state[trackList[i]]=offset
-                end
-            else
-                _syntaxCheck(false,"Invalid note operation")
-            end
-        elseif str:sub(1,1)=='='then--Repeat mark
-            local len=0
-            repeat
-                len=len+1
-                str=str:sub(2)
-            until str:sub(1,1)~='='
-            _syntaxCheck(len>=4 and len<=10,"Invalid repeat mark length")
-
-            if str:sub(1,1)=='S'then
+            elseif lineType=='rep_s'then--Repeat start
                 local cd=1
-                if str:sub(2)~=''then
-                    cd=tonumber(str:sub(2))
+                if str~=''then
+                    cd=tonumber(str)
                     _syntaxCheck(cd>=2 and cd%1==0,"Invalid loop count")
                     cd=cd-1
                 end
@@ -537,7 +552,7 @@ function Map.new(file)
                     startMark=line,
                     endMark=false,
                 })
-            elseif str=='E'then
+            elseif lineType=='rep_e'then--Repeat end
                 _syntaxCheck(loopStack[1],"No loop to end")
                 local curState=loopStack[#loopStack]
                 if curState.countDown>0 then
@@ -547,83 +562,83 @@ function Map.new(file)
                 else
                     rem(loopStack)
                 end
-            elseif str=='M'then
+            elseif lineType=='rep_m'then--Repeat middle(skip)
                 _syntaxCheck(loopStack[1],"No loop to break")
                 if loopStack[#loopStack].countDown==0 then
                     line=loopStack[#loopStack].endMark
                     rem(loopStack)
                 end
-            else
-                _syntaxCheck(false,"Invalid repeat mark")
-            end
-        elseif str:sub(1,1)=='&'then--Redirect notes to different track
-            if str:sub(2)==''then--Reset
-                for i=1,o.tracks do trackDir[i]=i end
-            elseif str:sub(2)=='A'then--Random shuffle (won't reset to 1~N!)
-                local l={}
-                for i=1,o.tracks do l[i]=trackDir[i]end
-                for i=1,o.tracks do trackDir[i]=rem(l,rnd(#l))end
-            else--Redirect tracks from presets
-                local argList=str:sub(2):split(',')
-                for i=1,#argList do
-                    _syntaxCheck(#argList[i]==o.tracks,"Illegal redirection (track count)")
-                    _syntaxCheck(not argList[i]:find('[^1-9a-zA-Z]'),"Illegal redirection (track number)")
-                end
-                local reDirMethod=argList[rnd(#argList)]
-                local l=TABLE.shift(trackDir)
-                for i=1,o.tracks do
-                    local id=tonumber(reDirMethod:sub(i,i),36)
-                    _syntaxCheck(id<=o.tracks,"Illegal redirection (too large track number)")
-                    trackDir[i]=l[id]
-                end
-            end
-        elseif str:sub(1,1)=='^'then--Set chord color
-            local c=str:sub(2):split(',')
-            if #c==0 then
-                c=defaultChordColor
-            else
-                for i=1,#c do
-                    _syntaxCheck(not c[i]:find("[^0-9a-fA-F]")and #c[i]<=6,"Invalid color code")
-                    c[i]={STRING.hexColor(c[i])}
-                end
-                if #c>o.tracks-1 then _syntaxCheck(false,"Too many colors")end
-                setmetatable(c,getmetatable(defaultChordColor))
-            end
-            o.eventQueue:insert{
-                type='setChordColor',
-                time=curTime,
-                color=c,
-            }
-        elseif str:sub(1,1)=='%'then--Rename tracks
-            local nameList=str:sub(2):split(',')
-            _syntaxCheck(#nameList==o.tracks,"Track names not match track count")
-            for id=1,#nameList do
-                local name=nameList[id]
-                if name:find(' ')then
-                    local multiNameList=name:split(' ')
-                    for i=1,#multiNameList do
-                        _syntaxCheck(trackNames[multiNameList[i]],"Invalid track name")
+            elseif lineType=='redirect_note'then--Redirect notes to different track
+                if str==''then--Reset
+                    for i=1,o.tracks do trackDir[i]=i end
+                elseif str=='A'then--Random shuffle (won't reset to 1~N!)
+                    local l={}
+                    for i=1,o.tracks do l[i]=trackDir[i]end
+                    for i=1,o.tracks do trackDir[i]=rem(l,rnd(#l))end
+                else--Redirect tracks from presets
+                    local argList=str:split(',')
+                    for i=1,#argList do
+                        _syntaxCheck(#argList[i]==o.tracks,"Illegal redirection (track count)")
+                        _syntaxCheck(not argList[i]:find('[^1-9a-zA-Z]'),"Illegal redirection (track number)")
                     end
+                    local reDirMethod=argList[rnd(#argList)]
+                    local l=TABLE.shift(trackDir)
+                    for i=1,o.tracks do
+                        local id=tonumber(reDirMethod:sub(i,i),36)
+                        _syntaxCheck(id<=o.tracks,"Illegal redirection (too large track number)")
+                        trackDir[i]=l[id]
+                    end
+                end
+            elseif lineType=='set_chord_color'then--Set chord color
+                local c=str:split(',')
+                if #c==0 then
+                    c=defaultChordColor
                 else
-                    _syntaxCheck(name=='x'or trackNames[name],"Invalid track name")
+                    for i=1,#c do
+                        _syntaxCheck(not c[i]:find("[^0-9a-fA-F]")and #c[i]<=6,"Invalid color code")
+                        c[i]={STRING.hexColor(c[i])}
+                    end
+                    if #c>o.tracks-1 then _syntaxCheck(false,"Too many colors")end
+                    setmetatable(c,getmetatable(defaultChordColor))
                 end
                 o.eventQueue:insert{
-                    type='setTrack',
+                    type='setChordColor',
                     time=curTime,
-                    track=id,
-                    operation='rename',
-                    args={name},
+                    color=c,
                 }
-                if name=='x'then
+            elseif lineType=='rename_track'then--Rename tracks
+                local nameList=str:split(',')
+                _syntaxCheck(#nameList==o.tracks,"Track names not match track count")
+                for id=1,#nameList do
+                    local name=nameList[id]
+                    if name:find(' ')then
+                        local multiNameList=name:split(' ')
+                        for i=1,#multiNameList do
+                            _syntaxCheck(trackNames[multiNameList[i]],"Invalid track name")
+                        end
+                    else
+                        _syntaxCheck(name=='x'or trackNames[name],"Invalid track name")
+                    end
                     o.eventQueue:insert{
                         type='setTrack',
                         time=curTime,
                         track=id,
-                        operation='setAvailable',
-                        args={false},
+                        operation='rename',
+                        args={name},
                     }
-                    trackAvailable[id]=false
+                    if name=='x'then
+                        o.eventQueue:insert{
+                            type='setTrack',
+                            time=curTime,
+                            track=id,
+                            operation='setAvailable',
+                            args={false},
+                        }
+                        trackAvailable[id]=false
+                    end
                 end
+            else
+                _syntaxCheck(false,"Invalid line type: "..lineType)
             end
         else--Notes
             local readState='note'
@@ -676,12 +691,12 @@ function Map.new(file)
                             lastLongBar[curTrack].tail=c=='A'
                             lastLongBar[curTrack]=false
                         else
-                            _syntaxCheck(curTrack==o.tracks+1,"Too few notes in one line")
+                            _syntaxCheck(curTrack==curRealTrack+1,"Too few notes in one line")
                             readState='rnd'
                             goto CONTINUE_nextState
                         end
                     end
-                    _syntaxCheck(curTrack<=o.tracks,"Too many notes in one line")
+                    _syntaxCheck(curTrack<=curRealTrack,"Too many notes in one line")
                     curTrack=curTrack+1
                     str=str:sub(2)
                 elseif readState=='rnd'then
