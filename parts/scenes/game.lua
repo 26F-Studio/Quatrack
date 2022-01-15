@@ -47,7 +47,7 @@ local combo,maxCombo,score,score0
 local hitCount,totalDeviateTime
 local bestChain
 local hits={}
-local touches
+local touches={}
 
 local function _updateStat()
     if fullAcc<=0 then return end
@@ -151,6 +151,34 @@ function scene.sceneInit()
         mapAuth=gc.newText(getFont(40),'Map: '..map.mapAuth),
     }
 
+    isSongPlaying=false
+    time=-3.6
+    hitOffests={}
+    curAcc,fullAcc=0,0
+    _updateAcc()
+    combo,maxCombo,score,score0=0,0,0,0
+    hitCount,totalDeviateTime=0,0
+    for i=-1,5 do hits[i]=0 end
+    hitLV,hitTextTime=false,1e-99
+    bestChain=5
+
+    needSaveSetting=false
+    TABLE.cut(touches)
+
+    tracks={}
+    local trackNameList=defaultTrackNames[map.tracks]
+    for id=1,map.tracks do
+        local t=require'parts.track'.new(id)
+        t:setDefaultPosition(70*(2*id-map.tracks-1),320)
+        t:setPosition({type='S'})
+        t:rename(trackNameList and trackNameList[id]or'')
+        t:setChordColor(defaultChordColor)
+        t:setNameAlpha({type='S'},100)
+        t:setNameAlpha({type='L',start=-3.6,duration=3},0)
+        t:updateLogic(time)
+        tracks[id]=t
+    end
+
     local dirPath=map.qbpFilePath:sub(1,#map.qbpFilePath-map.qbpFilePath:reverse():find("/")+1)
     if love.filesystem.getInfo(dirPath..map.songFile..'.ogg')then
         BGM.load(map.songFile,dirPath..map.songFile..'.ogg')
@@ -209,36 +237,6 @@ function scene.sceneInit()
         end
     else
         BG.set('none')
-    end
-
-    isSongPlaying=false
-    time=-3.6
-    hitOffests={}
-    curAcc,fullAcc=0,0
-    _updateAcc()
-    combo,maxCombo,score,score0=0,0,0,0
-    hitCount,totalDeviateTime=0,0
-    bestChain=5
-    for i=-1,5 do hits[i]=0 end
-
-    hitLV,hitTextTime=false,1e-99
-
-    needSaveSetting=false
-
-    touches={}
-
-    tracks={}
-    local trackNameList=defaultTrackNames[map.tracks]
-    for id=1,map.tracks do
-        local t=require'parts.track'.new(id)
-        t:setDefaultPosition(70*(2*id-map.tracks-1),320)
-        t:setPosition({type='S'})
-        t:rename(trackNameList and trackNameList[id]or'')
-        t:setChordColor(defaultChordColor)
-        t:setNameAlpha({type='S'},100)
-        t:setNameAlpha({type='L',start=-3.6,duration=3},0)
-        t:updateLogic(time)
-        tracks[id]=t
     end
 
     applyFPS(true)
