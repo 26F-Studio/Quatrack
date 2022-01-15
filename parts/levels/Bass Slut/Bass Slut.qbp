@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $scriptAuth=Ykzl
 $mapDifficulty=Hard-4
 $songFile=bassslut
-$songOffset=-27
+$songOffset=-24
 $tracks=8
 $realTracks=4
 $script=script
@@ -217,7 +217,6 @@ O-------;>102440ms
 O-------;>102269ms
 --O-----;>102098ms
 -A------;>102012ms
-
 
 ========E
 -----O--/16
@@ -787,6 +786,8 @@ O-------;>1126ms
 O-------;>783ms
 O-------;>440ms
 O--O----;>98ms
+# Notes
+
 
 
 --------
@@ -925,6 +926,7 @@ O--O----;>98ms
 [1,2,3,4]<S>T,60
 ========S32
 >98ms
+#Effects
 
 [1,2,3,4]<S>T,20
 %L2,L1,R1,R2,x,x,x,x
