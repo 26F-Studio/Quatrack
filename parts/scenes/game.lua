@@ -179,7 +179,8 @@ function scene.sceneInit()
                     map.script=mapEnv
                 end
             else
-                MES.new('error',err)
+                err=err:gsub('%b[]:','')
+                MES.new('error',("<$1>$2:$3"):repD('syntax',err:match('^%d+'),err:sub(err:find(':')+1)))
             end
         else
             MES.new('error',text.noFile)
