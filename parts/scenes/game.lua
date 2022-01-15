@@ -40,6 +40,7 @@ local map,tracks
 local hitLV--Hit level (-1~5)
 local hitTextTime--Time stamp, for hitText fading-out animation
 
+local safeAreaTimer
 local time,isSongPlaying
 local hitOffests
 local curAcc,fullAcc,accText
@@ -151,6 +152,7 @@ function scene.sceneInit()
         mapAuth=gc.newText(getFont(40),'Map: '..map.mapAuth),
     }
 
+    safeAreaTimer=2
     isSongPlaying=false
     time=-3.6
     hitOffests={}
@@ -469,8 +471,11 @@ function scene.update(dt)
         end
     end
 
-    --Update notes
+    --Update timers
     time=time+dt
+    if safeAreaTimer>0 then safeAreaTimer=max(0,safeAreaTimer-dt)end
+
+    --Update notes
     map:updateTime(time)
     while true do
         local n=map:poll('note')
@@ -546,9 +551,9 @@ function scene.draw()
     gc_setColor(1,1,1)gc_setLineWidth(2)
     callScriptEvent('drawBack')
 
-    if time<-2 then
+    if safeAreaTimer>0 then
         gc.origin()
-        drawSafeArea(SETTING.safeX,SETTING.safeY,-time-2)
+        drawSafeArea(SETTING.safeX,SETTING.safeY,safeAreaTimer)
     end
 
     gc_replaceTransform(SCR.xOy_m)
@@ -603,7 +608,7 @@ function scene.draw()
         gc_rectangle('fill',530,369,220*MATH.interval(time/songLength,0,1),3)
     end
 
-    --Draw deviate times\
+    --Draw deviate times
     local l=#hitOffests
     for i=1,l do
         local c=hitColors[getHitLV(hitOffests[i])]
