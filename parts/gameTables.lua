@@ -46,43 +46,48 @@ mapTemplate={
     freeSpeed=true,
     script=false,
 }
-local gc=love.graphics
-mapScriptEnv={
-    print=print,
-    assert=assert,error=error,
-    tonumber=tonumber,tostring=tostring,
-    select=select,next=next,
-    ipairs=ipairs,pairs=pairs,
-    type=type,
-    pcall=pcall,xpcall=xpcall,
-    rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
-    setfenv=setfenv,setmetatable=setmetatable,
-    math={},string={},table={},bit={},coroutine={},
-    debug={},package={},io={},os={},
+do
+    local gc=love.graphics
+    local GC=GC
+    mapScriptEnv={
+        print=print,
+        assert=assert,error=error,
+        tonumber=tonumber,tostring=tostring,
+        select=select,next=next,
+        ipairs=ipairs,pairs=pairs,
+        type=type,
+        pcall=pcall,xpcall=xpcall,
+        rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
+        setfenv=setfenv,setmetatable=setmetatable,
+        math={},string={},table={},bit={},coroutine={},
+        debug={},package={},io={},os={},
 
-    setColor=function(r,g,b,a)gc.setColor(r,g,b,a)end,
-    setLineWidth=function(w)gc.setLineWidth(w)end,
-    drawLine=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
-    drawRect=function(x,y,w,h)gc.rectangle('line',x,y,w,h)end,
-    fillRect=function(x,y,w,h)gc.rectangle('fill',x,y,w,h)end,
-    drawCircle=function(x,y,r)gc.circle('line',x,y,r)end,
-    fillCircle=function(x,y,r)gc.circle('fill',x,y,r)end,
-    drawPolygon=function(mode,x,y,r,sides,phase)GC.regPolygon('line',mode,x,y,r,sides,phase)end,
-    setFont=function(f)setFont(f)end,
-    drawText=function(text,x,y)gc.printf(text,x-2600,y,5200,'center')end,
+        MATH={},STRING={},TABLE={},
+        gc={
+            setColor=function(r,g,b,a)gc.setColor(r,g,b,a)end,
+            setLineWidth=function(w)gc.setLineWidth(w)end,
+            setFont=function(f)setFont(f)end,
 
-    message=function(mes)MES.new('info',mes)end,
-}
-TABLE.complete(math,mapScriptEnv.math)
-TABLE.complete(string,mapScriptEnv.string)mapScriptEnv.string.dump=nil
-TABLE.complete(table,mapScriptEnv.table)
-TABLE.complete(bit,mapScriptEnv.bit)
-TABLE.complete(coroutine,mapScriptEnv.coroutine)
-local dangerousLibMeta={__index=function()error("No way.")end}
-setmetatable(mapScriptEnv.debug,dangerousLibMeta)
-setmetatable(mapScriptEnv.package,dangerousLibMeta)
-setmetatable(mapScriptEnv.io,dangerousLibMeta)
-setmetatable(mapScriptEnv.os,dangerousLibMeta)
+            drawLine=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
+            rect=function(mode,x,y,w,h)gc.rectangle(mode,x,y,w,h)end,
+            circle=function(mode,x,y,r)gc.circle(mode,x,y,r)end,
+            polygon=function(mode,x,y,r,sides,phase)GC.regPolygon(mode,x,y,r,sides,phase)end,
+            drawText=function(text,x,y)gc.printf(text,x-2600,y,5200,'center')end,
+        },
+
+        message=function(mes)MES.new('info',mes)end,
+    }
+    for _,v in next,{
+        'math','string','table',
+        'bit','coroutine',
+        'MATH','STRING','TABLE',
+    }do TABLE.complete(_G[v],mapScriptEnv[v])end
+    mapScriptEnv.string.dump=nil
+    local dangerousLibMeta={__index=function()error("No way.")end}
+    for _,v in next,{
+        'debug','package','io','os'
+    }do setmetatable(mapScriptEnv[v],dangerousLibMeta)end
+end
 
 hitColors={
     [-1]=COLOR.dRed,
