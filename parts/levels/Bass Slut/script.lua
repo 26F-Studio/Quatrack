@@ -10,9 +10,9 @@ local function drawRectWave(t,n,sp)
     for i=-n,n do
         local tr=t-math.abs(i)*sp/n
         if tr>0 and tr<1 then
-            setColor(1,1,1,1-tr)
-            drawPolygon(640+i*640/n,360+tr*500*waveHeight[i],12,4,waveAngle[i])
-            drawPolygon(640+i*640/n,360-tr*500*waveHeight[i],12,4,waveAngle[i])
+            gc.setColor(1,1,1,1-tr)
+            gc.polygon('line',640+i*640/n,360+tr*500*waveHeight[i],12,4,waveAngle[i])
+            gc.polygon('line',640+i*640/n,360-tr*500*waveHeight[i],12,4,waveAngle[i])
         end
     end
 end
