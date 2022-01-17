@@ -68,11 +68,11 @@ do
             setLineWidth=function(w)gc.setLineWidth(w)end,
             setFont=function(f)setFont(f)end,
 
-            drawLine=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
-            rect=function(mode,x,y,w,h)gc.rectangle(mode,x,y,w,h)end,
-            circle=function(mode,x,y,r)gc.circle(mode,x,y,r)end,
-            polygon=function(mode,x,y,r,sides,phase)GC.regPolygon(mode,x,y,r,sides,phase)end,
-            drawText=function(text,x,y)gc.printf(text,x-2600,y,5200,'center')end,
+            line=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
+            rect=function(mode,x,y,w,h)gc.rectangle(mode or'line',x,y,w,h)end,
+            circle=function(mode,x,y,r)gc.circle(mode or'line',x,y,r)end,
+            polygon=function(mode,x,y,r,sides,phase)GC.regPolygon(mode or'line',x,y,r,sides,phase)end,
+            print=function(mode,text,x,y)gc.printf(text,x-2600,y,5200,mode or'center')end,
         },
 
         message=function(mes)MES.new('info',mes)end,
