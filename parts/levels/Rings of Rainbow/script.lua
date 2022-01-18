@@ -156,10 +156,10 @@ function init()
     o.speed=700
     for itheta=0,359,15 do
         o.direction=itheta
-        ins(events,{time=1.370,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=3.602,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=5.835,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=7.509,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=0.279,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=2.511,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=4.744,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=6.418,func=objCreate,arg=tableCopy(o)})
     end
 
     --CenterOrange
@@ -168,8 +168,8 @@ function init()
         for itheta=45,315,90 do
             o.speed=irho
             o.direction=itheta
-            ins(events,{time=1.928,func=objCreate,arg=tableCopy(o)})
-            ins(events,{time=4.160,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=0.837,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=3.069,func=objCreate,arg=tableCopy(o)})
         end
     end
 
@@ -178,16 +178,16 @@ function init()
     o.speed=700
     for itheta=0,359,18 do
         o.direction=itheta+9
-        ins(events,{time=2.486,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=4.718,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=6.393,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=1.395,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=3.627,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=5.302,func=objCreate,arg=tableCopy(o)})
     end
     o.speed=900
     for itheta=0,359,18 do
         o.direction=itheta
-        ins(events,{time=2.625,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=4.858,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=6.532,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=1.534,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=3.767,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=5.441,func=objCreate,arg=tableCopy(o)})
     end
 
     --CenterGreen
@@ -195,9 +195,9 @@ function init()
     for itheta=0,359,9 do
         o.speed=500+400*rnd()
         o.direction=itheta+9
-        ins(events,{time=3.044,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=5.277,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=6.951,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=1.953,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=4.186,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=5.86,func=objCreate,arg=tableCopy(o)})
     end
 
     --CenterAqua
@@ -207,7 +207,7 @@ function init()
         for itheta=0,359,30 do
             o.speed=600
             o.direction=itheta+itime*3.75
-            ins(events,{time=8.067+itime*0.07,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=6.976+itime*0.07,func=objCreate,arg=tableCopy(o)})
         end
     end
 
@@ -222,19 +222,19 @@ function init()
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[mod(itime,8)]
-        ins(events,{time=10.021+itime*0.279,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=8.93+itime*0.279,func=objCreate,arg=tableCopy(o)})
     end
     o.life=0.24
     for itime=0,23 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[mod(itime,8)]
-        ins(events,{time=14.486+itime*0.1395,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=13.395+itime*0.1395,func=objCreate,arg=tableCopy(o)})
     end
     o.life=0.18
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[mod(itime,8)]
-        ins(events,{time=17.835+itime*0.07,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=16.744+itime*0.07,func=objCreate,arg=tableCopy(o)})
     end
 
     --InsideCircle
@@ -249,7 +249,7 @@ function init()
             ins(o.tag,"insidecircle"..irho)
             o.speed=94.2*irho
             o.direction=itheta
-            ins(events,{time=18.951,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=17.86,func=objCreate,arg=tableCopy(o)})
         end
     end
 
@@ -259,17 +259,17 @@ function init()
         o.tag={"outsidecircle",offsetAngle=6*itime,distance=300}
         o.direction=o.tag.offsetAngle
         o.x,o.y=640+o.tag.distance*math.cos(math.rad(o.direction)),360-o.tag.distance*math.sin(math.rad(o.direction))
-        ins(events,{time=18.951+itime*0.0186,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=17.86+itime*0.0186,func=objCreate,arg=tableCopy(o)})
     end
 
     --Animations
-    ins(events,{time=19.788,func=objChange,arg={tag="insidecircle",key="speed",value=0}})
-    ins(events,{time=20.067,func=objChange,arg={tag="insidecircle3",key="speed",value=1969}})
-    ins(events,{time=20.346,func=objChange,arg={tag="insidecircle2",key="speed",value=1969}})
-    ins(events,{time=20.625,func=objChange,arg={tag="insidecircle1",key="speed",value=1969}})
-    ins(events,{time=20.904,func=objChange,arg={tag="outsidecircle",key="update",value=objCircleSpin}})
+    ins(events,{time=18.697,func=objChange,arg={tag="insidecircle",key="speed",value=0}})
+    ins(events,{time=18.976,func=objChange,arg={tag="insidecircle3",key="speed",value=1969}})
+    ins(events,{time=19.255,func=objChange,arg={tag="insidecircle2",key="speed",value=1969}})
+    ins(events,{time=19.534,func=objChange,arg={tag="insidecircle1",key="speed",value=1969}})
+    ins(events,{time=19.813,func=objChange,arg={tag="outsidecircle",key="update",value=objCircleSpin}})
 
-    ins(events,{time=21.184,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=20.093,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         if mod(obj.tag.offsetAngle,120)==0 then
             obj.update={objCircleSpin,objColorControl,objSource1}
         else
@@ -277,11 +277,11 @@ function init()
         end
     end}})
 
-    ins(events,{time=28.858,func=objExecute,arg={tag="sub",func=function(obj)obj.direction=pointDirection(640,360,obj.x,obj.y)end}})
-    ins(events,{time=28.858,func=objChange,arg={tag="outsidecircle",key="update",value={objCircleSpin,objColorControl}}})
+    ins(events,{time=27.767,func=objExecute,arg={tag="sub",func=function(obj)obj.direction=pointDirection(640,360,obj.x,obj.y)end}})
+    ins(events,{time=27.767,func=objChange,arg={tag="outsidecircle",key="update",value={objCircleSpin,objColorControl}}})
 
     --对 这里有他妈俩一样的东西 其中一个不可见 我也不知道为什么 但如果没有就不会正常工作 为什么呢 他妈的
-    ins(events,{time=29.556,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=28.465,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         local o=tableCopy(obj)
         o.tag={}
         o.update=objColorControl
@@ -290,7 +290,7 @@ function init()
         o.color[4]=0
         objCreate(o)
     end}})
-    ins(events,{time=29.556,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=28.465,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         local o=tableCopy(obj)
         o.tag={}
         o.update=objColorControl
@@ -299,7 +299,7 @@ function init()
         objCreate(o)
     end}})
 
-    ins(events,{time=30.114,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=29.023,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         if mod(obj.tag.offsetAngle,90)==0 then
             obj.update={objCircleSpin,objColorControl,objSource1}
         else
@@ -307,16 +307,16 @@ function init()
         end
     end}})
 
-    ins(events,{time=37.788,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=36.697,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         ins(obj.update,objCircleShrink)
     end}})
 
-    ins(events,{time=43.509,func=objExecute,arg={tag="sub",func=function(obj)
+    ins(events,{time=42.418,func=objExecute,arg={tag="sub",func=function(obj)
         obj.update=nil
         obj.speed=300
         obj.direction=pointDirection(640,360,obj.x,obj.y)
     end}})
-    ins(events,{time=43.509,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=42.418,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         obj.update=nil
         obj.speed=300
         obj.direction=pointDirection(640,360,obj.x,obj.y)
@@ -330,7 +330,7 @@ function init()
         local r=rnd()
         for itheta=0,359,72 do
             o.direction=itheta+72*r
-            ins(events,{time=45.742+0.279*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=44.651+0.279*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
 
@@ -340,7 +340,7 @@ function init()
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
-            ins(events,{time=54.672+0.279*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=53.581+0.279*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
 
@@ -350,7 +350,7 @@ function init()
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
-            ins(events,{time=61.370+0.1395*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=60.279+0.1395*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
 
@@ -360,11 +360,11 @@ function init()
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
-            ins(events,{time=62.486+0.07*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=61.395+0.07*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
 
-    ins(events,{time=63.602,func=objExecute,arg={tag="sub",func=function(obj)obj.direction,obj.speed=pointDirection(640,360,obj.x,obj.y),150 end}})
+    ins(events,{time=62.511,func=objExecute,arg={tag="sub",func=function(obj)obj.direction,obj.speed=pointDirection(640,360,obj.x,obj.y),150 end}})
 
     --CornerRed
     o.color=colorRainbow[0]
@@ -372,34 +372,34 @@ function init()
     o.x,o.y=0,0
     for itheta=15,75,30 do
         o.direction=itheta
-        ins(events,{time=68.346,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=70.579,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=72.811,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=74.486,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=67.255,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=69.488,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=71.72,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=73.395,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,0
     for itheta=105,165,30 do
         o.direction=itheta
-        ins(events,{time=68.346,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=70.579,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=72.811,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=74.486,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=67.255,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=69.488,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=71.72,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=73.395,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,720
     for itheta=195,255,30 do
         o.direction=itheta
-        ins(events,{time=68.346,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=70.579,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=72.811,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=74.486,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=67.255,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=69.488,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=71.72,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=73.395,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=0,720
     for itheta=285,345,30 do
         o.direction=itheta
-        ins(events,{time=68.346,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=70.579,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=72.811,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=74.486,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=67.255,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=69.488,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=71.72,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=73.395,func=objCreate,arg=tableCopy(o)})
     end
 
     --CornerOrange
@@ -408,33 +408,33 @@ function init()
     o.direction=pointDirection(o.x,o.y,640,360)
     for irho=500,1000,100 do
         o.speed=irho
-        ins(events,{time=68.904,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.137,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.602,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=67.813,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.046,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=74.511,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,0
     o.direction=pointDirection(o.x,o.y,640,360)
     for irho=500,1000,100 do
         o.speed=irho
-        ins(events,{time=68.904,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.137,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.602,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=67.813,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.046,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=74.511,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,720
     o.direction=pointDirection(o.x,o.y,640,360)
     for irho=500,1000,100 do
         o.speed=irho
-        ins(events,{time=68.904,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.137,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.602,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=67.813,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.046,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=74.511,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=0,720
     o.direction=pointDirection(o.x,o.y,640,360)
     for irho=500,1000,100 do
         o.speed=irho
-        ins(events,{time=68.904,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.137,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.602,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=67.813,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.046,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=74.511,func=objCreate,arg=tableCopy(o)})
     end
 
     --CornerYellow
@@ -443,67 +443,67 @@ function init()
     o.x,o.y=0,0
     for itheta=9,81,36 do
         o.direction=itheta
-        ins(events,{time=69.463,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.695,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.370,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.044,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.372,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.604,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.279,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=73.953,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,0
     for itheta=99,171,36 do
         o.direction=itheta
-        ins(events,{time=69.463,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.695,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.370,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.044,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.372,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.604,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.279,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=73.953,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,720
     for itheta=189,261,36 do
         o.direction=itheta
-        ins(events,{time=69.463,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.695,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.370,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.044,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.372,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.604,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.279,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=73.953,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=0,720
     for itheta=279,351,36 do
         o.direction=itheta
-        ins(events,{time=69.463,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.695,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.370,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.044,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.372,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.604,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.279,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=73.953,func=objCreate,arg=tableCopy(o)})
     end
     o.speed=900
     o.x,o.y=0,0
     for itheta=27,63,36 do
         o.direction=itheta
-        ins(events,{time=69.602,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.835,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.509,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.184,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.511,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.744,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.418,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=74.093,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,0
     for itheta=117,153,36 do
         o.direction=itheta
-        ins(events,{time=69.602,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.835,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.509,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.184,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.511,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.744,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.418,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=74.093,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,720
     for itheta=207,243,36 do
         o.direction=itheta
-        ins(events,{time=69.602,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.835,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.509,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.184,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.511,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.744,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.418,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=74.093,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=0,720
     for itheta=297,333,36 do
         o.direction=itheta
-        ins(events,{time=69.602,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=71.835,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.509,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=75.184,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.511,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=70.744,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.418,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=74.093,func=objCreate,arg=tableCopy(o)})
     end
 
     --CornerGreen
@@ -512,33 +512,33 @@ function init()
     for itheta=0,4 do
         o.direction=itheta*22.5
         o.speed=225*pointDistance(0,0,itheta,4-itheta)
-        ins(events,{time=70.021,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=72.253,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.928,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.93,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=71.162,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.837,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,0
     for itheta=0,4 do
         o.direction=itheta*22.5+90
         o.speed=225*pointDistance(0,0,itheta,4-itheta)
-        ins(events,{time=70.021,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=72.253,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.928,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.93,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=71.162,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.837,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=1280,720
     for itheta=0,4 do
         o.direction=itheta*22.5+180
         o.speed=225*pointDistance(0,0,itheta,4-itheta)
-        ins(events,{time=70.021,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=72.253,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.928,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.93,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=71.162,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.837,func=objCreate,arg=tableCopy(o)})
     end
     o.x,o.y=0,720
     for itheta=0,4 do
         o.direction=itheta*22.5+270
         o.speed=225*pointDistance(0,0,itheta,4-itheta)
-        ins(events,{time=70.021,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=72.253,func=objCreate,arg=tableCopy(o)})
-        ins(events,{time=73.928,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=68.93,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=71.162,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=72.837,func=objCreate,arg=tableCopy(o)})
     end
 
     --Bubbles
@@ -552,13 +552,13 @@ function init()
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[mod(itime,8)]
-        ins(events,{time=76.997+itime*0.279,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=75.906+itime*0.279,func=objCreate,arg=tableCopy(o)})
     end
     o.life=0.18
     for itime=0,63 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[mod(itime,8)]
-        ins(events,{time=81.463+itime*0.07,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=80.372+itime*0.07,func=objCreate,arg=tableCopy(o)})
     end
 
     --InsideCircle
@@ -573,7 +573,7 @@ function init()
             ins(o.tag,"insidecircle"..irho)
             o.speed=94.2*irho
             o.direction=itheta
-            ins(events,{time=85.928,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=84.837,func=objCreate,arg=tableCopy(o)})
         end
     end
 
@@ -583,15 +583,15 @@ function init()
         o.tag={"outsidecircle",offsetAngle=6*itime,distance=300}
         o.direction=o.tag.offsetAngle
         o.x,o.y=640+o.tag.distance*math.cos(math.rad(o.direction)),360-o.tag.distance*math.sin(math.rad(o.direction))
-        ins(events,{time=85.928+itime*0.0186,func=objCreate,arg=tableCopy(o)})
+        ins(events,{time=84.837+itime*0.0186,func=objCreate,arg=tableCopy(o)})
     end
 
     --Animations
-    ins(events,{time=86.765,func=objChange,arg={tag="insidecircle",key="speed",value=0}})
-    ins(events,{time=87.044,func=objChange,arg={tag="insidecircle3",key="speed",value=1969}})
-    ins(events,{time=87.323,func=objChange,arg={tag="insidecircle2",key="speed",value=1969}})
-    ins(events,{time=87.602,func=objChange,arg={tag="insidecircle1",key="speed",value=1969}})
-    ins(events,{time=87.881,func=objChange,arg={tag="outsidecircle",key="update",value=objCircleSpin}})
+    ins(events,{time=85.674,func=objChange,arg={tag="insidecircle",key="speed",value=0}})
+    ins(events,{time=85.953,func=objChange,arg={tag="insidecircle3",key="speed",value=1969}})
+    ins(events,{time=86.232,func=objChange,arg={tag="insidecircle2",key="speed",value=1969}})
+    ins(events,{time=86.511,func=objChange,arg={tag="insidecircle1",key="speed",value=1969}})
+    ins(events,{time=86.79,func=objChange,arg={tag="outsidecircle",key="update",value=objCircleSpin}})
 
     --Star
     o.x,o.y=640,360
@@ -602,22 +602,22 @@ function init()
             local d=pointDirection(o.x,o.y,o.x+math.cos(math.rad(itheta*72))+(math.cos(math.rad((itheta+2)*72))-math.cos(math.rad(itheta*72)))*irho/11,o.y-math.sin(math.rad(itheta*72))-(math.sin(math.rad((itheta+2)*72))-math.sin(math.rad(itheta*72)))*irho/11);
             local s=pointDistance(o.x,o.y,o.x+math.cos(math.rad(itheta*72))+(math.cos(math.rad((itheta+2)*72))-math.cos(math.rad(itheta*72)))*irho/11,o.y-math.sin(math.rad(itheta*72))-(math.sin(math.rad((itheta+2)*72))-math.sin(math.rad(itheta*72)))*irho/11);
             o.tag={"star",starD=d,starS=s,starT=88.160}
-            ins(events,{time=88.160,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=87.069,func=objCreate,arg=tableCopy(o)})
         end
     end
 
-    ins(events,{time=88.160,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=87.069,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         obj.update={objCircleSpin,objColorControl}
     end}})
 
-    ins(events,{time=96.811,func=objExecute,arg={tag="star",func=function(obj)
+    ins(events,{time=95.72,func=objExecute,arg={tag="star",func=function(obj)
         obj.keep=nil
         obj.update={objColorControl}
         obj.direction=pointDirection(640,360,obj.x,obj.y)
         obj.speed=26*pointDistance(640,360,obj.x,obj.y)
     end}})
 
-    ins(events,{time=97.090,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=95.999,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         if mod(obj.tag.offsetAngle,72)==0 then
             obj.update={objCircleSpin,objColorControl,objSource1}
         else
@@ -634,7 +634,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=101.556+0.279*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=100.465+0.279*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
     for itime=0,7 do
@@ -642,7 +642,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=101.556+0.279*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=100.465+0.279*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
     for itime=0,7 do
@@ -650,11 +650,11 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=103.788+0.1395*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=102.697+0.1395*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
 
-    ins(events,{time=104.765,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=103.674,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         ins(obj.update,objCircleShrink)
     end}})
 
@@ -663,7 +663,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=104.904+0.07*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=103.813+0.07*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
     for itime=0,15 do
@@ -671,7 +671,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=106.021+0.1395*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=104.93+0.1395*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
     for itime=0,31 do
@@ -679,17 +679,17 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=108.253+0.07*itime,func=objCreate,arg=tableCopy(o)})
+            ins(events,{time=107.162+0.07*itime,func=objCreate,arg=tableCopy(o)})
         end
     end
 
-    ins(events,{time=110.486,func=objExecute,arg={tag="sub",func=function(obj)
+    ins(events,{time=109.395,func=objExecute,arg={tag="sub",func=function(obj)
         obj.update=nil
         obj.speed=300
         obj.direction=pointDirection(640,360,obj.x,obj.y)
         obj.gravity=283
     end}})
-    ins(events,{time=110.486,func=objExecute,arg={tag="outsidecircle",func=function(obj)
+    ins(events,{time=109.395,func=objExecute,arg={tag="outsidecircle",func=function(obj)
         obj.update=nil
         obj.speed=300
         obj.direction=pointDirection(640,360,obj.x,obj.y)
