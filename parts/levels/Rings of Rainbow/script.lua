@@ -701,8 +701,8 @@ function init()
 end
 
 function update()
-    local t=game.time
-    local ts=t-pt
+    t=game.time
+    ts=t-pt
 
     for index,obj in pairs(objs) do
         if type(obj.update)=="function" then obj.update(obj) elseif type(obj.update)=="table" then for key,value in pairs(obj.update) do value(obj) end end
