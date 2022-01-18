@@ -18,7 +18,7 @@ local objTemplate={
     tag={},
 }
 
-local rnd,mod=math.random,math.mod
+local rnd=math.random
 local ins,rem=table.insert,table.remove
 
 local function pointDirection(x1,y1,x2,y2)
@@ -93,7 +93,7 @@ end
 
 local function objDrawCircle(obj)
     local dx,dy=obj.x,obj.y
-    if obj.keep then dx,dy=mod(dx,1280),mod(dy,720) end
+    if obj.keep then dx,dy=dx%1280,dy%720 end
     gc.setLineWidth(obj.width)
     gc.setColor(obj.color[1],obj.color[2],obj.color[3],obj.color[4])
     gc.circle("line",dx,dy,obj.scale)
@@ -101,7 +101,7 @@ end
 
 local function objDrawRinger(obj)
     local dx,dy=obj.x,obj.y
-    if obj.keep then dx,dy=mod(dx,1280),mod(dy,720) end
+    if obj.keep then dx,dy=dx%1280,dy%720 end
     gc.setLineWidth(obj.width)
     gc.setColor(obj.color[1],obj.color[2],obj.color[3],obj.color[4])
     gc.circle("fill",dx,dy,obj.scale)
@@ -114,7 +114,7 @@ local function objFadeout(obj)
 end
 
 local function objCircleSpin(obj)
-    obj.direction=mod(200*t,360)+obj.tag.offsetAngle
+    obj.direction=200*t%360+obj.tag.offsetAngle
     obj.x,obj.y=640+obj.tag.distance*math.cos(math.rad(obj.direction)),360-obj.tag.distance*math.sin(math.rad(obj.direction))
 end
 
@@ -129,12 +129,12 @@ local function objStar(obj)
 end
 
 local function objColorControl(obj)
-    local c=mod(math.floor((t+0.02)/0.279)+4,8)
+    local c=math.floor(t/0.279)%8
     obj.color[1],obj.color[2],obj.color[3]=colorRainbow[c][1],colorRainbow[c][2],colorRainbow[c][3]
 end
 
 local function objSource1(obj)
-    if obj.tag.delay then obj.tag.delay=mod(obj.tag.delay+ts,0.06) else obj.tag.delay=mod(ts,0.06) end
+    if obj.tag.delay then obj.tag.delay=obj.tag.delay+ts%0.06 else obj.tag.delay=ts%0.06 end
     if obj.tag.delay>0.03 then
         obj.tag.delay=obj.tag.delay-0.03
         local o=tableCopy(obj)
@@ -221,19 +221,19 @@ function init()
     o.life=0.3
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         ins(events,{time=8.93+itime*0.279,func=objCreate,arg=tableCopy(o)})
     end
     o.life=0.24
     for itime=0,23 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         ins(events,{time=13.395+itime*0.1395,func=objCreate,arg=tableCopy(o)})
     end
     o.life=0.18
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         ins(events,{time=16.744+itime*0.07,func=objCreate,arg=tableCopy(o)})
     end
 
@@ -270,7 +270,7 @@ function init()
     ins(events,{time=19.813,func=objChange,arg={tag="outsidecircle",key="update",value=objCircleSpin}})
 
     ins(events,{time=20.093,func=objExecute,arg={tag="outsidecircle",func=function(obj)
-        if mod(obj.tag.offsetAngle,120)==0 then
+        if obj.tag.offsetAngle%120==0 then
             obj.update={objCircleSpin,objColorControl,objSource1}
         else
             obj.update={objCircleSpin,objColorControl}
@@ -300,7 +300,7 @@ function init()
     end}})
 
     ins(events,{time=29.023,func=objExecute,arg={tag="outsidecircle",func=function(obj)
-        if mod(obj.tag.offsetAngle,90)==0 then
+        if obj.tag.offsetAngle%90==0 then
             obj.update={objCircleSpin,objColorControl,objSource1}
         else
             obj.update={objCircleSpin,objColorControl}
@@ -326,7 +326,7 @@ function init()
     o.speed=900
     for itime=0,31 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         local r=rnd()
         for itheta=0,359,72 do
             o.direction=itheta+72*r
@@ -336,7 +336,7 @@ function init()
 
     for itime=0,23 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
@@ -346,7 +346,7 @@ function init()
 
     for itime=0,7 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
@@ -356,7 +356,7 @@ function init()
 
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
@@ -551,13 +551,13 @@ function init()
     o.life=0.3
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         ins(events,{time=75.906+itime*0.279,func=objCreate,arg=tableCopy(o)})
     end
     o.life=0.18
     for itime=0,63 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
-        o.color=colorRainbow[mod(itime,8)]
+        o.color=colorRainbow[itime%8]
         ins(events,{time=80.372+itime*0.07,func=objCreate,arg=tableCopy(o)})
     end
 
@@ -601,7 +601,7 @@ function init()
         for irho=0,10 do
             local d=pointDirection(o.x,o.y,o.x+math.cos(math.rad(itheta*72))+(math.cos(math.rad((itheta+2)*72))-math.cos(math.rad(itheta*72)))*irho/11,o.y-math.sin(math.rad(itheta*72))-(math.sin(math.rad((itheta+2)*72))-math.sin(math.rad(itheta*72)))*irho/11);
             local s=pointDistance(o.x,o.y,o.x+math.cos(math.rad(itheta*72))+(math.cos(math.rad((itheta+2)*72))-math.cos(math.rad(itheta*72)))*irho/11,o.y-math.sin(math.rad(itheta*72))-(math.sin(math.rad((itheta+2)*72))-math.sin(math.rad(itheta*72)))*irho/11);
-            o.tag={"star",starD=d,starS=s,starT=88.160}
+            o.tag={"star",starD=d,starS=s,starT=87.069}
             ins(events,{time=87.069,func=objCreate,arg=tableCopy(o)})
         end
     end
@@ -618,7 +618,7 @@ function init()
     end}})
 
     ins(events,{time=95.999,func=objExecute,arg={tag="outsidecircle",func=function(obj)
-        if mod(obj.tag.offsetAngle,72)==0 then
+        if obj.tag.offsetAngle%72==0 then
             obj.update={objCircleSpin,objColorControl,objSource1}
         else
             obj.update={objCircleSpin,objColorControl}
