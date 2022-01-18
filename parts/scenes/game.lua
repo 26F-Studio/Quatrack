@@ -127,7 +127,8 @@ local function callScriptEvent(event)
             if TIME()-lastErrorTime[event]>=1 then
                 lastErrorTime[event]=TIME()
                 err=err:gsub('%b[]:','')
-                MES.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
+                --MES.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
+                MES.new('error',err)
             end
         end
     end
