@@ -184,11 +184,11 @@ function scene.sceneInit()
 
     local dirPath=map.qbpFilePath:sub(1,#map.qbpFilePath-map.qbpFilePath:reverse():find("/")+1)
     if love.filesystem.getInfo(dirPath..map.songFile..'.ogg')then
-        BGM.load(map.songFile,dirPath..map.songFile..'.ogg')
+        BGM.load(map.qbpFilePath,dirPath..map.songFile..'.ogg')
     else
         MES.new('error',text.noFile)
     end
-    BGM.play(map.songFile,'-preLoad')
+    BGM.play(map.qbpFilePath,'-preLoad')
 
     errorCount=0
     freshScriptArgs()
@@ -461,7 +461,7 @@ function scene.update(dt)
     --Try play bgm
     if not isSongPlaying then
         if time<=playSongTime and time+dt>playSongTime then
-            BGM.play(map.songFile,'-sdin -noloop')
+            BGM.play(map.qbpFilePath,'-sdin -noloop')
             BGM.setPitch(playSpeed)
             BGM.seek(time+dt-playSongTime)
             isSongPlaying=true
