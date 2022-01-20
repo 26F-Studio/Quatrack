@@ -116,12 +116,14 @@ local function freshScriptArgs()
     rawset(gameArgs,'hitCount',hitCount)
     rawset(gameArgs,'totalDeviateTime',totalDeviateTime)
     rawset(gameArgs,'bestChain',bestChain)
+    rawset(gameArgs,'hits',hits)
+    rawset(gameArgs,'map',map)
 end
 local errorCount
 local lastErrorTime=setmetatable({},{__index=function(self,k)self[k]=-1e99 return -1e99 end})
 local function callScriptEvent(event)
     if map.script[event]then
-        local ok,err=pcall(map.script[event])
+        local ok,err=pcall(map.script[event],gameArgs)
         if not ok then
             errorCount=errorCount+1
             if TIME()-lastErrorTime[event]>=1 then
@@ -544,7 +546,8 @@ function scene.update(dt)
     end
 
     freshScriptArgs()
-    if map.script.update then map.script.update()end
+    --if map.script.update then map.script.update()end
+    callScriptEvent('update')
 end
 
 local SCC={1,1,1}--Super chain color
