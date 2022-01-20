@@ -268,6 +268,32 @@ function Map.new(file)
                     math.randomseed(love.timer.getTime())
                     math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
                 end
+
+                --写个近的地方
+            elseif lineType=='set_gameplay'then
+                --error(str)
+
+                local data=str:split(',')
+                local op=data[1]:upper()
+                local opType=data[1]==data[1]:upper()and'set'or'move'
+                
+                if op=='J'then--Judges
+                    _syntaxCheck(#data<=6,"Too many arguments")
+                    data[2]=tonumber(data[2])or false
+                    data[3]=tonumber(data[3])or false
+                    data[4]=tonumber(data[4])or false
+                    data[5]=tonumber(data[5])or false
+                    data[6]=tonumber(data[6])or false
+                    event={
+                        type='setGamePlay',
+                        time=curTime,
+                        operation=opType..'Judges',
+                        args={data[2],data[3],data[4],data[5],data[6]},
+                    }
+                end
+                local E=TABLE.copy(event)
+                o.eventQueue:insert(E)
+
             elseif lineType=='set_track'then--Animation: set track states
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('[x]...' or '/set_track:x;...'")

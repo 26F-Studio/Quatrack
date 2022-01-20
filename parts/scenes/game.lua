@@ -50,6 +50,8 @@ local bestChain
 local hits={}
 local touches={}
 
+local functionsGamePlay={}
+
 local function _updateStat()
     if fullAcc<=0 then return end
     mergeStat(STAT,{
@@ -254,7 +256,7 @@ function scene.sceneBack()
 end
 
 local function _trigNote(deviateTime,noTailHold,weak)
-    hitLV=getHitLV(deviateTime)
+    hitLV=getHitLV(deviateTime,map.hitLVOffsets)
     hitTextTime=TIME()
     fullAcc=fullAcc+100
     if noTailHold and(hitLV>0 or hitLV==0 and weak)then hitLV=5 end
@@ -280,13 +282,13 @@ local function _trigNote(deviateTime,noTailHold,weak)
     _updateAcc()
 end
 local function _trackPress(id,weak,auto)
-    local deviateTime=tracks[id]:press(weak,auto)
+    local deviateTime=tracks[id]:press(weak,auto,hitLVOffsets)
     if not auto and deviateTime then
         _trigNote(deviateTime)
     end
 end
 local function _trackRelease(id,weak,auto)
-    local deviateTime,noTailHold=tracks[id]:release(weak,auto)
+    local deviateTime,noTailHold=tracks[id]:release(weak,auto,hitLVOffsets)
     if not auto and deviateTime then
         _trigNote(deviateTime,noTailHold,weak)
     end
@@ -457,6 +459,22 @@ end
 function scene.mouseDown(x,y,k)scene.touchDown(x,y,k)end
 function scene.mouseUp(_,_,k)scene.touchUp(_,_,k)end
 
+--我先随便写一个近的地方 回头再挪位置
+functionsGamePlay.setJudges=function(...)
+    local args={...}
+    for i,v in pairs(args) do
+        local n=7-i
+        map.hitLVOffsets[n]=v
+    end
+end
+functionsGamePlay.moveJudges=function(...)
+    local args={...}
+    for i,v in ipairs(args) do
+        local n=7-i
+        map.hitLVOffsets[n]=map.hitLVOffsets[n]+v
+    end
+end
+
 function scene.update(dt)
     dt=dt*playSpeed
 
@@ -495,6 +513,8 @@ function scene.update(dt)
             for i=1,#tracks do
                 tracks[i]:setChordColor(n.color)
             end
+        elseif n.type=='setGamePlay' then
+            functionsGamePlay[n.operation](t,unpack(n.args))
         end
     end
 
@@ -615,7 +635,7 @@ function scene.draw()
     --Draw deviate times
     local l=#hitOffests
     for i=1,l do
-        local c=hitColors[getHitLV(hitOffests[i])]
+        local c=hitColors[getHitLV(hitOffests[i],map.hitLVOffsets)]
         local r=1+(1-i/l)^1.626
         gc_setColor(c[1],c[2],c[3],.2*r)
         gc_rectangle('fill',640+hitOffests[i]*688-1,350-6*r,3,4+12*r)

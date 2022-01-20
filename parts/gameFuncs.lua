@@ -140,7 +140,7 @@ function loadBeatmap(path)
         return false,res
     end
 end
-function getHitLV(div)
+function getHitLV(div,hitLVOffsets)
     div=abs(div)
     return
     div<=hitLVOffsets[5]and 5 or

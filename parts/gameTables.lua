@@ -30,65 +30,6 @@ defaultChordColor={
     return self[l]
 end})
 
-mapTemplate={
-    version="1.0",
-    mapName='[mapName]',
-    musicAuth='[musicAuth]',
-    mapAuth='[mapAuth]',
-    scriptAuth='[scriptAuth]',
-    mapDifficulty='[mapDifficulty]',
-
-    songFile="[songFile]",
-    songImage=false,
-    songOffset=0,
-    tracks=4,
-    realTracks=false,
-    freeSpeed=true,
-    script=false,
-}
-do
-    local gc=love.graphics
-    local GC=GC
-    mapScriptEnv={
-        print=print,
-        assert=assert,error=error,
-        tonumber=tonumber,tostring=tostring,
-        select=select,next=next,
-        ipairs=ipairs,pairs=pairs,
-        type=type,
-        pcall=pcall,xpcall=xpcall,
-        rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
-        setfenv=setfenv,setmetatable=setmetatable,
-        math={},string={},table={},bit={},coroutine={},
-        debug={},package={},io={},os={},
-
-        MATH={},STRING={},TABLE={},
-        gc={
-            setColor=function(r,g,b,a)gc.setColor(r,g,b,a)end,
-            setLineWidth=function(w)gc.setLineWidth(w)end,
-            setFont=function(f)setFont(f)end,
-
-            line=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
-            rect=function(mode,x,y,w,h)gc.rectangle(mode or'line',x,y,w,h)end,
-            circle=function(mode,x,y,r)gc.circle(mode or'line',x,y,r)end,
-            polygon=function(mode,x,y,r,sides,phase)GC.regPolygon(mode or'line',x,y,r,sides,phase)end,
-            print=function(mode,text,x,y)gc.printf(text,x-2600,y,5200,mode or'center')end,
-        },
-
-        message=function(mes)MES.new('info',mes)end,
-    }
-    for _,v in next,{
-        'math','string','table',
-        'bit','coroutine',
-        'MATH','STRING','TABLE',
-    }do TABLE.complete(_G[v],mapScriptEnv[v])end
-    mapScriptEnv.string.dump=nil
-    local dangerousLibMeta={__index=function()error("No way.")end}
-    for _,v in next,{
-        'debug','package','io','os'
-    }do setmetatable(mapScriptEnv[v],dangerousLibMeta)end
-end
-
 hitColors={
     [-1]=COLOR.dRed,
     [0]=COLOR.dRed,
@@ -172,6 +113,68 @@ actionNames={
     'dropSpdDn',
     'dropSpdUp',
 }
+
+mapTemplate={
+    version="1.0",
+    mapName='[mapName]',
+    musicAuth='[musicAuth]',
+    mapAuth='[mapAuth]',
+    scriptAuth='[scriptAuth]',
+    mapDifficulty='[mapDifficulty]',
+
+    songFile="[songFile]",
+    songImage=false,
+    songOffset=0,
+    tracks=4,
+    realTracks=false,
+    freeSpeed=true,
+    script=false,
+
+    hitLVOffsets=TABLE.copy(hitLVOffsets)
+}
+do
+    local gc=love.graphics
+    local GC=GC
+    mapScriptEnv={
+        print=print,
+        assert=assert,error=error,
+        tonumber=tonumber,tostring=tostring,
+        select=select,next=next,
+        ipairs=ipairs,pairs=pairs,
+        type=type,
+        pcall=pcall,xpcall=xpcall,
+        rawget=rawget,rawset=rawset,rawlen=rawlen,rawequal=rawequal,
+        setfenv=setfenv,setmetatable=setmetatable,
+        math={},string={},table={},bit={},coroutine={},
+        debug={},package={},io={},os={},
+
+        MATH={},STRING={},TABLE={},
+        gc={
+            setColor=function(r,g,b,a)gc.setColor(r,g,b,a)end,
+            setLineWidth=function(w)gc.setLineWidth(w)end,
+            setFont=function(f)setFont(f)end,
+
+            line=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
+            rect=function(mode,x,y,w,h)gc.rectangle(mode or'line',x,y,w,h)end,
+            circle=function(mode,x,y,r)gc.circle(mode or'line',x,y,r)end,
+            polygon=function(mode,x,y,r,sides,phase)GC.regPolygon(mode or'line',x,y,r,sides,phase)end,
+            print=function(mode,text,x,y)gc.printf(text,x-2600,y,5200,mode or'center')end,
+        },
+
+        message=function(mes)MES.new('info',mes)end,
+    }
+    for _,v in next,{
+        'math','string','table',
+        'bit','coroutine',
+        'MATH','STRING','TABLE',
+    }do TABLE.complete(_G[v],mapScriptEnv[v])end
+    mapScriptEnv.string.dump=nil
+    local dangerousLibMeta={__index=function()error("No way.")end}
+    for _,v in next,{
+        'debug','package','io','os'
+    }do setmetatable(mapScriptEnv[v],dangerousLibMeta)end
+end
+
 do--Userdata tables
     KEY_MAP={--Keys-Function map, for convert direct key input
         f='L1',d='L2',s='L3',a='L4',lshift='L5',

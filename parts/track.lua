@@ -215,7 +215,7 @@ function Track:press(weak,auto)
     local i,note=self:pollNote('note')
     if note and(auto or note.available)and self.time>note.time-note.trigTime then
         local deviateTime=self.time-note.time
-        local hitLV=getHitLV(deviateTime)
+        local hitLV=getHitLV(deviateTime,hitLVOffsets)
         local _1,_2,_3
         if hitLV>0 then
             _1,_2,_3=note:getAlpha(1),self.state.x/420,-(math.abs(hitLV-4.5)-.5)
@@ -250,7 +250,7 @@ function Track:release(weak,auto)
     local i,note=self:pollNote('hold')
     if note and(auto or note.available)and note.type=='hold'and not note.head then--Release hold note
         local deviateTime=note.etime-self.time
-        local hitLV=getHitLV(deviateTime)
+        local hitLV=getHitLV(deviateTime,hitLVOffsets)
         if self.time>note.etime-note.trigTime then
             if note.tail and hitLV>0 then
                 SFX.play(holdTailSFX[hitLV],.4+.6*note:getAlpha(1),self.state.x/420)
