@@ -618,8 +618,8 @@ function scene.draw()
     gc_setColor(1,1,1)gc_rectangle('fill',640-2,350-13,4,30)
     for i=1,5 do
         local c=hitColors[i]
-        local d1=hitLVOffsets[i]
-        local d2=hitLVOffsets[i+1]
+        local d1=map.hitLVOffsets[i]
+        local d2=map.hitLVOffsets[i+1]
         gc_setColor(c[1]*.8+.3,c[2]*.8+.3,c[3]*.8+.3,.626)
         gc_rectangle('fill',640-d1*688,350,(d1-d2)*688,4)
         gc_rectangle('fill',640+d1*688,350,(d2-d1)*688,4)
