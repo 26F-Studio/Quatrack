@@ -146,6 +146,7 @@ function Map.new(file)
         alpha=TABLE.new({100},o.tracks),
         xOffset=TABLE.new({0},o.tracks),
         yOffset=TABLE.new({0},o.tracks),
+        label=TABLE.new({},o.tracks),
     }
     local line=#fileData
     while line>0 do
@@ -568,6 +569,19 @@ function Map.new(file)
                     for i=1,#trackList do
                         state[trackList[i]]=offset
                     end
+                elseif op=='L'then--Label
+                    local codes={}
+                    if not data[2]then
+                        --do nothing, leave it empty
+                    else
+                        for i=2,#data do
+                            local code=data[i]
+                            codes[i-1]=code
+                        end
+                    end
+                    for i=1,#trackList do
+                        noteState.label[trackList[i]]=codes
+                    end
                 else
                     _syntaxCheck(false,"Invalid note operation")
                 end
@@ -692,6 +706,7 @@ function Map.new(file)
                                 alpha=noteState.alpha[curTrack],
                                 xOffset=noteState.xOffset[curTrack],
                                 yOffset=noteState.yOffset[curTrack],
+                                label=noteState.label[curTrack],
                             }
                             o.noteQueue:insert(b)
                             lastNote[curTrack]=b
@@ -709,6 +724,7 @@ function Map.new(file)
                                 alpha=noteState.alpha[curTrack],
                                 xOffset=noteState.xOffset[curTrack],
                                 yOffset=noteState.yOffset[curTrack],
+                                label=noteState.label[curTrack],
                             }
                             o.noteQueue:insert(b)
                             lastLongBar[curTrack]=b
