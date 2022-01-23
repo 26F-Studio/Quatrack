@@ -124,9 +124,9 @@ local function freshScriptArgs()
 end
 local errorCount
 local lastErrorTime=setmetatable({},{__index=function(self,k)self[k]=-1e99 return -1e99 end})
-local function callScriptEvent(event)
+local function callScriptEvent(event,localArgs)
     if map.script[event]then
-        local ok,err=pcall(map.script[event],gameArgs)
+        local ok,err=pcall(map.script[event],gameArgs,localArgs)
         if not ok then
             errorCount=errorCount+1
             if TIME()-lastErrorTime[event]>=1 then
@@ -287,12 +287,16 @@ local function _trackPress(id,weak,auto)
     if not auto and deviateTime then
         _trigNote(deviateTime)
     end
+    local localArgs={trackID=id}
+    callScriptEvent('trackPress',localArgs)
 end
 local function _trackRelease(id,weak,auto)
     local deviateTime,noTailHold=tracks[id]:release(weak,auto,hitLVOffsets)
     if not auto and deviateTime then
         _trigNote(deviateTime,noTailHold,weak)
     end
+    local localArgs={trackID=id}
+    callScriptEvent('trackRelease',localArgs)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
