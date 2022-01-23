@@ -120,6 +120,7 @@ local function freshScriptArgs()
     rawset(gameArgs,'bestChain',bestChain)
     rawset(gameArgs,'hits',hits)
     rawset(gameArgs,'map',map)
+    rawset(gameArgs,'tracks',tracks)
 end
 local errorCount
 local lastErrorTime=setmetatable({},{__index=function(self,k)self[k]=-1e99 return -1e99 end})
