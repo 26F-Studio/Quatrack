@@ -78,6 +78,7 @@ function Map.new(file)
 
     --Load metadata
     while true do
+        assert(fileData[1],"Emtpy map")
         local str=fileData[1][2]
         SCline,SCstr=fileData[1][1],str
         if str:sub(1,1)=='$'then
@@ -348,69 +349,73 @@ function Map.new(file)
                 local data=str:split(',')
                 local op=data[1]:upper()
                 local opType=data[1]==data[1]:upper()and'set'or'move'
+                rem(data,1)
 
                 local event
                 if op=='P'then--Position
-                    _syntaxCheck(#data<=3,"Too many arguments")
+                    _syntaxCheck(#data<=2,"Too many arguments")
+                    data[1]=tonumber(data[1])or false
                     data[2]=tonumber(data[2])or false
-                    data[3]=tonumber(data[3])or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Position',
-                        args={animData,data[2],data[3]},
+                        args={animData,data[1],data[2]},
                     }
                 elseif op=='R'then--Rotate
-                    _syntaxCheck(#data<=2,"Too many arguments")
-                    data[2]=tonumber(data[2])or false
+                    _syntaxCheck(#data<=1,"Too many arguments")
+                    data[1]=tonumber(data[1])or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Angle',
-                        args={animData,data[2]},
+                        args={animData,data[1]},
                     }
                 elseif op=='S'then--Size
-                    _syntaxCheck(#data<=3,"Too many arguments")
+                    _syntaxCheck(#data<=2,"Too many arguments")
+                    data[1]=tonumber(data[1])or false
                     data[2]=tonumber(data[2])or false
-                    data[3]=tonumber(data[3])or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Size',
-                        args={animData,data[2],data[3]},
+                        args={animData,data[1],data[2]},
                     }
                 elseif op=='D'then--Drop speed
-                    _syntaxCheck(#data<=2,"Too many arguments")
-                    data[2]=tonumber(data[2])or false
+                    _syntaxCheck(#data<=1,"Too many arguments")
+                    data[1]=tonumber(data[1])or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'DropSpeed',
-                        args={animData,data[2]},
+                        args={animData,data[1]},
                     }
                 elseif op=='T'then--Transparent
-                    _syntaxCheck(#data<=2,"Too many arguments")
-                    data[2]=tonumber(data[2])or false
+                    _syntaxCheck(#data<=1,"Too many arguments")
+                    data[1]=tonumber(data[1])or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Alpha',
-                        args={animData,data[2]},
+                        args={animData,data[1]},
                     }
                 elseif op=='C'then--Color
-                    _syntaxCheck(#data<=2,"Too many arguments")
+                    _syntaxCheck(#data<=1,"Too many arguments")
                     local r,g,b
-                    if not data[2]then
-                        _syntaxCheck(opType=='set'or #data==2,"Too few arguments")
-                        r,g,b=1,1,1
+                    if not data[1]then
+                        if opType=='set'then
+                            r,g,b=1,1,1
+                        else
+                            r,g,b=0,0,0
+                        end
                     else
                         local neg
-                        if data[2]:sub(1,1)=='-'then
+                        if data[1]:sub(1,1)=='-'then
                             neg=true
-                            data[2]=data[2]:sub(2)
+                            data[1]=data[1]:sub(2)
                         end
-                        _syntaxCheck(not data[2]:find("[^0-9a-fA-F]")and #data[2]<=6,"Invalid color code")
-                        r,g,b=STRING.hexColor(data[2])
+                        _syntaxCheck(not data[1]:find("[^0-9a-fA-F]")and #data[1]<=6,"Invalid color code")
+                        r,g,b=STRING.hexColor(data[1])
                         if neg then
                             r,g,b=-r,-g,-b
                         end
@@ -422,20 +427,20 @@ function Map.new(file)
                         args={animData,r,g,b},
                     }
                 elseif op=='A'then--Available
-                    if data[2]=='true'then
-                        data[2]=true
-                    elseif data[2]=='false'then
-                        data[2]=false
+                    if data[1]=='true'then
+                        data[1]=true
+                    elseif data[1]=='false'then
+                        data[1]=false
                     end
                     if opType=='set'then
-                        if data[2]==nil then data[2]=true end
-                        _syntaxCheck(#data<=2,"Too many arguments")
-                        _syntaxCheck(data[2]==true or data[2]==false,"Invalid option (need true/false)")
+                        if data[1]==nil then data[1]=true end
+                        _syntaxCheck(#data<=1,"Too many arguments")
+                        _syntaxCheck(data[1]==true or data[1]==false,"Invalid option (need true/false)")
                         for i=1,#trackList do
-                            trackAvailable[trackList[i]]=data[2]
+                            trackAvailable[trackList[i]]=data[1]
                         end
                     elseif opType=='move'then
-                        _syntaxCheck(#data<=1,"Too many arguments")
+                        _syntaxCheck(#data==0,"Too many arguments")
                         for i=1,#trackList do
                             trackAvailable[trackList[i]]=not trackAvailable[trackList[i]]
                         end
@@ -444,18 +449,18 @@ function Map.new(file)
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Available',
-                        args={data[2]},
+                        args={data[1]},
                     }
                 elseif op=='N'then--Show track name
-                    if data[2]then
-                        data[2]=tonumber(data[2])
-                        _syntaxCheck(data[2],"Invalid alpha")
+                    if data[1]then
+                        data[1]=tonumber(data[1])
+                        _syntaxCheck(data[1],"Invalid alpha")
                     end
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'NameAlpha',
-                        args={animData,data[2]},
+                        args={animData,data[1]},
                     }
                 else
                     _syntaxCheck(false,"Invalid track operation")

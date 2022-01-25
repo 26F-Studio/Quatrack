@@ -84,10 +84,10 @@ function Track:moveSize(animData,dkx,dky)
     self:setSize(animData,self.targetState.kx+(dkx or 0),self.targetState.ky+(dky or 0))
 end
 function Track:moveDropSpeed(animData,dds)
-    self:setDropSpeed(animData,self.targetState.dropSpeed+dds)
+    self:setDropSpeed(animData,self.targetState.dropSpeed+(dds or 0))
 end
 function Track:moveAlpha(animData,da)
-    self:setAlpha(animData,self.targetState.alpha+da)
+    self:setAlpha(animData,self.targetState.alpha+(da or 0))
 end
 function Track:moveAvailable()--wtf
     self:setAvailable(not self.state.available)
@@ -100,7 +100,7 @@ function Track:moveColor(animData,dr,dg,db)
     )
 end
 function Track:moveNameAlpha(animData,dna)
-    self:setNameAlpha(animData,self.targetState.nameAlpha+dna)
+    self:setNameAlpha(animData,self.targetState.nameAlpha+(dna or 0))
 end
 
 function Track:setPosition(animData,x,y)
