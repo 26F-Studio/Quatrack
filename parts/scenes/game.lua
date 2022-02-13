@@ -56,15 +56,6 @@ local function _updateStat()
         game=1,
         time=songLength,
         score=score0,
-        hits={
-            miss=hits[-1],
-            bad=hits[0],
-            well=hits[1],
-            good=hits[2],
-            perf=hits[3],
-            prec=hits[4],
-            marv=hits[5],
-        },
     })
     saveStats()
 end

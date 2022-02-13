@@ -225,6 +225,11 @@ if FIRSTLAUNCH and MOBILE then
     SETTING.trackW=1.3
 end
 
+--Update savedata
+do
+    if STAT.hits then STAT.hits=nil end
+end
+
 --Apply system setting
 applySettings()
 

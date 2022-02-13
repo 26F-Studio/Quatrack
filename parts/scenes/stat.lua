@@ -21,8 +21,6 @@ function scene.draw()
         gc.print(item[i],300,i*50)
         gc.print(text.stat[i],100,i*50)
     end
-
-    drawHits(STAT.hits,0,260)
 end
 
 scene.widgetList={
