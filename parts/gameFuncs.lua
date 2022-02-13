@@ -140,14 +140,14 @@ function loadBeatmap(path)
         return false,res
     end
 end
-function getHitLV(div)
+function getHitLV(div,judgeTimes)
     div=abs(div)
     return
-    div<=hitLVOffsets[5]and 5 or
-    div<=hitLVOffsets[4]and 4 or
-    div<=hitLVOffsets[3]and 3 or
-    div<=hitLVOffsets[2]and 2 or
-    div<=hitLVOffsets[1]and 1 or
+    div<=judgeTimes[5]and 5 or
+    div<=judgeTimes[4]and 4 or
+    div<=judgeTimes[3]and 3 or
+    div<=judgeTimes[2]and 2 or
+    div<=judgeTimes[1]and 1 or
     0
 end
 function mergeStat(stat,delta)--Merge delta stat. to global stat.

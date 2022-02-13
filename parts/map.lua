@@ -20,6 +20,16 @@ local function _insert(list,obj)
     end
     ins(list,pos+1,obj)
 end
+local function _parseTime(s)
+    local _s,_e=s:find('^-?%d+%.?%d*')
+    if _e==#s then--All numbers
+        return tonumber(s),nil
+    elseif not _s then--No numbers
+        return nil,s
+    else
+        return tonumber(s:sub(_s,_e)),s:sub(_e+1)
+    end
+end
 
 local lineTypeMarks={--Attention, [1] is lua regex, not raw string
     {'^%!',      '/bpm:'},
@@ -32,8 +42,9 @@ local lineTypeMarks={--Attention, [1] is lua regex, not raw string
     {'^%=+E',    '/rep_e:'},
     {'^%=+M',    '/rep_m:'},
     {'^%&',      '/redirect_note:'},
-    {'^%^',      '/set_chord_color:'},
     {'^%%',      '/rename_track:'},
+    {'^%^',      '/set_chord_color:'},
+    {'^%?',      '/set_judge:'},
 }
 function Map.new(file)
     local o=TABLE.copy(mapTemplate)
@@ -111,26 +122,21 @@ function Map.new(file)
     end
 
     if type(o.songOffset)=='string'then
-        local unit=1
-        if o.songOffset:sub(-2)=='ms'then
-            o.songOffset=tonumber(o.songOffset:sub(1,-3))
-            unit=0.001
-        elseif o.songOffset:sub(-1)=='s'then
-            o.songOffset=tonumber(o.songOffset:sub(1,-2))
-        elseif o.songOffset:sub(-1)=='m'then
-            o.songOffset=tonumber(o.songOffset:sub(1,-2))
-            unit=60
-        elseif o.songOffset:sub(-1)=='h'then
-            o.songOffset=tonumber(o.songOffset:sub(1,-2))
-            unit=3600
+        local offset,unit=_parseTime(o.songOffset)
+        _syntaxCheck(offset,"Invalid $songOffset value (need time)")
+        if unit=='ms'then unit=0.001
+        elseif unit=='s'then unit=1
+        elseif unit=='m'then unit=60
+        elseif unit=='h'then unit=3600
+        elseif unit then
+            _syntaxCheck(false,"Invalid $songOffset unit (need ms,s,m,h)")
         else
-            o.songOffset=tonumber(o.songOffset)
-            _syntaxCheck(o.songOffset==0 or math.abs(o.songOffset)>=1,("Use $songOffset=$1ms is you sure"):repD(o.songOffset))
+            _syntaxCheck(offset==0 or math.abs(offset)>=1,("Use $songOffset=$1ms if you sure"):repD(o.songOffset))
             unit=0.001
         end
-        _syntaxCheck(o.songOffset,"Invalid songOffset")
-        o.songOffset=o.songOffset*unit
+        o.songOffset=offset*unit
     end
+
     if type(o.freeSpeed)=='string'then o.freeSpeed=o.freeSpeed=='true'end
 
     --Parse notes & animations
@@ -161,15 +167,15 @@ function Map.new(file)
         end
 
         if str:sub(1,1)=='/'then
-            local lineType
+            local codeType
             if str:find(':')then
-                lineType=str:sub(2,str:find(':')-1):lower()
+                codeType=str:sub(2,str:find(':')-1):lower()
                 str=str:sub(str:find(':')+1)
             else
-                lineType=str:sub(2):lower()
+                codeType=str:sub(2):lower()
                 str=''
             end
-            if lineType=='bpm'then--BPM mark
+            if codeType=='bpm'then--BPM mark
                 local data=str:split(',')
                 _syntaxCheck(data[1],"Need BPM mark")
                 _syntaxCheck(#data<=2,"Too many arguments")
@@ -196,7 +202,7 @@ function Map.new(file)
                     curBeat=false
                     signature=false
                 end
-            elseif lineType=='time'then--Time mark
+            elseif codeType=='time'then--Time mark
                 _syntaxCheck(not loopStack[1],"Cannot set time in loop")
                 if str=='start'then
                     curTime=-3.6
@@ -220,22 +226,20 @@ function Map.new(file)
                         _syntaxCheck(time[1]and time[2],"Invalid time mark")
                         dt=time[1]*60+time[2]
                     else
-                        local unit
-                        if str:sub(-2)=='ms'then
-                            str,unit=str:sub(1,-3),0.001
-                        elseif str:sub(-1)=='s'then
-                            str,unit=str:sub(1,-2),1
-                        elseif str:sub(-4)=='beat'then
-                            str,unit=str:sub(1,-5),60/curBPM
-                        elseif str:sub(-3)=='bar'then
+                        local time,unit=_parseTime(str)
+                        _syntaxCheck(time,"Invalid time mark")
+                        if unit=='ms'then unit=0.001
+                        elseif unit=='s'then unit=1
+                        elseif unit=='m'then unit=60
+                        elseif unit=='h'then unit=3600
+                        elseif unit=='beat'then unit=60/curBPM
+                        elseif unit=='bar'then unit=60/curBPM*signature
                             _syntaxCheck(signature,"No signature to calculate bar length")
-                            str,unit=str:sub(1,-4),60/curBPM*signature
-                        else--Unit default to beat
-                            unit=60/curBPM
+                        elseif unit then
+                            _syntaxCheck(false,"Invalid $songOffset unit (need ms,s,m,h,beat,bar)")
+                        else unit=60/curBPM
                         end
-                        dt=tonumber(str)
-                        _syntaxCheck(dt,"Invalid time mark")
-                        dt=dt*unit
+                        dt=time*unit
                     end
 
                     if sign==''then
@@ -246,7 +250,7 @@ function Map.new(file)
                         curTime=curTime-dt
                     end
                 end
-            elseif lineType=='bar_line'then--Bar separator
+            elseif codeType=='bar_line'then--Bar separator
                 local len=0
                 repeat
                     len=len+1
@@ -258,7 +262,7 @@ function Map.new(file)
                 else
                     _syntaxCheck(signature,"No signature to check")
                 end
-            elseif lineType=='rnd_seed'then--Random seed mark
+            elseif codeType=='rnd_seed'then--Random seed mark
                 if str==''then
                     math.randomseed(love.timer.getTime())
                 else
@@ -269,7 +273,7 @@ function Map.new(file)
                     math.randomseed(love.timer.getTime())
                     math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
                 end
-            elseif lineType=='set_track'then--Animation: set track states
+            elseif codeType=='set_track'then--Animation: set track states
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('[x]...' or '/set_track:x;...'")
 
@@ -313,24 +317,21 @@ function Map.new(file)
                         animData={type='S'}
                     elseif animType=='L'then
                         _syntaxCheck(#animList==1,"Invalid animation data (need time)")
-                        local s=animList[1]
-                        local unit
-                        if s:sub(-2)=='ms'then
-                            s,unit=s:sub(1,-3),0.001
-                        elseif s:sub(-1)=='s'then
-                            s,unit=s:sub(1,-2),1
-                        elseif s:sub(-4)=='beat'then
-                            s,unit=s:sub(1,-5),60/curBPM
-                        elseif s:sub(-3)=='bar'then
+                        local time,unit=_parseTime(animList[1])
+                        _syntaxCheck(time and time>0,"Invalid animation time (need positive number)")
+                        if unit=='ms'then unit=0.001
+                        elseif unit=='s'then unit=1
+                        elseif unit=='m'then unit=60
+                        elseif unit=='h'then unit=3600
+                        elseif unit=='beat'then unit=60/curBPM
+                        elseif unit=='bar'then unit=60/curBPM*signature
                             _syntaxCheck(signature,"No signature to calculate bar length")
-                            s,unit=s:sub(1,-4),60/curBPM*signature
-                        else--Unit default to beat
-                            unit=60/curBPM
+                        elseif unit then
+                            _syntaxCheck(false,"Invalid $songOffset unit (need ms,s,m,h,beat,bar)")
+                        else unit=60/curBPM
                         end
-                        s=tonumber(s)
-                        _syntaxCheck(s and s>0,"Invalid animation time ([number]ms/s/beat)")
-                        s=s*unit
-                        animData={type='L',start=curTime,duration=s}
+                        time=time*unit
+                        animData={type='L',start=curTime,duration=time}
                     elseif animType=='E'then
                         _syntaxCheck(#animList==1,"Invalid animation data (need speed)")
                         local s=tonumber(animList[1])
@@ -470,7 +471,7 @@ function Map.new(file)
                     E.track=trackList[i]
                     o.eventQueue:insert(E)
                 end
-            elseif lineType=='set_note'then--Note state: color & alpha
+            elseif codeType=='set_note'then--Note state: color & alpha
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('(x)...' or '/set_note:x;...')")
 
@@ -550,7 +551,7 @@ function Map.new(file)
                 else
                     _syntaxCheck(false,"Invalid note operation")
                 end
-            elseif lineType=='rep_s'then--Repeat start
+            elseif codeType=='rep_s'then--Repeat start
                 local cd=1
                 if str~=''then
                     cd=tonumber(str)
@@ -562,7 +563,7 @@ function Map.new(file)
                     startMark=line,
                     endMark=false,
                 })
-            elseif lineType=='rep_e'then--Repeat end
+            elseif codeType=='rep_e'then--Repeat end
                 _syntaxCheck(loopStack[1],"No loop to end")
                 local curState=loopStack[#loopStack]
                 if curState.countDown>0 then
@@ -572,13 +573,13 @@ function Map.new(file)
                 else
                     rem(loopStack)
                 end
-            elseif lineType=='rep_m'then--Repeat middle(skip)
+            elseif codeType=='rep_m'then--Repeat middle(skip)
                 _syntaxCheck(loopStack[1],"No loop to break")
                 if loopStack[#loopStack].countDown==0 then
                     line=loopStack[#loopStack].endMark
                     rem(loopStack)
                 end
-            elseif lineType=='redirect_note'then--Redirect notes to different track
+            elseif codeType=='redirect_note'then--Redirect notes to different track
                 if str==''then--Reset
                     for i=1,o.tracks do trackDir[i]=i end
                 elseif str=='A'then--Random shuffle (won't reset to 1~N!)
@@ -599,24 +600,7 @@ function Map.new(file)
                         trackDir[i]=l[id]
                     end
                 end
-            elseif lineType=='set_chord_color'then--Set chord color
-                local c=str:split(',')
-                if #c==0 then
-                    c=defaultChordColor
-                else
-                    for i=1,#c do
-                        _syntaxCheck(not c[i]:find("[^0-9a-fA-F]")and #c[i]<=6,"Invalid color code")
-                        c[i]={STRING.hexColor(c[i])}
-                    end
-                    if #c>o.tracks-1 then _syntaxCheck(false,"Too many colors")end
-                    setmetatable(c,getmetatable(defaultChordColor))
-                end
-                o.eventQueue:insert{
-                    type='setChordColor',
-                    time=curTime,
-                    color=c,
-                }
-            elseif lineType=='rename_track'then--Rename tracks
+            elseif codeType=='rename_track'then--Rename tracks
                 local nameList=str:split(',')
                 _syntaxCheck(#nameList==o.tracks,"Track names not match track count")
                 for id=1,#nameList do
@@ -647,8 +631,48 @@ function Map.new(file)
                         trackAvailable[id]=false
                     end
                 end
+            elseif codeType=='set_chord_color'then--Set chord color
+                local c=str:split(',')
+                if #c==0 then
+                    c=defaultChordColor
+                else
+                    for i=1,#c do
+                        _syntaxCheck(not c[i]:find("[^0-9a-fA-F]")and #c[i]<=6,"Invalid color code")
+                        c[i]={STRING.hexColor(c[i])}
+                    end
+                    if #c>o.tracks-1 then _syntaxCheck(false,"Too many colors")end
+                    setmetatable(c,getmetatable(defaultChordColor))
+                end
+                o.eventQueue:insert{
+                    type='setChordColor',
+                    time=curTime,
+                    color=c,
+                }
+            elseif codeType=='set_judge'then--Set judgement level
+                local t=str:split(',')
+                _syntaxCheck(#t==5,"Invalid judgement time list (need 5 values)")
+                for i=1,5 do
+                    local time,unit=_parseTime(t[i])
+                    _syntaxCheck(time and time>0,"Invalid judge time (need positive number)")
+                    if unit=='ms'then unit=0.001
+                    elseif unit=='s'then unit=1
+                    elseif unit then
+                        _syntaxCheck(false,"Invalid time unit (need ms,s)")
+                    else unit=0.001
+                    end
+                    t[i]=time*unit
+                end
+                for i=1,4 do
+                    _syntaxCheck(t[i]<t[i+1],"Invalid judgement time list (need ascending order)")
+                end
+                t[1],t[2],t[3],t[4],t[5]=t[5],t[4],t[3],t[2],t[1]
+                o.eventQueue:insert{
+                    type='setJudge',
+                    time=curTime,
+                    args=t,
+                }
             else
-                _syntaxCheck(false,"Invalid line type: "..lineType)
+                _syntaxCheck(false,"Invalid line type: "..codeType)
             end
         else--Notes
             local readState='note'

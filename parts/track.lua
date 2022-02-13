@@ -24,6 +24,7 @@ end
 function Track.new(id)
     local track={
         id=id,
+        _gameData=nil,
         name='',
         showname=false,
         nameList=false,
@@ -50,6 +51,10 @@ function Track.new(id)
     track.startState=TABLE.copy(track.state)
     track.targetState=TABLE.copy(track.state)
     return setmetatable(track,{__index=Track})
+end
+
+function Track:_setGameData(t)
+    self._gameData=t
 end
 
 function Track:rename(name)
@@ -215,7 +220,7 @@ function Track:press(weak,auto)
     local i,note=self:pollNote('note')
     if note and(auto or note.available)and self.time>note.time-note.trigTime then
         local deviateTime=self.time-note.time
-        local hitLV=getHitLV(deviateTime)
+        local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         local _1,_2,_3
         if hitLV>0 then
             _1,_2,_3=note:getAlpha(1),self.state.x/420,-(math.abs(hitLV-4.5)-.5)
@@ -250,7 +255,7 @@ function Track:release(weak,auto)
     local i,note=self:pollNote('hold')
     if note and(auto or note.available)and note.type=='hold'and not note.head then--Release hold note
         local deviateTime=note.etime-self.time
-        local hitLV=getHitLV(deviateTime)
+        local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         if self.time>note.etime-note.trigTime then
             if note.tail and hitLV>0 then
                 SFX.play(holdTailSFX[hitLV],.4+.6*note:getAlpha(1),self.state.x/420)
@@ -429,7 +434,7 @@ function Track:draw(map)
         local r,g,b=note:getColor(1-timeRemain/2.6)
         local a=note:getAlpha(1-timeRemain/2.6)
         if note.type=='tap'and timeRemain<0 then
-            a=a*(1+timeRemain/hitLVOffsets[1])
+            a=a*(1+timeRemain/self._gameData.judgeTimes[1])
         end
         if a >0 then
             local dx,dy=note:getOffset(1-timeRemain/2.6)

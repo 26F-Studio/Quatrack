@@ -114,7 +114,7 @@ hitAccList={
     100, --PREC
     101, --MARV
 }
-hitLVOffsets={--Time judgement
+judgeTimesTemplate={--Time judgement
     .16,
     .12,
     .08,
