@@ -16,7 +16,7 @@ mapMetaKeys={
     "freeSpeed",
     "script",
 }
-mapMetaKeyMap={}for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
+mapMetaKeyMap={} for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
 defaultChordColor={
     {STRING.hexColor("FFFF00")},
     {STRING.hexColor("FFC000")},
@@ -64,29 +64,29 @@ do
 
         MATH={},STRING={},TABLE={},
         gc={
-            setColor=function(r,g,b,a)gc.setColor(r,g,b,a)end,
-            setLineWidth=function(w)gc.setLineWidth(w)end,
-            setFont=function(f)setFont(f)end,
+            setColor=function(r,g,b,a) gc.setColor(r,g,b,a) end,
+            setLineWidth=function(w) gc.setLineWidth(w) end,
+            setFont=function(f) setFont(f) end,
 
-            line=function(x1,y1,x2,y2)gc.line(x1,y1,x2,y2)end,
-            rect=function(mode,x,y,w,h)gc.rectangle(mode or'line',x,y,w,h)end,
-            circle=function(mode,x,y,r)gc.circle(mode or'line',x,y,r)end,
-            polygon=function(mode,x,y,r,sides,phase)GC.regPolygon(mode or'line',x,y,r,sides,phase)end,
-            print=function(mode,text,x,y)gc.printf(text,x-2600,y,5200,mode or'center')end,
+            line=function(x1,y1,x2,y2) gc.line(x1,y1,x2,y2) end,
+            rect=function(mode,x,y,w,h) gc.rectangle(mode or 'line',x,y,w,h) end,
+            circle=function(mode,x,y,r) gc.circle(mode or 'line',x,y,r) end,
+            polygon=function(mode,x,y,r,sides,phase) GC.regPolygon(mode or 'line',x,y,r,sides,phase) end,
+            print=function(mode,text,x,y) gc.printf(text,x-2600,y,5200,mode or 'center') end,
         },
 
-        message=function(mes)MES.new('info',mes)end,
+        message=function(mes) MES.new('info',mes) end,
     }
     for _,v in next,{
         'math','string','table',
         'bit','coroutine',
         'MATH','STRING','TABLE',
-    }do TABLE.complete(_G[v],mapScriptEnv[v])end
+    } do TABLE.complete(_G[v],mapScriptEnv[v]) end
     mapScriptEnv.string.dump=nil
-    local dangerousLibMeta={__index=function()error("No way.")end}
+    local dangerousLibMeta={__index=function() error("No way.") end}
     for _,v in next,{
         'debug','package','io','os'
-    }do setmetatable(mapScriptEnv[v],dangerousLibMeta)end
+    } do setmetatable(mapScriptEnv[v],dangerousLibMeta) end
 end
 
 hitColors={
@@ -139,7 +139,7 @@ rankColors={
     COLOR.dViolet,
     COLOR.dWine,
     COLOR.dGray,
-}for i=1,#rankColors do rankColors[i]={.3+rankColors[i][1]*.7,.3+rankColors[i][2]*.7,.3+rankColors[i][3]*.7} end
+} for i=1,#rankColors do rankColors[i]={.3+rankColors[i][1]*.7,.3+rankColors[i][2]*.7,.3+rankColors[i][3]*.7} end
 defaultTrackNames={
     {'C'},
     {'L1','R1'},

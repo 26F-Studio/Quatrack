@@ -68,7 +68,7 @@ local function tableCopy(t)
 end
 
 local function tableFind(t,f)
-    for key,value in pairs(t)do if f==value then return true end end
+    for key,value in pairs(t) do if f==value then return true end end
 end
 
 local function objCreate(arg)
@@ -277,7 +277,7 @@ function init()
         end
     end}})
 
-    ins(events,{time=27.767,func=objExecute,arg={tag="sub",func=function(obj)obj.direction=pointDirection(640,360,obj.x,obj.y)end}})
+    ins(events,{time=27.767,func=objExecute,arg={tag="sub",func=function(obj) obj.direction=pointDirection(640,360,obj.x,obj.y) end}})
     ins(events,{time=27.767,func=objChange,arg={tag="outsidecircle",key="update",value={objCircleSpin,objColorControl}}})
 
     --对 这里有他妈俩一样的东西 其中一个不可见 我也不知道为什么 但如果没有就不会正常工作 为什么呢 他妈的
@@ -364,7 +364,7 @@ function init()
         end
     end
 
-    ins(events,{time=62.511,func=objExecute,arg={tag="sub",func=function(obj)obj.direction,obj.speed=pointDirection(640,360,obj.x,obj.y),150 end}})
+    ins(events,{time=62.511,func=objExecute,arg={tag="sub",func=function(obj) obj.direction,obj.speed=pointDirection(640,360,obj.x,obj.y),150 end}})
 
     --CornerRed
     o.color=colorRainbow[0]
@@ -697,7 +697,7 @@ function init()
     end}})
 
     --SORT IT
-    table.sort(events,function(a,b)return a.time<b.time end)
+    table.sort(events,function(a,b) return a.time<b.time end)
 end
 
 function update()
@@ -725,7 +725,7 @@ function update()
             rem(objs,index)
         end
     end
-    while(#events>0 and events[1].time<t)do
+    while(#events>0 and events[1].time<t) do
         events[1].func(events[1].arg)
         rem(events,1)
     end

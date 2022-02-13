@@ -26,7 +26,7 @@ end
 scene.widgetList={
     WIDGET.newButton{name='path',x=860,y=640,w=250,h=80,font=25,
         code=function()
-            if SYSTEM=="Windows"or SYSTEM=="Linux"then
+            if SYSTEM=="Windows" or SYSTEM=="Linux" then
                 love.system.openURL(SAVEDIR)
             else
                 MES.new('info',SAVEDIR)

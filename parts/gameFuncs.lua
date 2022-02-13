@@ -40,20 +40,20 @@ do--function tryDelete()
     end
 end
 do--function loadFile(name,args), function saveFile(data,name,args)
-    local t=setmetatable({},{__index=function()return"'$1' loading failed: $2"end})
+    local t=setmetatable({},{__index=function() return"'$1' loading failed: $2" end})
     function loadFile(name,args)
         local text=text or t
-        if not args then args=''end
+        if not args then args='' end
         local res,mes=pcall(FILE.load,name,args)
         if res then
             return mes
         else
-            if mes:find'open error'then
+            if mes:find'open error' then
                 MES.new('error',text.loadError_open:repD(name,""))
-            elseif mes:find'unknown mode'then
+            elseif mes:find'unknown mode' then
                 MES.new('error',text.loadError_errorMode:repD(name,args))
-            elseif mes:find'no file'then
-                if not args:sArg'-canSkip'then
+            elseif mes:find'no file' then
+                if not args:sArg'-canSkip' then
                     MES.new('error',text.loadError_noFile:repD(name,""))
                 end
             elseif mes then
@@ -70,12 +70,12 @@ do--function loadFile(name,args), function saveFile(data,name,args)
             return mes
         else
             MES.new('error',
-                mes:find'duplicate'and
-                    text.saveError_duplicate:repD(name)or
-                mes:find'encode error'and
-                    text.saveError_encode:repD(name)or
+                mes:find'duplicate' and
+                    text.saveError_duplicate:repD(name) or
+                mes:find'encode error' and
+                    text.saveError_encode:repD(name) or
                 mes and
-                    text.saveError_other:repD(name,mes)or
+                    text.saveError_other:repD(name,mes) or
                 text.saveError_unknown:repD(name)
             )
         end
@@ -143,21 +143,21 @@ end
 function getHitLV(div,judgeTimes)
     div=abs(div)
     return
-    div<=judgeTimes[5]and 5 or
-    div<=judgeTimes[4]and 4 or
-    div<=judgeTimes[3]and 3 or
-    div<=judgeTimes[2]and 2 or
-    div<=judgeTimes[1]and 1 or
+    div<=judgeTimes[5] and 5 or
+    div<=judgeTimes[4] and 4 or
+    div<=judgeTimes[3] and 3 or
+    div<=judgeTimes[2] and 2 or
+    div<=judgeTimes[1] and 1 or
     0
 end
 function mergeStat(stat,delta)--Merge delta stat. to global stat.
     for k,v in next,delta do
-        if type(v)=='table'then
-            if type(stat[k])=='table'then
+        if type(v)=='table' then
+            if type(stat[k])=='table' then
                 mergeStat(stat[k],v)
             end
         else
-            if stat[k]then
+            if stat[k] then
                 stat[k]=stat[k]+v
             end
         end
@@ -258,13 +258,13 @@ end
 
 
 --Widget function shortcuts
-function backScene()SCN.back()end
+function backScene()SCN.back() end
 do--function goScene(name,style)
     local cache={}
     function goScene(name,style)
         local hash=style and name..style or name
-        if not cache[hash]then
-            cache[hash]=function()SCN.go(name,style)end
+        if not cache[hash] then
+            cache[hash]=function() SCN.go(name,style) end
         end
         return cache[hash]
     end
@@ -273,8 +273,8 @@ do--function swapScene(name,style)
     local cache={}
     function swapScene(name,style)
         local hash=style and name..style or name
-        if not cache[hash]then
-            cache[hash]=function()SCN.swapTo(name,style)end
+        if not cache[hash] then
+            cache[hash]=function() SCN.swapTo(name,style) end
         end
         return cache[hash]
     end
@@ -282,14 +282,14 @@ end
 do--function pressKey(k)
     local cache={}
     function pressKey(k)
-        if not cache[k]then
-            cache[k]=function()love.keypressed(k)end
+        if not cache[k] then
+            cache[k]=function() love.keypressed(k) end
         end
         return cache[k]
     end
 end
 do--CUS/SETXXX(k)
-    function SETval(k)return function()return SETTING[k]end end
-    function SETrev(k)return function()SETTING[k]=not SETTING[k]end end
-    function SETsto(k)return function(i)SETTING[k]=i end end
+    function SETval(k)return function() return SETTING[k] end end
+    function SETrev(k)return function() SETTING[k]=not SETTING[k] end end
+    function SETsto(k)return function(i) SETTING[k]=i end end
 end

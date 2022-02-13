@@ -3,9 +3,9 @@ local fs=love.filesystem
 VERSION=require"version"
 TIME=love.timer.getTime
 YIELD=coroutine.yield
-SYSTEM=love.system.getOS()if SYSTEM=='OS X'then SYSTEM='macOS'end
+SYSTEM=love.system.getOS() if SYSTEM=='OS X' then SYSTEM='macOS' end
 FNNS=SYSTEM:find'\79\83'--What does FNSF stand for? IDK so don't ask me lol
-MOBILE=SYSTEM=='Android'or SYSTEM=='iOS'
+MOBILE=SYSTEM=='Android' or SYSTEM=='iOS'
 SAVEDIR=fs.getSaveDirectory()
 
 --Global Vars & Settings
@@ -60,11 +60,11 @@ string.trim=STRING.trim
 FILE.clear('')
 
 --Create directories
-for _,v in next,{'conf','record','replay','cache','lib','songs'}do
+for _,v in next,{'conf','record','replay','cache','lib','songs'} do
     local info=fs.getInfo(v)
     if not info then
         fs.createDirectory(v)
-    elseif info.type~='directory'then
+    elseif info.type~='directory' then
         fs.remove(v)
         fs.createDirectory(v)
     end
@@ -76,8 +76,8 @@ require'parts.gameFuncs'
 
 --Load shader files from SOURCE ONLY
 SHADER={}
-for _,v in next,fs.getDirectoryItems('parts/shaders')do
-    if isSafeFile('parts/shaders/'..v)then
+for _,v in next,fs.getDirectoryItems('parts/shaders') do
+    if isSafeFile('parts/shaders/'..v) then
         local name=v:sub(1,-6)
         SHADER[name]=love.graphics.newShader('parts/shaders/'..name..'.glsl')
     end
@@ -91,7 +91,7 @@ do--Z.setCursor
         if not SETTING.sysCursor then
             gc.setColor(1,1,1)
             gc.circle('line',x,y,10)
-            if love.mouse.isDown(1) then gc.circle('fill',x,y,6)end
+            if love.mouse.isDown(1) then gc.circle('fill',x,y,6) end
             gc.setColor(1,1,1,.626)
             gc.setLineWidth(2)
             local angle=TIME()
@@ -102,13 +102,13 @@ do--Z.setCursor
     end)
 end
 Z.setOnFnKeys({
-    function()MES.new('check',PROFILE.switch()and"profile start!"or"profile report copied!")end,
-    function()MES.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num))end,
-    function()MES.new('error',"挂了")end,
-    function()end,
-    function()print(WIDGET.getSelected()or"no widget selected")end,
-    function()for k,v in next,_G do print(k,v)end end,
-    function()if love["_openConsole"]then love["_openConsole"]()end end,
+    function() MES.new('check',PROFILE.switch() and "profile start!" or "profile report copied!") end,
+    function() MES.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
+    function() MES.new('error',"挂了") end,
+    function() end,
+    function() print(WIDGET.getSelected() or "no widget selected") end,
+    function() for k,v in next,_G do print(k,v) end end,
+    function() if love["_openConsole"] then love["_openConsole"]() end end,
 })
 Z.setDebugInfo{
     {"Cache",gcinfo},
@@ -156,8 +156,8 @@ do--Z.setOnFocus
 end
 
 --Load settings and statistics
-TABLE.update(loadFile('conf/settings','-canSkip')or{},SETTING)
-TABLE.coverR(loadFile('conf/data','-canSkip')or{},STAT)
+TABLE.update(loadFile('conf/settings','-canSkip') or{},SETTING)
+TABLE.coverR(loadFile('conf/data','-canSkip') or{},STAT)
 local savedKey=loadFile('conf/key','-canSkip')
 if savedKey then
     KEY_MAP=savedKey
@@ -170,8 +170,8 @@ IMG.init{
 }
 SFX.init((function()
     local L={}
-    for _,v in next,fs.getDirectoryItems('media/effect/chiptune/')do
-        if isSafeFile('media/effect/chiptune/'..v,"Dangerous file : %SAVE%/media/effect/chiptune/"..v)then
+    for _,v in next,fs.getDirectoryItems('media/effect/chiptune/') do
+        if isSafeFile('media/effect/chiptune/'..v,"Dangerous file : %SAVE%/media/effect/chiptune/"..v) then
             table.insert(L,v:sub(1,-5))
         end
     end
@@ -179,8 +179,8 @@ SFX.init((function()
 end)())
 BGM.load((function()
     local L={}
-    for _,v in next,fs.getDirectoryItems('media/music')do
-        if isSafeFile('media/music/'..v,"Dangerous file : %SAVE%/media/music/"..v)then
+    for _,v in next,fs.getDirectoryItems('media/music') do
+        if isSafeFile('media/music/'..v,"Dangerous file : %SAVE%/media/music/"..v) then
             L[v:sub(1,-5)]='media/music/'..v
         end
     end
@@ -199,16 +199,16 @@ LANG.init('zh',
 table.insert(_LOADTIMELIST_,("Initialize Parts: %.3fs"):format(TIME()-_LOADTIME_))
 
 --Load background files from SOURCE ONLY
-for _,v in next,fs.getDirectoryItems('parts/backgrounds')do
-    if isSafeFile('parts/backgrounds/'..v)and v:sub(-3)=='lua'then
+for _,v in next,fs.getDirectoryItems('parts/backgrounds') do
+    if isSafeFile('parts/backgrounds/'..v) and v:sub(-3)=='lua' then
         local name=v:sub(1,-5)
         BG.add(name,require('parts.backgrounds.'..name))
     end
 end
 BG.remList('none')BG.remList('gray')BG.remList('custom')
 --Load scene files from SOURCE ONLY
-for _,v in next,fs.getDirectoryItems('parts/scenes')do
-    if isSafeFile('parts/scenes/'..v)then
+for _,v in next,fs.getDirectoryItems('parts/scenes') do
+    if isSafeFile('parts/scenes/'..v) then
         local sceneName=v:sub(1,-5)
         SCN.add(sceneName,require('parts.scenes.'..sceneName))
         LANG.addScene(sceneName)
@@ -235,4 +235,4 @@ applySettings()
 
 table.insert(_LOADTIMELIST_,("Initialize Data: %.3fs"):format(TIME()-_LOADTIME_))
 
-for i=1,#_LOADTIMELIST_ do LOG(_LOADTIMELIST_[i])end
+for i=1,#_LOADTIMELIST_ do LOG(_LOADTIMELIST_[i]) end

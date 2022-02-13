@@ -59,7 +59,7 @@ end
 
 function Track:rename(name)
     self.name=name
-    if name=='x'then name=''end
+    if name=='x' then name='' end
     self.nameList=name:split(' ')
     self.showName=TABLE.shift(self.nameList)
     for i=1,#self.showName do
@@ -75,7 +75,7 @@ function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,
 function Track:setDefaultAngle(ang)self.defaultState.ang=ang end
 function Track:setDefaultSize(kx,ky)self.defaultState.kx,self.defaultState.ky=kx,ky end
 function Track:setDefaultDropSpeed(speed)self.defaultState.dropSpeed=speed end
-function Track:setDefaultAlpha(alpha)self.defaultState.alpha=interval(alpha,0,100)end
+function Track:setDefaultAlpha(alpha)self.defaultState.alpha=interval(alpha,0,100) end
 function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
 function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=interval(r,0,1),interval(g,0,1),interval(b,0,1) end
 
@@ -164,19 +164,19 @@ function Track:addItem(note)
 end
 function Track:pollNote(noteType)
     local l=self.notes
-    if noteType=='note'then
+    if noteType=='note' then
         for i=1,#l do
             if
-                l[i].type=='tap'or
-                l[i].type=='hold'and l[i].active and l[i].head
+                l[i].type=='tap' or
+                l[i].type=='hold' and l[i].active and l[i].head
             then
                 return i,l[i]
             end
         end
-    elseif noteType=='hold'then
+    elseif noteType=='hold' then
         for i=1,#l do
             if
-                l[i].type=='hold'and l[i].active
+                l[i].type=='hold' and l[i].active
             then
                 return i,l[i]
             end
@@ -186,7 +186,7 @@ end
 function Track:pollPressTime()
     local l=self.notes
     for i=1,#l do
-        if l[i].available and(l[i].type=='tap'or l[i].type=='hold'and l[i].active and l[i].head)then
+        if l[i].available and(l[i].type=='tap' or l[i].type=='hold' and l[i].active and l[i].head) then
             return l[i].time
         end
     end
@@ -196,7 +196,7 @@ function Track:pollReleaseTime()
     local l=self.notes
     for i=1,#l do
         local note=l[i]
-        if note.type=='hold'and note.available and note.active and note.tail then
+        if note.type=='hold' and note.available and note.active and note.tail then
             return note.etime
         end
     end
@@ -218,19 +218,19 @@ function Track:press(weak,auto)
 
     --Check first note
     local i,note=self:pollNote('note')
-    if note and(auto or note.available)and self.time>note.time-note.trigTime then
+    if note and(auto or note.available) and self.time>note.time-note.trigTime then
         local deviateTime=self.time-note.time
         local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         local _1,_2,_3
         if hitLV>0 then
             _1,_2,_3=note:getAlpha(1),self.state.x/420,-(math.abs(hitLV-4.5)-.5)
         end
-        if note.type=='tap'then--Press tap note
+        if note.type=='tap' then--Press tap note
             rem(self.notes,i)
             if _1 then
                 SFX.play('hit_tap',.4+.6*_1,_2,_3)
             end
-        elseif note.type=='hold'then--Press hold note
+        elseif note.type=='hold' then--Press hold note
             if not note.head then return end
             note.head=false
             if _1 then
@@ -253,7 +253,7 @@ function Track:release(weak,auto)
     if not weak then self.pressed=false end
     self.lastReleaseTime=self.time
     local i,note=self:pollNote('hold')
-    if note and(auto or note.available)and note.type=='hold'and not note.head then--Release hold note
+    if note and(auto or note.available) and note.type=='hold' and not note.head then--Release hold note
         local deviateTime=note.etime-self.time
         local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         if self.time>note.etime-note.trigTime then
@@ -288,12 +288,12 @@ function Track:update(dt)
         local a=self.animQueue[i]
         local animData=a.data
         local animKeys=animManager[a.paramSet]
-        if animData.type=='S'then
+        if animData.type=='S' then
             for j=1,#animKeys do
                 C[animKeys[j]]=T[animKeys[j]]
             end
             rem(self.animQueue,i)
-        elseif animData.type=='L'then
+        elseif animData.type=='L' then
             for j=1,#animKeys do
                 local k=animKeys[j]
                 C[k]=lerp(S[k],T[k],(self.time-animData.start)/animData.duration)
@@ -304,7 +304,7 @@ function Track:update(dt)
                 end
                 rem(self.animQueue,i)
             end
-        elseif animData.type=='E'then
+        elseif animData.type=='E' then
             for j=1,#animKeys do
                 local k=animKeys[j]
                 C[k]=approach(C[k],T[k],animData.speed*dt)
@@ -325,12 +325,12 @@ function Track:updateLogic(time)
     local missCount,marvCount=0,0
     for i=#self.notes,1,-1 do
         local note=self.notes[i]
-        if note.type=='tap'then
+        if note.type=='tap' then
             if self.time>note.time+note.lostTime then
                 rem(self.notes,i)
                 missCount=missCount+1
             end
-        elseif note.type=='hold'then
+        elseif note.type=='hold' then
             if note.head then--Hold not pressed, miss whole when head missed
                 if note.active and self.time>note.time+note.lostTime then
                     note.active=false
@@ -433,7 +433,7 @@ function Track:draw(map)
 
         local r,g,b=note:getColor(1-timeRemain/2.6)
         local a=note:getAlpha(1-timeRemain/2.6)
-        if note.type=='tap'and timeRemain<0 then
+        if note.type=='tap' and timeRemain<0 then
             a=a*(1+timeRemain/self._gameData.judgeTimes[1])
         end
         if a >0 then
@@ -441,13 +441,13 @@ function Track:draw(map)
             dx,dy=dx*noteDX,dy*noteDY
 
             gc_translate(dx,dy)
-            if note.type=='tap'then
+            if note.type=='tap' then
                 if chordAlpha and note.chordCount>1 then
                     _drawChordBox(self.chordColor[note.chordCount-1],chordAlpha*a,trackW,headH,thick)
                 end
                 gc_setColor(r,g,b,a)
                 gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
-            elseif note.type=='hold'then
+            elseif note.type=='hold' then
                 local tailH=(note.etime-self.time)*dropSpeed
                 local a2=note.active and a or a*.5
                 --Body

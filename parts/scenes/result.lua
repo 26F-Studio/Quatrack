@@ -10,7 +10,7 @@ local scene={}
 
 function scene.sceneInit()
     applyFPS(false)
-    results=SCN.args[1]or{
+    results=SCN.args[1] or{
         fake=true,
         map=require'parts.map'.new(),
         score=62600,
@@ -28,8 +28,8 @@ function scene.sceneInit()
         },
         bestChain=math.random(5),
     }
-    if results.accText:sub(1,1)=='-'then results.bestChain=0 end
-    if results.averageDeviate:sub(1,1)~='-'then results.averageDeviate='+'..results.averageDeviate end
+    if results.accText:sub(1,1)=='-' then results.bestChain=0 end
+    if results.averageDeviate:sub(1,1)~='-' then results.averageDeviate='+'..results.averageDeviate end
     results.mapName=gc.newText(getFont(80,'mono'),results.map.mapName)
     results.mapDifficulty=gc.newText(getFont(30,'mono'),results.map.mapDifficulty)
 
@@ -63,8 +63,8 @@ end
 
 function scene.keyDown(key,isRep)
     if isRep then return end
-    local k=KEY_MAP[key]or key
-    if k=='restart'then
+    local k=KEY_MAP[key] or key
+    if k=='restart' then
         if results.map.valid then
             local map,errmsg=loadBeatmap(results.map.qbpFilePath)
             if map then
@@ -73,7 +73,7 @@ function scene.keyDown(key,isRep)
                 MES.new('error',errmsg)
             end
         end
-    elseif k=='escape'then
+    elseif k=='escape' then
         SCN.back()
     end
 end

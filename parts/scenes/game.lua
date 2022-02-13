@@ -80,7 +80,7 @@ end
 local function _tryGoResult()
     if SCN.swapping or not game.map.finished then return true end
     for i=1,#game.tracks do if #game.tracks[i].notes>0 then return true end end
-    if game.needSaveSetting then saveSettings()end
+    if game.needSaveSetting then saveSettings() end
     if game.fullAcc>0 and game.curAcc/game.fullAcc>=.6 then
         _updateStat()
         MES.new('check',text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
@@ -106,7 +106,7 @@ local function _tryGoResult()
     })
 end
 
-local gameArgs=setmetatable({},{__newindex=function()error("game.xxx is read only")end})
+local gameArgs=setmetatable({},{__newindex=function() error("game.xxx is read only") end})
 local function freshScriptArgs()
     rawset(gameArgs,'time',game.time)
     rawset(gameArgs,'combo',game.combo)
@@ -118,9 +118,9 @@ local function freshScriptArgs()
     rawset(gameArgs,'totalDeviateTime',game.totalDeviateTime)
     rawset(gameArgs,'bestChain',game.bestChain)
 end
-local lastErrorTime=setmetatable({},{__index=function(self,k)self[k]=-1e99 return -1e99 end})
+local lastErrorTime=setmetatable({},{__index=function(self,k) self[k]=-1e99 return -1e99 end})
 local function callScriptEvent(event,...)
-    if game.map.script[event]then
+    if game.map.script[event] then
         local ok,err=pcall(game.map.script[event],...)
         if not ok then
             game.errorCount=game.errorCount+1
@@ -174,7 +174,7 @@ function scene.sceneInit()
     for id=1,game.map.tracks do
         local t=require'parts.track'.new(id)
         t:_setGameData(game)
-        t:rename(trackNameList and trackNameList[id]or'')
+        t:rename(trackNameList and trackNameList[id] or '')
         t:setChordColor(defaultChordColor)
         t:setDefaultPosition(70*(2*id-game.map.tracks-1),320)
         t:setPosition({type='S'})
@@ -185,7 +185,7 @@ function scene.sceneInit()
     end
 
     local dirPath=game.map.qbpFilePath:sub(1,#game.map.qbpFilePath-game.map.qbpFilePath:reverse():find("/")+1)
-    if love.filesystem.getInfo(dirPath..game.map.songFile..'.ogg')then
+    if love.filesystem.getInfo(dirPath..game.map.songFile..'.ogg') then
         BGM.load(game.map.qbpFilePath,dirPath..game.map.songFile..'.ogg')
     else
         MES.new('error',text.noFile)
@@ -195,7 +195,7 @@ function scene.sceneInit()
     game.errorCount=0
     freshScriptArgs()
     if game.map.script then
-        if love.filesystem.getInfo(dirPath..game.map.script..'.lua')then
+        if love.filesystem.getInfo(dirPath..game.map.script..'.lua') then
             local file=love.filesystem.read('string',dirPath..game.map.script..'.lua')
             local func,err=loadstring(file)
             game.map.script={}
@@ -226,7 +226,7 @@ function scene.sceneInit()
     BGM.stop()
     if game.map.songImage then
         local image
-        if love.filesystem.getInfo('parts/levels')or love.filesystem.getInfo('songs/'..game.map.songImage)then
+        if love.filesystem.getInfo('parts/levels') or love.filesystem.getInfo('songs/'..game.map.songImage) then
             local success
             success,image=pcall(gc.newImage,dirPath..game.map.songImage)
             if not success then
@@ -250,14 +250,14 @@ end
 function scene.sceneBack()
     BGM.stop()
     applyFPS(false)
-    if game.needSaveSetting then saveSettings()end
+    if game.needSaveSetting then saveSettings() end
 end
 
 local function _trigNote(deviateTime,noTailHold,weak)
     game.hitLV=getHitLV(deviateTime,game.judgeTimes)
     game.hitTextTime=TIME()
     game.fullAcc=game.fullAcc+100
-    if noTailHold and(game.hitLV>0 or game.hitLV==0 and weak)then game.hitLV=5 end
+    if noTailHold and(game.hitLV>0 or game.hitLV==0 and weak) then game.hitLV=5 end
     game.bestChain=min(game.bestChain,game.hitLV)
     game.hits[game.hitLV]=game.hits[game.hitLV]+1
     if game.hitLV>0 then
@@ -273,7 +273,7 @@ local function _trigNote(deviateTime,noTailHold,weak)
             game.hitOffests[SETTING.dvtCount+1]=nil
         end
     else
-        if game.combo>=10 then SFX.play('combobreak')end
+        if game.combo>=10 then SFX.play('combobreak') end
         game.combo=0
         game.bestChain=0
     end
@@ -294,28 +294,28 @@ local function _trackRelease(id,weak,auto)
 end
 function scene.keyDown(key,isRep)
     if isRep then return end
-    local k=KEY_MAP[key]or key
-    if trackNames[k]then
+    local k=KEY_MAP[key] or key
+    if trackNames[k] then
         if game.autoPlay then return end
         local minTime=1e99
         for id=1,game.map.tracks do
-            if game.tracks[id].name:find(k)then
+            if game.tracks[id].name:find(k) then
                 local t=game.tracks[id]:pollPressTime()
                 if t<minTime then minTime=t end
             end
         end
         for id=1,game.map.tracks do
-            if game.tracks[id].name:find(k)then
+            if game.tracks[id].name:find(k) then
                 _trackPress(id,minTime<game.tracks[id]:pollPressTime())
             end
         end
-    elseif k=='skip'then
+    elseif k=='skip' then
         if not game.isSongPlaying and game.time<-.8 then
             game.time=-.8
         else
             _tryGoResult()
         end
-    elseif k=='restart'then
+    elseif k=='restart' then
         local m,errmsg=loadBeatmap(game.map.qbpFilePath)
         if m then
             SCN.args[1]=m
@@ -324,11 +324,11 @@ function scene.keyDown(key,isRep)
         else
             MES.new('error',errmsg)
         end
-    elseif k=='sfxVolDn'then SETTING.sfx=max(SETTING.sfx-.1,0)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
-    elseif k=='sfxVolUp'then SETTING.sfx=min(SETTING.sfx+.1,1)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
-    elseif k=='musicVolDn'then SETTING.bgm=max(SETTING.bgm-.1,0)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
-    elseif k=='musicVolUp'then SETTING.bgm=min(SETTING.bgm+.1,1)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
-    elseif k=='dropSpdDn'then
+    elseif k=='sfxVolDn' then SETTING.sfx=max(SETTING.sfx-.1,0)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
+    elseif k=='sfxVolUp' then SETTING.sfx=min(SETTING.sfx+.1,1)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
+    elseif k=='musicVolDn' then SETTING.bgm=max(SETTING.bgm-.1,0)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
+    elseif k=='musicVolUp' then SETTING.bgm=min(SETTING.bgm+.1,1)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
+    elseif k=='dropSpdDn' then
         if game.score0==0 or game.curAcc==-1e99 then
             SETTING.dropSpeed=max(SETTING.dropSpeed-1,-8)
             MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
@@ -336,7 +336,7 @@ function scene.keyDown(key,isRep)
         else
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
-    elseif k=='dropSpdUp'then
+    elseif k=='dropSpdUp' then
         if game.score0==0 or game.curAcc==-1e99 then
             SETTING.dropSpeed=min(SETTING.dropSpeed+1,8)
             MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
@@ -344,24 +344,24 @@ function scene.keyDown(key,isRep)
         else
             MES.new('warn',text.cannotAdjustDropSpeed,0)
         end
-    elseif k=='escape'then
-        if _tryGoResult()then
+    elseif k=='escape' then
+        if _tryGoResult() then
             SCN.back()
         end
-    elseif k=='auto'then
+    elseif k=='auto' then
         game.autoPlay=not game.autoPlay
         if game.autoPlay then
             game.curAcc=-1e99
             game.fullAcc=1e99
             _updateAcc()
         end
-    elseif('12345'):find(key,1,true)and kbIsDown('lctrl','rctrl')and kbIsDown('lalt','ralt')then
+    elseif('12345'):find(key,1,true) and kbIsDown('lctrl','rctrl') and kbIsDown('lalt','ralt') then
         game.playSpeed=
-            key=='1'and .25 or
-            key=='2'and .5 or
-            key=='3'and 1 or
-            key=='4'and 8 or
-            key=='5'and 32
+            key=='1' and .25 or
+            key=='2' and .5 or
+            key=='3' and 1 or
+            key=='4' and 8 or
+            key=='5' and 32
         if game.playSpeed<1 then
             game.curAcc=-1e99
             game.fullAcc=1e99
@@ -373,12 +373,12 @@ function scene.keyDown(key,isRep)
 end
 function scene.keyUp(key)
     local k=KEY_MAP[key]
-    if trackNames[k]then
+    if trackNames[k] then
         if game.autoPlay then return end
 
         local minTime=1e99
         for id=1,game.map.tracks do
-            if game.tracks[id].name:find(k)then
+            if game.tracks[id].name:find(k) then
                 local t=game.tracks[id]:pollReleaseTime()
                 if t<minTime then
                     minTime=t
@@ -386,12 +386,12 @@ function scene.keyUp(key)
             end
         end
         for id=1,game.map.tracks do
-            if game.tracks[id].name:find(k)then
+            if game.tracks[id].name:find(k) then
                 local s=game.tracks[id].nameList
                 for j=1,#s do
                     local kbKey=KEY_MAP_inv[s[j]]
-                    if kbKey and kbIsDown(kbKey)then
-                        if minTime==game.tracks[id]:pollReleaseTime()then
+                    if kbKey and kbIsDown(kbKey) then
+                        if minTime==game.tracks[id]:pollReleaseTime() then
                             _trackRelease(id,true)
                             goto BREAK_weak
                         end
@@ -442,7 +442,7 @@ function scene.touchUp(_,_,id)
         if game.touches[i][1]==id then
             local allReleased=true
             for j=1,#game.touches do
-                if i~=j and game.touches[j][2]==game.touches[i][2]then
+                if i~=j and game.touches[j][2]==game.touches[i][2] then
                     allReleased=false
                     break
                 end
@@ -455,8 +455,8 @@ function scene.touchUp(_,_,id)
         end
     end
 end
-function scene.mouseDown(x,y,k)scene.touchDown(x,y,k)end
-function scene.mouseUp(_,_,k)scene.touchUp(_,_,k)end
+function scene.mouseDown(x,y,k)scene.touchDown(x,y,k) end
+function scene.mouseUp(_,_,k)scene.touchUp(_,_,k) end
 
 function scene.update(dt)
     dt=dt*game.playSpeed
@@ -470,14 +470,14 @@ function scene.update(dt)
             game.isSongPlaying=true
         end
     else
-        if not BGM.isPlaying()then
+        if not BGM.isPlaying() then
             _tryGoResult()
         end
     end
 
     -- Update timers
     game.time=game.time+dt
-    if game.safeAreaTimer>0 then game.safeAreaTimer=max(0,game.safeAreaTimer-dt)end
+    if game.safeAreaTimer>0 then game.safeAreaTimer=max(0,game.safeAreaTimer-dt) end
 
     -- Update notes
     game.map:updateTime(game.time)
@@ -489,14 +489,14 @@ function scene.update(dt)
     while true do
         local n=game.map:poll('event')
         if not n then break end
-        if n.type=='setTrack'then
+        if n.type=='setTrack' then
             local t=game.tracks[n.track]
             t[n.operation](t,unpack(n.args))
-        elseif n.type=='setChordColor'then
+        elseif n.type=='setChordColor' then
             for i=1,#game.tracks do
                 game.tracks[i]:setChordColor(n.color)
             end
-        elseif n.type=='setJudge'then
+        elseif n.type=='setJudge' then
             for i=1,5 do
                 game.judgeTimes[i]=n.args[i]
             end
@@ -508,21 +508,21 @@ function scene.update(dt)
         local t=game.tracks[id]
         do-- Auto play and invalid notes' auto hitting
             local _,note=t:pollNote('note')
-            if note and(not note.available or game.autoPlay)and note.type=='tap'then
+            if note and(not note.available or game.autoPlay) and note.type=='tap' then
                 if game.time>=note.time then
                     _trackPress(id,false,true)
                     note=t.notes[1]
-                    if not(note and note.type=='hold')then
+                    if not(note and note.type=='hold') then
                         _trackRelease(id)
                     end
                 end
             end
             note=t.notes[1]
-            if note and(not note.available or game.autoPlay)and note.type=='hold'then
+            if note and(not note.available or game.autoPlay) and note.type=='hold' then
                 if note.head then
-                    if game.time>=note.time then _trackPress(id,false,true)end
+                    if game.time>=note.time then _trackPress(id,false,true) end
                 else
-                    if game.time>=note.etime then _trackRelease(id,false,true)end
+                    if game.time>=note.etime then _trackRelease(id,false,true) end
                 end
             end
         end
@@ -538,7 +538,7 @@ function scene.update(dt)
             game.hitLV=-1
             game.fullAcc=game.fullAcc+100*missCount
             _updateAcc()
-            if game.combo>=10 then SFX.play('combobreak')end
+            if game.combo>=10 then SFX.play('combobreak') end
             game.combo=0
             game.bestChain=0
             game.hits[-1]=game.hits[-1]+missCount

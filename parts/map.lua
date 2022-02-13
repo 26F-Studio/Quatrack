@@ -66,20 +66,20 @@ function Map.new(file)
     end
 
     --Read file
-    local fileData={}do
+    local fileData={} do
         local lineNum=1
-        for l in love.filesystem.lines(file)do
-            if l:find(';')then
+        for l in love.filesystem.lines(file) do
+            if l:find(';') then
                 l=l:split(';')
                 for i=1,#l do
                     l[i]=l[i]:trim()
-                    if l[i]~=''and l[i]:sub(1,1)~='#'then
+                    if l[i]~='' and l[i]:sub(1,1)~='#' then
                         ins(fileData,{lineNum,l[i]})
                     end
                 end
             else
                 l=l:trim()
-                if l~=''and l:sub(1,1)~='#'then
+                if l~='' and l:sub(1,1)~='#' then
                     ins(fileData,{lineNum,l})
                 end
             end
@@ -92,7 +92,7 @@ function Map.new(file)
         assert(fileData[1],"Emtpy map")
         local str=fileData[1][2]
         SCline,SCstr=fileData[1][1],str
-        if str:sub(1,1)=='$'then
+        if str:sub(1,1)=='$' then
             local k=str:sub(2,str:find('=')-1)
             _syntaxCheck(TABLE.find(mapMetaKeys,k),"Invalid map info key '"..k.."'")
             _syntaxCheck(str:find('='),"Syntax error (need '=')")
@@ -107,27 +107,27 @@ function Map.new(file)
     SCline=0
     SCstr='[metadata]'
     _syntaxCheck(o.version=='1.0',"Invalid map version")
-    if o.songFile then o.songFile=o.songFile:trim()end
+    if o.songFile then o.songFile=o.songFile:trim() end
     _syntaxCheck(#o.songFile>0,"Invalid $songFile")
     if o.songImage then
         o.songImage=o.songImage:trim()
         _syntaxCheck(#o.songImage>0,"Invalid $songImage")
     end
 
-    if type(o.tracks)=='string'then o.tracks=tonumber(o.tracks)end
+    if type(o.tracks)=='string' then o.tracks=tonumber(o.tracks) end
     _syntaxCheck(o.tracks,"Invalid $tracks value (need number)")
     if o.realTracks then
-        if type(o.realTracks)=='string'then o.realTracks=tonumber(o.realTracks)end
+        if type(o.realTracks)=='string' then o.realTracks=tonumber(o.realTracks) end
         _syntaxCheck(o.realTracks,"Invalid $realTracks value (need number)")
     end
 
-    if type(o.songOffset)=='string'then
+    if type(o.songOffset)=='string' then
         local offset,unit=_parseTime(o.songOffset)
         _syntaxCheck(offset,"Invalid $songOffset value (need time)")
-        if unit=='ms'then unit=0.001
-        elseif unit=='s'then unit=1
-        elseif unit=='m'then unit=60
-        elseif unit=='h'then unit=3600
+        if unit=='ms' then unit=0.001
+        elseif unit=='s' then unit=1
+        elseif unit=='m' then unit=60
+        elseif unit=='h' then unit=3600
         elseif unit then
             _syntaxCheck(false,"Invalid $songOffset unit (need ms,s,m,h)")
         else
@@ -137,15 +137,15 @@ function Map.new(file)
         o.songOffset=offset*unit
     end
 
-    if type(o.freeSpeed)=='string'then o.freeSpeed=o.freeSpeed=='true'end
+    if type(o.freeSpeed)=='string' then o.freeSpeed=o.freeSpeed=='true' end
 
     --Parse notes & animations
     local curTime,curBPM=0,180
     local curBeat,signature=false,false
     local loopStack={}
     local curRealTrack=o.tracks
-    local trackDir={}for i=1,o.tracks do trackDir[i]=i end
-    local trackAvailable={}for i=1,o.tracks do trackAvailable[i]=true end
+    local trackDir={} for i=1,o.tracks do trackDir[i]=i end
+    local trackAvailable={} for i=1,o.tracks do trackAvailable[i]=true end
     local lastLongBar=TABLE.new(false,o.tracks)
     local lastLineState=TABLE.new(false,o.tracks)
     local noteState={
@@ -160,58 +160,58 @@ function Map.new(file)
         SCline,SCstr=fileData[line][1],str--For assertion
 
         for i=1,#lineTypeMarks do
-            if str:find(lineTypeMarks[i][1])then
+            if str:find(lineTypeMarks[i][1]) then
                 str=str:gsub(lineTypeMarks[i][1],lineTypeMarks[i][2],1)
                 break
             end
         end
 
-        if str:sub(1,1)=='/'then
+        if str:sub(1,1)=='/' then
             local codeType
-            if str:find(':')then
+            if str:find(':') then
                 codeType=str:sub(2,str:find(':')-1):lower()
                 str=str:sub(str:find(':')+1)
             else
                 codeType=str:sub(2):lower()
                 str=''
             end
-            if codeType=='bpm'then--BPM mark
+            if codeType=='bpm' then--BPM mark
                 local data=str:split(',')
                 _syntaxCheck(data[1],"Need BPM mark")
                 _syntaxCheck(#data<=2,"Too many arguments")
                 local bpmStr,signStr=data[1],data[2]
-                if bpmStr=='+'then
+                if bpmStr=='+' then
                     local bpm_add=tonumber(bpmStr:sub(2))
                     _syntaxCheck(type(bpm_add)=='number',"Invalid BPM mark")
                     curBPM=curBPM+bpm_add
-                elseif bpmStr=='-'then
+                elseif bpmStr=='-' then
                     local bpm_sub=tonumber(bpmStr:sub(2))
                     _syntaxCheck(type(bpm_sub)=='number',"Invalid BPM mark")
                     _syntaxCheck(bpm_sub<curBPM,"Decrease BPM too much")
                     curBPM=curBPM-bpm_sub
                 else
                     local bpm=tonumber(bpmStr)
-                    _syntaxCheck(type(bpm)=='number'and bpm>0,"Invalid BPM mark")
+                    _syntaxCheck(type(bpm)=='number' and bpm>0,"Invalid BPM mark")
                     curBPM=bpm
                 end
                 if signStr then
                     local sign=tonumber(signStr)
-                    _syntaxCheck(type(sign)=='number'and sign>0 and sign%1==0,"Invalid time signature")
+                    _syntaxCheck(type(sign)=='number' and sign>0 and sign%1==0,"Invalid time signature")
                     curBeat,signature=0,sign
                 else
                     curBeat=false
                     signature=false
                 end
-            elseif codeType=='time'then--Time mark
+            elseif codeType=='time' then--Time mark
                 _syntaxCheck(not loopStack[1],"Cannot set time in loop")
-                if str=='start'then
+                if str=='start' then
                     curTime=-3.6
                 else
                     local sign
-                    if str:sub(1,1)=='+'then
+                    if str:sub(1,1)=='+' then
                         sign='+'
                         str=str:sub(2)
-                    elseif str:sub(1,1)=='-'then
+                    elseif str:sub(1,1)=='-' then
                         sign='-'
                         str=str:sub(2)
                     else
@@ -219,21 +219,21 @@ function Map.new(file)
                     end
 
                     local dt
-                    if str:find(':')then
+                    if str:find(':') then
                         local time=str:split(':')
                         time[1]=tonumber(time[1])
                         time[2]=tonumber(time[2])
-                        _syntaxCheck(time[1]and time[2],"Invalid time mark")
+                        _syntaxCheck(time[1] and time[2],"Invalid time mark")
                         dt=time[1]*60+time[2]
                     else
                         local time,unit=_parseTime(str)
                         _syntaxCheck(time,"Invalid time mark")
-                        if unit=='ms'then unit=0.001
-                        elseif unit=='s'then unit=1
-                        elseif unit=='m'then unit=60
-                        elseif unit=='h'then unit=3600
-                        elseif unit=='beat'then unit=60/curBPM
-                        elseif unit=='bar'then unit=60/curBPM*signature
+                        if unit=='ms' then unit=0.001
+                        elseif unit=='s' then unit=1
+                        elseif unit=='m' then unit=60
+                        elseif unit=='h' then unit=3600
+                        elseif unit=='beat' then unit=60/curBPM
+                        elseif unit=='bar' then unit=60/curBPM*signature
                             _syntaxCheck(signature,"No signature to calculate bar length")
                         elseif unit then
                             _syntaxCheck(false,"Invalid $songOffset unit (need ms,s,m,h,beat,bar)")
@@ -242,15 +242,15 @@ function Map.new(file)
                         dt=time*unit
                     end
 
-                    if sign==''then
+                    if sign=='' then
                         curTime=dt
-                    elseif sign=='+'then
+                    elseif sign=='+' then
                         curTime=curTime+dt
-                    elseif sign=='-'then
+                    elseif sign=='-' then
                         curTime=curTime-dt
                     end
                 end
-            elseif codeType=='bar_line'then--Bar separator
+            elseif codeType=='bar_line' then--Bar separator
                 local len=0
                 repeat
                     len=len+1
@@ -262,8 +262,8 @@ function Map.new(file)
                 else
                     _syntaxCheck(signature,"No signature to check")
                 end
-            elseif codeType=='rnd_seed'then--Random seed mark
-                if str==''then
+            elseif codeType=='rnd_seed' then--Random seed mark
+                if str=='' then
                     math.randomseed(love.timer.getTime())
                 else
                     local seedList=str:split(',')
@@ -273,20 +273,20 @@ function Map.new(file)
                     math.randomseed(love.timer.getTime())
                     math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
                 end
-            elseif codeType=='set_track'then--Animation: set track states
+            elseif codeType=='set_track' then--Animation: set track states
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('[x]...' or '/set_track:x;...'")
 
                 local trackList={}
 
                 local trackStr=str:sub(1,t-1)
-                if trackStr=='A'or trackStr=='L'or trackStr=='R'then
+                if trackStr=='A' or trackStr=='L' or trackStr=='R' then
                     local i,j
-                    if trackStr=='A'then
+                    if trackStr=='A' then
                         i,j=1,o.tracks
-                    elseif trackStr=='L'then
+                    elseif trackStr=='L' then
                         i,j=1,(o.tracks+1)*.5
-                    elseif trackStr=='R'then
+                    elseif trackStr=='R' then
                         i,j=o.tracks*.5+1,o.tracks
                     end
                     for n=0,j-i do
@@ -303,7 +303,7 @@ function Map.new(file)
                 str=str:sub(t+1)
 
                 local animData
-                if str:sub(1,1)=='<'then
+                if str:sub(1,1)=='<' then
                     local t2=str:find('>')
                     _syntaxCheck(t2,"Syntax error (need '>')")
                     local animList=str:sub(2,t2-1):split(',')
@@ -312,19 +312,19 @@ function Map.new(file)
 
                     local animType=rem(animList,1)
                     _syntaxCheck(animType,"Need animation type (S/L/E/C)")
-                    if animType=='S'then
+                    if animType=='S' then
                         _syntaxCheck(#animList==0,"Invalid animation data")
                         animData={type='S'}
-                    elseif animType=='L'then
+                    elseif animType=='L' then
                         _syntaxCheck(#animList==1,"Invalid animation data (need time)")
                         local time,unit=_parseTime(animList[1])
                         _syntaxCheck(time and time>0,"Invalid animation time (need positive number)")
-                        if unit=='ms'then unit=0.001
-                        elseif unit=='s'then unit=1
-                        elseif unit=='m'then unit=60
-                        elseif unit=='h'then unit=3600
-                        elseif unit=='beat'then unit=60/curBPM
-                        elseif unit=='bar'then unit=60/curBPM*signature
+                        if unit=='ms' then unit=0.001
+                        elseif unit=='s' then unit=1
+                        elseif unit=='m' then unit=60
+                        elseif unit=='h' then unit=3600
+                        elseif unit=='beat' then unit=60/curBPM
+                        elseif unit=='bar' then unit=60/curBPM*signature
                             _syntaxCheck(signature,"No signature to calculate bar length")
                         elseif unit then
                             _syntaxCheck(false,"Invalid $songOffset unit (need ms,s,m,h,beat,bar)")
@@ -332,12 +332,12 @@ function Map.new(file)
                         end
                         time=time*unit
                         animData={type='L',start=curTime,duration=time}
-                    elseif animType=='E'then
+                    elseif animType=='E' then
                         _syntaxCheck(#animList==1,"Invalid animation data (need speed)")
                         local s=tonumber(animList[1])
                         _syntaxCheck(s and s>0,"Invalid expontial param")
                         animData={type='E',start=curTime,speed=s}
-                    elseif animType=='C'then
+                    elseif animType=='C' then
                         _syntaxCheck(false,"Coming soon")
                         animData={type='C'}
                     else
@@ -349,73 +349,73 @@ function Map.new(file)
 
                 local data=str:split(',')
                 local op=data[1]:upper()
-                local opType=data[1]==data[1]:upper()and'set'or'move'
+                local opType=data[1]==data[1]:upper() and 'set' or 'move'
                 rem(data,1)
 
                 local event
-                if op=='P'then--Position
+                if op=='P' then--Position
                     _syntaxCheck(#data<=2,"Too many arguments")
-                    data[1]=tonumber(data[1])or false
-                    data[2]=tonumber(data[2])or false
+                    data[1]=tonumber(data[1]) or false
+                    data[2]=tonumber(data[2]) or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Position',
                         args={animData,data[1],data[2]},
                     }
-                elseif op=='R'then--Rotate
+                elseif op=='R' then--Rotate
                     _syntaxCheck(#data<=1,"Too many arguments")
-                    data[1]=tonumber(data[1])or false
+                    data[1]=tonumber(data[1]) or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Angle',
                         args={animData,data[1]},
                     }
-                elseif op=='S'then--Size
+                elseif op=='S' then--Size
                     _syntaxCheck(#data<=2,"Too many arguments")
-                    data[1]=tonumber(data[1])or false
-                    data[2]=tonumber(data[2])or false
+                    data[1]=tonumber(data[1]) or false
+                    data[2]=tonumber(data[2]) or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Size',
                         args={animData,data[1],data[2]},
                     }
-                elseif op=='D'then--Drop speed
+                elseif op=='D' then--Drop speed
                     _syntaxCheck(#data<=1,"Too many arguments")
-                    data[1]=tonumber(data[1])or false
+                    data[1]=tonumber(data[1]) or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'DropSpeed',
                         args={animData,data[1]},
                     }
-                elseif op=='T'then--Transparent
+                elseif op=='T' then--Transparent
                     _syntaxCheck(#data<=1,"Too many arguments")
-                    data[1]=tonumber(data[1])or false
+                    data[1]=tonumber(data[1]) or false
                     event={
                         type='setTrack',
                         time=curTime,
                         operation=opType..'Alpha',
                         args={animData,data[1]},
                     }
-                elseif op=='C'then--Color
+                elseif op=='C' then--Color
                     _syntaxCheck(#data<=1,"Too many arguments")
                     local r,g,b
-                    if not data[1]then
-                        if opType=='set'then
+                    if not data[1] then
+                        if opType=='set' then
                             r,g,b=1,1,1
                         else
                             r,g,b=0,0,0
                         end
                     else
                         local neg
-                        if data[1]:sub(1,1)=='-'then
+                        if data[1]:sub(1,1)=='-' then
                             neg=true
                             data[1]=data[1]:sub(2)
                         end
-                        _syntaxCheck(not data[1]:find("[^0-9a-fA-F]")and #data[1]<=6,"Invalid color code")
+                        _syntaxCheck(not data[1]:find("[^0-9a-fA-F]") and #data[1]<=6,"Invalid color code")
                         r,g,b=STRING.hexColor(data[1])
                         if neg then
                             r,g,b=-r,-g,-b
@@ -427,20 +427,20 @@ function Map.new(file)
                         operation=opType..'Color',
                         args={animData,r,g,b},
                     }
-                elseif op=='A'then--Available
-                    if data[1]=='true'then
+                elseif op=='A' then--Available
+                    if data[1]=='true' then
                         data[1]=true
-                    elseif data[1]=='false'then
+                    elseif data[1]=='false' then
                         data[1]=false
                     end
-                    if opType=='set'then
+                    if opType=='set' then
                         if data[1]==nil then data[1]=true end
                         _syntaxCheck(#data<=1,"Too many arguments")
                         _syntaxCheck(data[1]==true or data[1]==false,"Invalid option (need true/false)")
                         for i=1,#trackList do
                             trackAvailable[trackList[i]]=data[1]
                         end
-                    elseif opType=='move'then
+                    elseif opType=='move' then
                         _syntaxCheck(#data==0,"Too many arguments")
                         for i=1,#trackList do
                             trackAvailable[trackList[i]]=not trackAvailable[trackList[i]]
@@ -452,8 +452,8 @@ function Map.new(file)
                         operation=opType..'Available',
                         args={data[1]},
                     }
-                elseif op=='N'then--Show track name
-                    if data[1]then
+                elseif op=='N' then--Show track name
+                    if data[1] then
                         data[1]=tonumber(data[1])
                         _syntaxCheck(data[1],"Invalid alpha")
                     end
@@ -471,20 +471,20 @@ function Map.new(file)
                     E.track=trackList[i]
                     o.eventQueue:insert(E)
                 end
-            elseif codeType=='set_note'then--Note state: color & alpha
+            elseif codeType=='set_note' then--Note state: color & alpha
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('(x)...' or '/set_note:x;...')")
 
                 local trackList={}
 
                 local trackStr=str:sub(1,t-1)
-                if trackStr=='A'or trackStr=='L'or trackStr=='R'then
+                if trackStr=='A' or trackStr=='L' or trackStr=='R' then
                     local i,j
-                    if trackStr=='A'then
+                    if trackStr=='A' then
                         i,j=1,o.tracks
-                    elseif trackStr=='L'then
+                    elseif trackStr=='L' then
                         i,j=1,(o.tracks+1)*.5
-                    elseif trackStr=='R'then
+                    elseif trackStr=='R' then
                         i,j=o.tracks*.5+1,o.tracks
                     end
                     for n=0,j-i do
@@ -501,9 +501,9 @@ function Map.new(file)
 
                 local data=str:sub(t+1):split(',')
                 local op=data[1]:upper()
-                if op=='T'then--Transparent
+                if op=='T' then--Transparent
                     local a={}
-                    if data[2]then
+                    if data[2] then
                         for i=2,#data do
                             local alpha=tonumber(data[i])
                             _syntaxCheck(alpha and alpha>=0 and alpha<=100,"Invalid alpha value")
@@ -515,14 +515,14 @@ function Map.new(file)
                     for i=1,#trackList do
                         noteState.alpha[trackList[i]]=a
                     end
-                elseif op=='C'then--Color
+                elseif op=='C' then--Color
                     local codes={}
-                    if not data[2]then
+                    if not data[2] then
                         codes[1]='E6E6E6'
                     else
                         for i=2,#data do
                             local code=data[i]
-                            _syntaxCheck(not code:find("[^0-9a-fA-F]")and #code<=6,"Invalid color code")
+                            _syntaxCheck(not code:find("[^0-9a-fA-F]") and #code<=6,"Invalid color code")
                             codes[i-1]=code
                         end
                     end
@@ -533,9 +533,9 @@ function Map.new(file)
                     for i=1,#trackList do
                         noteState.color[trackList[i]]=color
                     end
-                elseif op=='X'or op=='Y'then--X/Y offset
+                elseif op=='X' or op=='Y' then--X/Y offset
                     local offset={}
-                    if data[2]then
+                    if data[2] then
                         for i=2,#data do
                             data[i]=tonumber(data[i])
                             _syntaxCheck(data[i],"Invalid alpha value")
@@ -544,16 +544,16 @@ function Map.new(file)
                     else
                         offset[1]=0
                     end
-                    local state=op=='X'and noteState.xOffset or noteState.yOffset
+                    local state=op=='X' and noteState.xOffset or noteState.yOffset
                     for i=1,#trackList do
                         state[trackList[i]]=offset
                     end
                 else
                     _syntaxCheck(false,"Invalid note operation")
                 end
-            elseif codeType=='rep_s'then--Repeat start
+            elseif codeType=='rep_s' then--Repeat start
                 local cd=1
-                if str~=''then
+                if str~='' then
                     cd=tonumber(str)
                     _syntaxCheck(cd>=2 and cd%1==0,"Invalid loop count")
                     cd=cd-1
@@ -563,7 +563,7 @@ function Map.new(file)
                     startMark=line,
                     endMark=false,
                 })
-            elseif codeType=='rep_e'then--Repeat end
+            elseif codeType=='rep_e' then--Repeat end
                 _syntaxCheck(loopStack[1],"No loop to end")
                 local curState=loopStack[#loopStack]
                 if curState.countDown>0 then
@@ -573,19 +573,19 @@ function Map.new(file)
                 else
                     rem(loopStack)
                 end
-            elseif codeType=='rep_m'then--Repeat middle(skip)
+            elseif codeType=='rep_m' then--Repeat middle(skip)
                 _syntaxCheck(loopStack[1],"No loop to break")
                 if loopStack[#loopStack].countDown==0 then
                     line=loopStack[#loopStack].endMark
                     rem(loopStack)
                 end
-            elseif codeType=='redirect_note'then--Redirect notes to different track
-                if str==''then--Reset
+            elseif codeType=='redirect_note' then--Redirect notes to different track
+                if str=='' then--Reset
                     for i=1,o.tracks do trackDir[i]=i end
-                elseif str=='A'then--Random shuffle (won't reset to 1~N!)
+                elseif str=='A' then--Random shuffle (won't reset to 1~N!)
                     local l={}
-                    for i=1,o.tracks do l[i]=trackDir[i]end
-                    for i=1,o.tracks do trackDir[i]=rem(l,rnd(#l))end
+                    for i=1,o.tracks do l[i]=trackDir[i] end
+                    for i=1,o.tracks do trackDir[i]=rem(l,rnd(#l)) end
                 else--Redirect tracks from presets
                     local argList=str:split(',')
                     for i=1,#argList do
@@ -600,18 +600,18 @@ function Map.new(file)
                         trackDir[i]=l[id]
                     end
                 end
-            elseif codeType=='rename_track'then--Rename tracks
+            elseif codeType=='rename_track' then--Rename tracks
                 local nameList=str:split(',')
                 _syntaxCheck(#nameList==o.tracks,"Track names not match track count")
                 for id=1,#nameList do
                     local name=nameList[id]
-                    if name:find(' ')then
+                    if name:find(' ') then
                         local multiNameList=name:split(' ')
                         for i=1,#multiNameList do
                             _syntaxCheck(trackNames[multiNameList[i]],"Invalid track name")
                         end
                     else
-                        _syntaxCheck(name=='x'or trackNames[name],"Invalid track name")
+                        _syntaxCheck(name=='x' or trackNames[name],"Invalid track name")
                     end
                     o.eventQueue:insert{
                         type='setTrack',
@@ -620,7 +620,7 @@ function Map.new(file)
                         operation='rename',
                         args={name},
                     }
-                    if name=='x'then
+                    if name=='x' then
                         o.eventQueue:insert{
                             type='setTrack',
                             time=curTime,
@@ -631,16 +631,16 @@ function Map.new(file)
                         trackAvailable[id]=false
                     end
                 end
-            elseif codeType=='set_chord_color'then--Set chord color
+            elseif codeType=='set_chord_color' then--Set chord color
                 local c=str:split(',')
                 if #c==0 then
                     c=defaultChordColor
                 else
                     for i=1,#c do
-                        _syntaxCheck(not c[i]:find("[^0-9a-fA-F]")and #c[i]<=6,"Invalid color code")
+                        _syntaxCheck(not c[i]:find("[^0-9a-fA-F]") and #c[i]<=6,"Invalid color code")
                         c[i]={STRING.hexColor(c[i])}
                     end
-                    if #c>o.tracks-1 then _syntaxCheck(false,"Too many colors")end
+                    if #c>o.tracks-1 then _syntaxCheck(false,"Too many colors") end
                     setmetatable(c,getmetatable(defaultChordColor))
                 end
                 o.eventQueue:insert{
@@ -648,14 +648,14 @@ function Map.new(file)
                     time=curTime,
                     color=c,
                 }
-            elseif codeType=='set_judge'then--Set judgement level
+            elseif codeType=='set_judge' then--Set judgement level
                 local t=str:split(',')
                 _syntaxCheck(#t==5,"Invalid judgement time list (need 5 values)")
                 for i=1,5 do
                     local time,unit=_parseTime(t[i])
                     _syntaxCheck(time and time>0,"Invalid judge time (need positive number)")
-                    if unit=='ms'then unit=0.001
-                    elseif unit=='s'then unit=1
+                    if unit=='ms' then unit=0.001
+                    elseif unit=='s' then unit=1
                     elseif unit then
                         _syntaxCheck(false,"Invalid time unit (need ms,s)")
                     else unit=0.001
@@ -682,10 +682,10 @@ function Map.new(file)
 
             local c
             while true do
-                if readState=='note'then
+                if readState=='note' then
                     c=str:sub(1,1)
-                    if c~='-'then--Space
-                        if c=='O'then--Tap note
+                    if c~='-' then--Space
+                        if c=='O' then--Tap note
                             local b={
                                 type='tap',
                                 time=curTime,
@@ -698,7 +698,7 @@ function Map.new(file)
                             }
                             o.noteQueue:insert(b)
                             lastNote[curTrack]=b
-                        elseif c=='U'then--Hold note start
+                        elseif c=='U' then--Hold note start
                             _syntaxCheck(not lastLongBar[curTrack],"Cannot start a long bar in a long bar")
                             local b={
                                 type='hold',
@@ -716,9 +716,9 @@ function Map.new(file)
                             o.noteQueue:insert(b)
                             lastLongBar[curTrack]=b
                             lastNote[curTrack]=b
-                        elseif c=='A'or c=='H'then--Long bar stop
+                        elseif c=='A' or c=='H' then--Long bar stop
                             _syntaxCheck(lastLongBar[curTrack],"No long bar to stop")
-                            if c=='A'then
+                            if c=='A' then
                                 lastNote[curTrack]=lastLongBar[curTrack]
                             end
                             lastLongBar[curTrack].etime=curTime
@@ -733,12 +733,12 @@ function Map.new(file)
                     _syntaxCheck(curTrack<=curRealTrack,"Too many notes in one line")
                     curTrack=curTrack+1
                     str=str:sub(2)
-                elseif readState=='rnd'then
+                elseif readState=='rnd' then
                     c=str:sub(1,1)
                     local noJack=c==c:upper()
                     c=c:upper()
 
-                    if not(c=='L'or c=='R'or c=='X')then
+                    if not(c=='L' or c=='R' or c=='X') then
                         readState='time'
                         goto CONTINUE_nextState
                     end
@@ -746,26 +746,26 @@ function Map.new(file)
                     local available={}
                     for i=1,o.tracks do available[i]=i end
                     for i=#available,1,-1 do
-                        if lastNote[available[i]]then
+                        if lastNote[available[i]] then
                             rem(available,i)
                         end
                     end
 
-                    for i=#available,1,-1 do if not noJack==not lastLineState[available[i]]then rem(available,i)end end
+                    for i=#available,1,-1 do if not noJack==not lastLineState[available[i]] then rem(available,i) end end
 
-                    if c=='L'then--Random left
+                    if c=='L' then--Random left
                         for i=#available,1,-1 do
                             if available[i]>(o.tracks+1)*.5 then
                                 rem(available,i)
                             end
                         end
-                    elseif c=='R'then--Random right
+                    elseif c=='R' then--Random right
                         for i=#available,1,-1 do
                             if available[i]<(o.tracks+1)*.5 then
                                 rem(available,i)
                             end
                         end
-                    elseif c=='X'then--Random anywhere
+                    elseif c=='X' then--Random anywhere
                         --Do nothing
                     end
                     _syntaxCheck(#available>0,"No space to place notes")
@@ -784,38 +784,38 @@ function Map.new(file)
                     o.noteQueue:insert(b)
                     lastNote[curTrack]=b
                     str=str:sub(2)
-                elseif readState=='time'then
-                    if str:sub(1,1)=='|'then--Shorten 1/2 for each
+                elseif readState=='time' then
+                    if str:sub(1,1)=='|' then--Shorten 1/2 for each
                         while true do
                             step=step*.5
                             str=str:sub(2)
-                            if str==''then
+                            if str=='' then
                                 break
                             else
                                 _syntaxCheck(str:sub(1,1)=='|',"Mixed mark")
                             end
                         end
-                    elseif str:sub(1,1)=='~'then--Add 1 beat for each
+                    elseif str:sub(1,1)=='~' then--Add 1 beat for each
                         while true do
                             step=step+1
                             str=str:sub(2)
-                            if str==''then
+                            if str=='' then
                                 break
                             else
                                 _syntaxCheck(str:sub(1,1)=='~',"Mixed mark")
                             end
                         end
-                    elseif str:sub(1,1)=='*'then--Multiply time by any number
+                    elseif str:sub(1,1)=='*' then--Multiply time by any number
                         local mul=tonumber(str:sub(2))
                         _syntaxCheck(type(mul)=='number',"Invalid scale num")
                         step=step*mul
                         break
-                    elseif str:sub(1,1)=='/'then--Divide time by any number
+                    elseif str:sub(1,1)=='/' then--Divide time by any number
                         local div=tonumber(str:sub(2))
                         _syntaxCheck(type(div)=='number',"Invalid scale num")
                         step=step/div
                         break
-                    elseif str==''then
+                    elseif str=='' then
                         break
                     else
                         _syntaxCheck(false,"Invalid time mark")
@@ -826,16 +826,16 @@ function Map.new(file)
 
             local chordCount=0
             for i=1,o.tracks do
-                if lastNote[i]and lastNote[i].available then
+                if lastNote[i] and lastNote[i].available then
                     chordCount=chordCount+1
                 end
             end
             for i=1,o.tracks do
-                if lastNote[i]then
+                if lastNote[i] then
                     local n=lastNote[i]
-                    if n.type=='tap'then
+                    if n.type=='tap' then
                         n.chordCount=chordCount
-                    elseif n.type=='hold'then
+                    elseif n.type=='hold' then
                         if n.etime then
                             n.chordCount_tail=chordCount
                         else
@@ -869,17 +869,17 @@ function Map:updateTime(time)
 end
 
 function Map:poll(type)
-    if type=='note'then
+    if type=='note' then
         local n=self.noteQueue[self.notePtr]
         if n then
             if self.time>n.time-2.6 then
                 local queue=self.noteQueue
                 self.notePtr=self.notePtr+1
-                if not queue[self.notePtr]then self.finished=true end
+                if not queue[self.notePtr] then self.finished=true end
                 return Note.new(n)
             end
         end
-    elseif type=='event'then
+    elseif type=='event' then
         local n=self.eventQueue[self.animePtr]
         if n then
             if self.time>n.time then

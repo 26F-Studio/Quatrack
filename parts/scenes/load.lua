@@ -15,7 +15,7 @@ local loadingThread=coroutine.wrap(function()
     logoColor2={COLOR.rainbow_light(r)}
     YIELD('loadSFX')SFX.load('media/effect/chiptune/')
     YIELD('loadVoice')VOC.load('media/vocal/')
-    YIELD('loadFont')for i=1,17 do getFont(15+5*i)end
+    YIELD('loadFont') for i=1,17 do getFont(15+5*i) end
 
     STAT.run=STAT.run+1
     saveStats()
@@ -44,7 +44,7 @@ function scene.mouseDown()
 end
 scene.touchDown=scene.mouseDown
 function scene.keyDown(key)
-    if key=="escape"then
+    if key=="escape" then
         love.event.quit()
     elseif LOADED then
         scene.mouseDown()
@@ -53,7 +53,7 @@ end
 
 function scene.update()
     if not LOADED then
-        loading=loadingThread()or loading
+        loading=loadingThread() or loading
         progress=progress+1
     end
 end
@@ -63,7 +63,7 @@ function scene.draw()
     mDraw(IMG.title,640,200,0,.3)
 
     gc.setColor(logoColor1[1],logoColor1[2],logoColor1[3],progress/maxProgress)mDraw(studioLogo,640,400)
-    gc.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress)for dx=-2,2,2 do for dy=-2,2,2 do mDraw(studioLogo,640+dx,400+dy)end end
+    gc.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress) for dx=-2,2,2 do for dy=-2,2,2 do mDraw(studioLogo,640+dx,400+dy) end end
     gc.setColor(.2,.2,.2,progress/maxProgress)mDraw(studioLogo,640,400)
 
     gc.setColor(1,1,1)

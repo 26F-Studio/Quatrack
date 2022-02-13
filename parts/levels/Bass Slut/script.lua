@@ -1,7 +1,7 @@
 local waveHeight,waveAngle={},{}
 
 local function drawRectWave(t,n,sp)
-    if not waveHeight[n]then
+    if not waveHeight[n] then
         for i=-n,n do
             waveHeight[i]=0.4+0.9*math.random()
             waveAngle[i]=90*math.random()
