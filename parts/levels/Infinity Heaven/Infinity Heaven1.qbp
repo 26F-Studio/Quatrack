@@ -4,8 +4,10 @@ $musicAuth=HyuN
 $mapAuth=AcSier
 $mapDifficulty=Normal-1
 
-$songFile=infinityheaven
-$songOffset=170ms
+$songFile=Infinity Heaven
+$songOffset=-5ms
+$songImage=Infinity Heaven.png
+$tracks=4
 
 H--H
 -O--*2;[A]T,0
@@ -495,6 +497,8 @@ O-O-/2
 -O-O*1.5
 O---*0.75
 -OO-*0.75;[A]C,DDDD66
+
 ----/2;[A]P
 ----*4;[A]p,,-150
+>-4.5beat
 !160
