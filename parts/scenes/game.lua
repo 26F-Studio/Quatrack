@@ -107,16 +107,15 @@ local function _tryGoResult()
 end
 
 local gameArgs=setmetatable({},{__newindex=function() error("game.xxx is read only") end})
-local function freshScriptArgs()
-    rawset(gameArgs,'time',game.time)
-    rawset(gameArgs,'combo',game.combo)
-    rawset(gameArgs,'maxCombo',game.maxCombo)
-    rawset(gameArgs,'score',game.score0)
-    rawset(gameArgs,'fullAcc',game.fullAcc)
-    rawset(gameArgs,'curAcc',game.curAcc)
-    rawset(gameArgs,'hitCount',game.hitCount)
-    rawset(gameArgs,'totalDeviateTime',game.totalDeviateTime)
-    rawset(gameArgs,'bestChain',game.bestChain)
+local function _freshScriptArgs()
+    for k,v in next,game do
+        if type(v)=='number' or type(v)=='string' or type(v)=='boolean' then
+            rawset(gameArgs,k,v)
+        end
+    end
+
+    --Special, will remove in the future
+    rawset(gameArgs,'map',game.map)
 end
 local lastErrorTime=setmetatable({},{__index=function(self,k) self[k]=-1e99 return -1e99 end})
 local function callScriptEvent(event,...)
@@ -124,7 +123,7 @@ local function callScriptEvent(event,...)
         local ok,err=pcall(game.map.script[event],...)
         if not ok then
             game.errorCount=game.errorCount+1
-            if TIME()-lastErrorTime[event]>=1 then
+            if TIME()-lastErrorTime[event]>=0.626 then
                 lastErrorTime[event]=TIME()
                 err=err:gsub('%b[]:','')
                 -- MES.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
@@ -193,7 +192,7 @@ function scene.sceneInit()
     BGM.play(game.map.qbpFilePath,'-preLoad')
 
     game.errorCount=0
-    freshScriptArgs()
+    _freshScriptArgs()
     if game.map.script then
         if love.filesystem.getInfo(dirPath..game.map.script..'.lua') then
             local file=love.filesystem.read('string',dirPath..game.map.script..'.lua')
@@ -550,7 +549,7 @@ function scene.update(dt)
         game.score=game.score+(game.score0-game.score)*dt^.26
     end
 
-    freshScriptArgs()
+    _freshScriptArgs()
     callScriptEvent('update')
 end
 
