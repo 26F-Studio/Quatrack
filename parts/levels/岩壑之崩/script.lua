@@ -36,10 +36,6 @@ local offsetWater={50,0}
 local offsetThunder={1.96e42}
 local offsetIce={{140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,140,0,0,0},{-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,-140,0,0,0}}
 
-local function pointDir(x1,y1,x2,y2)
-    return math.atan2(y2-y1,x2-x1)
-end
-
 local function objCreate(arg)
     arg.timeSpawn=t
     ins(objs,arg)
@@ -57,9 +53,9 @@ end
 
 local function objAnimBase(x,y,s)
     gc.line(x-49*s,y-2*s,x-49*s,y-11*s,x-40*s,y-11*s)
-    gc.line(x+40*s,y-11*s,x+49*s,y-11*s,x+49*s,y-2*s)
+    gc.line(x+49*s,y-2*s,x+49*s,y-11*s,x+40*s,y-11*s)
     gc.line(x-49*s,y+2*s,x-49*s,y+11*s,x-40*s,y+11*s)
-    gc.line(x+40*s,y+11*s,x+49*s,y+11*s,x+49*s,y+2*s)
+    gc.line(x+49*s,y+2*s,x+49*s,y+11*s,x+40*s,y+11*s)
 end
 
 local function objAnimDefault(obj)
@@ -93,20 +89,20 @@ local function objAnimWater(obj)
     local s=1+0.8*_t
     gc.setColor(98/255,130/255,209/255,1-2*_t)
     objAnimBase(x,y,s)
-
-    gc.setColor(132/255,130/255,209/255,1-2*_t)
-    gc.line(x-36*s,y-11*s,x+36*s,y-11*s)
-    gc.line(x-36*s,y-11*s,x-36*s,y-7*s)
-    gc.line(x-45*s,y-7*s,x-36*s,y-7*s)
-    gc.line(x-45*s,y-7*s,x-45*s,y+7*s)
-    gc.line(x-45*s,y+7*s,x-36*s,y+7*s)
-    gc.line(x-36*s,y+7*s,x-36*s,y+11*s)
-    gc.line(x-36*s,y+11*s,x+36*s,y+11*s)
-    gc.line(x+36*s,y-11*s,x+36*s,y-7*s)
-    gc.line(x+36*s,y-7*s,x+45*s,y-7*s)
-    gc.line(x+45*s,y-7*s,x+45*s,y+7*s)
-    gc.line(x+36*s,y+7*s,x+45*s,y+7*s)
-    gc.line(x+36*s,y+7*s,x+36*s,y+11*s)
+    gc.line(
+        x+36*s,y-11*s,
+        x-36*s,y-11*s,
+        x-36*s,y-7*s,
+        x-45*s,y-7*s,
+        x-45*s,y+7*s,
+        x-36*s,y+7*s,
+        x-36*s,y+11*s,
+        x+36*s,y+11*s,
+        x+36*s,y+7*s,
+        x+45*s,y+7*s,
+        x+45*s,y-7*s,
+        x+36*s,y-7*s
+    )
 end
 
 local function objPartWater(obj)
@@ -167,7 +163,7 @@ local function objPartIce(obj)
 end
 
 function init()
-    for i,note in next,game.map.noteQueue do
+    for _,note in next,game.map.noteQueue do
         if type(note)=='table' and note.track>=1 and note.track<=4 then
             local oAnim=TABLE.copy(objTemplate)
             local oAnimTime=note.time
@@ -212,7 +208,7 @@ function init()
     o.life=5.294
     if elementA then
         o.text={"若陀龙王即将汲取火元素的力量…","附着火元素的音符下落速度将会加快！"}
-        for i,note in next,game.map.noteQueue do
+        for _,note in next,game.map.noteQueue do
             if type(note)=='table' and note.track>=5 and note.track<=8 then
                 note.color=colorFire
                 note.yOffset=offsetFire
@@ -245,7 +241,7 @@ function init()
         end
     else
         o.text={"若陀龙王即将汲取水元素的力量…","附着水元素的音符下落速度将会减慢！"}
-        for i,note in next,game.map.noteQueue do
+        for _,note in next,game.map.noteQueue do
             if type(note)=='table' and note.track>=5 and note.track<=8 then
                 note.color=colorWater
                 note.yOffset=offsetWater
@@ -280,7 +276,7 @@ function init()
     ins(events,{time=72.701,func=objCreate,arg=TABLE.copy(o)})
     if elementB then
         o.text={"若陀龙王即将汲取雷元素的力量…","附着雷元素的音符需要在一拍后重复击打！"}
-        for i,note in next,game.map.noteQueue do
+        for _,note in next,game.map.noteQueue do
             if type(note)=='table' and note.track>=9 and note.track<=12 then
                 note.color=colorThunder
                 local oAnim=TABLE.copy(objTemplate)
@@ -316,7 +312,7 @@ function init()
         end
     else
         o.text={"若陀龙王即将汲取冰元素的力量…","附着冰元素的音符将会移动到相邻的轨道！"}
-        for i,note in next,game.map.noteQueue do
+        for _,note in next,game.map.noteQueue do
             if type(note)=='table' and note.track>=17 and note.track<=20 then
                 note.color=colorIce
                 note.xOffset=offsetIce[2-note.track%2]
@@ -360,7 +356,9 @@ function update()
     ts=t-pt
 
     for index,obj in next,objs do
-        if type(obj.update)=='function' then obj.update(obj) elseif type(obj.update)=='table' then
+        if type(obj.update)=='function' then
+            obj.update(obj)
+        elseif type(obj.update)=='table' then
             for _,v in next,obj.update do
                 v(obj)
             end
