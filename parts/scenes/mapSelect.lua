@@ -90,6 +90,7 @@ local scene={}
 
 function scene.sceneInit()
     if not mapLoaded then _freshSongList() end
+    BG.set()
     BGM.play()
 end
 
