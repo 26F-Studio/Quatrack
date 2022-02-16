@@ -663,7 +663,7 @@ function Map.new(file)
                     t[i]=time*unit
                 end
                 for i=1,4 do
-                    _syntaxCheck(t[i]<t[i+1],"Invalid judgement time list (need ascending order)")
+                    _syntaxCheck(t[i]<=t[i+1],"Invalid judgement time list (need ascending order)")
                 end
                 t[1],t[2],t[3],t[4],t[5]=t[5],t[4],t[3],t[2],t[1]
                 o.eventQueue:insert{
