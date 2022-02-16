@@ -266,21 +266,21 @@ function init()
 
     --对 这里有他妈俩一样的东西 其中一个不可见 我也不知道为什么 但如果没有就不会正常工作 为什么呢 他妈的
     ins(events,{time=28.465,func=objExecute,arg={tag='outsidecircle',func=function(obj)
-        local o=TABLE.copy(obj)
-        o.tag={}
-        o.update=objColorControl
-        o.direction=pointDirection(o.x,o.y,640,360)
-        o.speed=1000
-        o.color[4]=0
-        objCreate(o)
+        local _o=TABLE.copy(obj)
+        _o.tag={}
+        _o.update=objColorControl
+        _o.direction=pointDirection(_o.x,_o.y,640,360)
+        _o.speed=1000
+        _o.color[4]=0
+        objCreate(_o)
     end}})
     ins(events,{time=28.465,func=objExecute,arg={tag='outsidecircle',func=function(obj)
-        local o=TABLE.copy(obj)
-        o.tag={}
-        o.update=objColorControl
-        o.direction=pointDirection(o.x,o.y,640,360)
-        o.speed=1000
-        objCreate(o)
+        local _o=TABLE.copy(obj)
+        _o.tag={}
+        _o.update=objColorControl
+        _o.direction=pointDirection(_o.x,_o.y,640,360)
+        _o.speed=1000
+        objCreate(_o)
     end}})
 
     ins(events,{time=29.023,func=objExecute,arg={tag='outsidecircle',func=function(obj)

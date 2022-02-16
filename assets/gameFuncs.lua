@@ -114,9 +114,11 @@ end
 function applyFPS(inGame)
     if inGame then
         Zenitha.setMaxFPS(SETTING.maxFPS)
-        Zenitha.setDrawFreq(SETTING.frameMul)
+        Zenitha.setUpdateFreq(SETTING.updRate)
+        Zenitha.setDrawFreq(SETTING.drawRate)
     else
         Zenitha.setMaxFPS(math.min(SETTING.maxFPS,90))
+        Zenitha.setUpdateFreq(100)
         Zenitha.setDrawFreq(100)
     end
 end

@@ -240,6 +240,7 @@ end
 --Update savedata
 do
     if STAT.hits then STAT.hits=nil end
+    if SETTING.frameMul then SETTING.drawRate,SETTING.frameMul=SETTING.frameMul end
 end
 DEBUG.checkLoadTime("Load savedata")
 --------------------------------------------------------------

@@ -118,7 +118,8 @@ return{
     setting_slowUnfocus="挂后台节约性能",
 
     setting_maxFPS="最大FPS",
-    setting_frameMul="绘制帧率百分比",
+    setting_updRate="更新帧频率",
+    setting_drawRate="绘制帧频率",
 
     keySetting_restart="重开",
     keySetting_skip="跳过",

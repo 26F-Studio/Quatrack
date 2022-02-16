@@ -204,7 +204,8 @@ do--Userdata tables
         cleanCanvas=false,
         fullscreen=true,
         maxFPS=300,
-        frameMul=30,
+        updRate=100,
+        drawRate=30,
 
         --System
         sysCursor=false,

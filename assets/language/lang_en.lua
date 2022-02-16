@@ -118,7 +118,8 @@ return{
     setting_slowUnfocus="Slow when unfocused",
 
     setting_maxFPS="Max FPS",
-    setting_frameMul="Frame draw rate",
+    setting_updRate="Update rate",
+    setting_drawRate="Draw rate",
 
     keySetting_restart="restart",
     keySetting_skip="skip",

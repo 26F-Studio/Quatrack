@@ -118,7 +118,7 @@ end
 
 scene.widgetList={
     listBox,
-    WIDGET.new{type='button_fill',name="openDir",x=160,y=640,w=200,h=80,  sound='button',text=CHAR.icon.import,color='lV',fontSize=60,
+    WIDGET.new{type='button_fill',x=160,y=640,w=200,h=80,  sound='button',text=CHAR.icon.import,color='lV',fontSize=60,
         code=function()
             if SYSTEM=="Windows" or SYSTEM=="Linux" then
                 love.system.openURL(love.filesystem.getSaveDirectory()..'/songs')
@@ -127,8 +127,8 @@ scene.widgetList={
             end
         end
     },
-    WIDGET.new{type='button_fill',name="fresh",  x=320,y=640,w=80,        sound='button',text=CHAR.icon.retry_spin,color='lB',fontSize=50,code=_freshSongList,visibleFunc=function() return love.timer.getTime()-lastFreshTime>2.6 end},
-    WIDGET.new{type='button_fill',name="play",   x=640,y=640,w=140,h=80,  sound='button',text=CHAR.icon.play,color='lG',fontSize=60,code=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button_fill',name="back",   x=1140,y=640,w=170,h=80, sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button_fill',x=320,y=640,w=80,        sound='button',text=CHAR.icon.retry_spin,color='lB',fontSize=50,code=_freshSongList,visibleFunc=function() return love.timer.getTime()-lastFreshTime>2.6 end},
+    WIDGET.new{type='button_fill',x=640,y=640,w=140,h=80,  sound='button',text=CHAR.icon.play,color='lG',fontSize=60,code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button_fill',x=1140,y=640,w=170,h=80, sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 return scene

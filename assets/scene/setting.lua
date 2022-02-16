@@ -83,7 +83,8 @@ scene.widgetList={
     WIDGET.new{type='checkBox',   x=1160,y=430,       text=LANG'setting_slowUnfocus', widthLimit=360,disp=SETval('slowUnfocus'),   code=SETrev('slowUnfocus')},
 
     WIDGET.new{type='slider',     x=860,y=750,w=360,  text=LANG'setting_maxFPS',      widthLimit=180,axis={60,360,10},smooth=true, disp=SETval('maxFPS'),valueShow=sliderShow_fps,code=SETsto('maxFPS')},
-    WIDGET.new{type='slider',     x=860,y=800,w=360,  text=LANG'setting_frameMul',    widthLimit=180,axis={20,100,10},             disp=SETval('frameMul'),valueShow=sliderShow_mul,code=SETsto('frameMul')},
+    WIDGET.new{type='slider',     x=860,y=800,w=360,  text=LANG'setting_updRate',     widthLimit=180,axis={20,100,10},             disp=SETval('updRate'),valueShow=sliderShow_mul,code=SETsto('updRate')},
+    WIDGET.new{type='slider',     x=860,y=850,w=360,  text=LANG'setting_drawRate',    widthLimit=180,axis={20,100,10},             disp=SETval('drawRate'),valueShow=sliderShow_mul,code=SETsto('drawRate')},
 
     WIDGET.new{type='button_fill',x=900,y=640,w=170,h=80,sound='button',fontSize=60,text=CHAR.key.keyboard,code=WIDGET.c_goScn'setting_key'},
 

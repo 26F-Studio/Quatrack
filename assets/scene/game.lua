@@ -115,6 +115,7 @@ local function _freshScriptArgs()
     end
 
     --Special, will remove in the future
+    rawset(gameArgs,'hits',game.hits)
     rawset(gameArgs,'map',game.map)
 end
 local lastErrorTime=setmetatable({},{__index=function(self,k) self[k]=-1e99 return -1e99 end})
