@@ -2,7 +2,7 @@
 local gc=love.graphics
 local int,rnd=math.floor,math.random
 local ins,rem=table.insert,table.remove
-local mDraw=mDraw
+local mDraw=GC.draw
 local back={}
 
 local lanterns

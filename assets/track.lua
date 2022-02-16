@@ -408,10 +408,10 @@ function Track:draw(map)
 
         --Draw track name
         if s.nameAlpha>0 then
-            setFont(40)
+            FONT.set(40)
             gc_setColor(r,g,b,s.nameAlpha/100)
             for i=1,#self.showName do
-                mStr(self.showName[i],0,-20-40*i)
+                GC.mStr(self.showName[i],0,-20-40*i)
             end
         end
     end

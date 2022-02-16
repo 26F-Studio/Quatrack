@@ -66,7 +66,7 @@ do
         gc={
             setColor=function(r,g,b,a) gc.setColor(r,g,b,a) end,
             setLineWidth=function(w) gc.setLineWidth(w) end,
-            setFont=function(f) setFont(f) end,
+            setFont=function(f) FONT.set(f) end,
 
             line=function(...) gc.line(...) end,
             rect=function(mode,x,y,w,h) gc.rectangle(mode,x,y,w,h) end,

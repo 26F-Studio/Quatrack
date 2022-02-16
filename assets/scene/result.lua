@@ -8,11 +8,11 @@ local results
 
 local scene={}
 
-function scene.sceneInit()
+function scene.enter()
     applyFPS(false)
     results=SCN.args[1] or{
         fake=true,
-        map=require'parts.map'.new(),
+        map=require'assets.map'.new(),
         score=62600,
         maxCombo=260,
         accText="96.20%",
@@ -30,8 +30,8 @@ function scene.sceneInit()
     }
     if results.accText:sub(1,1)=='-' then results.bestChain=0 end
     if results.averageDeviate:sub(1,1)~='-' then results.averageDeviate='+'..results.averageDeviate end
-    results.mapName=gc.newText(getFont(80,'mono'),results.map.mapName)
-    results.mapDifficulty=gc.newText(getFont(30,'mono'),results.map.mapDifficulty)
+    results.mapName=gc.newText(FONT.get(80,'mono'),results.map.mapName)
+    results.mapDifficulty=gc.newText(FONT.get(30,'mono'),results.map.mapDifficulty)
 
     --Rank
     local acc=tonumber(results.accText:sub(1,-2))
@@ -54,8 +54,8 @@ function scene.sceneInit()
     else                   rankClr,rankStr=rankColors[8],'F '
     end
     results.rankClr=rankClr
-    results.rankText1=gc.newText(getFont(100,'mono'),rankStr:sub(1,1))
-    results.rankText2=gc.newText(getFont(65,'mono'),rankStr:sub(2,2))
+    results.rankText1=gc.newText(FONT.get(100,'mono'),rankStr:sub(1,1))
+    results.rankText2=gc.newText(FONT.get(65,'mono'),rankStr:sub(2,2))
 
     BGM.play('result')
     BG.set()
@@ -87,9 +87,9 @@ function scene.draw()
     gc.push('transform')
         gc.translate(640,100)
         gc.scale(min(900/results.mapName:getWidth(),1))
-        mText(results.mapName,0,0)
+        GC.simpX(results.mapName,0,0)
     gc.pop()
-    mText(results.mapDifficulty,640,200)
+    GC.simpX(results.mapDifficulty,640,200)
 
     gc.push('transform')
     gc.translate(240,255)
@@ -105,21 +105,21 @@ function scene.draw()
 
     --Draw score & accuracy & combo
     gc.setColor(COLOR.Z)
-    setFont(60)
+    FONT.set(60)
     gc.print(results.score,140,0)
-    setFont(50)
+    FONT.set(50)
     gc.print(results.accText,140,60)
-    setFont(15)
+    FONT.set(15)
     gc.print(results.averageDeviate,145,120)
-    setFont(40)
+    FONT.set(40)
     gc.print(results.maxCombo.."x",140,135)
 
     --Draw trophy
     if results.bestChain>0 then
-        local t=TIME()
+        local t=love.timer.getTime()
         local c=results.bestChain
-        local trophy=text.chainTexts[c]
-        setFont(80)
+        local trophy=Text.chainTexts[c]
+        FONT.set(80)
         local clr=chainColors[c]
         for i=0,420,10 do
             gc.setColor(clr[1],clr[2],clr[3],.45-(i/1000))
@@ -157,7 +157,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.newButton{name="again",x=940,y=640,w=170,h=80,font=60,fText=CHAR.icon.retry_spin,code=pressKey'restart'},
-    WIDGET.newButton{name="back", x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
+    WIDGET.new{type='button_fill',name="again",x=940,y=640,w=170,h=80,sound='button',fontSize=60,text=CHAR.icon.retry_spin,code=WIDGET.c_pressKey'restart'},
+    WIDGET.new{type='button_fill',name="back", x=1140,y=640,w=170,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 return scene

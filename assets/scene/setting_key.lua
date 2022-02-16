@@ -83,12 +83,12 @@ local keyNames={
     },
 }setmetatable(keyNames.apple,{__index=keyNames.normal})
 
-function scene.sceneInit()
+function scene.enter()
     selected=false
     KEY_MAP_inv:_update()
     BG.set('none')
 end
-function scene.sceneBack()
+function scene.leave()
     saveFile(KEY_MAP,'conf/key')
 end
 
@@ -127,21 +127,21 @@ function scene.keyDown(key,isRep)
 end
 
 function scene.draw()
-    setFont(20)
+    FONT.set(20)
     gc.setColor(COLOR.Z)
-    gc.printf(text.keySettingInstruction,526,600,500,'right')
+    gc.printf(Text.keySettingInstruction,526,600,500,'right')
 
-    setFont(30)
+    FONT.set(30)
     for i=1,20 do
         gc.setColor(
             selected==actionNames[i] and(
-                TIME()%.26>.13 and COLOR.R or
+                love.timer.getTime()%.26>.13 and COLOR.R or
                 COLOR.Y
             ) or
             COLOR.Z
         )
         local W=scene.widgetList[i]
-        local x,y=W:getCenter()
+        local x,y=W._x,W._y
         if i<=11 then
             mStr(KEY_MAP_inv[actionNames[i]] or '[X]',x,y-90)
         else
@@ -158,29 +158,29 @@ local function _setSel(i)
     end
 end
 scene.widgetList={
-    WIDGET.newKey{name='L5',        x=90,  y=260,w=100,h=60,fText='L5',color='dH',code=function() _setSel(01) end},
-    WIDGET.newKey{name='L4',        x=200, y=260,w=100,h=60,fText='L4',color='dH',code=function() _setSel(02) end},
-    WIDGET.newKey{name='L3',        x=310, y=260,w=100,h=60,fText='L3',color='Z' ,code=function() _setSel(03) end},
-    WIDGET.newKey{name='L2',        x=420, y=260,w=100,h=60,fText='L2',color='lB',code=function() _setSel(04) end},
-    WIDGET.newKey{name='L1',        x=530, y=260,w=100,h=60,fText='L1',color='lB',code=function() _setSel(05) end},
-    WIDGET.newKey{name='C',         x=640, y=260,w=100,h=60,fText='C', color='Z' ,code=function() _setSel(06) end},
-    WIDGET.newKey{name='R1',        x=750, y=260,w=100,h=60,fText='R1',color='lB',code=function() _setSel(07) end},
-    WIDGET.newKey{name='R2',        x=860, y=260,w=100,h=60,fText='R2',color='lB',code=function() _setSel(08) end},
-    WIDGET.newKey{name='R3',        x=970, y=260,w=100,h=60,fText='R3',color='Z' ,code=function() _setSel(09) end},
-    WIDGET.newKey{name='R4',        x=1080,y=260,w=100,h=60,fText='R4',color='dH',code=function() _setSel(10) end},
-    WIDGET.newKey{name='R5',        x=1190,y=260,w=100,h=60,fText='R5',color='dH',code=function() _setSel(11) end},
+    WIDGET.new{type='button',x=90,  y=260,w=100,h=60,sound='click',fontSize=30,text='L5',color='dH',code=function() _setSel(01) end},
+    WIDGET.new{type='button',x=200, y=260,w=100,h=60,sound='click',fontSize=30,text='L4',color='dH',code=function() _setSel(02) end},
+    WIDGET.new{type='button',x=310, y=260,w=100,h=60,sound='click',fontSize=30,text='L3',color='Z' ,code=function() _setSel(03) end},
+    WIDGET.new{type='button',x=420, y=260,w=100,h=60,sound='click',fontSize=30,text='L2',color='lB',code=function() _setSel(04) end},
+    WIDGET.new{type='button',x=530, y=260,w=100,h=60,sound='click',fontSize=30,text='L1',color='lB',code=function() _setSel(05) end},
+    WIDGET.new{type='button',x=640, y=260,w=100,h=60,sound='click',fontSize=30,text='C', color='Z' ,code=function() _setSel(06) end},
+    WIDGET.new{type='button',x=750, y=260,w=100,h=60,sound='click',fontSize=30,text='R1',color='lB',code=function() _setSel(07) end},
+    WIDGET.new{type='button',x=860, y=260,w=100,h=60,sound='click',fontSize=30,text='R2',color='lB',code=function() _setSel(08) end},
+    WIDGET.new{type='button',x=970, y=260,w=100,h=60,sound='click',fontSize=30,text='R3',color='Z' ,code=function() _setSel(09) end},
+    WIDGET.new{type='button',x=1080,y=260,w=100,h=60,sound='click',fontSize=30,text='R4',color='dH',code=function() _setSel(10) end},
+    WIDGET.new{type='button',x=1190,y=260,w=100,h=60,sound='click',fontSize=30,text='R5',color='dH',code=function() _setSel(11) end},
 
-    WIDGET.newKey{name='restart',   x=130, y=400,w=120,h=60,font=25,color='lR',code=function() _setSel(12) end},
-    WIDGET.newKey{name='skip',      x=130, y=480,w=120,h=60,font=25,color='lG',code=function() _setSel(13) end},
-    WIDGET.newKey{name='auto',      x=130, y=560,w=120,h=60,font=25,color='lO',code=function() _setSel(14) end},
-    WIDGET.newKey{name='sfxVolDn',  x=430, y=400,w=120,h=60,font=25,color='lL',code=function() _setSel(15) end},
-    WIDGET.newKey{name='sfxVolUp',  x=430, y=480,w=120,h=60,font=25,color='lL',code=function() _setSel(16) end},
-    WIDGET.newKey{name='musicVolDn',x=730, y=400,w=120,h=60,font=25,color='lL',code=function() _setSel(17) end},
-    WIDGET.newKey{name='musicVolUp',x=730, y=480,w=120,h=60,font=25,color='lL',code=function() _setSel(18) end},
-    WIDGET.newKey{name='dropSpdDn', x=1030,y=400,w=120,h=60,font=25,color='lL',code=function() _setSel(19) end},
-    WIDGET.newKey{name='dropSpdUp', x=1030,y=480,w=120,h=60,font=25,color='lL',code=function() _setSel(20) end},
+    WIDGET.new{type='button',x=130, y=400,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_restart',   color='lR',code=function() _setSel(12) end},
+    WIDGET.new{type='button',x=130, y=480,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_skip',      color='lG',code=function() _setSel(13) end},
+    WIDGET.new{type='button',x=130, y=560,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_auto',      color='lO',code=function() _setSel(14) end},
+    WIDGET.new{type='button',x=430, y=400,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_sfxVolDn',  color='lL',code=function() _setSel(15) end},
+    WIDGET.new{type='button',x=430, y=480,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_sfxVolUp',  color='lL',code=function() _setSel(16) end},
+    WIDGET.new{type='button',x=730, y=400,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_musicVolDn',color='lL',code=function() _setSel(17) end},
+    WIDGET.new{type='button',x=730, y=480,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_musicVolUp',color='lL',code=function() _setSel(18) end},
+    WIDGET.new{type='button',x=1030,y=400,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_dropSpdDn', color='lL',code=function() _setSel(19) end},
+    WIDGET.new{type='button',x=1030,y=480,w=120,h=60,sound='click',fontSize=25,text=LANG'keySetting_dropSpdUp', color='lL',code=function() _setSel(20) end},
 
-    WIDGET.newButton{name='back',x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
+    WIDGET.new{type='button_fill',x=1140,y=640,w=170,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 
 return scene

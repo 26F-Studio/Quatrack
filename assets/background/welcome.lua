@@ -7,7 +7,7 @@ local t
 local textObj
 function back.init()
     t=math.random()*2600
-    textObj=gc.newText(getFont(80),"Welcome To Quatrack")
+    textObj=gc.newText(FONT.get(80),"Welcome To Quatrack")
 end
 function back.update(dt)
     t=t+dt
@@ -29,11 +29,11 @@ function back.draw()
         gc.rotate(t+5*sin(.26*t)+5*sin(.626*t))
     end
     gc.setColor(.4,.6,1,.3)
-    mDraw(textObj,4*sin(t*.7942),4*sin(t*.7355))
+    GC.draw(textObj,4*sin(t*.7942),4*sin(t*.7355))
     gc.setColor(.5,.7,1,.4)
-    mDraw(textObj,2*sin(t*.77023),2*sin(t*.7026))
+    GC.draw(textObj,2*sin(t*.77023),2*sin(t*.7026))
     gc.setColor(1,1,1,.5)
-    mDraw(textObj,3*sin(t*.7283),3*sin(t*.7626))
+    GC.draw(textObj,3*sin(t*.7283),3*sin(t*.7626))
     gc.pop()
 end
 return back

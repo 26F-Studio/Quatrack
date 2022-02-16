@@ -1,6 +1,6 @@
 local scene={}
 
-function scene.sceneInit()
+function scene.enter()
     if SYSTEM~="iOS" then
         if math.random()>.0000626 then
             love.timer.sleep(.26)
@@ -10,8 +10,8 @@ function scene.sceneInit()
         end
     else
         MES.update(1e99)
-        Z.setPowerInfo(false)
-        Z.setClickFX(false)
+        Zenitha.setPowerInfo(false)
+        Zenitha.setClickFX(false)
         VERSION.string=""
         MES.new('error',"Please quit with HOME button on iOS",1e99)
     end

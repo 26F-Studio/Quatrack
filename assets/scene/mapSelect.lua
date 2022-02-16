@@ -3,7 +3,7 @@ local gc=love.graphics
 local min=math.min
 local ins=table.insert
 
-local listBox=WIDGET.newListBox{name='sel',x=60,y=80,w=1160,h=480,lineH=40,drawF=function(v,_,sel)
+local listBox=WIDGET.new{type='listBox',x=60,y=80,w=1160,h=480,lineHeight=40,drawFunc=function(v,_,sel)
     if sel then
         gc.setColor(COLOR.X)
         gc.rectangle('fill',0,0,1160,40)
@@ -13,11 +13,11 @@ local listBox=WIDGET.newListBox{name='sel',x=60,y=80,w=1160,h=480,lineH=40,drawF
     gc.setColor(COLOR.Z)
     gc.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
 
-    setFont(30,'mono')
+    FONT.set(30,'mono')
     gc.setColor(v.difficultyColor)
     gc.draw(v.difficulty,1050-v.difficulty:getWidth(),2)
     gc.setColor(COLOR.lS)
-    mStr(v.tracks,1105,0)
+    GC.mStr(v.tracks,1105,0)
 end}
 
 local mapLoaded=false
@@ -26,9 +26,9 @@ local lastFreshTime=0
 local mapList
 local function _freshSongList()
     mapLoaded=true
-    lastFreshTime=TIME()
+    lastFreshTime=love.timer.getTime()
     mapList={}
-    for source,path in next,{game='parts/levels',outside='songs'} do
+    for source,path in next,{game='assets/level',outside='songs'} do
         for _,dirName in next,love.filesystem.getDirectoryItems(path) do
             local dirPath=path..'/'..dirName
             local info=love.filesystem.getInfo(dirPath)
@@ -64,9 +64,9 @@ local function _freshSongList()
                         ins(mapList,{
                             path=fullPath,
                             source=source,
-                            mapName=gc.newText(getFont(30),{color,metaData.mapName,COLOR.dH," - "..metaData.musicAuth}),
-                            mapAuth=gc.newText(getFont(30),metaData.mapAuth),
-                            difficulty=gc.newText(getFont(25),dText),
+                            mapName=gc.newText(FONT.get(30),{color,metaData.mapName,COLOR.dH," - "..metaData.musicAuth}),
+                            mapAuth=gc.newText(FONT.get(30),metaData.mapAuth),
+                            difficulty=gc.newText(FONT.get(25),dText),
                             difficultyColor=
                                 dText:sub(1,4)=='Easy' and COLOR.lG or
                                 dText:sub(1,4)=='Norm' and COLOR.lY or
@@ -88,7 +88,7 @@ end
 
 local scene={}
 
-function scene.sceneInit()
+function scene.enter()
     if not mapLoaded then _freshSongList() end
     BG.set()
     BGM.play()
@@ -118,17 +118,17 @@ end
 
 scene.widgetList={
     listBox,
-    WIDGET.newButton{name="openDir",x=160,y=640,w=200,h=80,fText=CHAR.icon.import,color='lV',font=60,
+    WIDGET.new{type='button_fill',name="openDir",x=160,y=640,w=200,h=80,  sound='button',text=CHAR.icon.import,color='lV',fontSize=60,
         code=function()
             if SYSTEM=="Windows" or SYSTEM=="Linux" then
-                love.system.openURL(SAVEDIR..'/songs')
+                love.system.openURL(love.filesystem.getSaveDirectory()..'/songs')
             else
-                MES.new('info',SAVEDIR)
+                MES.new('info',love.filesystem.getSaveDirectory())
             end
         end
     },
-    WIDGET.newButton{name="fresh",x=320,y=640,w=80,fText=CHAR.icon.retry_spin,color='lB',font=50,code=_freshSongList,hideF=function() return TIME()-lastFreshTime<2.6 end},
-    WIDGET.newButton{name="play",x=640,y=640,w=140,h=80,fText=CHAR.icon.play,color='lG',font=60,code=pressKey'return'},
-    WIDGET.newButton{name="back", x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
+    WIDGET.new{type='button_fill',name="fresh",  x=320,y=640,w=80,        sound='button',text=CHAR.icon.retry_spin,color='lB',fontSize=50,code=_freshSongList,visibleFunc=function() return love.timer.getTime()-lastFreshTime>2.6 end},
+    WIDGET.new{type='button_fill',name="play",   x=640,y=640,w=140,h=80,  sound='button',text=CHAR.icon.play,color='lG',fontSize=60,code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button_fill',name="back",   x=1140,y=640,w=170,h=80, sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 return scene

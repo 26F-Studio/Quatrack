@@ -13,9 +13,9 @@ local loadingThread=coroutine.wrap(function()
     local r=math.random()*6.2832
     logoColor1={COLOR.rainbow(r)}
     logoColor2={COLOR.rainbow_light(r)}
-    YIELD('loadSFX')SFX.load('media/effect/chiptune/')
-    YIELD('loadVoice')VOC.load('media/vocal/')
-    YIELD('loadFont') for i=1,17 do getFont(15+5*i) end
+    coroutine.yield('loadSFX')SFX.load('assets/effect/chiptune/')
+    coroutine.yield('loadVoice')VOC.load('assets/vocal/')
+    coroutine.yield('loadFont') for i=1,17 do FONT.get(15+5*i) end
 
     STAT.run=STAT.run+1
     saveStats()
@@ -23,12 +23,12 @@ local loadingThread=coroutine.wrap(function()
     return'finish'
 end)
 
-function scene.sceneInit()
-    studioLogo=gc.newText(getFont(90),"26F Studio")
+function scene.enter()
+    studioLogo=gc.newText(FONT.get(90),"26F Studio")
     progress=0
     maxProgress=10
 end
-function scene.sceneBack()
+function scene.leave()
     love.event.quit()
 end
 
@@ -60,15 +60,15 @@ end
 
 function scene.draw()
     gc.setColor(1,1,1)
-    mDraw(IMG.title,640,200,0,.3)
+    GC.draw(IMG.title,640,200,0,.3)
 
-    gc.setColor(logoColor1[1],logoColor1[2],logoColor1[3],progress/maxProgress)mDraw(studioLogo,640,400)
-    gc.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress) for dx=-2,2,2 do for dy=-2,2,2 do mDraw(studioLogo,640+dx,400+dy) end end
-    gc.setColor(.2,.2,.2,progress/maxProgress)mDraw(studioLogo,640,400)
+    gc.setColor(logoColor1[1],logoColor1[2],logoColor1[3],progress/maxProgress)GC.draw(studioLogo,640,400)
+    gc.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress) for dx=-2,2,2 do for dy=-2,2,2 do GC.draw(studioLogo,640+dx,400+dy) end end
+    gc.setColor(.2,.2,.2,progress/maxProgress)GC.draw(studioLogo,640,400)
 
     gc.setColor(1,1,1)
-    setFont(30)
-    mStr(text.loadText[loading],640,530)
+    FONT.set(30)
+    GC.mStr(Text.loadText[loading],640,530)
 end
 
 return scene

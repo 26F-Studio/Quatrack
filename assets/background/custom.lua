@@ -20,7 +20,7 @@ function back.draw()
     gc_clear(.1,.1,.1)
     if image then
         gc_setColor(1,1,1,alpha)
-        mDraw(image,mx,my,nil,k)
+        GC.draw(image,mx,my,nil,k)
     end
 end
 function back.event(a,img)

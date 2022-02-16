@@ -11,4 +11,4 @@ runs:
     - name: Pack Quatrack
       shell: bash
       run: |
-        7z a -tzip ${{ inputs.filePath }} media parts Zframework conf.lua main.lua version.lua
+        7z a -tzip ${{ inputs.filePath }} assets Zenitha conf.lua main.lua version.lua

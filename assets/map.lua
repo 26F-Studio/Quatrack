@@ -1,4 +1,4 @@
-local Note=require'parts.note'
+local Note=require'assets.note'
 
 local int,rnd=math.floor,math.random
 local ins,rem=table.insert,table.remove

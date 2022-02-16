@@ -6,8 +6,8 @@ local gc_replaceTransform,gc_translate=gc.replaceTransform,gc.translate
 
 local kbIsDown=love.keyboard.isDown
 
-local setFont=setFont
-local mStr=mStr
+local setFont=FONT.set
+local mStr=GC.mStr
 
 local unpack,rawset=unpack,rawset
 local max,min=math.max,math.min
@@ -83,9 +83,9 @@ local function _tryGoResult()
     if game.needSaveSetting then saveSettings() end
     if game.fullAcc>0 and game.curAcc/game.fullAcc>=.6 then
         _updateStat()
-        MES.new('check',text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
+        MES.new('check',Text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
     else
-        MES.new('info',text.invalidScore)
+        MES.new('info',Text.invalidScore)
     end
     SCN.swapTo('result',nil,{
         map=game.map,
@@ -123,8 +123,8 @@ local function callScriptEvent(event,...)
         local ok,err=pcall(game.map.script[event],...)
         if not ok then
             game.errorCount=game.errorCount+1
-            if TIME()-lastErrorTime[event]>=0.626 then
-                lastErrorTime[event]=TIME()
+            if love.timer.getTime()-lastErrorTime[event]>=0.626 then
+                lastErrorTime[event]=love.timer.getTime()
                 err=err:gsub('%b[]:','')
                 -- MES.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
                 MES.new('error',err)
@@ -135,11 +135,11 @@ end
 
 local scene={}
 
-function scene.sceneInit()
+function scene.enter()
     KEY_MAP_inv:_update()
     game.autoPlay=false
     game.playSpeed=1
-    game.autoPlayTextObj=game.autoPlayTextObj or gc.newText(getFont(100),'AUTO')
+    game.autoPlayTextObj=game.autoPlayTextObj or gc.newText(FONT.get(100),'AUTO')
     game.judgeTimes=TABLE.shift(judgeTimesTemplate)
 
     game.map=SCN.args[1]
@@ -148,9 +148,9 @@ function scene.sceneInit()
     game.songLength=game.map.songLength
 
     game.texts={
-        mapName=gc.newText(getFont(80),game.map.mapName),
-        musicAuth=gc.newText(getFont(40),'Music: '..game.map.musicAuth),
-        mapAuth=gc.newText(getFont(40),'Map: '..game.map.mapAuth),
+        mapName=gc.newText(FONT.get(80),game.map.mapName),
+        musicAuth=gc.newText(FONT.get(40),'Music: '..game.map.musicAuth),
+        mapAuth=gc.newText(FONT.get(40),'Map: '..game.map.mapAuth),
     }
 
     game.safeAreaTimer=2
@@ -171,7 +171,7 @@ function scene.sceneInit()
     game.tracks={}
     local trackNameList=defaultTrackNames[game.map.tracks]
     for id=1,game.map.tracks do
-        local t=require'parts.track'.new(id)
+        local t=require'assets.track'.new(id)
         t:_setGameData(game)
         t:rename(trackNameList and trackNameList[id] or '')
         t:setChordColor(defaultChordColor)
@@ -187,7 +187,7 @@ function scene.sceneInit()
     if love.filesystem.getInfo(dirPath..game.map.songFile..'.ogg') then
         BGM.load(game.map.qbpFilePath,dirPath..game.map.songFile..'.ogg')
     else
-        MES.new('error',text.noFile)
+        MES.new('error',Text.noFile)
     end
     BGM.play(game.map.qbpFilePath,'-preLoad')
 
@@ -215,7 +215,7 @@ function scene.sceneInit()
                 MES.new('error',("<$1>$2:$3"):repD('syntax',err:match('^%d+'),err:sub(err:find(':')+1)))
             end
         else
-            MES.new('error',text.noFile)
+            MES.new('error',Text.noFile)
         end
     else
         game.map.script={}
@@ -225,11 +225,11 @@ function scene.sceneInit()
     BGM.stop()
     if game.map.songImage then
         local image
-        if love.filesystem.getInfo('parts/levels') or love.filesystem.getInfo('songs/'..game.map.songImage) then
+        if love.filesystem.getInfo('assets/level') or love.filesystem.getInfo('songs/'..game.map.songImage) then
             local success
             success,image=pcall(gc.newImage,dirPath..game.map.songImage)
             if not success then
-                MES.new('error',text.noFile)
+                MES.new('error',Text.noFile)
                 image=nil
             end
         end
@@ -246,7 +246,7 @@ function scene.sceneInit()
     applyFPS(true)
 end
 
-function scene.sceneBack()
+function scene.leave()
     BGM.stop()
     applyFPS(false)
     if game.needSaveSetting then saveSettings() end
@@ -254,7 +254,7 @@ end
 
 local function _trigNote(deviateTime,noTailHold,weak)
     game.hitLV=getHitLV(deviateTime,game.judgeTimes)
-    game.hitTextTime=TIME()
+    game.hitTextTime=love.timer.getTime()
     game.fullAcc=game.fullAcc+100
     if noTailHold and(game.hitLV>0 or game.hitLV==0 and weak) then game.hitLV=5 end
     game.bestChain=min(game.bestChain,game.hitLV)
@@ -318,8 +318,8 @@ function scene.keyDown(key,isRep)
         local m,errmsg=loadBeatmap(game.map.qbpFilePath)
         if m then
             SCN.args[1]=m
-            BGM.stop('-s')
-            scene.sceneInit()
+            BGM.stop()
+            scene.enter()
         else
             MES.new('error',errmsg)
         end
@@ -330,18 +330,18 @@ function scene.keyDown(key,isRep)
     elseif k=='dropSpdDn' then
         if game.score0==0 or game.curAcc==-1e99 then
             SETTING.dropSpeed=max(SETTING.dropSpeed-1,-8)
-            MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
+            MES.new('info',Text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
             game.needSaveSetting=true
         else
-            MES.new('warn',text.cannotAdjustDropSpeed,0)
+            MES.new('warn',Text.cannotAdjustDropSpeed,0)
         end
     elseif k=='dropSpdUp' then
         if game.score0==0 or game.curAcc==-1e99 then
             SETTING.dropSpeed=min(SETTING.dropSpeed+1,8)
-            MES.new('info',text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
+            MES.new('info',Text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
             game.needSaveSetting=true
         else
-            MES.new('warn',text.cannotAdjustDropSpeed,0)
+            MES.new('warn',Text.cannotAdjustDropSpeed,0)
         end
     elseif k=='escape' then
         if _tryGoResult() then
@@ -366,8 +366,8 @@ function scene.keyDown(key,isRep)
             game.fullAcc=1e99
             _updateAcc()
         end
-        BGM.setPitch(game.playSpeed)
-        BGM.seek(game.time-game.playSongTime)
+        BGM.set('all','pitch',game.playSpeed,0)
+        BGM.set('all','seek',game.time-game.playSongTime)
     end
 end
 function scene.keyUp(key)
@@ -464,8 +464,8 @@ function scene.update(dt)
     if not game.isSongPlaying then
         if game.time<=game.playSongTime and game.time+dt>game.playSongTime then
             BGM.play(game.map.qbpFilePath,'-sdin -noloop')
-            BGM.setPitch(game.playSpeed)
-            BGM.seek(game.time+dt-game.playSongTime)
+            BGM.set('all','pitch',game.playSpeed,0)
+            BGM.set('all','seek',game.time+dt-game.playSongTime)
             game.isSongPlaying=true
         end
     else
@@ -533,7 +533,7 @@ function scene.update(dt)
             end
         end
         if missCount>0 then
-            game.hitTextTime=TIME()
+            game.hitTextTime=love.timer.getTime()
             game.hitLV=-1
             game.fullAcc=game.fullAcc+100*missCount
             _updateAcc()
@@ -568,7 +568,7 @@ function scene.draw()
     -- Draw auto mark
     if game.autoPlay then
         gc_setColor(1,1,1,.126)
-        mDraw(game.autoPlayTextObj,nil,nil,nil,3.55)
+        GC.draw(game.autoPlayTextObj,nil,nil,nil,3.55)
     end
 
     -- Draw tracks
@@ -579,10 +579,10 @@ function scene.draw()
     gc_replaceTransform(SCR.xOy)
 
     -- Draw hit text
-    if TIME()-game.hitTextTime<.26 and game.hitLV<=SETTING.showHitLV then
+    if love.timer.getTime()-game.hitTextTime<.26 and game.hitLV<=SETTING.showHitLV then
         local c=hitColors[game.hitLV]
         setFont(80,'mono')
-        gc_setColor(c[1],c[2],c[3],2.6-(TIME()-game.hitTextTime)*10)
+        gc_setColor(c[1],c[2],c[3],2.6-(love.timer.getTime()-game.hitTextTime)*10)
         mStr(hitTexts[game.hitLV],640,245)
     end
 
@@ -591,9 +591,9 @@ function scene.draw()
         setFont(50,'mono')
         if game.bestChain==5 then
             SCC[3]=(1-game.time/game.songLength)^.26
-            GC.shadedPrint(game.combo,640,360,'center',1,chainColors[game.bestChain],SCC)
+            GC.shadedPrint(game.combo,640,360,'center',1,8,chainColors[game.bestChain],SCC)
         else
-            GC.shadedPrint(game.combo,640,360,'center',1,chainColors[game.bestChain],COLOR.Z)
+            GC.shadedPrint(game.combo,640,360,'center',1,8,chainColors[game.bestChain],COLOR.Z)
         end
     end
 
@@ -630,8 +630,8 @@ function scene.draw()
         gc_setColor(1,1,1,a)
         gc_draw(game.texts.mapName,640,100,nil,min(1200/game.texts.mapName:getWidth(),1),1,game.texts.mapName:getWidth()*.5)
         gc_setColor(.7,.7,.7,a)
-        mText(game.texts.musicAuth,640,200)
-        mText(game.texts.mapAuth,640,240)
+        GC.simpX(game.texts.musicAuth,640,200)
+        GC.simpX(game.texts.mapAuth,640,240)
     end
 
     gc_setColor(1,1,1)
@@ -658,7 +658,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.newKey{name="restart", x=100,y=60,w=50,fText=CHAR.icon.retry_spin,code=pressKey'restart'},
-    WIDGET.newKey{name="pause", x=40,y=60,w=50,fText=CHAR.icon.back,code=backScene},
+    WIDGET.new{type='button',x=100,y=60,w=50,sound='click',text=CHAR.icon.retry_spin,code=WIDGET.c_pressKey'restart'},
+    WIDGET.new{type='button',x=40,y=60,w=50, sound='click',text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 return scene

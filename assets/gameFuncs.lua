@@ -6,43 +6,43 @@ local abs=math.abs
 do--function tryBack()
     local sureTime=-1e99
     function tryBack()
-        if TIME()-sureTime<1 then
+        if love.timer.getTime()-sureTime<1 then
             sureTime=-1e99
             return true
         else
-            sureTime=TIME()
-            MES.new('warn',text.sureQuit)
+            sureTime=love.timer.getTime()
+            MES.new('warn',Text.sureQuit)
         end
     end
 end
 do--function tryReset()
     local sureTime=-1e99
     function tryReset()
-        if TIME()-sureTime<1 then
+        if love.timer.getTime()-sureTime<1 then
             sureTime=-1e99
             return true
         else
-            sureTime=TIME()
-            MES.new('warn',text.sureReset)
+            sureTime=love.timer.getTime()
+            MES.new('warn',Text.sureReset)
         end
     end
 end
 do--function tryDelete()
     local sureTime=-1e99
     function tryDelete()
-        if TIME()-sureTime<1 then
+        if love.timer.getTime()-sureTime<1 then
             sureTime=-1e99
             return true
         else
-            sureTime=TIME()
-            MES.new('warn',text.sureDelete)
+            sureTime=love.timer.getTime()
+            MES.new('warn',Text.sureDelete)
         end
     end
 end
 do--function loadFile(name,args), function saveFile(data,name,args)
     local t=setmetatable({},{__index=function() return"'$1' loading failed: $2" end})
     function loadFile(name,args)
-        local text=text or t
+        local text=Text or t
         if not args then args='' end
         local res,mes=pcall(FILE.load,name,args)
         if res then
@@ -64,7 +64,7 @@ do--function loadFile(name,args), function saveFile(data,name,args)
         end
     end
     function saveFile(data,name,args)
-        local text=text or t
+        local text=Text or t
         local res,mes=pcall(FILE.save,data,name,args)
         if res then
             return mes
@@ -81,13 +81,6 @@ do--function loadFile(name,args), function saveFile(data,name,args)
         end
     end
 end
-function isSafeFile(file,mes)
-    if love.filesystem.getRealDirectory(file)~=SAVEDIR then
-        return true
-    elseif mes then
-        MES.new('warn',mes)
-    end
-end
 function saveStats()
     return saveFile(STAT,'conf/data')
 end
@@ -97,8 +90,8 @@ end
 do--function applySettings()
     function applySettings()
         --Apply language
-        text=LANG.get(SETTING.locale)
-        WIDGET.setLang(text.WidgetText)
+        Text=LANG.get(SETTING.locale)
+        LANG.setTextFuncSrc(Text)
 
         --Apply cursor
         love.mouse.setVisible(SETTING.sysCursor)
@@ -108,9 +101,8 @@ do--function applySettings()
         love.resize(gc.getWidth(),gc.getHeight())
 
         --Apply Zframework setting
-        Z.setClickFX(SETTING.clickFX)
-        Z.setPowerInfo(SETTING.powerInfo)
-        Z.setCleanCanvas(SETTING.cleanCanvas)
+        Zenitha.setClickFX(SETTING.clickFX)
+        Zenitha.setCleanCanvas(SETTING.cleanCanvas)
 
         --Apply sound
         love.audio.setVolume(SETTING.mainVol)
@@ -121,11 +113,11 @@ do--function applySettings()
 end
 function applyFPS(inGame)
     if inGame then
-        Z.setMaxFPS(SETTING.maxFPS)
-        Z.setFrameMul(SETTING.frameMul)
+        Zenitha.setMaxFPS(SETTING.maxFPS)
+        Zenitha.setDrawFreq(SETTING.frameMul)
     else
-        Z.setMaxFPS(math.min(SETTING.maxFPS,90))
-        Z.setFrameMul(100)
+        Zenitha.setMaxFPS(math.min(SETTING.maxFPS,90))
+        Zenitha.setDrawFreq(100)
     end
 end
 
@@ -133,7 +125,7 @@ end
 
 --Game
 function loadBeatmap(path)
-    local success,res=pcall(require'parts.map'.new,path)
+    local success,res=pcall(require'assets.map'.new,path)
     if success then
         return res
     else
@@ -168,32 +160,32 @@ end
 
 --GC
 do--function posterizedText(str,x,y)
-    local TIME=TIME
+    local timer=love.timer.getTime
     local gc_setColorMask=gc.setColorMask
     function posterizedText(str,x,y)
-        local t=TIME()
+        local t=timer()
         gc.push('transform')
         gc.translate(x+sin(2.6*t),y+sin(3.6*t))
         gc.setColor(1,1,1)
         gc_setColorMask(true,false,false,true)
-        mStr(str,sin(6*t),sin(11*t))
+        GC.mStr(str,sin(6*t),sin(11*t))
         gc_setColorMask(false,true,false,true)
-        mStr(str,sin(7*t),sin(10*t))
+        GC.mStr(str,sin(7*t),sin(10*t))
         gc_setColorMask(false,false,true,true)
-        mStr(str,sin(8*t),sin(9*t))
+        GC.mStr(str,sin(8*t),sin(9*t))
         gc_setColorMask()
         gc.pop()
     end
     function posterizedDraw(obj,x,y)
-        local t=TIME()
+        local t=timer()
         gc.push('transform')
         gc.translate(x,y)
         gc_setColorMask(true,false,false,true)
-        mDraw(obj,sin(6*t),sin(8*t))
+        GC.draw(obj,sin(6*t),sin(8*t))
         gc_setColorMask(false,true,false,true)
-        mDraw(obj,sin(9.5*t),sin(5*t))
+        GC.draw(obj,sin(9.5*t),sin(5*t))
         gc_setColorMask(false,false,true,true)
-        mDraw(obj,sin(6.5*t),sin(8.5*t))
+        GC.draw(obj,sin(6.5*t),sin(8.5*t))
         gc_setColorMask()
         gc.pop()
     end
@@ -217,18 +209,18 @@ function drawSafeArea(x,y,time,alpha)
 end
 function drawHits(hits,x,y)
     gc.translate(x,y)
-    setFont(100)
+    FONT.set(100)
     gc.setColor(.92,.82,.65)
     gc.printf(hits.perf+hits.prec+hits.marv,-140,0,600,'right')
 
-    setFont(80)
+    FONT.set(80)
     gc.setColor(.58,.65,.96)
     gc.printf(hits.well+hits.good,-140,100,600,'right')
 
     gc.setColor(.6,.1,.1)
     gc.printf(hits.miss+hits.bad,-140,180,600,'right')
 
-    setFont(25)
+    FONT.set(25)
     gc.setColor(hitColors[5])
     gc.printf(hitTexts[5],-55,27,600,'right')
     gc.print(hits.marv,555,27)
@@ -255,39 +247,6 @@ function drawHits(hits,x,y)
     gc.translate(-x,-y)
 end
 
-
-
---Widget function shortcuts
-function backScene()SCN.back() end
-do--function goScene(name,style)
-    local cache={}
-    function goScene(name,style)
-        local hash=style and name..style or name
-        if not cache[hash] then
-            cache[hash]=function() SCN.go(name,style) end
-        end
-        return cache[hash]
-    end
-end
-do--function swapScene(name,style)
-    local cache={}
-    function swapScene(name,style)
-        local hash=style and name..style or name
-        if not cache[hash] then
-            cache[hash]=function() SCN.swapTo(name,style) end
-        end
-        return cache[hash]
-    end
-end
-do--function pressKey(k)
-    local cache={}
-    function pressKey(k)
-        if not cache[k] then
-            cache[k]=function() love.keypressed(k) end
-        end
-        return cache[k]
-    end
-end
 do--CUS/SETXXX(k)
     function SETval(k)return function() return SETTING[k] end end
     function SETrev(k)return function() SETTING[k]=not SETTING[k] end end

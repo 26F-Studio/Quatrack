@@ -4,7 +4,7 @@ local scene={}
 
 local item
 
-function scene.sceneInit()
+function scene.enter()
     BG.set()
     item={
         STAT.run,
@@ -16,24 +16,24 @@ end
 
 function scene.draw()
     gc.setColor(COLOR.Z)
-    setFont(30)
+    FONT.set(30)
     for i=1,#item do
         gc.print(item[i],300,i*50)
-        gc.print(text.stat[i],100,i*50)
+        gc.print(Text.stat[i],100,i*50)
     end
 end
 
 scene.widgetList={
-    WIDGET.newButton{name='path',x=860,y=640,w=250,h=80,font=25,
+    WIDGET.new{type='button_fill',x=860,y=640,w=250,h=80,sound='button',fontSize=25,text=LANG'stat_path',
         code=function()
             if SYSTEM=="Windows" or SYSTEM=="Linux" then
-                love.system.openURL(SAVEDIR)
+                love.system.openURL(love.filesystem.getSaveDirectory())
             else
-                MES.new('info',SAVEDIR)
+                MES.new('info',love.filesystem.getSaveDirectory())
             end
         end
     },
-    WIDGET.newButton{name='back',x=1140,y=640,w=170,h=80,sound='back',font=60,fText=CHAR.icon.back,code=backScene},
+    WIDGET.new{type='button_fill',x=1140,y=640,w=170,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 
 return scene

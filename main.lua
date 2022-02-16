@@ -1,20 +1,31 @@
---System Global Vars Declaration
-local fs=love.filesystem
-VERSION=require"version"
-TIME=love.timer.getTime
-YIELD=coroutine.yield
-SYSTEM=love.system.getOS() if SYSTEM=='OS X' then SYSTEM='macOS' end
-FNNS=SYSTEM:find'\79\83'--What does FNSF stand for? IDK so don't ask me lol
-MOBILE=SYSTEM=='Android' or SYSTEM=='iOS'
-SAVEDIR=fs.getSaveDirectory()
+-- #    ____              __                  __   #
+-- #   / __ \__  ______ _/ /__________ ______/ /__ #
+-- #  / / / / / / / __ `/ __/ ___/ __ `/ ___/ //_/ #
+-- # / /_/ / /_/ / /_/ / /_/ /  / /_/ / /__/ ,<    #
+-- # \___\_\__,_/\__,_/\__/_/   \__,_/\___/_/|_|   #
+-- #                                               #
+-- Quatrack is a music game
+-- Creating issue on github is welcomed
 
---Global Vars & Settings
+-- Some coding style:
+-- 1. I made a framework called Zenitha, *most* code in Zenitha are not directly relevant to game;
+-- 2. "xxx" are texts for reading by player, 'xxx' are string values just used in program;
+-- 3. Some goto statement are used for better performance. All goto-labes have detailed names so don't be afraid;
+-- 4. Except "gcinfo" function of lua itself, other "gc" are short for "graphics";
+
+-------------------------------------------------------------
+-- Load Zenitha
+require("Zenitha")
+DEBUG.checkLoadTime("Load Zenitha")
+--------------------------------------------------------------
+-- Global Vars Declaration
+VERSION=require"version"
+FNNS=SYSTEM:find'\79\83'-- What does FNSF stand for? IDK so don't ask me lol
 SFXPACKS={}
 VOCPACKS={}
 FIRSTLAUNCH=false
-DAILYLAUNCH=false
-
---System setting
+--------------------------------------------------------------
+-- System setting
 math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
 love.keyboard.setKeyRepeat(true)
@@ -24,84 +35,46 @@ if MOBILE then
     f.resizable=false
     love.window.setMode(w,h,f)
 end
-
-local _LOADTIMELIST_={}
-local _LOADTIME_=TIME()
-
---Load modules
-Z=require'Zframework'
-FONT.load{
-    norm='parts/fonts/proportional.ttf',
-    mono='parts/fonts/monospaced.ttf',
-}
-FONT.setDefault('norm')
-FONT.setFallback('norm')
-
-SCR.setSize(1280,720)--Initialize Screen size
-BGM.setDefault('title')
-BGM.setMaxSources(5)
-VOC.setDiversion(.62)
-
-table.insert(_LOADTIMELIST_,("Load Zframework: %.3fs"):format(TIME()-_LOADTIME_))
-
---Create shortcuts
-setFont=FONT.set
-getFont=FONT.get
-mStr=GC.mStr
-mText=GC.simpX
-mDraw=GC.draw
-Snd=SFX.playSample
-string.repD=STRING.repD
-string.sArg=STRING.sArg
-string.split=STRING.split
-string.trim=STRING.trim
-
---Delete all naked files (from too old version)
-FILE.clear('')
-
---Create directories
-for _,v in next,{'conf','record','replay','cache','lib','songs'} do
-    local info=fs.getInfo(v)
+--------------------------------------------------------------
+-- Create directories
+for _,v in next,{'conf','progress','record','replay','cache','lib'} do
+    local info=love.filesystem.getInfo(v)
     if not info then
-        fs.createDirectory(v)
+        love.filesystem.createDirectory(v)
     elseif info.type~='directory' then
-        fs.remove(v)
-        fs.createDirectory(v)
+        love.filesystem.remove(v)
+        love.filesystem.createDirectory(v)
     end
 end
-
-CHAR=require'parts.char'
-require'parts.gameTables'
-require'parts.gameFuncs'
-
---Load shader files from SOURCE ONLY
-SHADER={}
-for _,v in next,fs.getDirectoryItems('parts/shaders') do
-    if isSafeFile('parts/shaders/'..v) then
-        local name=v:sub(1,-6)
-        SHADER[name]=love.graphics.newShader('parts/shaders/'..name..'.glsl')
-    end
-end
-
---Init Zframework
-do--Z.setCursor
+--------------------------------------------------------------
+-- Load modules
+CHAR=require'assets.char'
+require'assets.gameTables'
+require'assets.gameFuncs'
+DEBUG.checkLoadTime("Load Assets")
+--------------------------------------------------------------
+-- Config Zenitha
+STRING.install()
+Zenitha.setFirstScene('load')
+do--Zenitha.setDrawCursor
     local gc=love.graphics
     local sin,cos=math.sin,math.cos
-    Z.setCursor(function(_,x,y)
+    Zenitha.setDrawCursor(function(_,x,y)
         if not SETTING.sysCursor then
             gc.setColor(1,1,1)
             gc.circle('line',x,y,10)
             if love.mouse.isDown(1) then gc.circle('fill',x,y,6) end
             gc.setColor(1,1,1,.626)
             gc.setLineWidth(2)
-            local angle=TIME()
+            local angle=love.timer.getTime()
             local s,c=sin(angle),cos(angle)
             gc.line(x-20*c,y-20*s,x+20*c,y+20*s)
             gc.line(x+20*s,y-20*c,x-20*s,y+20*c)
         end
     end)
 end
-Z.setOnFnKeys({
+Zenitha.setOnGlobalKey('f11',function() SETTING.fullscreen=not SETTING.fullscreen applySettings() end)
+Zenitha.setOnFnKeys({
     function() MES.new('check',PROFILE.switch() and "profile start!" or "profile report copied!") end,
     function() MES.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
     function() MES.new('error',"挂了") end,
@@ -110,11 +83,11 @@ Z.setOnFnKeys({
     function() for k,v in next,_G do print(k,v) end end,
     function() if love["_openConsole"] then love["_openConsole"]() end end,
 })
-Z.setDebugInfo{
+Zenitha.setDebugInfo{
     {"Cache",gcinfo},
     {"Audios",love.audio.getSourceCount},
 }
-do--Z.setOnFocus
+do--Zenitha.setOnFocus
     local function task_autoSoundOff()
         while true do
             coroutine.yield()
@@ -134,7 +107,7 @@ do--Z.setOnFocus
             end
         end
     end
-    Z.setOnFocus(function(f)
+    Zenitha.setOnFocus(function(f)
         if f then
             applyFPS(SCN.cur=='game')
             love.timer.step()
@@ -144,8 +117,8 @@ do--Z.setOnFocus
             end
         else
             if SETTING.slowUnfocus then
-                Z.setMaxFPS(20)
-                Z.setFrameMul(100)
+                Zenitha.setMaxFPS(20)
+                Zenitha.setDrawFreq(100)
             end
             if SETTING.autoMute then
                 TASK.removeTask_code(task_autoSoundOn)
@@ -154,7 +127,100 @@ do--Z.setOnFocus
         end
     end)
 end
-
+do--Zenitha.setDrawSysInfo
+    local gc=love.graphics
+    Zenitha.setDrawSysInfo(function()
+        if not SETTING.powerInfo then return end
+        gc.setColor(0,0,0,.26)
+        gc.rectangle('fill',0,0,107,26)
+        local state,pow=love.system.getPowerInfo()
+        if state~='unknown' then
+            gc.setLineWidth(2)
+            if state=='nobattery' then
+                gc.setColor(1,1,1)
+                gc.line(74,5,100,22)
+            elseif pow then
+                if state=='charging' then gc.setColor(0,1,0)
+                elseif pow>50 then        gc.setColor(1,1,1)
+                elseif pow>26 then        gc.setColor(1,1,0)
+                elseif pow==26 then       gc.setColor(.5,0,1)
+                else                      gc.setColor(1,0,0)
+                end
+                gc.rectangle('fill',76,6,pow*.22,14)
+                if pow<100 then
+                    FONT.set(10,'_basic')
+                    GC.shadedPrint(pow,87,6,'center',1,8)
+                end
+            end
+            gc.rectangle('line',74,4,26,18)
+            gc.rectangle('fill',102,6,2,14)
+        end
+        FONT.set(25,'_basic')
+        gc.print(os.date("%H:%M"),3,-5)
+    end)
+end
+FONT.load{
+    norm='assets/font/proportional.ttf',
+    mono='assets/font/monospaced.ttf',
+}
+FONT.setDefaultFont('norm')
+FONT.setDefaultFallback('norm')
+SCR.setSize(1280,720)
+BGM.setDefault('title')
+BGM.setMaxSources(5)
+VOC.setDiversion(.62)
+LANG.add{
+    zh='assets/language/lang_zh.lua',
+    en='assets/language/lang_en.lua',
+}
+LANG.setDefault('zh')
+--[Attention] Not loading IMG/SFX/BGM files here, just read file paths
+IMG.init{
+    title='assets/image/title.png',
+}
+SFX.init((function()
+    local L={}
+    for _,v in next,love.filesystem.getDirectoryItems('assets/effect/chiptune/') do
+        if FILE.isSafe('assets/effect/chiptune/'..v) then
+            table.insert(L,v:sub(1,-5))
+        end
+    end
+    return L
+end)())
+BGM.load((function()
+    local L={}
+    for _,v in next,love.filesystem.getDirectoryItems('assets/music') do
+        if FILE.isSafe('assets/music/'..v) then
+            L[v:sub(1,-5)]='assets/music/'..v
+        end
+    end
+    return L
+end)())
+VOC.init{}
+DEBUG.checkLoadTime("Configuring Zenitha")
+--------------------------------------------------------------
+-- Load SOURCE ONLY resources
+SHADER={}
+for _,v in next,love.filesystem.getDirectoryItems('assets/shader') do
+    if FILE.isSafe('assets/shader/'..v) then
+        local name=v:sub(1,-6)
+        SHADER[name]=love.graphics.newShader('assets/shader/'..name..'.glsl')
+    end
+end
+for _,v in next,love.filesystem.getDirectoryItems('assets/background') do
+    if FILE.isSafe('assets/background/'..v) and v:sub(-3)=='lua' then
+        local name=v:sub(1,-5)
+        BG.add(name,require('assets/background/'..name))
+    end
+end
+for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
+    if FILE.isSafe('assets/scene/'..v) then
+        local sceneName=v:sub(1,-5)
+        SCN.add(sceneName,require('assets/scene/'..sceneName))
+    end
+end
+DEBUG.checkLoadTime("Load SDs+BGs+SCNs")
+--------------------------------------------------------------
 --Load settings and statistics
 TABLE.update(loadFile('conf/settings','-canSkip') or{},SETTING)
 TABLE.coverR(loadFile('conf/data','-canSkip') or{},STAT)
@@ -163,60 +229,7 @@ if savedKey then
     KEY_MAP=savedKey
     KEY_MAP_inv:_update()
 end
-
---Initialize media modules
-IMG.init{
-    title='media/image/title.png',
-}
-SFX.init((function()
-    local L={}
-    for _,v in next,fs.getDirectoryItems('media/effect/chiptune/') do
-        if isSafeFile('media/effect/chiptune/'..v,"Dangerous file : %SAVE%/media/effect/chiptune/"..v) then
-            table.insert(L,v:sub(1,-5))
-        end
-    end
-    return L
-end)())
-BGM.load((function()
-    local L={}
-    for _,v in next,fs.getDirectoryItems('media/music') do
-        if isSafeFile('media/music/'..v,"Dangerous file : %SAVE%/media/music/"..v) then
-            L[v:sub(1,-5)]='media/music/'..v
-        end
-    end
-    return L
-end)())
-VOC.init{}
-
---Initialize language lib
-LANG.init('zh',
-    {
-        zh=require'parts.language.lang_zh',
-        en=require'parts.language.lang_en',
-    }
-)
-
-table.insert(_LOADTIMELIST_,("Initialize Parts: %.3fs"):format(TIME()-_LOADTIME_))
-
---Load background files from SOURCE ONLY
-for _,v in next,fs.getDirectoryItems('parts/backgrounds') do
-    if isSafeFile('parts/backgrounds/'..v) and v:sub(-3)=='lua' then
-        local name=v:sub(1,-5)
-        BG.add(name,require('parts.backgrounds.'..name))
-    end
-end
-BG.remList('none')BG.remList('gray')BG.remList('custom')
---Load scene files from SOURCE ONLY
-for _,v in next,fs.getDirectoryItems('parts/scenes') do
-    if isSafeFile('parts/scenes/'..v) then
-        local sceneName=v:sub(1,-5)
-        SCN.add(sceneName,require('parts.scenes.'..sceneName))
-        LANG.addScene(sceneName)
-    end
-end
-
-table.insert(_LOADTIMELIST_,("Load Files: %.3fs"):format(TIME()-_LOADTIME_))
-
+--------------------------------------------------------------
 --First start
 FIRSTLAUNCH=STAT.run==0
 if FIRSTLAUNCH and MOBILE then
@@ -224,15 +237,13 @@ if FIRSTLAUNCH and MOBILE then
     SETTING.scaleX=1.3
     SETTING.trackW=1.3
 end
-
 --Update savedata
 do
     if STAT.hits then STAT.hits=nil end
 end
-
+DEBUG.checkLoadTime("Load savedata")
+--------------------------------------------------------------
+DEBUG.logLoadTime()
+--------------------------------------------------------------
 --Apply system setting
 applySettings()
-
-table.insert(_LOADTIMELIST_,("Initialize Data: %.3fs"):format(TIME()-_LOADTIME_))
-
-for i=1,#_LOADTIMELIST_ do LOG(_LOADTIMELIST_[i]) end

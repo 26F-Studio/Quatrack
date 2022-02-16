@@ -34,5 +34,5 @@ runs:
         cp squashfs-root/icon.png squashfs-root/.DirIcon
         chmod 777 squashfs-root/love
         mkdir -p squashfs-root/usr/share/Quatrack
-        mv media parts Zframework conf.lua main.lua version.lua squashfs-root/usr/share/Quatrack
+        mv assets Zenitha conf.lua main.lua version.lua squashfs-root/usr/share/Quatrack
         ./appimagetool-x86_64.AppImage squashfs-root ${{ inputs.filePath }}
