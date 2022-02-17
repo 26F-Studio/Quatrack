@@ -19,7 +19,6 @@ local SETTING=SETTING
 
 local hitColors=hitColors
 local hitTexts=hitTexts
-local hitAccList=hitAccList
 local chainColors=chainColors
 local trackNames=trackNames
 local getHitLV=getHitLV
@@ -141,7 +140,9 @@ function scene.enter()
     game.autoPlay=false
     game.playSpeed=1
     game.autoPlayTextObj=game.autoPlayTextObj or gc.newText(FONT.get(100),'AUTO')
-    game.judgeTimes=TABLE.shift(judgeTimesTemplate)
+
+    game.judgeTimes={.16,.12,.08,.05,.03,0}
+    game.accPoints={-100,0,75,100,101}
 
     game.map=SCN.args[1]
 
@@ -261,7 +262,7 @@ local function _trigNote(deviateTime,noTailHold,weak)
     game.bestChain=min(game.bestChain,game.hitLV)
     game.hits[game.hitLV]=game.hits[game.hitLV]+1
     if game.hitLV>0 then
-        game.curAcc=game.curAcc+hitAccList[game.hitLV]
+        game.curAcc=game.curAcc+game.accPoints[game.hitLV]
         game.score0=game.score0+int(game.hitLV*(10000+game.combo)^.5)
         game.combo=game.combo+1
         if game.combo>game.maxCombo then game.maxCombo=game.combo end
@@ -496,9 +497,13 @@ function scene.update(dt)
             for i=1,#game.tracks do
                 game.tracks[i]:setChordColor(n.color)
             end
-        elseif n.type=='setJudge' then
+        elseif n.type=='setJudgeTimes' then
             for i=1,5 do
                 game.judgeTimes[i]=n.args[i]
+            end
+        elseif n.type=='setAccPoints' then
+            for i=1,5 do
+                game.accPoints[i]=n.args[i]
             end
         end
     end

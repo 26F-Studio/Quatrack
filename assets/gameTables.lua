@@ -117,21 +117,6 @@ hitTexts={
     'PREC',
     'MARV'
 }
-hitAccList={
-    -100,--WELL
-    0,   --GOOD
-    75,  --PERF
-    100, --PREC
-    101, --MARV
-}
-judgeTimesTemplate={--Time judgement
-    .16,
-    .12,
-    .08,
-    .05,
-    .03,
-    0,
-}
 chainColors={
     [0]=COLOR.dH,
     COLOR.lSea,

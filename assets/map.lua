@@ -44,7 +44,8 @@ local lineTypeMarks={--Attention, [1] is lua regex, not raw string
     {'^%&',      '/redirect_note:'},
     {'^%%',      '/rename_track:'},
     {'^%^',      '/set_chord_color:'},
-    {'^%?',      '/set_judge:'},
+    -- /set_judge:
+    -- /set_acc_points:
 }
 function Map.new(file)
     local o=TABLE.copy(mapTemplate)
@@ -648,7 +649,7 @@ function Map.new(file)
                     time=curTime,
                     color=c,
                 }
-            elseif codeType=='set_judge' then--Set judgement level
+            elseif codeType=='set_judge' then--Set judgement widths
                 local t=str:split(',')
                 _syntaxCheck(#t==5,"Invalid judgement time list (need 5 values)")
                 for i=1,5 do
@@ -667,7 +668,23 @@ function Map.new(file)
                 end
                 t[1],t[2],t[3],t[4],t[5]=t[5],t[4],t[3],t[2],t[1]
                 o.eventQueue:insert{
-                    type='setJudge',
+                    type='setJudgeTimes',
+                    time=curTime,
+                    args=t,
+                }
+            elseif codeType=='set_acc_points' then--Set accuracy points
+                local t=str:split(',')
+                _syntaxCheck(#t==5,"Invalid accuracy list (need 5 values)")
+                for i=1,5 do
+                    t[i]=tonumber(t[i])
+                    _syntaxCheck(t[i] and t[i]%1==0,"Invalid accuracy (need integer)")
+                end
+                for i=1,4 do
+                    _syntaxCheck(t[i]<=t[i+1],"Invalid accuracy list (need ascending order)")
+                end
+                _syntaxCheck(t[5]>=100,"Max accuracy must be greater than 100")
+                o.eventQueue:insert{
+                    type='setAccPoints',
                     time=curTime,
                     args=t,
                 }
