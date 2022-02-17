@@ -37,7 +37,7 @@ if MOBILE then
 end
 --------------------------------------------------------------
 -- Create directories
-for _,v in next,{'conf','progress','record','replay','cache','lib'} do
+for _,v in next,{'conf','record','replay','cache','lib','songs'} do
     local info=love.filesystem.getInfo(v)
     if not info then
         love.filesystem.createDirectory(v)
@@ -55,6 +55,7 @@ DEBUG.checkLoadTime("Load Assets")
 --------------------------------------------------------------
 -- Config Zenitha
 STRING.install()
+Zenitha.setVersionText(VERSION.string)
 Zenitha.setFirstScene('load')
 do--Zenitha.setDrawCursor
     local gc=love.graphics
@@ -62,10 +63,10 @@ do--Zenitha.setDrawCursor
     Zenitha.setDrawCursor(function(_,x,y)
         if not SETTING.sysCursor then
             gc.setColor(1,1,1)
+            gc.setLineWidth(2)
             gc.circle('line',x,y,10)
             if love.mouse.isDown(1) then gc.circle('fill',x,y,6) end
             gc.setColor(1,1,1,.626)
-            gc.setLineWidth(2)
             local angle=love.timer.getTime()
             local s,c=sin(angle),cos(angle)
             gc.line(x-20*c,y-20*s,x+20*c,y+20*s)
@@ -85,6 +86,7 @@ Zenitha.setOnFnKeys({
 })
 Zenitha.setDebugInfo{
     {"Cache",gcinfo},
+    {"Tasks",TASK.getCount},
     {"Audios",love.audio.getSourceCount},
 }
 do--Zenitha.setOnFocus
@@ -241,6 +243,7 @@ end
 do
     if STAT.hits then STAT.hits=nil end
     if SETTING.frameMul then SETTING.drawRate,SETTING.frameMul=SETTING.frameMul end
+    love.filesystem.remove('progress')
 end
 DEBUG.checkLoadTime("Load savedata")
 --------------------------------------------------------------
