@@ -1,4 +1,4 @@
---Light-dark
+-- Light-dark
 local gc=love.graphics
 local sin=math.sin
 local back={}

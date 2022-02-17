@@ -1,4 +1,4 @@
---Changing pure color
+-- Changing pure color
 local gc=love.graphics
 local sin=math.sin
 local back={}

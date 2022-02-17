@@ -133,6 +133,7 @@ do--Zenitha.setDrawSysInfo
     local gc=love.graphics
     Zenitha.setDrawSysInfo(function()
         if not SETTING.powerInfo then return end
+        gc.translate(SCR.safeX,0)
         gc.setColor(0,0,0,.26)
         gc.rectangle('fill',0,0,107,26)
         local state,pow=love.system.getPowerInfo()

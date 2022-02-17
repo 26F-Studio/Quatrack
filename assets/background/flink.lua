@@ -1,4 +1,4 @@
---Flash after random time
+-- Flash after random time
 local gc=love.graphics
 local back={}
 

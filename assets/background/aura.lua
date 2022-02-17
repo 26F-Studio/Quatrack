@@ -1,4 +1,4 @@
---Cool liquid background
+-- Cool liquid background
 local gc=love.graphics
 local back={}
 local shader=SHADER.aura

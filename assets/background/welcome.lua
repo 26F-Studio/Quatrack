@@ -1,4 +1,4 @@
---Welcome to Quatrack
+-- Welcome to Techmino
 local gc=love.graphics
 local sin=math.sin
 local back={}

@@ -1,4 +1,4 @@
---Cool Tunnel
+-- Cool Tunnel
 local gc=love.graphics
 local rnd=math.random
 local ins,rem=table.insert,table.remove

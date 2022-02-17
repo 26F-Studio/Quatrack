@@ -1,4 +1,4 @@
---Space with stars
+-- Space with stars
 local gc=love.graphics
 local back={}
 

@@ -1,4 +1,4 @@
---Lightning
+-- Lightning
 local gc=love.graphics
 local back={}
 
