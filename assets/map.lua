@@ -680,8 +680,9 @@ function Map.new(file)
                     _syntaxCheck(t[i] and t[i]%1==0,"Invalid accuracy (need integer)")
                 end
                 for i=1,4 do
-                    _syntaxCheck(t[i]<=t[i+1],"Invalid accuracy list (need ascending order)")
+                    _syntaxCheck(t[i]>=t[i+1],"Invalid accuracy list (need descending order)")
                 end
+                t[1],t[2],t[3],t[4],t[5]=t[5],t[4],t[3],t[2],t[1]
                 _syntaxCheck(t[5]>=100,"Max accuracy must be greater than 100")
                 o.eventQueue:insert{
                     type='setAccPoints',
