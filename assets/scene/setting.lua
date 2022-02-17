@@ -71,7 +71,7 @@ scene.widgetList={
     WIDGET.new{type='slider',     x=200, y=850,w=420, text=LANG'setting_trackW',      widthLimit=160,axis={.8,1.5},                disp=SETval('trackW'),valueShow=sliderShow_scale,code=SETsto('trackW')},
     WIDGET.new{type='slider',     x=200, y=950,w=420, text=LANG'setting_safeX',       widthLimit=160,axis={0,120,10},              disp=SETval('safeX'),code=function(v) SETTING.safeX=v boundaryDispTime=2.6 end},
     WIDGET.new{type='slider',     x=200, y=1000,w=210,text=LANG'setting_safeY',       widthLimit=160,axis={0,60,10},               disp=SETval('safeY'),code=function(v) SETTING.safeY=v boundaryDispTime=2.6 end},
-    WIDGET.new{type='slider',     x=200, y=1050,w=260,text=LANG'setting_showHitLV',   widthLimit=160,axis={1,5,1},                 disp=SETval('showHitLV'),valueShow=sliderShow_hitLV,code=SETsto('showHitLV')},
+    WIDGET.new{type='slider',     x=200, y=1050,w=260,text=LANG'setting_showHitLV',   widthLimit=160,axis={0,5,1},                 disp=SETval('showHitLV'),valueShow=sliderShow_hitLV,code=SETsto('showHitLV')},
     WIDGET.new{type='slider',     x=200, y=1100,w=420,text=LANG'setting_dvtCount',    widthLimit=160,axis={5,50,5},                disp=SETval('dvtCount'),code=SETsto('dvtCount')},
 
     WIDGET.new{type='checkBox',   x=1160,y=70,        text=LANG'setting_sysCursor',   widthLimit=360,disp=SETval('sysCursor'),     code=function() SETTING.sysCursor=not SETTING.sysCursor applySettings() end},
