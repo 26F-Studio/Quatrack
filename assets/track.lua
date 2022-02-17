@@ -221,21 +221,21 @@ function Track:press(weak,auto)
     if note and(auto or note.available) and self.time>note.time-note.trigTime then
         local deviateTime=self.time-note.time
         local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
-        local _1,_2,_3
+        local _a,_p,_d
         if hitLV>0 then
-            _1,_2,_3=note:getAlpha(1),self.state.x/420,-(math.abs(hitLV-4.5)-.5)
+            _a,_p,_d=note:getAlpha(1),self.state.x/420,-(math.abs(hitLV-4.5)-.5)
         end
         if note.type=='tap' then--Press tap note
             rem(self.notes,i)
-            if _1 then
-                SFX.play('hit_tap',.4+.6*_1,_2,_3)
+            if _a then
+                SFX.play('hit_tap',.3+.7*_a,_p,_d)
             end
         elseif note.type=='hold' then--Press hold note
             if not note.head then return end
             note.head=false
-            if _1 then
-                SFX.play('hit_tap',.4+.5*_1,_2,_3)
-                SFX.play(holdHeadSFX[hitLV],.4+.6*_1,_2)
+            if _a then
+                SFX.play('hit_tap',.3+.7*_a,_p,_d)
+                SFX.play(holdHeadSFX[hitLV],.4+.6*_a,_p)
             end
         end
         return deviateTime
