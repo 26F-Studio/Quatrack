@@ -4,7 +4,7 @@ $musicAuth=小潘潘 & 小峰峰
 $mapAuth=Ykzl
 $mapDifficulty=Easy-5
 
-$songFile=xuemaojiao
+$songFile=xuemaojiao.ogg
 $songOffset=370ms
 
 [A]C,FFFFFF

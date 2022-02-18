@@ -4,7 +4,7 @@ $musicAuth=Cres
 $mapAuth=Ykzl
 $mapDifficulty=Lunatic-1
 
-$songFile=endtimebougainvillea
+$songFile=endtimebougainvillea.ogg
 $songOffset=-356ms
 
 ---O

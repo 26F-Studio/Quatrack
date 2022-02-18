@@ -4,7 +4,7 @@ $musicAuth=LCA
 $mapAuth=Ykzl
 $mapDifficulty=Lunatic-1
 
-$songFile=shigure
+$songFile=shigure.ogg
 $songOffset=-380ms
 $tracks=6
 

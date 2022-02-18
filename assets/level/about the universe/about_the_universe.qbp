@@ -4,7 +4,7 @@ $musicAuth=SOTUI
 $mapAuth=Circulus Charting Team
 $mapDifficulty=Hard-1
 
-$songFile=about_the_universe
+$songFile=about_the_universe.ogg
 $songOffset=260ms
 
 --OH

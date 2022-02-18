@@ -4,7 +4,7 @@ $musicAuth=a_hisa
 $mapAuth=Ykzl
 $mapDifficulty=Normal-6
 
-$songFile=logicalstimulus
+$songFile=logicalstimulus.ogg
 $songOffset=-11ms
 
 O--O;>117.106s

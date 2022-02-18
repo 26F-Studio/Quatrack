@@ -5,7 +5,7 @@ $mapAuth=AcSier
 $mapAuth2=720969 & MrZ
 $mapDifficulty=Normal-5
 
-$songFile=fuli
+$songFile=fuli.ogg
 $songOffset=420ms
 
 HHHH;[A]T,0

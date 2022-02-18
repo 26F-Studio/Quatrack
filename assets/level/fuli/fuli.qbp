@@ -4,7 +4,7 @@ $musicAuth=MYUKKE.
 $mapAuth=AcSier
 $mapDifficulty=Normal-2
 
-$songFile=fuli
+$songFile=fuli.ogg
 $songOffset=420ms
 
 HHHH;[A]T,0

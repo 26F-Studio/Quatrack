@@ -4,7 +4,7 @@ $musicAuth=ゆーむ
 $mapAuth=Ykzl
 $mapDifficulty=Normal-3
 
-$songFile=ainosukima
+$songFile=ainosukima.ogg
 $songOffset=10ms
 
 --O-;>103.463s

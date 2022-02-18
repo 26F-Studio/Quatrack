@@ -4,7 +4,7 @@ $musicAuth=Musical Masterpiece
 $mapAuth=tyrcs
 $mapDifficulty=Lunatic-9
 
-$songFile=M-A
+$songFile=M-A.ogg
 $songImage=M-A.jpg
 $songOffset=150ms
 $tracks=6

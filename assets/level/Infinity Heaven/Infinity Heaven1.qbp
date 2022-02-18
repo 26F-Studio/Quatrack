@@ -4,7 +4,7 @@ $musicAuth=HyuN
 $mapAuth=AcSier
 $mapDifficulty=Normal-1
 
-$songFile=Infinity Heaven
+$songFile=Infinity Heaven.ogg
 $songOffset=-5ms
 $songImage=Infinity Heaven.png
 $tracks=4

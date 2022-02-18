@@ -4,7 +4,7 @@ $musicAuth=Acotto
 $mapAuth=Ykzl
 $mapDifficulty=Normal-8
 
-$songFile=entrancemetal
+$songFile=entrancemetal.ogg
 $songOffset=224ms
 
 -OO-;[A]T,40

@@ -4,7 +4,7 @@ $musicAuth=Bluewind
 $mapAuth=Chiyuki_Yunokawa
 $mapDifficulty=Hard-8
 
-$songFile=praw
+$songFile=praw.ogg
 $songImage=brs-praw.jpg
 $songOffset=0
 $tracks=4

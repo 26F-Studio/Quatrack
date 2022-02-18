@@ -4,7 +4,7 @@ $musicAuth=EBIMAYO
 $mapAuth=MrZ
 $mapDifficulty=Hard-1
 
-$songFile=goodrage
+$songFile=goodrage.ogg
 $songImage=goodrage.png
 $songOffset=-130ms
 

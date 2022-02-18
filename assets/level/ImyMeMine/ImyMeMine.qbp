@@ -4,7 +4,7 @@ $musicAuth=Nayuta/YOU
 $mapAuth=Nufral
 $mapDifficulty=Hard-7
 
-$songFile=ImyMeMine
+$songFile=ImyMeMine.ogg
 $songOffset=145ms
 $tracks=4
 $freeSpeed=true

@@ -4,7 +4,7 @@ $musicAuth=S.S.H.
 $mapAuth=Ykzl
 $mapDifficulty=Hard-6
 
-$songFile=intersect
+$songFile=intersect.ogg
 $songOffset=-255ms
 
 HHHH

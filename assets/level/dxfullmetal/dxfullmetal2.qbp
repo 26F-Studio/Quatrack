@@ -4,7 +4,7 @@ $musicAuth=IOSYS TRAX (uno with.ちよこ)
 $mapAuth=Ykzl
 $mapDifficulty=Hard-7
 
-$songFile=dxfullmetal
+$songFile=dxfullmetal.ogg
 $songImage=dxfullmetal.jpg
 $songOffset=600ms
 $tracks=8

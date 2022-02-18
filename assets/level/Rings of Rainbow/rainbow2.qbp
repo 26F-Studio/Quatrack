@@ -4,7 +4,7 @@ $musicAuth=Hommarju
 $mapAuth=Ykzl
 $scriptAuth=Ykzl
 $mapDifficulty=Normal-9
-$songFile=rainbow
+$songFile=rainbow.ogg
 $script=script
 
 H---;>114697ms

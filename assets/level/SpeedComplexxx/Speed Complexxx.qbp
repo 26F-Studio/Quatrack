@@ -4,7 +4,7 @@ $musicAuth=Kobaryo / Srezcat
 $mapAuth=XMiao
 $mapDifficulty=Hard-4
 
-$songFile=SpeedComplexxx
+$songFile=SpeedComplexxx.ogg
 $songImage=Speed Complexxx.jpg
 $songOffset=286ms
 $tracks=7
