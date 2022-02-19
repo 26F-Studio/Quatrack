@@ -24,7 +24,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',x=860,y=640,w=250,h=80,sound='button',fontSize=25,text=LANG'stat_path',
+    WIDGET.new{type='button_fill',x=860,y=640,w=250,h=80,fontSize=25,text=LANG'stat_path',
         code=function()
             if SYSTEM=="Windows" or SYSTEM=="Linux" then
                 love.system.openURL(love.filesystem.getSaveDirectory())

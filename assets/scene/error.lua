@@ -34,8 +34,8 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',x=940,y=640,w=170,h=80,sound='click',fontSize=65,text=CHAR.icon.console,code=WIDGET.c_goScn'app_console'},
-    WIDGET.new{type='button',x=1140,y=640,w=170,h=80,sound='click',fontSize=40,text=CHAR.icon.cross_thick,code=love.event.quit},
+    WIDGET.new{type='button',x=940,y=640,w=170,h=80,sound='key',fontSize=65,text=CHAR.icon.console,code=WIDGET.c_goScn'app_console'},
+    WIDGET.new{type='button',x=1140,y=640,w=170,h=80,sound='key',fontSize=40,text=CHAR.icon.cross_thick,code=love.event.quit},
 }
 
 return scene

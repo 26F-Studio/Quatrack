@@ -172,6 +172,11 @@ SCR.setSize(1280,720)
 BGM.setDefault('title')
 BGM.setMaxSources(5)
 VOC.setDiversion(.62)
+WIDGET.setDefaultButtonSound('button')
+WIDGET.setDefaultCheckBoxSound('check','uncheck')
+WIDGET.setDefaultSelectorSound('selector')
+WIDGET.setDefaultTypeSound('hit5','hit3')
+WIDGET.setDefaultClearSound('hold4')
 LANG.add{
     zh='assets/language/lang_zh.lua',
     en='assets/language/lang_en.lua',
