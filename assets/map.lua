@@ -44,6 +44,7 @@ local lineTypeMarks={--Attention, [1] is lua regex, not raw string
     {'^%&',      '/redirect_note:'},
     {'^%%',      '/rename_track:'},
     {'^%^',      '/set_chord_color:'},
+    {'^%|',      '/set_note_per_line:'},
     -- /set_judge:
     -- /set_acc_points:
 }
@@ -144,7 +145,7 @@ function Map.new(file)
     local curTime,curBPM=0,180
     local curBeat,signature=false,false
     local loopStack={}
-    local curRealTrack=o.tracks
+    local curNotePerLine=o.tracks
     local trackDir={} for i=1,o.tracks do trackDir[i]=i end
     local trackAvailable={} for i=1,o.tracks do trackAvailable[i]=true end
     local lastLongBar=TABLE.new(false,o.tracks)
@@ -649,6 +650,10 @@ function Map.new(file)
                     time=curTime,
                     color=c,
                 }
+            elseif codeType=='set_note_per_line' then--Set note per line
+                local n=tonumber(str)
+                _syntaxCheck(n>0 and n%1==0,"Invalid note per line (need positive integer)")
+                curNotePerLine=n
             elseif codeType=='set_judge' then--Set judgement widths
                 local t=str:split(',')
                 _syntaxCheck(#t==5,"Invalid judgement time list (need 5 values)")
@@ -743,12 +748,12 @@ function Map.new(file)
                             lastLongBar[curTrack].tail=c=='A'
                             lastLongBar[curTrack]=false
                         else
-                            _syntaxCheck(curTrack==curRealTrack+1,"Too few notes in one line")
+                            _syntaxCheck(curTrack==curNotePerLine+1,"Too few notes in one line")
                             readState='rnd'
                             goto CONTINUE_nextState
                         end
                     end
-                    _syntaxCheck(curTrack<=curRealTrack,"Too many notes in one line")
+                    _syntaxCheck(curTrack<=curNotePerLine,"Too many notes in one line")
                     curTrack=curTrack+1
                     str=str:sub(2)
                 elseif readState=='rnd' then
