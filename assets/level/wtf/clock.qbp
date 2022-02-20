@@ -3,7 +3,7 @@ $mapName=CLOCK
 $musicAuth=X
 $mapAuth=XMiao
 $mapAuth2=MrZ
-$mapDifficulty=Hard-0
+$mapDifficulty=Special
 $tracks=5
 $realTracks=99
 
