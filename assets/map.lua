@@ -31,7 +31,7 @@ local function _parseTime(s)
     end
 end
 
-local lineTypeMarks={--Attention, [1] is lua regex, not raw string
+local codeMarks={--Attention, [1] is lua regex, not raw string
     {'^%!',      '/bpm:'},
     {'^%>',      '/time:'},
     {'^%++',     '/bar_line:'},
@@ -44,7 +44,7 @@ local lineTypeMarks={--Attention, [1] is lua regex, not raw string
     {'^%&',      '/redirect_note:'},
     {'^%%',      '/rename_track:'},
     {'^%^',      '/set_chord_color:'},
-    {'^%|',      '/set_note_per_line:'},
+    {'^%|',      '/set_note_need:'},
     -- /set_judge:
     -- /set_acc_points:
 }
@@ -161,23 +161,23 @@ function Map.new(file)
         local str=fileData[line][2]
         SCline,SCstr=fileData[line][1],str--For assertion
 
-        for i=1,#lineTypeMarks do
-            if str:find(lineTypeMarks[i][1]) then
-                str=str:gsub(lineTypeMarks[i][1],lineTypeMarks[i][2],1)
+        for i=1,#codeMarks do
+            if str:find(codeMarks[i][1]) then
+                str=str:gsub(codeMarks[i][1],codeMarks[i][2],1)
                 break
             end
         end
 
         if str:sub(1,1)=='/' then
-            local codeType
+            local code
             if str:find(':') then
-                codeType=str:sub(2,str:find(':')-1):lower()
+                code=str:sub(2,str:find(':')-1):lower()
                 str=str:sub(str:find(':')+1)
             else
-                codeType=str:sub(2):lower()
+                code=str:sub(2):lower()
                 str=''
             end
-            if codeType=='bpm' then--BPM mark
+            if code=='bpm' then--BPM mark
                 local data=str:split(',')
                 _syntaxCheck(data[1],"Need BPM mark")
                 _syntaxCheck(#data<=2,"Too many arguments")
@@ -204,7 +204,7 @@ function Map.new(file)
                     curBeat=false
                     signature=false
                 end
-            elseif codeType=='time' then--Time mark
+            elseif code=='time' then--Time mark
                 _syntaxCheck(not loopStack[1],"Cannot set time in loop")
                 if str=='start' then
                     curTime=-3.6
@@ -252,7 +252,7 @@ function Map.new(file)
                         curTime=curTime-dt
                     end
                 end
-            elseif codeType=='bar_line' then--Bar separator
+            elseif code=='bar_line' then--Bar separator
                 local len=0
                 repeat
                     len=len+1
@@ -264,7 +264,7 @@ function Map.new(file)
                 else
                     _syntaxCheck(signature,"No signature to check")
                 end
-            elseif codeType=='rnd_seed' then--Random seed mark
+            elseif code=='rnd_seed' then--Random seed mark
                 if str=='' then
                     math.randomseed(love.timer.getTime())
                 else
@@ -275,7 +275,7 @@ function Map.new(file)
                     math.randomseed(love.timer.getTime())
                     math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
                 end
-            elseif codeType=='set_track' then--Animation: set track states
+            elseif code=='set_track' then--Animation: set track states
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('[x]...' or '/set_track:x;...'")
 
@@ -473,7 +473,7 @@ function Map.new(file)
                     E.track=trackList[i]
                     o.eventQueue:insert(E)
                 end
-            elseif codeType=='set_note' then--Note state: color & alpha
+            elseif code=='set_note' then--Note state: color & alpha
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('(x)...' or '/set_note:x;...')")
 
@@ -553,7 +553,7 @@ function Map.new(file)
                 else
                     _syntaxCheck(false,"Invalid note operation")
                 end
-            elseif codeType=='rep_s' then--Repeat start
+            elseif code=='rep_s' then--Repeat start
                 local cd=1
                 if str~='' then
                     cd=tonumber(str)
@@ -565,7 +565,7 @@ function Map.new(file)
                     startMark=line,
                     endMark=false,
                 })
-            elseif codeType=='rep_e' then--Repeat end
+            elseif code=='rep_e' then--Repeat end
                 _syntaxCheck(loopStack[1],"No loop to end")
                 local curState=loopStack[#loopStack]
                 if curState.countDown>0 then
@@ -575,13 +575,13 @@ function Map.new(file)
                 else
                     rem(loopStack)
                 end
-            elseif codeType=='rep_m' then--Repeat middle(skip)
+            elseif code=='rep_m' then--Repeat middle(skip)
                 _syntaxCheck(loopStack[1],"No loop to break")
                 if loopStack[#loopStack].countDown==0 then
                     line=loopStack[#loopStack].endMark
                     rem(loopStack)
                 end
-            elseif codeType=='redirect_note' then--Redirect notes to different track
+            elseif code=='redirect_note' then--Redirect notes to different track
                 if str=='' then--Reset
                     for i=1,o.tracks do trackDir[i]=i end
                 elseif str=='A' then--Random shuffle (won't reset to 1~N!)
@@ -602,7 +602,7 @@ function Map.new(file)
                         trackDir[i]=l[id]
                     end
                 end
-            elseif codeType=='rename_track' then--Rename tracks
+            elseif code=='rename_track' then--Rename tracks
                 local nameList=str:split(',')
                 _syntaxCheck(#nameList==o.tracks,"Track names not match track count")
                 for id=1,#nameList do
@@ -633,7 +633,7 @@ function Map.new(file)
                         trackAvailable[id]=false
                     end
                 end
-            elseif codeType=='set_chord_color' then--Set chord color
+            elseif code=='set_chord_color' then--Set chord color
                 local c=str:split(',')
                 if #c==0 then
                     c=defaultChordColor
@@ -650,11 +650,11 @@ function Map.new(file)
                     time=curTime,
                     color=c,
                 }
-            elseif codeType=='set_note_per_line' then--Set note per line
+            elseif code=='set_note_need' then--Set note per line
                 local n=tonumber(str)
                 _syntaxCheck(n>0 and n%1==0,"Invalid note per line (need positive integer)")
                 curNotePerLine=n
-            elseif codeType=='set_judge' then--Set judgement widths
+            elseif code=='set_judge' then--Set judgement widths
                 local t=str:split(',')
                 _syntaxCheck(#t==5,"Invalid judgement time list (need 5 values)")
                 for i=1,5 do
@@ -677,7 +677,7 @@ function Map.new(file)
                     time=curTime,
                     args=t,
                 }
-            elseif codeType=='set_acc_points' then--Set accuracy points
+            elseif code=='set_acc_points' then--Set accuracy points
                 local t=str:split(',')
                 _syntaxCheck(#t==5,"Invalid accuracy list (need 5 values)")
                 for i=1,5 do
@@ -695,7 +695,7 @@ function Map.new(file)
                     args=t,
                 }
             else
-                _syntaxCheck(false,"Invalid line type: "..codeType)
+                _syntaxCheck(false,"Invalid line type: "..code)
             end
         else--Notes
             local readState='note'
