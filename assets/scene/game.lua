@@ -373,9 +373,9 @@ function scene.keyDown(key,isRep)
     end
 end
 function scene.keyUp(key)
+    if game.autoPlay then return end
     local k=KEY_MAP[key]
     if trackNames[k] then
-        if game.autoPlay then return end
 
         local minTime=1e99
         for id=1,game.map.tracks do
@@ -406,10 +406,10 @@ function scene.keyUp(key)
 end
 
 function scene.touchDown(x,y,id)
+    if game.autoPlay then return end
     local _x,_y=SCR.xOy:transformPoint(x,y)
     if _x<SETTING.safeX*SCR.k or _x>SCR.w-SETTING.safeX*SCR.k or _y<SETTING.safeY*SCR.k or _y>SCR.h-SETTING.safeY*SCR.k then return end
 
-    if game.autoPlay then return end
     x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
     local minD2,closestTrackID=1e99,false
     x=x/SETTING.scaleX

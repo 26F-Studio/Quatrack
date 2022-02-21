@@ -247,9 +247,13 @@ if FIRSTLAUNCH and MOBILE then
 end
 --Update savedata
 do
-    if STAT.hits then STAT.hits=nil end
-    if SETTING.frameMul then SETTING.drawRate,SETTING.frameMul=SETTING.frameMul end
+    SETTING.drawRate=SETTING.drawRate or SETTING.frameMul
+    STAT.hits=nil
+    SETTING.frameMul=nil
     love.filesystem.remove('progress')
+    if STAT.version~=VERSION.code then
+        love.filesystem.write('songs/readme.txt',love.filesystem.read('assets/language/readme.txt'))
+    end
 end
 DEBUG.checkLoadTime("Load savedata")
 --------------------------------------------------------------
