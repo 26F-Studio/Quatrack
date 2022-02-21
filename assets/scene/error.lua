@@ -20,7 +20,7 @@ function scene.draw()
         gc.setColor(1,1,1)
         gc.draw(errorShot,100,326,nil,512/errorShot:getWidth(),288/errorShot:getHeight())
     end
-    gc.setColor(COLOR.Z)
+    gc.setColor(COLOR.L)
     FONT.set(100)gc.print(":(",100,0,0,1.2)
     FONT.set(40)gc.printf(errorText,100,160,SCR.w0-100)
     FONT.set(20,'mono')

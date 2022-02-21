@@ -15,7 +15,7 @@ function scene.enter()
 end
 
 function scene.draw()
-    gc.setColor(COLOR.Z)
+    gc.setColor(COLOR.L)
     FONT.set(30)
     for i=1,#item do
         gc.print(item[i],300,i*50)

@@ -18,10 +18,10 @@ mapMetaKeys={
 }
 mapMetaKeyMap={} for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
 defaultChordColor={
-    {STRING.hexColor("FFFF00")},
-    {STRING.hexColor("FFC000")},
-    {STRING.hexColor("FF6000")},
-    {STRING.hexColor("FF0000")},
+    {COLOR.hex("FFFF00")},
+    {COLOR.hex("FFC000")},
+    {COLOR.hex("FF6000")},
+    {COLOR.hex("FF0000")},
 }setmetatable(defaultChordColor,{__index=function(self,k)
     local l=#self
     for i=l+1,k do
@@ -100,13 +100,13 @@ do
 end
 
 hitColors={
-    [-1]=COLOR.dRed,
-    [0]=COLOR.dRed,
-    COLOR.lViolet,
-    COLOR.lSea,
-    COLOR.lOrange,
-    COLOR.lGray,
-    COLOR.lGray,
+    [-1]=COLOR.dR,
+    [0]=COLOR.dR,
+    COLOR.lV,
+    COLOR.lS,
+    COLOR.lO,
+    COLOR.dL,
+    COLOR.dL,
 }
 hitTexts={
     [-1]="MISS",
@@ -118,22 +118,22 @@ hitTexts={
     'MARV'
 }
 chainColors={
-    [0]=COLOR.dH,
-    COLOR.lSea,
-    COLOR.lSea,
-    COLOR.lFire,
-    COLOR.lYellow,
-    COLOR.lYellow,
+    [0]=COLOR.lD,
+    COLOR.lS,
+    COLOR.lS,
+    COLOR.lF,
+    COLOR.lY,
+    COLOR.lY,
 }
 rankColors={
-    COLOR.lMagenta,
-    COLOR.lFire,
-    COLOR.lYellow,
-    COLOR.lGreen,
-    COLOR.lBlue,
-    COLOR.dViolet,
-    COLOR.dWine,
-    COLOR.dGray,
+    COLOR.lM,
+    COLOR.lF,
+    COLOR.lY,
+    COLOR.lG,
+    COLOR.lB,
+    COLOR.dV,
+    COLOR.dW,
+    COLOR.lD,
 } for i=1,#rankColors do rankColors[i]={.3+rankColors[i][1]*.7,.3+rankColors[i][2]*.7,.3+rankColors[i][3]*.7} end
 defaultTrackNames={
     {'C'},

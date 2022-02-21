@@ -1,4 +1,4 @@
--- Customizable grey background
+-- Customizable pure color background
 local gc=love.graphics
 local back={}
 local r,g,b=.26,.26,.26

@@ -5,12 +5,12 @@ local ins=table.insert
 
 local listBox=WIDGET.new{type='listBox',x=60,y=80,w=1160,h=480,lineHeight=40,drawFunc=function(v,_,sel)
     if sel then
-        gc.setColor(COLOR.X)
+        gc.setColor(COLOR.dX)
         gc.rectangle('fill',0,0,1160,40)
     end
     gc.setColor(1,1,1)
     gc.draw(v.mapName,10,-1,nil,min(690/v.mapName:getWidth(),1),1)
-    gc.setColor(COLOR.Z)
+    gc.setColor(COLOR.L)
     gc.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
 
     FONT.set(30,'mono')
@@ -52,7 +52,7 @@ local function _freshSongList()
                             end
                         end
                         file:close()
-                        local color=source=='game' and COLOR.Z or source=='outside' and COLOR.lY or COLOR.lD
+                        local color=source=='game' and COLOR.L or source=='outside' and COLOR.lY or COLOR.lD
                         local dText=metaData.mapDifficulty
                         local difficultyNum=string.format('%03d',(
                             dText:sub(1,4):lower()=='easy' and 0000 or
@@ -66,7 +66,7 @@ local function _freshSongList()
                         ins(mapList,{
                             path=fullPath,
                             source=source,
-                            mapName=gc.newText(FONT.get(30),{color,metaData.mapName,COLOR.dH," - "..metaData.musicAuth}),
+                            mapName=gc.newText(FONT.get(30),{color,metaData.mapName,COLOR.lD," - "..metaData.musicAuth}),
                             mapAuth=gc.newText(FONT.get(30),metaData.mapAuth),
                             difficulty=gc.newText(FONT.get(25),dText),
                             difficultyColor=
@@ -74,8 +74,8 @@ local function _freshSongList()
                                 dText:sub(1,4)=='Norm' and COLOR.lY or
                                 dText:sub(1,4)=='Hard' and COLOR.lR or
                                 dText:sub(1,4)=='Luna' and COLOR.lM or
-                                dText:sub(1,4)=='Over' and COLOR.lH or
-                                COLOR.lX,
+                                dText:sub(1,4)=='Over' and COLOR.dL or
+                                COLOR.X,
                             tracks=metaData.realTracks and metaData.realTracks~=metaData.tracks and(('$1($2)'):repD(metaData.realTracks,metaData.tracks)) or metaData.tracks,
                             sortName=(source=='outside' and '0' or '1')..(metaData.realTracks or metaData.tracks)..difficultyNum..metaData.mapName
                         })

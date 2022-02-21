@@ -83,7 +83,7 @@ local function _marvStencil()
     gc.rectangle('fill',_stencilX,210,100,100)
 end
 function scene.draw()
-    gc.setColor(COLOR.Z)
+    gc.setColor(COLOR.L)
     gc.push('transform')
         gc.translate(640,100)
         gc.scale(min(900/results.mapName:getWidth(),1))
@@ -104,7 +104,7 @@ function scene.draw()
     gc.pop()
 
     --Draw score & accuracy & combo
-    gc.setColor(COLOR.Z)
+    gc.setColor(COLOR.L)
     FONT.set(60)
     gc.print(results.score,140,0)
     FONT.set(50)

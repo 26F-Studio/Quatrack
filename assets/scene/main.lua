@@ -22,7 +22,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',x=240,y=80,w=100,        color='lN',fontSize=70,text=CHAR.icon.language,           code=WIDGET.c_goScn'lang'},
+    WIDGET.new{type='button_fill',x=240,y=80,w=100,        color='lI',fontSize=70,text=CHAR.icon.language,           code=WIDGET.c_goScn'lang'},
     WIDGET.new{type='button_fill',x=240,y=450,w=280,h=120, color="lR",fontSize=45,text=LANG'main_play',      code=WIDGET.c_goScn'mapSelect'},
     WIDGET.new{type='button_fill',x=640,y=450,w=280,h=120, color="lB",fontSize=45,text=LANG'main_setting',   code=WIDGET.c_goScn'setting'},
     WIDGET.new{type='button_fill',x=240,y=600,w=95,        color="lY",fontSize=70,text=CHAR.key.winMenu,             code=WIDGET.c_goScn'stat'},

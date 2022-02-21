@@ -128,7 +128,7 @@ end
 
 function scene.draw()
     FONT.set(20)
-    gc.setColor(COLOR.Z)
+    gc.setColor(COLOR.L)
     gc.printf(Text.keySettingInstruction,526,600,500,'right')
 
     FONT.set(30)
@@ -138,7 +138,7 @@ function scene.draw()
                 love.timer.getTime()%.26>.13 and COLOR.R or
                 COLOR.Y
             ) or
-            COLOR.Z
+            COLOR.L
         )
         local W=scene.widgetList[i]
         local x,y=W._x,W._y
@@ -158,17 +158,17 @@ local function _setSel(i)
     end
 end
 scene.widgetList={
-    WIDGET.new{type='button',x=90,  y=260,w=100,h=60,sound='key',fontSize=30,text='L5',color='dH',code=function() _setSel(01) end},
-    WIDGET.new{type='button',x=200, y=260,w=100,h=60,sound='key',fontSize=30,text='L4',color='dH',code=function() _setSel(02) end},
-    WIDGET.new{type='button',x=310, y=260,w=100,h=60,sound='key',fontSize=30,text='L3',color='Z' ,code=function() _setSel(03) end},
+    WIDGET.new{type='button',x=90,  y=260,w=100,h=60,sound='key',fontSize=30,text='L5',color='lD',code=function() _setSel(01) end},
+    WIDGET.new{type='button',x=200, y=260,w=100,h=60,sound='key',fontSize=30,text='L4',color='lD',code=function() _setSel(02) end},
+    WIDGET.new{type='button',x=310, y=260,w=100,h=60,sound='key',fontSize=30,text='L3',color='L' ,code=function() _setSel(03) end},
     WIDGET.new{type='button',x=420, y=260,w=100,h=60,sound='key',fontSize=30,text='L2',color='lB',code=function() _setSel(04) end},
     WIDGET.new{type='button',x=530, y=260,w=100,h=60,sound='key',fontSize=30,text='L1',color='lB',code=function() _setSel(05) end},
-    WIDGET.new{type='button',x=640, y=260,w=100,h=60,sound='key',fontSize=30,text='C', color='Z' ,code=function() _setSel(06) end},
+    WIDGET.new{type='button',x=640, y=260,w=100,h=60,sound='key',fontSize=30,text='C', color='L' ,code=function() _setSel(06) end},
     WIDGET.new{type='button',x=750, y=260,w=100,h=60,sound='key',fontSize=30,text='R1',color='lB',code=function() _setSel(07) end},
     WIDGET.new{type='button',x=860, y=260,w=100,h=60,sound='key',fontSize=30,text='R2',color='lB',code=function() _setSel(08) end},
-    WIDGET.new{type='button',x=970, y=260,w=100,h=60,sound='key',fontSize=30,text='R3',color='Z' ,code=function() _setSel(09) end},
-    WIDGET.new{type='button',x=1080,y=260,w=100,h=60,sound='key',fontSize=30,text='R4',color='dH',code=function() _setSel(10) end},
-    WIDGET.new{type='button',x=1190,y=260,w=100,h=60,sound='key',fontSize=30,text='R5',color='dH',code=function() _setSel(11) end},
+    WIDGET.new{type='button',x=970, y=260,w=100,h=60,sound='key',fontSize=30,text='R3',color='L' ,code=function() _setSel(09) end},
+    WIDGET.new{type='button',x=1080,y=260,w=100,h=60,sound='key',fontSize=30,text='R4',color='lD',code=function() _setSel(10) end},
+    WIDGET.new{type='button',x=1190,y=260,w=100,h=60,sound='key',fontSize=30,text='R5',color='lD',code=function() _setSel(11) end},
 
     WIDGET.new{type='button',x=130, y=400,w=120,h=60,sound='key',fontSize=25,text=LANG'keySetting_restart',   color='lR',code=function() _setSel(12) end},
     WIDGET.new{type='button',x=130, y=480,w=120,h=60,sound='key',fontSize=25,text=LANG'keySetting_skip',      color='lG',code=function() _setSel(13) end},

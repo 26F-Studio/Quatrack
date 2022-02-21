@@ -599,7 +599,7 @@ function scene.draw()
             SCC[3]=(1-game.time/game.songLength)^.26
             GC.shadedPrint(game.combo,640,360,'center',1,8,chainColors[game.bestChain],SCC)
         else
-            GC.shadedPrint(game.combo,640,360,'center',1,8,chainColors[game.bestChain],COLOR.Z)
+            GC.shadedPrint(game.combo,640,360,'center',1,8,chainColors[game.bestChain],COLOR.L)
         end
     end
 
