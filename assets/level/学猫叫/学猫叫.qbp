@@ -5,7 +5,7 @@ $mapAuth=Ykzl
 $mapDifficulty=Easy-5
 
 $songFile=xuemaojiao.ogg
-$songOffset=370ms
+$songOffset=-675ms
 
 [A]C,FFFFFF
 -H--/2
@@ -358,5 +358,4 @@ O---/2
 ---O
 ---O
 O---/2
-----*2
 !115
