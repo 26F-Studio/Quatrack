@@ -36,7 +36,7 @@ local game={
     playSpeed=false,
     texts={"","",""},
     judgeTimes=nil,-- judgeTimeList, copied from _G.judgeTimes
-    mapEnv=nil,-- Enviroment of script, copied from _G.mapTemplate
+    mapEnv=nil,-- Enviroment of script, copied from _G.mapScriptEnv
 
     map=nil,-- Map object
     tracks=nil,-- track object list
@@ -105,6 +105,7 @@ local function _tryGoResult()
     })
 end
 
+local settingArgs=setmetatable({},{__newindex=function() error("setting.xxx is read only") end})
 local gameArgs=setmetatable({},{__newindex=function() error("game.xxx is read only") end})
 local function _freshScriptArgs()
     for k,v in next,game do
@@ -116,11 +117,16 @@ local function _freshScriptArgs()
     --Special, will remove in the future
     rawset(gameArgs,'hits',game.hits)
     rawset(gameArgs,'map',game.map)
+
+    -- These can change during the game, we need to copy them.
+    rawset(settingArgs,'sfx',SETTING.sfx)
+    rawset(settingArgs,'bgm',SETTING.bgm)
+    rawset(settingArgs,'dropSpeed',SETTING.dropSpeed)
 end
 local lastErrorTime=setmetatable({},{__index=function(self,k) self[k]=-1e99 return -1e99 end})
 local function callScriptEvent(event,...)
-    if game.map.script[event] then
-        local ok,err=pcall(game.map.script[event],...)
+    if game.mapEnv[event] then
+        local ok,err=pcall(game.mapEnv[event],...)
         if not ok then
             game.errorCount=game.errorCount+1
             if love.timer.getTime()-lastErrorTime[event]>=0.626 then
@@ -195,22 +201,21 @@ function scene.enter()
 
     game.errorCount=0
     _freshScriptArgs()
+    for k,v in next,SETTING do rawset(settingArgs,k,v) end
     if game.map.script then
         if love.filesystem.getInfo(dirPath..game.map.script..'.lua') then
             local file=love.filesystem.read('string',dirPath..game.map.script..'.lua')
             local func,err=loadstring(file)
-            game.map.script={}
             if func then
                 game.mapEnv=TABLE.copy(mapScriptEnv)
                 game.mapEnv.game=gameArgs
+                game.mapEnv.setting=settingArgs
                 game.mapEnv._G=game.mapEnv
                 setfenv(func,game.mapEnv)
                 local _
                 _,err=pcall(func)
                 if err then
                     MES.new('error',err)
-                else
-                    game.map.script=game.mapEnv
                 end
             else
                 err=err:gsub('%b[]:','')
