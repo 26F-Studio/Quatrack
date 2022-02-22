@@ -27,19 +27,22 @@ local function _showVolMes(v)
     MES.new('info',('$1%'):repD(('%d'):format(v*100)),0)
 end
 
+local autoPlayTextObj
+
 local game={
     needSaveSetting=false,
     autoPlay=false,
-    autoPlayTextObj=false,
-    playSongTime=false,
-    songLength=false,
-    playSpeed=false,
+
+    playSongTime=nil,
+    songLength=nil,
+    playSpeed=nil,
+
+    map=nil,-- Map object
+    tracks=nil,-- track object list
     texts={"","",""},
     judgeTimes=nil,-- judgeTimeList, copied from _G.judgeTimes
     mapEnv=nil,-- Enviroment of script, copied from _G.mapScriptEnv
 
-    map=nil,-- Map object
-    tracks=nil,-- track object list
     hitLV=nil,-- Hit level (-1~5)
     hitTextTime=nil,-- Time stamp, for hitText fading-out animation
 
@@ -58,6 +61,7 @@ local game={
     totalDeviateTime=nil,
     bestChain=nil,
     hits={},
+
     touches={},
 }
 
@@ -122,6 +126,7 @@ local function _freshScriptArgs()
     rawset(settingArgs,'sfx',SETTING.sfx)
     rawset(settingArgs,'bgm',SETTING.bgm)
     rawset(settingArgs,'dropSpeed',SETTING.dropSpeed)
+    rawset(settingArgs,'fullscreen',SETTING.fullscreen)
 end
 local lastErrorTime=setmetatable({},{__index=function(self,k) self[k]=-1e99 return -1e99 end})
 local function callScriptEvent(event,...)
@@ -145,7 +150,7 @@ function scene.enter()
     KEY_MAP_inv:_update()
     game.autoPlay=false
     game.playSpeed=1
-    game.autoPlayTextObj=game.autoPlayTextObj or gc.newText(FONT.get(100),'AUTO')
+    if not autoPlayTextObj then autoPlayTextObj=gc.newText(FONT.get(100),'AUTO') end
 
     game.judgeTimes={.16,.12,.08,.05,.03,0}
     game.accPoints={-100,0,75,100,101}
@@ -579,7 +584,7 @@ function scene.draw()
     -- Draw auto mark
     if game.autoPlay then
         gc_setColor(1,1,1,.126)
-        GC.draw(game.autoPlayTextObj,nil,nil,nil,3.55)
+        GC.draw(autoPlayTextObj,nil,nil,nil,3.55)
     end
 
     -- Draw tracks
