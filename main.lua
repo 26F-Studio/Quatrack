@@ -55,6 +55,7 @@ DEBUG.checkLoadTime("Load Assets")
 --------------------------------------------------------------
 -- Config Zenitha
 STRING.install()
+Zenitha.setAppName('Quatrack')
 Zenitha.setVersionText(VERSION.string)
 Zenitha.setFirstScene('load')
 do--Zenitha.setDrawCursor
@@ -175,7 +176,7 @@ VOC.setDiversion(.62)
 WIDGET.setDefaultButtonSound('button')
 WIDGET.setDefaultCheckBoxSound('check','uncheck')
 WIDGET.setDefaultSelectorSound('selector')
-WIDGET.setDefaultTypeSound('hit5','hit3')
+WIDGET.setDefaultTypeSound('hit5','hit3','hold1')
 WIDGET.setDefaultClearSound('hold4')
 LANG.add{
     zh='assets/language/lang_zh.lua',
