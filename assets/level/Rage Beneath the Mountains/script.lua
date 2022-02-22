@@ -44,7 +44,7 @@ end
 local function objDrawText(obj)
     local alpha=math.min(t-obj.timeSpawn,obj.life,0.5)*2
     gc.setColor(0,0,0,alpha*0.4)
-    gc.rect('fill',obj.x,obj.y,1280,36*#obj.text)
+    gc.rectangle('fill',obj.x,obj.y,1280,36*#obj.text)
     for i,str in next,obj.text do
         gc.setColor(1,1,1,alpha)
         gc.print(str,640,obj.y+36*(i-1))

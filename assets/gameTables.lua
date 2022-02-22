@@ -69,7 +69,7 @@ do
             setFont=function(f) FONT.set(f) end,
 
             line=function(...) gc.line(...) end,
-            rect=function(mode,x,y,w,h) gc.rectangle(mode,x,y,w,h) end,
+            rectangle=function(mode,x,y,w,h) gc.rectangle(mode,x,y,w,h) end,
             circle=function(mode,x,y,r) gc.circle(mode,x,y,r) end,
             polygon=function(mode,x,y,r,sides,phase) GC.regPolygon(mode,x,y,r,sides,phase) end,
             print=function(text,x,y,mode)
