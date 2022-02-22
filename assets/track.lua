@@ -5,7 +5,7 @@ local gc_setColor=gc.setColor
 local gc_rectangle=gc.rectangle
 
 local ins,rem=table.insert,table.remove
-local max=math.max
+local max,min=math.max,math.min
 local interval=MATH.interval
 
 local SETTING=SETTING
@@ -223,7 +223,7 @@ function Track:press(weak,auto)
         local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         local _a,_p,_d
         if hitLV>0 then
-            _a,_p,_d=note:getAlpha(1),self.state.x/420,-(math.abs(hitLV-4.5)-.5)
+            _a,_p,_d=note:getAlpha(1),self.state.x/420,min(hitLV-SETTING.showHitLV+1,0)
         end
         if note.type=='tap' then--Press tap note
             rem(self.notes,i)
