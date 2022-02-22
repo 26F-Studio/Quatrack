@@ -85,7 +85,7 @@ do
             end,
         },
 
-        message=function(mes) MES.new('info',mes) end,
+        message=function(mes,time) MES.new('info',mes,time or 3) end,
     }
     for _,v in next,{
         'math','string','table',

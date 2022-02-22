@@ -293,6 +293,7 @@ local function _trackPress(id,weak,auto)
     end
 end
 local function _trackRelease(id,weak,auto)
+    callScriptEvent('trackRelease',id)
     local deviateTime,noTailHold=game.tracks[id]:release(weak,auto)
     if not auto and deviateTime then
         _trigNote(deviateTime,noTailHold,weak)
