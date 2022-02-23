@@ -207,6 +207,7 @@ function scene.enter()
     game.errorCount=0
     _freshScriptArgs()
     for k,v in next,SETTING do rawset(settingArgs,k,v) end
+    game.mapEnv={}
     if game.map.script then
         if love.filesystem.getInfo(dirPath..game.map.script..'.lua') then
             local file=love.filesystem.read('string',dirPath..game.map.script..'.lua')
@@ -229,8 +230,6 @@ function scene.enter()
         else
             MES.new('error',Text.noFile)
         end
-    else
-        game.map.script={}
     end
     callScriptEvent('init')
 
