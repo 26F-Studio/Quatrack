@@ -37,10 +37,11 @@ local function _updateSFXvol()
     end
 end
 local function sliderShow_time(S)
-    return("%.0f"):format(S.disp()).." ms"
+    local t=S.disp()
+    return (t<0 and Text.music_early or t>0 and Text.music_late or Text.music_nodelay):repD(("%.0f"):format(math.abs(t)).." ms")
 end
 local function sliderShow_scale(S)
-    return("x%.2f"):format(S.disp())
+    return ("x%.2f"):format(S.disp())
 end
 local function sliderShow_fps(S)
     return S.disp().." FPS"

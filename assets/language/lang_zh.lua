@@ -14,13 +14,17 @@ return{
     playedLong="已经玩很久了!注意休息!",
     playedTooMuch="今天玩太久啦!打块好玩但也要适可而止哦~",
 
+    music_early="提前 $1",
+    music_late="延后 $1",
+    music_nodelay="无",
+
     pause="暂停",
     pauseCount="暂停统计",
     chainTexts={
         "NO BREAK",
         "NO BREAK+",
-        "PERFECT",
         "ALL PERFECT",
+        "ALL PERFECT+",
         "MARVELOUS",
     },
 

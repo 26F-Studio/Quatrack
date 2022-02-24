@@ -14,6 +14,10 @@ return{
     playedLong="You have been playing for a long time. Time to a break!",
     playedTooMuch="You have been playing for far too long! Quatrack is fun, but remember to have some rests!",
 
+    music_early="$1 Early",
+    music_late="$1 Late",
+    music_nodelay="None",
+
     pause="Pause",
     pauseCount="Pauses",
     chainTexts={
