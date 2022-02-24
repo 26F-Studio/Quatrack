@@ -208,7 +208,7 @@ do--Userdata tables
         slowUnfocus=true,
 
         --Game
-        bgAlpha=.16,
+        bgAlpha=.26,
         musicDelay=0,
         dropSpeed=0,
         noteThick=22,
