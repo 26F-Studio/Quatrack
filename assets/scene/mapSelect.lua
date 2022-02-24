@@ -131,6 +131,6 @@ scene.widgetList={
     },
     WIDGET.new{type='button_fill',x=320,y=640,w=80,        text=CHAR.icon.retry_spin,color='lB',fontSize=50,code=_freshSongList,visibleFunc=function() return love.timer.getTime()-lastFreshTime>2.6 end},
     WIDGET.new{type='button_fill',x=640,y=640,w=140,h=80,  text=CHAR.icon.play,color='lG',fontSize=60,code=WIDGET.c_pressKey'return'},
-    WIDGET.new{type='button_fill',x=1140,y=640,w=170,h=80, sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 return scene
