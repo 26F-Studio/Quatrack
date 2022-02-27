@@ -346,7 +346,12 @@ function init()
         end
     end
     ins(events,{time=115.054,func=objCreate,arg=TABLE.copy(o)})
-
+    for _,note in next,game.map.noteQueue do
+        if type(note)=='table' then
+            note.track=(note.track-1)%4+1
+            note.available=true
+        end
+    end
     --SORT IT
     table.sort(events,function(a,b) return a.time<b.time end)
 end
