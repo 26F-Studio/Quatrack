@@ -63,7 +63,7 @@ function Track:rename(name)
     self.nameList=name:split(' ')
     self.showName=TABLE.shift(self.nameList)
     for i=1,#self.showName do
-        self.showName[i]=KEY_MAP_inv[self.showName[i]]:upper()
+        self.showName[i]=(KEY_MAP_inv[self.showName[i]] or '[X]'):upper()
     end
 end
 
