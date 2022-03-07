@@ -239,7 +239,8 @@ function Map.new(file)
                             _syntaxCheck(signature,"No signature to calculate bar length")
                         elseif unit then
                             _syntaxCheck(false,"Invalid $songOffset unit (need ms,s,m,h,beat,bar)")
-                        else unit=60/curBPM
+                        else
+                            unit=60/curBPM
                         end
                         dt=time*unit
                     end
@@ -662,8 +663,7 @@ function Map.new(file)
                     _syntaxCheck(time and time>0,"Invalid judge time (need positive number)")
                     if unit=='ms' then unit=0.001
                     elseif unit=='s' then unit=1
-                    elseif unit then
-                        _syntaxCheck(false,"Invalid time unit (need ms,s)")
+                    elseif unit then _syntaxCheck(false,"Invalid time unit (need ms,s)")
                     else unit=0.001
                     end
                     t[i]=time*unit

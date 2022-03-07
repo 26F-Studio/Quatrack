@@ -86,6 +86,7 @@ do
         },
 
         message=function(mes,time) MES.new('info',mes,time or 3) end,
+        -- sfx=function(name,vol,pos,pitch)SFX.play(name,vol,pos,pitch)end,
     }
     for _,v in next,{
         'math','string','table',
