@@ -231,8 +231,8 @@ end
 DEBUG.checkLoadTime("Load SDs+BGs+SCNs")
 --------------------------------------------------------------
 --Load settings and statistics
-TABLE.update(loadFile('conf/settings','-canSkip') or{},SETTING)
-TABLE.coverR(loadFile('conf/data','-canSkip') or{},STAT)
+TABLE.update(loadFile('conf/settings','-canSkip') or {},SETTING)
+TABLE.coverR(loadFile('conf/data','-canSkip') or {},STAT)
 local savedKey=loadFile('conf/key','-canSkip')
 if savedKey then
     KEY_MAP=savedKey
@@ -252,8 +252,10 @@ do
     STAT.hits=nil
     SETTING.frameMul=nil
     love.filesystem.remove('progress')
-    if STAT.version~=VERSION.code then
+    if STAT.version~=VERSION.code or not love.filesystem.getInfo('songs/readme.txt','file') then
         love.filesystem.write('songs/readme.txt',love.filesystem.read('assets/language/readme.txt'))
+        STAT.version=VERSION.code
+        saveStats()
     end
 end
 DEBUG.checkLoadTime("Load savedata")
