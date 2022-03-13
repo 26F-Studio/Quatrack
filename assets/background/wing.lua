@@ -15,7 +15,7 @@ local wingColor={
 }
 local wingHeight={.572,.536,.476,.405,.307,.402,.457,.367}
 function back.init()
-    crystal_img=GC.DO{42,118,
+    crystal_img=GC.load{42,118,
         {'setCL',.93,.93,.93},
         {'fPoly',21,0,0,29,21,40},
         {'setCL',.6,.6,.6},
