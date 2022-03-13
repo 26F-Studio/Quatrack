@@ -18,9 +18,8 @@ function back.draw()
     else
         gc.clear(.08,.08,.084)
     end
-    gc.push('transform')
-    gc.translate(SCR.cx,SCR.cy+20*sin(t*.02))
-    gc.scale(SCR.k)
+    gc.replaceTransform(SCR.xOy_m)
+    gc.translate(0,20*sin(t*.02))
     gc.scale(1.26,1.36)
     if -t%6.26<.1355 then
         gc.translate(60*sin(t*.26),100*sin(t*.626))
@@ -34,6 +33,5 @@ function back.draw()
     GC.draw(textObj,2*sin(t*.77023),2*sin(t*.7026))
     gc.setColor(1,1,1,.5)
     GC.draw(textObj,3*sin(t*.7283),3*sin(t*.7626))
-    gc.pop()
 end
 return back
