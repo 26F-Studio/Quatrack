@@ -1,6 +1,6 @@
 local Note=require'assets.note'
 
-local int,rnd=math.floor,math.random
+local int,rnd,abs=math.floor,math.random,math.abs
 local ins,rem=table.insert,table.remove
 
 local Map={}
@@ -315,13 +315,13 @@ function Map.new(file)
 
                     local animType=rem(animList,1)
                     _syntaxCheck(animType,"Need animation type (S/L/E/C)")
-                    if animType=='S' then
+                    if animType=='S' then-- Sudden
                         _syntaxCheck(#animList==0,"Invalid animation data")
                         animData={type='S'}
-                    elseif animType=='L' then
-                        _syntaxCheck(#animList==1,"Invalid animation data (need time)")
+                    elseif animType=='L' then-- Linear
+                        _syntaxCheck(#animList==1,"Invalid animation data (need duration)")
                         local time,unit=_parseTime(animList[1])
-                        _syntaxCheck(time and time>0,"Invalid animation time (need positive number)")
+                        _syntaxCheck(time and time>0,"Invalid animation duration (need positive number)")
                         if unit=='ms' then unit=0.001
                         elseif unit=='s' then unit=1
                         elseif unit=='m' then unit=60
@@ -330,16 +330,35 @@ function Map.new(file)
                         elseif unit=='bar' then unit=60/curBPM*signature
                             _syntaxCheck(signature,"No signature to calculate bar length")
                         elseif unit then
-                            _syntaxCheck(false,"Invalid $songOffset unit (need ms,s,m,h,beat,bar)")
+                            _syntaxCheck(false,"Invalid duration unit (need ms,s,m,h,beat,bar)")
                         else unit=60/curBPM
                         end
                         time=time*unit
                         animData={type='L',start=curTime,duration=time}
-                    elseif animType=='E' then
+                    elseif animType=='E' then-- Exponential
                         _syntaxCheck(#animList==1,"Invalid animation data (need speed)")
                         local s=tonumber(animList[1])
-                        _syntaxCheck(s and s>0,"Invalid expontial param")
+                        _syntaxCheck(s and s>0,"Invalid speed param")
                         animData={type='E',start=curTime,speed=s}
+                    elseif animType=='P' then-- Power
+                        _syntaxCheck(#animList==2,"Invalid animation data (need duration and exponent)")
+                        local time,unit=_parseTime(animList[1])
+                        _syntaxCheck(time and time>0,"Invalid animation duration (need positive number)")
+                        if unit=='ms' then unit=0.001
+                        elseif unit=='s' then unit=1
+                        elseif unit=='m' then unit=60
+                        elseif unit=='h' then unit=3600
+                        elseif unit=='beat' then unit=60/curBPM
+                        elseif unit=='bar' then unit=60/curBPM*signature
+                            _syntaxCheck(signature,"No signature to calculate bar length")
+                        elseif unit then
+                            _syntaxCheck(false,"Invalid duration unit (need ms,s,m,h,beat,bar)")
+                        else unit=60/curBPM
+                        end
+                        time=time*unit
+                        local e=tonumber(animList[2])
+                        _syntaxCheck(e and abs(e)>1,"Invalid expontial param (need <-1 or >1)")
+                        animData={type='P',start=curTime,duration=time,exp=e}
                     elseif animType=='C' then
                         _syntaxCheck(false,"Coming soon")
                         animData={type='C'}

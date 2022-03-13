@@ -314,6 +314,21 @@ function Track:update(dt)
                 end
                 rem(self.animQueue,i)
             end
+        elseif animData.type=='P' then
+            for j=1,#animKeys do
+                local k=animKeys[j]
+                C[k]=
+                    animData.exp>0 and S[k]+(T[k]-S[k])*((self.time-animData.start)/animData.duration)^animData.exp or
+                    S[k]+(T[k]-S[k])*(1-(1-(self.time-animData.start)/animData.duration)^-animData.exp)
+            end
+            if self.time>animData.start+animData.duration then
+                for j=1,#animKeys do
+                    C[animKeys[j]]=T[animKeys[j]]
+                end
+                rem(self.animQueue,i)
+            end
+        else
+            rem(self.animQueue,i)
         end
     end
 end
