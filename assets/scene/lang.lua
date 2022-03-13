@@ -61,7 +61,7 @@ scene.widgetList={
     -- WIDGET.new{type='button_fill',x=637,y=449,w=346,h=100,fontSize=40, text=langList.ja,      color='J',sound='check',code=function() _setLang('ja') end},
     -- WIDGET.new{type='button_fill',x=637,y=568,w=346,h=100,fontSize=40, text=langList.zh_grass,color='L',sound='check',code=function() _setLang('zh_grass') end},
 
-    WIDGET.new{type='button_fill',x=1003,y=210,w=346,h=100,sound='check',fontSize=40,text=langList.zh,      color='C',code=function() _setLang('zh') end},
+    WIDGET.new{type='button_fill',x=1003,y=210,w=346,h=100,sound='check',fontSize=40,text=langList.zh,      color='lS',code=function() _setLang('zh') end},
     -- WIDGET.new{type='button_fill',x=1003,y=329,w=346,h=100,fontSize=40,text=langList.zh_full, color='N',sound='check',code=function() _setLang('zh_full') end},
     -- WIDGET.new{type='button_fill',x=1003,y=449,w=346,h=100,fontSize=40,text=langList.zh_trad, color='S',sound='check',code=function() _setLang('zh_trad') end},
 

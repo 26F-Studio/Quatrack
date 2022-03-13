@@ -210,6 +210,13 @@ local holdHeadSFX={
     'hold1',
     'hold1',
 }
+local holdTailSFX={
+    'hit8',
+    'hit7',
+    'hit6',
+    'hit5',
+    'hit5',
+}
 function Track:press(weak,auto)
     --Animation
     self.pressed=true
@@ -241,14 +248,6 @@ function Track:press(weak,auto)
         return deviateTime
     end
 end
-
-local holdTailSFX={
-    'hit8',
-    'hit7',
-    'hit6',
-    'hit5',
-    'hit5',
-}
 function Track:release(weak,auto)
     if not weak then self.pressed=false end
     self.lastReleaseTime=self.time
