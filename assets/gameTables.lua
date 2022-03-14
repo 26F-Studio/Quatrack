@@ -71,7 +71,8 @@ do
             line=function(...) gc.line(...) end,
             rectangle=function(mode,x,y,w,h) gc.rectangle(mode,x,y,w,h) end,
             circle=function(mode,x,y,r) gc.circle(mode,x,y,r) end,
-            polygon=function(mode,x,y,r,sides,phase) GC.regPolygon(mode,x,y,r,sides,phase) end,
+            regPolygon=function(mode,x,y,r,sides,phase) GC.regPolygon(mode,x,y,r,sides,phase) end,
+            polygon=function(mode,...)gc.polygon(mode,...)end,
             print=function(text,x,y,mode)
                 if not mode or mode=='center' then
                     gc.printf(text,x-2600,y,5200,'center')
