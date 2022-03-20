@@ -431,7 +431,7 @@ function Track:draw(map)
     end
 
     --Prepare to draw notes
-    local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^(SETTING.dropSpeed or 0))*ky
+    local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^SETTING.dropSpeed or 0)*ky
     local thick=SETTING.noteThick*ky
 
     local chordAlpha=SETTING.chordAlpha
