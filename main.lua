@@ -185,7 +185,8 @@ LANG.add{
 LANG.setDefault('zh')
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths
 IMG.init{
-    title='assets/image/title.png',
+    logo_full='assets/image/logo_full.png',
+    logo_color='assets/image/logo_color.png',
 }
 SFX.init((function()
     local L={}

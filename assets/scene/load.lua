@@ -60,10 +60,14 @@ end
 
 function scene.draw()
     gc.setColor(1,1,1)
-    GC.draw(IMG.title,640,200,0,.3)
+    GC.draw(IMG.logo_full,640,200,0,.3)
+    gc.setColor(1,1,1,(1-math.abs(math.sin(love.timer.getTime())))^3/2)
+    GC.draw(IMG.logo_color,640,200,0,.3)
 
-    gc.setColor(logoColor1[1],logoColor1[2],logoColor1[3],progress/maxProgress)GC.draw(studioLogo,640,400)
-    gc.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress) for dx=-2,2,2 do for dy=-2,2,2 do GC.draw(studioLogo,640+dx,400+dy) end end
+    gc.setColor(logoColor1[1],logoColor1[2],logoColor1[3],progress/maxProgress)
+    GC.draw(studioLogo,640,400)
+    gc.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress)
+    for dx=-2,2,2 do for dy=-2,2,2 do GC.draw(studioLogo,640+dx,400+dy) end end
     gc.setColor(.2,.2,.2,progress/maxProgress)GC.draw(studioLogo,640,400)
 
     gc.setColor(1,1,1)
