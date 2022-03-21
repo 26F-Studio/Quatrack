@@ -1,1 +1,4 @@
 .vscode
+*.ini
+.DS_Store
+Thumbs.db
