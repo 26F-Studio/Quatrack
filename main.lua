@@ -187,6 +187,15 @@ LANG.setDefault('zh')
 IMG.init{
     logo_full='assets/image/logo_full.png',
     logo_color='assets/image/logo_color.png',
+    z={
+        character='assets/image/z_character.png',
+        screen1='assets/image/z_screen1.png',
+        screen2='assets/image/z_screen2.png',
+        particle1='assets/image/z_particle1.png',
+        particle2='assets/image/z_particle2.png',
+        particle3='assets/image/z_particle3.png',
+        particle4='assets/image/z_particle4.png',
+    }
 }
 SFX.init((function()
     local L={}

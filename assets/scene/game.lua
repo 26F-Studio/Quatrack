@@ -246,7 +246,7 @@ function scene.enter()
         end
         if image then
             BG.set('image')
-            BG.send(SETTING.bgAlpha*.626,image)
+            BG.send('image',SETTING.bgAlpha*.626,image)
         else
             BG.set('none')
         end

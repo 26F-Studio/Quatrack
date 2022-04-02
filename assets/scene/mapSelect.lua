@@ -122,7 +122,7 @@ scene.widgetList={
     listBox,
     WIDGET.new{type='button_fill',x=160,y=640,w=200,h=80,  text=CHAR.icon.import,color='lV',fontSize=60,
         code=function()
-            if SYSTEM=="Windows" or SYSTEM=="Linux" then
+            if not MOBILE then
                 love.system.openURL(love.filesystem.getSaveDirectory()..'/songs')
             else
                 MES.new('info',love.filesystem.getSaveDirectory())
