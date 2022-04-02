@@ -311,8 +311,7 @@ function scene.keyDown(key,isRep)
         local minTime=1e99
         for id=1,game.map.tracks do
             if game.tracks[id].name:find(k) then
-                local t=game.tracks[id]:pollPressTime()
-                if t<minTime then minTime=t end
+                minTime=min(minTime,game.tracks[id]:pollPressTime())
             end
         end
         for id=1,game.map.tracks do
@@ -421,35 +420,47 @@ function scene.touchDown(x,y,id)
     if _x<SETTING.safeX*SCR.k or _x>SCR.w-SETTING.safeX*SCR.k or _y<SETTING.safeY*SCR.k or _y>SCR.h-SETTING.safeY*SCR.k then return end
 
     x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
-    local minD2,closestTrackID=1e99,false
     x=x/SETTING.scaleX
+    local minDist,closestTrackID=1e99,false
+    local onTrack,minTime={},1e99
     for i=1,#game.tracks do
-        local t=game.tracks[i]
-        if t.state.available then
-            local angle=math.atan2(y-t.state.y,x-t.state.x)
-            if t.state.ky<0 then angle=angle+3.141592653589793 end
-            angle=angle-t.state.ang/57.29577951308232
+        local T=game.tracks[i]
+        if T.state.available then
+            local angle=math.atan2(y-T.state.y,x-T.state.x)
+            if T.state.ky<0 then angle=angle+3.141592653589793 end
+            angle=angle-T.state.ang/57.29577951308232
             angle=angle+1.5707963267948966
             angle=angle%6.283185307179586
 
             local D
             if abs(angle-3.141592653589793)>=1.5707963267948966 then
                 if angle>3.141592653589793 then angle=6.283185307179586-angle end
-                D=abs(cos(t.state.ang/57.29577951308232)*(x-t.state.x)+sin(t.state.ang/57.29577951308232)*(y-t.state.y))
+                D=abs(cos(T.state.ang/57.29577951308232)*(x-T.state.x)+sin(T.state.ang/57.29577951308232)*(y-T.state.y))
             else
-                D=((y-t.state.y)^2+(x-t.state.x)^2)^.5
+                D=((y-T.state.y)^2+(x-T.state.x)^2)^.5
             end
-            if D<minD2 then minD2,closestTrackID=D,i end
+            if D<=50*T.state.kx*SETTING.trackW/SETTING.scaleX then
+                ins(onTrack,T)
+                minTime=min(minTime,T:pollPressTime())
+            elseif D<minDist then
+                minDist,closestTrackID=D,i
+            end
         end
     end
-    if closestTrackID then
+    if #onTrack>0 then
+        for i=1,#onTrack do
+            local T=onTrack[i]
+            ins(game.touches,{id,T.id})
+            _trackPress(T.id,minTime<T:pollPressTime())
+        end
+    elseif closestTrackID then
         ins(game.touches,{id,closestTrackID})
         _trackPress(closestTrackID,false)
     end
 end
 function scene.touchUp(_,_,id)
     if game.autoPlay then return end
-    for i=1,#game.touches do
+    for i=#game.touches,1,-1 do
         if game.touches[i][1]==id then
             local allReleased=true
             for j=1,#game.touches do
@@ -462,7 +473,6 @@ function scene.touchUp(_,_,id)
                 _trackRelease(game.touches[i][2])
             end
             rem(game.touches,i)
-            return
         end
     end
 end
