@@ -94,10 +94,6 @@ return{
     setting_bgm="音乐",
     setting_sfx="音效",
     setting_stereo="立体声",
-    setting_spawn="方块生成",
-    setting_warn="危险警告",
-    setting_vib="振动",
-    setting_voc="语音",
 
     setting_bgAlpha="背景亮度",
     setting_musicDelay="音乐延迟",
@@ -124,6 +120,8 @@ return{
     setting_maxFPS="最大FPS",
     setting_updRate="更新帧频率",
     setting_drawRate="绘制帧频率",
+
+    setting_showTouch="触摸显示",
 
     keySetting_restart="重开",
     keySetting_skip="跳过",

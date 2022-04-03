@@ -223,6 +223,7 @@ do--Userdata tables
         safeY=10,
         showHitLV=5,
         dvtCount=20,
+        showTouch=true,
 
         --Sound
         autoMute=false,

@@ -94,10 +94,6 @@ return{
     setting_bgm="BGM",
     setting_sfx="SFX",
     setting_stereo="Stereo",
-    setting_spawn="Spawn SFX",
-    setting_warn="Warning SFX",
-    setting_vib="Vibrations",
-    setting_voc="Voices",
 
     setting_bgAlpha="Background Brightness",
     setting_musicDelay="Music Delay",
@@ -124,6 +120,8 @@ return{
     setting_maxFPS="Max FPS",
     setting_updRate="Update rate",
     setting_drawRate="Draw rate",
+
+    setting_showTouch="Show touches",
 
     keySetting_restart="restart",
     keySetting_skip="skip",

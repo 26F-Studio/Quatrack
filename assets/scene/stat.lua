@@ -44,7 +44,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',x=860,y=640,w=250,h=80,fontSize=25,text=LANG'stat_path',
+    WIDGET.new{type='button_fill',pos={1,1},x=-320,y=-80,w=200,h=80,fontSize=25,text=LANG'stat_path',
         code=function()
             if not MOBILE then
                 love.system.openURL(love.filesystem.getSaveDirectory())

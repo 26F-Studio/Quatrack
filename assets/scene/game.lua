@@ -1,9 +1,11 @@
 local gc=love.graphics
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
-local gc_rectangle=gc.rectangle
+local gc_line,gc_rectangle,gc_circle=gc.line,gc.rectangle,gc.circle
 local gc_draw,gc_printf=gc.draw,gc.printf
 local gc_replaceTransform,gc_translate=gc.replaceTransform,gc.translate
 
+local getMousePotision=love.mouse.getPosition
+local getTouchPosition=love.touch.getPosition
 local kbIsDown=love.keyboard.isDown
 
 local setFont=FONT.set
@@ -90,6 +92,7 @@ local function _tryGoResult()
     else
         MES.new('info',Text.invalidScore)
     end
+    Zenitha.setClickFX(SETTING.clickFX)
     SCN.swapTo('result',nil,{
         map=game.map,
         score=game.score0,
@@ -253,12 +256,13 @@ function scene.enter()
     else
         BG.set('none')
     end
-
+    Zenitha.setClickFX(false)
     applyFPS(true)
 end
 
 function scene.leave()
     BGM.stop()
+    Zenitha.setClickFX(SETTING.clickFX)
     applyFPS(false)
     if game.needSaveSetting then saveSettings() end
 end
@@ -602,6 +606,33 @@ function scene.draw()
     end
 
     gc_replaceTransform(SCR.xOy)
+
+    -- Draw touches
+    if SETTING.showTouch then
+        gc_setLineWidth(4)
+        for i=1,#game.touches do
+            local id=game.touches[i][1]
+            local x,y
+            if type(id)=='number' then
+                x,y=SCR.xOy:inverseTransformPoint(getMousePotision())
+            else
+                local success
+                success,x,y=pcall(getTouchPosition,id)
+                if success then
+                    x,y=SCR.xOy:inverseTransformPoint(x,y)
+                end
+            end
+            if x then
+                local T=game.tracks[game.touches[i][2]]
+                local x2,y2=SCR.xOy:inverseTransformPoint(SCR.xOy_m:transformPoint(T.state.x,T.state.y))
+
+                gc_setColor(1,1,1,.6)
+                gc_circle('line',x,y,62)
+                gc_setColor(1,1,1,.3)
+                gc_line(x,y,x2,y2)
+            end
+        end
+    end
 
     -- Draw hit text
     if love.timer.getTime()-game.hitTextTime<.26 and game.hitLV<=SETTING.showHitLV then
