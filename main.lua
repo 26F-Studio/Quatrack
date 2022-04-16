@@ -28,7 +28,6 @@ FIRSTLAUNCH=false
 -- System setting
 math.randomseed(os.time()*626)
 love.setDeprecationOutput(false)
-love.keyboard.setKeyRepeat(true)
 love.keyboard.setTextInput(false)
 if MOBILE then
     local w,h,f=love.window.getMode()

@@ -423,7 +423,7 @@ function scene.touchDown(x,y,id)
     local _x,_y=SCR.xOy:transformPoint(x,y)
     if _x<SETTING.safeX*SCR.k or _x>SCR.w-SETTING.safeX*SCR.k or _y<SETTING.safeY*SCR.k or _y>SCR.h-SETTING.safeY*SCR.k then return end
 
-    x,y=SCR.xOy_m:inverseTransformPoint(SCR.xOy:transformPoint(x,y))
+    x,y=SCR.xOy_m:inverseTransformPoint(_x,_y)
     x=x/SETTING.scaleX
     local minDist,closestTrackID=1e99,false
     local onTrack,minTime={},1e99

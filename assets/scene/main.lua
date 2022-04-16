@@ -1,12 +1,12 @@
+local gc=love.graphics
+
 local scene={}
 
-local title
 local tryCounter=0
 
 function scene.enter()
     BG.set()
     BGM.play()
-    title=MATH.roll(1e-6) and 'QUADTRACK' or 'QUATRACK'
 end
 
 function scene.keyDown(key)
@@ -18,12 +18,14 @@ function scene.keyDown(key)
 end
 
 function scene.draw()
-    FONT.set(100)
-    posterizedText(title,640,120)
+    gc.setColor(1,1,1)
+    GC.draw(IMG.logo_full,640,200,0,.3)
+    gc.setColor(1,1,1,(1-math.abs(math.sin(love.timer.getTime())))^3/2)
+    GC.draw(IMG.logo_color,640,200,0,.3)
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',x=240,y=80,w=100,        color='lI',fontSize=70,text=CHAR.icon.language,   code=WIDGET.c_goScn'lang'},
+    WIDGET.new{type='button_fill',x=200,y=80,w=100,        color='lI',fontSize=70,text=CHAR.icon.language,   code=WIDGET.c_goScn'lang'},
     WIDGET.new{type='button_fill',x=240,y=450,w=280,h=120, color="lR",fontSize=45,text=LANG'main_play',      code=WIDGET.c_goScn'mapSelect'},
     WIDGET.new{type='button_fill',x=640,y=450,w=280,h=120, color="lB",fontSize=45,text=LANG'main_setting',   code=WIDGET.c_goScn'setting'},
     WIDGET.new{type='button_fill',x=240,y=600,w=95,        color="lY",fontSize=70,text=CHAR.key.winMenu,     code=WIDGET.c_goScn'stat'},

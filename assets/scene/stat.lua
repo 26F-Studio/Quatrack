@@ -14,13 +14,7 @@ function scene.enter()
     }
 end
 
-function scene.draw()
-    local t=love.timer.getTime()
-
-    -- Infomation
-    gc.push('transform')
-    gc.translate(120,100+4*math.sin(t))
-    gc.setColor(COLOR.lC)
+local function drawPannel()
     gc.setLineWidth(4)
     gc.rectangle('line',0,0,626,326)
     FONT.set(30)
@@ -28,6 +22,19 @@ function scene.draw()
         gc.print(item[i],220,i*50-30)
         gc.print(Text.stat[i],20,i*50-30)
     end
+end
+
+function scene.draw()
+    local t=love.timer.getTime()
+
+    -- Infomation
+    gc.push('transform')
+    gc.translate(120,100+4*math.sin(t))
+    gc.setColor(.4,.97,.94)
+    drawPannel()
+    gc.translate(4*math.sin(t*.6),3*math.sin(t*.5))
+    gc.setColor(.7,.97,.94,.4)
+    drawPannel()
     gc.pop()
 
     -- Character
