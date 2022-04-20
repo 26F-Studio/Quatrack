@@ -59,18 +59,17 @@ Zenitha.setVersionText(VERSION.string)
 Zenitha.setFirstScene('load')
 do--Zenitha.setDrawCursor
     local gc=love.graphics
-    local sin,cos=math.sin,math.cos
     Zenitha.setDrawCursor(function(_,x,y)
         if not SETTING.sysCursor then
             gc.setColor(1,1,1)
             gc.setLineWidth(2)
-            gc.circle('line',x,y,10)
-            if love.mouse.isDown(1) then gc.circle('fill',x,y,6) end
+            gc.translate(x,y)
+            gc.rotate(love.timer.getTime()%6.283185307179586)
+            gc.circle('line',0,0,10)
+            if love.mouse.isDown(1) then gc.circle('fill',0,0,6) end
             gc.setColor(1,1,1,.626)
-            local angle=love.timer.getTime()
-            local s,c=sin(angle),cos(angle)
-            gc.line(x-20*c,y-20*s,x+20*c,y+20*s)
-            gc.line(x+20*s,y-20*c,x-20*s,y+20*c)
+            gc.line(0,-20,0,20)
+            gc.line(-20,0,20,0)
         end
     end)
 end

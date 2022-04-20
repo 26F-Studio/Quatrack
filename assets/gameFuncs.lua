@@ -249,7 +249,7 @@ function drawHits(hits,x,y)
     gc.translate(-x,-y)
 end
 
-do--CUS/SETXXX(k)
+do--SETXXX(k)
     function SETval(k)return function() return SETTING[k] end end
     function SETrev(k)return function() SETTING[k]=not SETTING[k] end end
     function SETsto(k)return function(i) SETTING[k]=i end end
