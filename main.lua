@@ -66,7 +66,9 @@ do--Zenitha.setDrawCursor
             gc.translate(x,y)
             gc.rotate(love.timer.getTime()%6.283185307179586)
             gc.circle('line',0,0,10)
-            if love.mouse.isDown(1) then gc.circle('fill',0,0,6) end
+            if love.mouse.isDown(1) then gc.circle('line',0,0,6) end
+            if love.mouse.isDown(2) then gc.circle('fill',0,0,4) end
+            if love.mouse.isDown(3) then gc.line(-6,-6,6,6) gc.line(-6,6,6,-6) end
             gc.setColor(1,1,1,.626)
             gc.line(0,-20,0,20)
             gc.line(-20,0,20,0)
