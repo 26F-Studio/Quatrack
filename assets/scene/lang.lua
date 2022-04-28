@@ -43,8 +43,15 @@ end
 local function _setLang(lid)
     SETTING.locale=lid
     applySettings()
-    TEXT.clear()
-    TEXT.show(langList[lid],640,360,100,'appear',.626)
+    TEXT:clear()
+    TEXT:add{
+        text=langList[lid],
+        x=640,
+        y=360,
+        fontSize=100,
+        style='appear',
+        duration=1.6,
+    }
     collectgarbage()
     WIDGET.resize()
     if FIRSTLAUNCH then SCN.back() end

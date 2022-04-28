@@ -14,7 +14,7 @@ local mStr=GC.mStr
 local unpack,rawset=unpack,rawset
 local max,min=math.max,math.min
 local sin,cos=math.sin,math.cos
-local int,ceil,abs=math.floor,math.ceil,math.abs
+local floor,ceil,abs=math.floor,math.ceil,math.abs
 local ins,rem=table.insert,table.remove
 
 local SETTING=SETTING
@@ -78,7 +78,7 @@ local function _updateStat()
 end
 
 local function _updateAcc()
-    local acc=int(10000*game.curAcc/max(game.fullAcc,1))/100
+    local acc=floor(10000*game.curAcc/max(game.fullAcc,1))/100
     game.accText=("%.2f%%"):format(acc)
 end
 
@@ -276,7 +276,7 @@ local function _trigNote(deviateTime,noTailHold,weak)
     game.hits[game.hitLV]=game.hits[game.hitLV]+1
     if game.hitLV>0 then
         game.curAcc=game.curAcc+game.accPoints[game.hitLV]
-        game.score0=game.score0+int(game.hitLV*(10000+game.combo)^.5)
+        game.score0=game.score0+floor(game.hitLV*(10000+game.combo)^.5)
         game.combo=game.combo+1
         if game.combo>game.maxCombo then game.maxCombo=game.combo end
         if not noTailHold then

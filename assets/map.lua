@@ -1,6 +1,6 @@
 local Note=require'assets.note'
 
-local int,rnd,abs=math.floor,math.random,math.abs
+local floor,rnd,abs=math.floor,math.random,math.abs
 local ins,rem=table.insert,table.remove
 
 local Map={}
@@ -261,7 +261,7 @@ function Map.new(file)
                 until str:sub(1,1)~='+'
                 _syntaxCheck(len>=4 and len<=10,"Invalid bar mark length")
                 if curBeat then
-                    _syntaxCheck(int(curBeat*2048+.5)/2048%signature==0,"Unfinished bar")
+                    _syntaxCheck(floor(curBeat*2048+.5)/2048%signature==0,"Unfinished bar")
                 else
                     _syntaxCheck(signature,"No signature to check")
                 end
