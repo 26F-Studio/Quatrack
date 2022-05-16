@@ -1,4 +1,5 @@
 uniform float phase;
+uniform float alpha;
 vec4 effect(vec4 color,sampler2D tex,vec2 texCoord,vec2 scrCoord){
     float x=scrCoord.x/love_ScreenSize.x;
     float y=scrCoord.y/love_ScreenSize.y;
@@ -10,5 +11,5 @@ vec4 effect(vec4 color,sampler2D tex,vec2 texCoord,vec2 scrCoord){
     V.rb+=vec2(smoothstep(0.626,0.,length(vec2((0.5+cos(phase*0.98)*0.4)-x,(0.5+sin(phase*0.57)*0.4)-y))));
     V.gb+=vec2(smoothstep(0.626,0.,length(vec2((0.5-cos(phase*0.86)*0.4)-x,(0.5-sin(phase*0.32)*0.4)-y))));
 
-    return vec4(V/max(max(V.r,V.g),V.b)/1.626,0.4);
+    return vec4(V/max(max(V.r,V.g),V.b)/1.626,alpha);
 }

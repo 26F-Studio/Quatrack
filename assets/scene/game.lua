@@ -668,7 +668,7 @@ function scene.draw()
     if game.time>0 then
         setFont(10)
         gc_setColor(1,1,1)
-        gc_rectangle('fill',530,369,220*MATH.interval(game.time/game.songLength,0,1),3)
+        gc_rectangle('fill',530,369,220*MATH.clamp(game.time/game.songLength,0,1),3)
     end
 
     -- Draw deviate times

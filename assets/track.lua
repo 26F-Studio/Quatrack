@@ -6,7 +6,7 @@ local gc_rectangle=gc.rectangle
 
 local ins,rem=table.insert,table.remove
 local max,min=math.max,math.min
-local interval=MATH.interval
+local clamp=MATH.clamp
 
 local SETTING=SETTING
 
@@ -75,9 +75,9 @@ function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,
 function Track:setDefaultAngle(ang)self.defaultState.ang=ang end
 function Track:setDefaultSize(kx,ky)self.defaultState.kx,self.defaultState.ky=kx,ky end
 function Track:setDefaultDropSpeed(speed)self.defaultState.dropSpeed=speed end
-function Track:setDefaultAlpha(alpha)self.defaultState.alpha=interval(alpha,0,100) end
+function Track:setDefaultAlpha(alpha)self.defaultState.alpha=clamp(alpha,0,100) end
 function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
-function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=interval(r,0,1),interval(g,0,1),interval(b,0,1) end
+function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=clamp(r,0,1),clamp(g,0,1),clamp(b,0,1) end
 
 function Track:movePosition(animData,dx,dy)
     self:setPosition(animData,self.targetState.x+(dx or 0),self.targetState.y+(dy or 0))
@@ -99,9 +99,9 @@ function Track:moveAvailable()--wtf
 end
 function Track:moveColor(animData,dr,dg,db)
     self:setColor(animData,
-        interval(self.targetState.r+(dr or 0),0,1),
-        interval(self.targetState.g+(dg or 0),0,1),
-        interval(self.targetState.b+(db or 0),0,1)
+        clamp(self.targetState.r+(dr or 0),0,1),
+        clamp(self.targetState.g+(dg or 0),0,1),
+        clamp(self.targetState.b+(db or 0),0,1)
     )
 end
 function Track:moveNameAlpha(animData,dna)
@@ -135,7 +135,7 @@ end
 function Track:setAlpha(animData,alpha)
     self.state.alpha=self.targetState.alpha
     self.startState.alpha=self.targetState.alpha
-    self.targetState.alpha=interval(alpha or self.defaultState.alpha,0,100)
+    self.targetState.alpha=clamp(alpha or self.defaultState.alpha,0,100)
     self.animQueue:insert{paramSet='alpha',data=animData}
 end
 function Track:setAvailable(bool)
@@ -155,7 +155,7 @@ end
 function Track:setNameAlpha(animData,nameAlpha)
     self.state.nameAlpha=self.targetState.nameAlpha
     self.startState.nameAlpha=self.targetState.nameAlpha
-    self.targetState.nameAlpha=interval(nameAlpha or self.defaultState.nameAlpha,0,100)
+    self.targetState.nameAlpha=clamp(nameAlpha or self.defaultState.nameAlpha,0,100)
     self.animQueue:insert{paramSet='nameAlpha',data=animData}
 end
 
@@ -268,7 +268,7 @@ function Track:release(weak,auto)
     end
 end
 
-local approach,lerp=MATH.expApproach,MATH.lerp
+local approach,mix=MATH.expApproach,MATH.mix
 local animManager={
     position={'x','y'},
     angle={'ang'},
@@ -295,7 +295,7 @@ function Track:update(dt)
         elseif animData.type=='L' then
             for j=1,#animKeys do
                 local k=animKeys[j]
-                C[k]=lerp(S[k],T[k],(self.time-animData.start)/animData.duration)
+                C[k]=mix(S[k],T[k],(self.time-animData.start)/animData.duration)
             end
             if self.time>animData.start+animData.duration then
                 for j=1,#animKeys do
