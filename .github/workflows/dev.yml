@@ -40,6 +40,7 @@ jobs:
     needs: get-info
     steps:
       - name: Remote CI
+        id: remote-ci
         uses: convictional/trigger-workflow-and-wait@v1.6.1
         with:
           github_token: ${{ secrets.GH_ACCESS_TOKEN }}
@@ -57,3 +58,7 @@ jobs:
             "versionString": "${{ needs.get-info.outputs.versionString }}",
             "versionCode": "${{ needs.get-info.outputs.versionCode }}"
             }'
+      - name: Get remote Ci outputs
+        shell: bash
+        run: |
+          echo ${{ toJSON(steps.remote-ci.outputs) }}
