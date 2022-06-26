@@ -78,6 +78,7 @@ jobs:
           workflow: dev.yml
           run_id: ${{ steps.remote-ci.outputs.workflow_id }}
           path: ./artifacts/
+          skip_unpack: true
       - name: List artifacts
         shell: bash
         run: |
