@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Quatrack Development
+Comment=Quatrack is cool!
+MimeType=application/x-love-game;
+Exec=app %f
+Type=Application
+Categories=Game;
+Terminal=false
+Icon=icon
+NoDisplay=false
