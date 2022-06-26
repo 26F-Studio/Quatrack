@@ -25,7 +25,7 @@ jobs:
         shell: lua {0}
         run: |
           local version = require 'version'
-          print("::set-output name=appName::quatrack")
+          print("::set-output name=appName::Quatrack")
           print("::set-output name=versionName::"..version.string)
           print("::set-output name=versionString::"..version.string:sub(2))
           print(("::set-output name=versionCode::%d"):format(version.code))
