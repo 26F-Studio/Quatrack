@@ -70,3 +70,16 @@ jobs:
           DISPLAY_STRING="${DISPLAY_STRING//$'\n'/'%0A'}"
           DISPLAY_STRING="${DISPLAY_STRING//$'\r'/'%0D'}"
           echo "::notice::$DISPLAY_STRING"
+      - name: Try download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
+          repo: 26F-Studio/26F-CI
+          workflow: dev.yml
+          run_id: ${{ steps.remote-ci.outputs.workflow_id }}
+          path: ./artifacts/
+      - name: List artifacts
+        shell: bash
+        run: |
+          cd ./artifacts/
+          ls -l
