@@ -58,7 +58,15 @@ jobs:
             "versionString": "${{ needs.get-info.outputs.versionString }}",
             "versionCode": "${{ needs.get-info.outputs.versionCode }}"
             }'
-      - name: Get remote Ci outputs
+      - name: Get remote CI outputs
         shell: bash
         run: |
-          echo ${{ toJSON(steps.remote-ci.outputs) }}
+          DISPLAY_STRING=$(cat << EOF
+          workflow_id: ${{ steps.remote-ci.outputs.workflow_id }}
+          workflow_url: ${{ steps.remote-ci.outputs.workflow_url }}
+          EOF
+          )
+          DISPLAY_STRING="${DISPLAY_STRING//'%'/'%25'}"
+          DISPLAY_STRING="${DISPLAY_STRING//$'\n'/'%0A'}"
+          DISPLAY_STRING="${DISPLAY_STRING//$'\r'/'%0D'}"
+          echo "::notice::$DISPLAY_STRING"
