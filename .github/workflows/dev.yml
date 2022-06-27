@@ -46,7 +46,7 @@ jobs:
           github_token: ${{ secrets.GH_ACCESS_TOKEN }}
           owner: 26F-Studio
           repo: 26F-CI
-          workflow_file_name: dev.yml
+          workflow_file_name: main.yml
           client_payload: '{
             "repository": "${{ github.repository }}",
             "ref": "${{ github.ref_name }}",
@@ -75,14 +75,14 @@ jobs:
         with:
           github_token: ${{ secrets.GH_ACCESS_TOKEN }}
           repo: 26F-Studio/26F-CI
-          workflow: dev.yml
+          workflow: main.yml
           run_id: ${{ steps.remote-ci.outputs.workflow_id }}
           path: ./artifacts/
           skip_unpack: true
       - name: Unpack artifacts
         shell: bash
         run: |
-          mkdir ./release/
-          cd ./release/
-          7z x ./artifacts/*.zip -y
+          mkdir ./releases/
+          cd ./releases/
+          7z x ../artifacts/*.zip -y
           ls -l
