@@ -79,8 +79,10 @@ jobs:
           run_id: ${{ steps.remote-ci.outputs.workflow_id }}
           path: ./artifacts/
           skip_unpack: true
-      - name: List artifacts
+      - name: Unpack artifacts
         shell: bash
         run: |
-          cd ./artifacts/
+          mkdir ./release/
+          cd ./release/
+          7z x ./artifacts/*.zip -y
           ls -l
