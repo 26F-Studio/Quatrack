@@ -16,7 +16,8 @@ jobs:
       versionCode: ${{ steps.app-info.outputs.versionCode }}
       commitHash: ${{ steps.git-info.outputs.commitHash }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout sources
+        uses: actions/checkout@v3
       - name: Install lua
         run: |
           sudo apt-get install lua5.3 -y
@@ -70,23 +71,3 @@ jobs:
           DISPLAY_STRING="${DISPLAY_STRING//$'\n'/'%0A'}"
           DISPLAY_STRING="${DISPLAY_STRING//$'\r'/'%0D'}"
           echo "::notice::$DISPLAY_STRING"
-      - name: Try download artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
-          repo: 26F-Studio/26F-CI
-          workflow: main.yml
-          run_id: ${{ steps.remote-ci.outputs.workflow_id }}
-          path: ./artifacts/
-          skip_unpack: true
-      - name: Unpack artifacts
-        shell: bash
-        run: |
-          pushd ./artifacts/
-          ls -l
-          popd
-          mkdir ./releases/
-          7z x './artifacts/*.zip' -o./releases/
-          pushd ./releases/
-          ls -l
-          popd
