@@ -82,7 +82,11 @@ jobs:
       - name: Unpack artifacts
         shell: bash
         run: |
-          mkdir ./releases/
-          cd ./releases/
-          7z x ../artifacts/*.zip -y
+          pushd ./artifacts/
           ls -l
+          popd
+          mkdir ./releases/
+          7z x './artifacts/*.zip' -o./releases/
+          pushd ./releases/
+          ls -l
+          popd
