@@ -605,8 +605,6 @@ function scene.draw()
         game.tracks[i]:draw(game.map)
     end
 
-    gc_replaceTransform(SCR.xOy)
-
     -- Draw touches
     if SETTING.showTouch then
         gc_setLineWidth(4)
@@ -614,22 +612,21 @@ function scene.draw()
             local id=game.touches[i][1]
             local x,y
             if type(id)=='number' then
-                x,y=SCR.xOy:inverseTransformPoint(getMousePotision())
+                x,y=SCR.xOy_m:inverseTransformPoint(getMousePotision())
             else
                 local success
                 success,x,y=pcall(getTouchPosition,id)
                 if success then
-                    x,y=SCR.xOy:inverseTransformPoint(x,y)
+                    x,y=SCR.xOy_m:inverseTransformPoint(x,y)
                 end
             end
             if x then
                 local T=game.tracks[game.touches[i][2]]
-                local x2,y2=SCR.xOy:inverseTransformPoint(SCR.xOy_m:transformPoint(T.state.x,T.state.y))
 
                 gc_setColor(1,1,1,.6)
                 gc_circle('line',x,y,62)
                 gc_setColor(1,1,1,.3)
-                gc_line(x,y,x2,y2)
+                gc_line(x,y,T.state.x*SETTING.scaleX,T.state.y)
             end
         end
     end
@@ -639,7 +636,7 @@ function scene.draw()
         local c=hitColors[game.hitLV]
         setFont(80,'mono')
         gc_setColor(c[1],c[2],c[3],2.6-(love.timer.getTime()-game.hitTextTime)*10)
-        mStr(hitTexts[game.hitLV],640,245)
+        mStr(hitTexts[game.hitLV],0,-115)
     end
 
     -- Draw combo
@@ -647,28 +644,28 @@ function scene.draw()
         setFont(50,'mono')
         if game.bestChain==5 then
             SCC[3]=(1-game.time/game.songLength)^.26
-            GC.shadedPrint(game.combo,640,360,'center',1,8,chainColors[game.bestChain],SCC)
+            GC.shadedPrint(game.combo,0,0,'center',1,8,chainColors[game.bestChain],SCC)
         else
-            GC.shadedPrint(game.combo,640,360,'center',1,8,chainColors[game.bestChain],COLOR.L)
+            GC.shadedPrint(game.combo,0,0,'center',1,8,chainColors[game.bestChain],COLOR.L)
         end
     end
 
     -- Draw deviate indicator
-    gc_setColor(1,1,1)gc_rectangle('fill',640-2,350-13,4,30)
+    gc_setColor(1,1,1)gc_rectangle('fill',-2,-23,4,30)
     for i=1,5 do
         local c=hitColors[i]
         local d1=game.judgeTimes[i]
         local d2=game.judgeTimes[i+1]
         gc_setColor(c[1]*.8+.3,c[2]*.8+.3,c[3]*.8+.3,.626)
-        gc_rectangle('fill',640-d1*688,350,(d1-d2)*688,4)
-        gc_rectangle('fill',640+d1*688,350,(d2-d1)*688,4)
+        gc_rectangle('fill',-d1*688,-10,(d1-d2)*688,4)
+        gc_rectangle('fill',d1*688, -10,(d2-d1)*688,4)
     end
 
     -- Draw time
     if game.time>0 then
         setFont(10)
         gc_setColor(1,1,1)
-        gc_rectangle('fill',530,369,220*MATH.clamp(game.time/game.songLength,0,1),3)
+        gc_rectangle('fill',-110,9,220*MATH.clamp(game.time/game.songLength,0,1),3)
     end
 
     -- Draw deviate times
@@ -677,17 +674,17 @@ function scene.draw()
         local c=hitColors[getHitLV(game.hitOffests[i],game.judgeTimes)]
         local r=1+(1-i/l)^1.626
         gc_setColor(c[1],c[2],c[3],.2*r)
-        gc_rectangle('fill',640+game.hitOffests[i]*688-1,350-6*r,3,4+12*r)
+        gc_rectangle('fill',game.hitOffests[i]*688-1,-10-6*r,3,4+12*r)
     end
 
     -- Draw map info at start
     if game.time<0 then
         local a=3.6-2*abs(game.time+1.8)
         gc_setColor(1,1,1,a)
-        gc_draw(game.texts.mapName,640,100,nil,min(1200/game.texts.mapName:getWidth(),1),1,game.texts.mapName:getWidth()*.5)
+        gc_draw(game.texts.mapName,0,-260,nil,min(1200/game.texts.mapName:getWidth(),1),1,game.texts.mapName:getWidth()*.5)
         gc_setColor(.7,.7,.7,a)
-        GC.simpX(game.texts.musicAuth,640,200)
-        GC.simpX(game.texts.mapAuth,640,240)
+        GC.simpX(game.texts.musicAuth,0,-160)
+        GC.simpX(game.texts.mapAuth,0,-120)
     end
 
     gc_setColor(1,1,1)
