@@ -206,7 +206,7 @@ SFX.init((function()
     end
     return L
 end)())
-BGM.load((function()
+BGM.init((function()
     local L={}
     for _,v in next,love.filesystem.getDirectoryItems('assets/music') do
         if FILE.isSafe('assets/music/'..v) then

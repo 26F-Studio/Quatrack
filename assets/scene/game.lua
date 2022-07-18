@@ -201,7 +201,7 @@ function scene.enter()
 
     local dirPath=game.map.qbpFilePath:sub(1,#game.map.qbpFilePath-game.map.qbpFilePath:reverse():find("/")+1)
     if love.filesystem.getInfo(dirPath..game.map.songFile) then
-        BGM.load(game.map.qbpFilePath,dirPath..game.map.songFile)
+        BGM.init(game.map.qbpFilePath,dirPath..game.map.songFile)
     elseif game.map.songFile~="[songFile]" then
         MES.new('error',Text.noFile)
     end
