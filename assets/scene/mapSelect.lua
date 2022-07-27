@@ -98,7 +98,7 @@ end
 
 function scene.keyDown(key)
     if key=='return' then
-        local map,errmsg=loadBeatmap(listBox:getSel().path)
+        local map,errmsg=loadBeatmap(listBox:getItem().path)
         if map then
             SFX.play('enter')
             SCN.go('game',nil,map)
