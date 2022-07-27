@@ -277,6 +277,35 @@ function scene.leave()
     if game.needSaveSetting then saveSettings() end
 end
 
+local function _emitParticles(id,auto)
+    local p=game.hitParticles
+    local state=game.tracks[id].state
+    local x,y=state.x,state.y
+    local s=sin(state.ang*.0174533)
+    local c=cos(state.ang*.0174533)
+    local fy=state.ky>0 and 1 or -1
+    p:setLinearAcceleration(1260*s,-1260*c*fy,4200*s,-4200*c*fy)
+    p:setLinearDamping(10,12)
+    for _=1,(auto and 3 or 16)*state.kx do
+        local dx=(math.random()*2-1)*50*state.kx
+        local dy=-math.random()*SETTING.noteThick*fy
+        p:moveTo(x+c*dx+s*dy,y+s*dx+c*dy)
+        p:emit(1)
+    end
+end
+local function _emitHoldParticles(id,available)
+    if game.autoPlay or available and math.random()>.0626 then return end
+    local p=game.hitParticles
+    local state=game.tracks[id].state
+    local s=sin(state.ang*.0174533)
+    local c=cos(state.ang*.0174533)
+    local fy=state.ky>0 and 1 or -1
+    p:setLinearAcceleration(1260*s,-1260*c*fy,4200*s,-4200*c*fy)
+    p:setLinearDamping(10,12)
+    local dx=(math.random()*2-1)*50*state.kx
+    p:moveTo(state.x+c*dx,state.y+s*dx)
+    p:emit(1)
+end
 local function _trigNote(deviateTime,noTailHold,weak)
     game.hitLV=getHitLV(deviateTime,game.judgeTimes)
     game.hitTextTime=love.timer.getTime()
@@ -306,21 +335,10 @@ end
 local function _trackPress(id,weak,auto)
     callScriptEvent('trackPress',id)
     local deviateTime=game.tracks[id]:press(weak,auto)
-    if deviateTime and not auto then
-        _trigNote(deviateTime)
-        local p=game.hitParticles
-        local state=game.tracks[id].state
-        local x,y=state.x,state.y
-        local s=sin(state.ang*.0174533)
-        local c=cos(state.ang*.0174533)
-        local fy=state.ky>0 and 1 or -1
-        p:setLinearAcceleration(1260*s,-1260*c*fy,4200*s,-4200*c*fy)
-        p:setLinearDamping(10,12)
-        for _=1,12*state.kx do
-            local dx=(math.random()*2-1)*50*state.kx
-            local dy=-math.random()*SETTING.noteThick*fy
-            p:setPosition(x+c*dx+s*dy,y+s*dx+c*dy)
-            p:emit(1)
+    if deviateTime then
+        _emitParticles(id,auto)
+        if not auto then
+            _trigNote(deviateTime)
         end
     end
 end
@@ -570,15 +588,19 @@ function scene.update(dt)
                 end
             end
             note=t.notes[1]
-            if note and(not note.available or game.autoPlay) and note.type=='hold' then
+            if note and (not note.available or game.autoPlay) and note.type=='hold' then
                 if note.head then
                     if game.time>=note.time then _trackPress(id,false,true) end
                 else
                     if game.time>=note.etime then _trackRelease(id,false,true) end
                 end
             end
+            if note and note.type=='hold' and note.active and not note.head then
+                _emitHoldParticles(id,note.available)
+            end
         end
         t:update(dt)
+
         local missCount,marvCount=t:updateLogic(game.time)
         if marvCount>0 then
             for _=1,marvCount do
