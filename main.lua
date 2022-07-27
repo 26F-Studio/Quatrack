@@ -120,8 +120,8 @@ do--Zenitha.setOnFocus
             end
         else
             if SETTING.slowUnfocus then
-                Zenitha.setMaxFPS(20)
-                Zenitha.setDrawFreq(100)
+                Zenitha.setMaxFPS(math.min(SETTING.maxFPS,90))
+                Zenitha.setDrawFreq(15)
             end
             if SETTING.autoMute then
                 TASK.removeTask_code(task_autoSoundOn)
