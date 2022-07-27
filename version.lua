@@ -1,5 +1,5 @@
 return{
-    ["apkCode"]=53,
-    ["code"]=000501,
-    ["string"]="V0.5.1",
+    ["apkCode"]=54,
+    ["code"]=000502,
+    ["string"]="V0.5.2",
 }
