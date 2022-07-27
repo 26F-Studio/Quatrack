@@ -77,15 +77,15 @@ scene.widgetList={
     WIDGET.new{type='slider',     pos={0,0},x=200,y=1250,w=420,     text=LANG'setting_updRate',     widthLimit=180,axis={20,100,10},             disp=SETval('updRate'),valueShow=sliderShow_mul,code=SETsto('updRate')},
     WIDGET.new{type='slider',     pos={0,0},x=200,y=1300,w=420,     text=LANG'setting_drawRate',    widthLimit=180,axis={20,100,10},             disp=SETval('drawRate'),valueShow=sliderShow_mul,code=SETsto('drawRate')},
 
-    WIDGET.new{type='checkBox',   pos={1,0},x=-100,y=70,            text=LANG'setting_sysCursor',   widthLimit=360,disp=SETval('sysCursor'),     code=function() SETTING.sysCursor=not SETTING.sysCursor applySettings() end},
-    WIDGET.new{type='checkBox',   pos={1,0},x=-100,y=130,           text=LANG'setting_clickFX',     widthLimit=360,disp=SETval('clickFX'),       code=function() SETTING.clickFX=not SETTING.clickFX applySettings() end},
-    WIDGET.new{type='checkBox',   pos={1,0},x=-100,y=190,           text=LANG'setting_power',       widthLimit=360,disp=SETval('powerInfo'),     code=function() SETTING.powerInfo=not SETTING.powerInfo applySettings() end},
-    WIDGET.new{type='checkBox',   pos={1,0},x=-100,y=250,           text=LANG'setting_clean',       widthLimit=360,disp=SETval('cleanCanvas'),   code=function() SETTING.cleanCanvas=not SETTING.cleanCanvas applySettings() end},
-    WIDGET.new{type='checkBox',   pos={1,0},x=-100,y=310,           text=LANG'setting_fullscreen',  widthLimit=360,disp=SETval('fullscreen'),    code=function() SETTING.fullscreen=not SETTING.fullscreen applySettings() end},
-    WIDGET.new{type='checkBox',   pos={1,0},x=-100,y=370,           text=LANG'setting_autoMute',    widthLimit=360,disp=SETval('autoMute'),      code=SETrev('autoMute')},
-    WIDGET.new{type='checkBox',   pos={1,0},x=-100,y=430,           text=LANG'setting_slowUnfocus', widthLimit=360,disp=SETval('slowUnfocus'),   code=SETrev('slowUnfocus')},
+    WIDGET.new{type='switch',     pos={1,0},x=-100,y=70,            text=LANG'setting_sysCursor',   widthLimit=360,disp=SETval('sysCursor'),     code=function() SETTING.sysCursor=not SETTING.sysCursor applySettings() end},
+    WIDGET.new{type='switch',     pos={1,0},x=-100,y=130,           text=LANG'setting_clickFX',     widthLimit=360,disp=SETval('clickFX'),       code=function() SETTING.clickFX=not SETTING.clickFX applySettings() end},
+    WIDGET.new{type='switch',     pos={1,0},x=-100,y=190,           text=LANG'setting_power',       widthLimit=360,disp=SETval('powerInfo'),     code=function() SETTING.powerInfo=not SETTING.powerInfo applySettings() end},
+    WIDGET.new{type='switch',     pos={1,0},x=-100,y=250,           text=LANG'setting_clean',       widthLimit=360,disp=SETval('cleanCanvas'),   code=function() SETTING.cleanCanvas=not SETTING.cleanCanvas applySettings() end},
+    WIDGET.new{type='switch',     pos={1,0},x=-100,y=310,           text=LANG'setting_fullscreen',  widthLimit=360,disp=SETval('fullscreen'),    code=function() SETTING.fullscreen=not SETTING.fullscreen applySettings() end},
+    WIDGET.new{type='switch',     pos={1,0},x=-100,y=370,           text=LANG'setting_autoMute',    widthLimit=360,disp=SETval('autoMute'),      code=SETrev('autoMute')},
+    WIDGET.new{type='switch',     pos={1,0},x=-100,y=430,           text=LANG'setting_slowUnfocus', widthLimit=360,disp=SETval('slowUnfocus'),   code=SETrev('slowUnfocus')},
 
-    WIDGET.new{type='checkBox',   pos={1,0},x=-100,y=520,           text=LANG'setting_showTouch',   widthLimit=360,disp=SETval('showTouch'),     code=SETrev('showTouch')},
+    WIDGET.new{type='switch',     pos={1,0},x=-100,y=520,           text=LANG'setting_showTouch',   widthLimit=360,disp=SETval('showTouch'),     code=SETrev('showTouch')},
 
     WIDGET.new{type='button_fill',pos={1,1},x=-320,y=-80,w=160,h=80,fontSize=60,text=CHAR.key.keyboard,code=WIDGET.c_goScn'setting_key'},
 

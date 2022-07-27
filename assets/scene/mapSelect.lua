@@ -5,10 +5,10 @@ local ins=table.insert
 
 local listBox=WIDGET.new{type='listBox',x=60,y=80,w=1160,h=480,lineHeight=40,drawFunc=function(v,_,sel)
     if sel then
-        gc.setColor(COLOR.dX)
+        gc.setColor(COLOR.X)
         gc.rectangle('fill',0,0,1160,40)
     end
-    gc.setColor(1,1,1)
+    gc.setColor(COLOR.L)
     gc.draw(v.mapName,10,-1,nil,min(690/v.mapName:getWidth(),1),1)
     gc.setColor(COLOR.L)
     gc.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
@@ -66,7 +66,7 @@ local function _freshSongList()
                         ins(mapList,{
                             path=fullPath,
                             source=source,
-                            mapName=gc.newText(FONT.get(30),{color,metaData.mapName,COLOR.lD," - "..metaData.musicAuth}),
+                            mapName=gc.newText(FONT.get(30),{color,metaData.mapName,COLOR.LD," - "..metaData.musicAuth}),
                             mapAuth=gc.newText(FONT.get(30),metaData.mapAuth),
                             difficulty=gc.newText(FONT.get(25),dText),
                             difficultyColor=
