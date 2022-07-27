@@ -65,6 +65,14 @@ local game={
     hits={},
 
     touches={},
+    hitParticles=(function()
+        local p=gc.newParticleSystem(GC.load{1,1,{'clear',1,1,1,.6}},1000)
+        p:setColors(1,1,1,1,1,1,1,.26,1,1,1,0)
+        p:setSizes(10,4,2,1)
+        p:setParticleLifetime(.5,1)
+        p:setEmissionRate(0)
+        return p
+    end)(),
 }
 
 local function _updateStat()
@@ -256,6 +264,8 @@ function scene.enter()
     else
         BG.set('none')
     end
+
+    game.hitParticles:reset()
     Zenitha.setClickFX(false)
     applyFPS(true)
 end
@@ -296,8 +306,22 @@ end
 local function _trackPress(id,weak,auto)
     callScriptEvent('trackPress',id)
     local deviateTime=game.tracks[id]:press(weak,auto)
-    if not auto and deviateTime then
+    if deviateTime and not auto then
         _trigNote(deviateTime)
+        local p=game.hitParticles
+        local state=game.tracks[id].state
+        local x,y=state.x,state.y
+        local s=sin(state.ang*.0174533)
+        local c=cos(state.ang*.0174533)
+        local fy=state.ky>0 and 1 or -1
+        p:setLinearAcceleration(1260*s,-1260*c*fy,4200*s,-4200*c*fy)
+        p:setLinearDamping(10,12)
+        for _=1,12*state.kx do
+            local dx=(math.random()*2-1)*50*state.kx
+            local dy=-math.random()*SETTING.noteThick*fy
+            p:setPosition(x+c*dx+s*dy,y+s*dx+c*dy)
+            p:emit(1)
+        end
     end
 end
 local function _trackRelease(id,weak,auto)
@@ -578,6 +602,9 @@ function scene.update(dt)
         game.score=game.score+(game.score0-game.score)*dt^.26
     end
 
+    -- Update hit particles
+    game.hitParticles:update(dt)
+
     _freshScriptArgs()
     callScriptEvent('update')
 end
@@ -688,6 +715,7 @@ function scene.draw()
     end
 
     gc_setColor(1,1,1)
+    gc_draw(game.hitParticles)
 
     gc_replaceTransform(SCR.xOy_ur)
     gc_translate(-SCR.safeX/SCR.k,0)
