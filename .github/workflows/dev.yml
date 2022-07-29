@@ -88,7 +88,7 @@ jobs:
       - name: Love actions for testing
         uses: 26F-Studio/love-actions-test@v1
         with:
-          font-path: ./assets/fonts/proportional.otf
+          font-path: ./assets/font/proportional.ttf
           language-folder: ./assets/language
           strict: true
   build-android:
