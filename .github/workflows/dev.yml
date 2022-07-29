@@ -333,15 +333,15 @@ jobs:
           team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
           developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
           developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
-          dmg-background-path: ./.github/build/macOS/dev/dmg.png
-          dmg-icon-position: "287 313"
-          dmg-icon-size: "128"
-          dmg-link-position: "734 313"
-          dmg-text-size: "12"
-          dmg-volume-icon-path: ./.github/build/macOS/dev/dmg.icns
-          dmg-volume-name: ${{ steps.process-app-name.outputs.product-name }}
-          dmg-window-position: "200 120"
-          dmg-window-size: "1024 604"
+          # dmg-background-path: ./.github/build/macOS/dev/dmg.png
+          # dmg-icon-position: "287 313"
+          # dmg-icon-size: "128"
+          # dmg-link-position: "734 313"
+          # dmg-text-size: "12"
+          # dmg-volume-icon-path: ./.github/build/macOS/dev/dmg.icns
+          # dmg-volume-name: ${{ steps.process-app-name.outputs.product-name }}
+          # dmg-window-position: "200 120"
+          # dmg-window-size: "1024 604"
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
