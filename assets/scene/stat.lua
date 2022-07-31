@@ -1,5 +1,3 @@
-local gc=love.graphics
-
 local scene={}
 
 local item
@@ -15,12 +13,12 @@ function scene.enter()
 end
 
 local function drawPannel()
-    gc.setLineWidth(4)
-    gc.rectangle('line',0,0,626,326)
+    GC.setLineWidth(4)
+    GC.rectangle('line',0,0,626,326)
     FONT.set(30)
     for i=1,#item do
-        gc.print(item[i],220,i*50-30)
-        gc.print(Text.stat[i],20,i*50-30)
+        GC.print(item[i],220,i*50-30)
+        GC.print(Text.stat[i],20,i*50-30)
     end
 end
 
@@ -28,26 +26,26 @@ function scene.draw()
     local t=love.timer.getTime()
 
     -- Infomation
-    gc.push('transform')
-    gc.translate(120,100+4*math.sin(t))
-    gc.setColor(.4,.97,.94)
+    GC.push('transform')
+    GC.translate(120,100+4*math.sin(t))
+    GC.setColor(.4,.97,.94)
     drawPannel()
-    gc.translate(4*math.sin(t*.6),3*math.sin(t*.5))
-    gc.setColor(.7,.97,.94,.4)
+    GC.translate(4*math.sin(t*.6),3*math.sin(t*.5))
+    GC.setColor(.7,.97,.94,.4)
     drawPannel()
-    gc.pop()
+    GC.pop()
 
     -- Character
-    gc.translate(962,300)
-    gc.setColor(1,1,1)
-    gc.scale(.626)
-    GC.draw(IMG.z.character)
-    GC.draw(IMG.z.screen1, -91, -157+16*math.sin(t))
-    GC.draw(IMG.z.screen2, 120, -166+16*math.sin(t+1))
-    gc.setColor(1,1,1,.7+.3*math.sin(.6*t)) GC.draw(IMG.z.particle1, -50,                    42+6*math.sin(t*0.36))
-    gc.setColor(1,1,1,.7+.3*math.sin(.7*t)) GC.draw(IMG.z.particle2, 110+6*math.sin(t*0.92), 55)
-    gc.setColor(1,1,1,.7+.3*math.sin(.8*t)) GC.draw(IMG.z.particle3, -54+6*math.sin(t*0.48), -248)
-    gc.setColor(1,1,1,.7+.3*math.sin(.9*t)) GC.draw(IMG.z.particle4, 133,                    -305+6*math.sin(t*0.40))
+    GC.translate(962,300)
+    GC.setColor(1,1,1)
+    GC.scale(.626)
+    GC.mDraw(IMG.z.character)
+    GC.mDraw(IMG.z.screen1, -91, -157+16*math.sin(t))
+    GC.mDraw(IMG.z.screen2, 120, -166+16*math.sin(t+1))
+    GC.setColor(1,1,1,.7+.3*math.sin(.6*t)) GC.mDraw(IMG.z.particle1, -50,                    42+6*math.sin(t*0.36))
+    GC.setColor(1,1,1,.7+.3*math.sin(.7*t)) GC.mDraw(IMG.z.particle2, 110+6*math.sin(t*0.92), 55)
+    GC.setColor(1,1,1,.7+.3*math.sin(.8*t)) GC.mDraw(IMG.z.particle3, -54+6*math.sin(t*0.48), -248)
+    GC.setColor(1,1,1,.7+.3*math.sin(.9*t)) GC.mDraw(IMG.z.particle4, 133,                    -305+6*math.sin(t*0.40))
 end
 
 scene.widgetList={

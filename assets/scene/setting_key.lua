@@ -1,6 +1,3 @@
-local gc=love.graphics
-local mStr=GC.mStr
-
 local scene={}
 
 local selected--if waiting for key
@@ -129,7 +126,7 @@ end
 function scene.draw()
     FONT.set(30)
     for i=1,20 do
-        gc.setColor(
+        GC.setColor(
             selected==actionNames[i] and(
                 love.timer.getTime()%.26>.13 and COLOR.R or
                 COLOR.Y
@@ -139,16 +136,16 @@ function scene.draw()
         local W=scene.widgetList[i]
         local x,y=W._x,W._y
         if i<=11 then
-            mStr(KEY_MAP_inv[actionNames[i]] or '[X]',x,y-90)
+            GC.mStr(KEY_MAP_inv[actionNames[i]] or '[X]',x,y-90)
         else
-            mStr(KEY_MAP_inv[actionNames[i]] or '[X]',x+140,y-25)
+            GC.mStr(KEY_MAP_inv[actionNames[i]] or '[X]',x+140,y-25)
         end
     end
 
-    gc.replaceTransform(SCR.xOy_dr)
+    GC.replaceTransform(SCR.xOy_dr)
     FONT.set(20)
-    gc.setColor(COLOR.L)
-    gc.printf(Text.keySettingInstruction,-710,-120,500,'right')
+    GC.setColor(COLOR.L)
+    GC.printf(Text.keySettingInstruction,-710,-120,500,'right')
 end
 
 local function _setSel(i)

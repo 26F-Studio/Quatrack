@@ -1,5 +1,3 @@
-local gc=love.graphics
-
 local scene={}
 
 local loading,progress,maxProgress
@@ -24,7 +22,7 @@ local loadingThread=coroutine.wrap(function()
 end)
 
 function scene.enter()
-    studioLogo=gc.newText(FONT.get(90),"26F Studio")
+    studioLogo=GC.newText(FONT.get(90),"26F Studio")
     progress=0
     maxProgress=10
 end
@@ -59,18 +57,18 @@ function scene.update()
 end
 
 function scene.draw()
-    gc.setColor(1,1,1)
-    GC.draw(IMG.logo_full,640,200,0,.3)
-    gc.setColor(1,1,1,(1-math.abs(math.sin(love.timer.getTime())))^3/2)
-    GC.draw(IMG.logo_color,640,200,0,.3)
+    GC.setColor(1,1,1)
+    GC.mDraw(IMG.logo_full,640,200,0,.3)
+    GC.setColor(1,1,1,(1-math.abs(math.sin(love.timer.getTime())))^3/2)
+    GC.mDraw(IMG.logo_color,640,200,0,.3)
 
-    gc.setColor(logoColor1[1],logoColor1[2],logoColor1[3],progress/maxProgress)
-    GC.draw(studioLogo,640,400)
-    gc.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress)
-    for dx=-2,2,2 do for dy=-2,2,2 do GC.draw(studioLogo,640+dx,400+dy) end end
-    gc.setColor(.2,.2,.2,progress/maxProgress)GC.draw(studioLogo,640,400)
+    GC.setColor(logoColor1[1],logoColor1[2],logoColor1[3],progress/maxProgress)
+    GC.mDraw(studioLogo,640,400)
+    GC.setColor(logoColor2[1],logoColor2[2],logoColor2[3],progress/maxProgress)
+    for dx=-2,2,2 do for dy=-2,2,2 do GC.mDraw(studioLogo,640+dx,400+dy) end end
+    GC.setColor(.2,.2,.2,progress/maxProgress)GC.mDraw(studioLogo,640,400)
 
-    gc.setColor(1,1,1)
+    GC.setColor(1,1,1)
     FONT.set(30)
     GC.mStr(Text.loadText[loading],640,530)
 end

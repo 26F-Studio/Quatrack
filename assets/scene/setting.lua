@@ -1,5 +1,3 @@
-local gc=love.graphics
-
 local scene={}
 
 local boundaryDispTime
@@ -19,12 +17,12 @@ function scene.update(dt)
 end
 
 function scene.draw()
-    gc.replaceTransform(SCR.xOy_ul)
+    GC.replaceTransform(SCR.xOy_ul)
     FONT.set(80)
     posterizedText('SETTINGS',350,10-SCN.curScroll)
 
     if boundaryDispTime>0 then
-        gc.origin()
+        GC.origin()
         drawSafeArea(SETTING.safeX,SETTING.safeY,boundaryDispTime,2.6)
     end
 end

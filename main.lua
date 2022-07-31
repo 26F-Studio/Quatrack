@@ -58,20 +58,19 @@ Zenitha.setAppName('Quatrack')
 Zenitha.setVersionText(VERSION.string)
 Zenitha.setFirstScene('load')
 do--Zenitha.setDrawCursor
-    local gc=love.graphics
     Zenitha.setDrawCursor(function(_,x,y)
         if not SETTING.sysCursor then
-            gc.setColor(1,1,1)
-            gc.setLineWidth(2)
-            gc.translate(x,y)
-            gc.rotate(love.timer.getTime()%6.283185307179586)
-            gc.circle('line',0,0,10)
-            if love.mouse.isDown(1) then gc.circle('line',0,0,6) end
-            if love.mouse.isDown(2) then gc.circle('fill',0,0,4) end
-            if love.mouse.isDown(3) then gc.line(-6,-6,6,6) gc.line(-6,6,6,-6) end
-            gc.setColor(1,1,1,.626)
-            gc.line(0,-20,0,20)
-            gc.line(-20,0,20,0)
+            GC.setColor(1,1,1)
+            GC.setLineWidth(2)
+            GC.translate(x,y)
+            GC.rotate(love.timer.getTime()%6.283185307179586)
+            GC.circle('line',0,0,10)
+            if love.mouse.isDown(1) then GC.circle('line',0,0,6) end
+            if love.mouse.isDown(2) then GC.circle('fill',0,0,4) end
+            if love.mouse.isDown(3) then GC.line(-6,-6,6,6) GC.line(-6,6,6,-6) end
+            GC.setColor(1,1,1,.626)
+            GC.line(0,-20,0,20)
+            GC.line(-20,0,20,0)
         end
     end)
 end
@@ -131,36 +130,35 @@ do--Zenitha.setOnFocus
     end)
 end
 do--Zenitha.setDrawSysInfo
-    local gc=love.graphics
     Zenitha.setDrawSysInfo(function()
         if not SETTING.powerInfo then return end
-        gc.translate(SCR.safeX,0)
-        gc.setColor(0,0,0,.26)
-        gc.rectangle('fill',0,0,107,26)
+        GC.translate(SCR.safeX,0)
+        GC.setColor(0,0,0,.26)
+        GC.rectangle('fill',0,0,107,26)
         local state,pow=love.system.getPowerInfo()
         if state~='unknown' then
-            gc.setLineWidth(2)
+            GC.setLineWidth(2)
             if state=='nobattery' then
-                gc.setColor(1,1,1)
-                gc.line(74,5,100,22)
+                GC.setColor(1,1,1)
+                GC.line(74,5,100,22)
             elseif pow then
-                if state=='charging' then gc.setColor(0,1,0)
-                elseif pow>50 then        gc.setColor(1,1,1)
-                elseif pow>26 then        gc.setColor(1,1,0)
-                elseif pow==26 then       gc.setColor(.5,0,1)
-                else                      gc.setColor(1,0,0)
+                if state=='charging' then GC.setColor(0,1,0)
+                elseif pow>50 then        GC.setColor(1,1,1)
+                elseif pow>26 then        GC.setColor(1,1,0)
+                elseif pow==26 then       GC.setColor(.5,0,1)
+                else                      GC.setColor(1,0,0)
                 end
-                gc.rectangle('fill',76,6,pow*.22,14)
+                GC.rectangle('fill',76,6,pow*.22,14)
                 if pow<100 then
                     FONT.set(15,'_basic')
                     GC.shadedPrint(pow,87,4,'center',1,8)
                 end
             end
-            gc.rectangle('line',74,4,26,18)
-            gc.rectangle('fill',102,6,2,14)
+            GC.rectangle('line',74,4,26,18)
+            GC.rectangle('fill',102,6,2,14)
         end
         FONT.set(25,'_basic')
-        gc.print(os.date("%H:%M"),3,0,nil,.9)
+        GC.print(os.date("%H:%M"),3,0,nil,.9)
     end)
 end
 FONT.load{

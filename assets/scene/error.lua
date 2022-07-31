@@ -1,4 +1,3 @@
-local gc=love.graphics
 local rnd=math.random
 
 local BGcolor
@@ -15,21 +14,21 @@ function scene.enter()
 end
 
 function scene.draw()
-    gc.clear(BGcolor)
+    GC.clear(BGcolor)
     if errorShot then
-        gc.setColor(1,1,1)
-        gc.draw(errorShot,100,326,nil,512/errorShot:getWidth(),288/errorShot:getHeight())
+        GC.setColor(1,1,1)
+        GC.draw(errorShot,100,326,nil,512/errorShot:getWidth(),288/errorShot:getHeight())
     end
-    gc.setColor(COLOR.L)
-    FONT.set(100)gc.print(":(",100,0,0,1.2)
-    FONT.set(40)gc.printf(errorText,100,160,SCR.w0-100)
+    GC.setColor(COLOR.L)
+    FONT.set(100)GC.print(":(",100,0,0,1.2)
+    FONT.set(40)GC.printf(errorText,100,160,SCR.w0-100)
     FONT.set(20,'mono')
-    gc.print(sysAndScn,100,630)
+    GC.print(sysAndScn,100,630)
     FONT.set(15,'mono')
-    gc.printf(errorInfo[1],626,326,1260-626)
-    gc.print("TRACEBACK",626,390)
+    GC.printf(errorInfo[1],626,326,1260-626)
+    GC.print("TRACEBACK",626,390)
     for i=4,#errorInfo do
-        gc.print(errorInfo[i],626,340+20*i)
+        GC.print(errorInfo[i],626,340+20*i)
     end
 end
 

@@ -1,8 +1,7 @@
-local gc=love.graphics
-local gc_push,gc_pop=gc.push,gc.pop
-local gc_translate,gc_rotate=gc.translate,gc.rotate
-local gc_setColor=gc.setColor
-local gc_rectangle=gc.rectangle
+local gc_push,gc_pop=GC.push,GC.pop
+local gc_translate,gc_rotate=GC.translate,GC.rotate
+local gc_setColor=GC.setColor
+local gc_rectangle=GC.rectangle
 
 local ins,rem=table.insert,table.remove
 local max,min=math.max,math.min

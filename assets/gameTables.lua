@@ -47,7 +47,6 @@ mapTemplate={
     script=false,
 }
 do
-    local gc=love.graphics
     local GC=GC
     mapScriptEnv={
         print=print,
@@ -64,22 +63,22 @@ do
 
         MATH={},STRING={},TABLE={},
         gc={
-            setColor=function(r,g,b,a) gc.setColor(r,g,b,a) end,
-            setLineWidth=function(w) gc.setLineWidth(w) end,
+            setColor=function(r,g,b,a) GC.setColor(r,g,b,a) end,
+            setLineWidth=function(w) GC.setLineWidth(w) end,
             setFont=function(f) FONT.set(f) end,
 
-            line=function(...) gc.line(...) end,
-            rectangle=function(mode,x,y,w,h) gc.rectangle(mode,x,y,w,h) end,
-            circle=function(mode,x,y,r) gc.circle(mode,x,y,r) end,
+            line=function(...) GC.line(...) end,
+            rectangle=function(mode,x,y,w,h) GC.rectangle(mode,x,y,w,h) end,
+            circle=function(mode,x,y,r) GC.circle(mode,x,y,r) end,
             regPolygon=function(mode,x,y,r,sides,phase) GC.regPolygon(mode,x,y,r,sides,phase) end,
-            polygon=function(mode,...)gc.polygon(mode,...)end,
+            polygon=function(mode,...)GC.polygon(mode,...)end,
             print=function(text,x,y,mode)
                 if not mode or mode=='center' then
-                    gc.printf(text,x-2600,y,5200,'center')
+                    GC.printf(text,x-2600,y,5200,'center')
                 elseif mode=='left' then
-                    gc.printf(text,x,y,5200,'left')
+                    GC.printf(text,x,y,5200,'left')
                 elseif mode=='right' then
-                    gc.printf(text,x-5200,y,5200,'right')
+                    GC.printf(text,x-5200,y,5200,'right')
                 else
                     error("Print mode must be center/left/right")
                 end

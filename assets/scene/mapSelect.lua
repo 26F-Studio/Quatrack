@@ -1,22 +1,20 @@
-local gc=love.graphics
-
 local min=math.min
 local ins=table.insert
 
 local listBox=WIDGET.new{type='listBox',x=60,y=80,w=1160,h=480,lineHeight=40,drawFunc=function(v,_,sel)
     if sel then
-        gc.setColor(COLOR.X)
-        gc.rectangle('fill',0,0,1160,40)
+        GC.setColor(COLOR.X)
+        GC.rectangle('fill',0,0,1160,40)
     end
-    gc.setColor(COLOR.L)
-    gc.draw(v.mapName,10,-1,nil,min(690/v.mapName:getWidth(),1),1)
-    gc.setColor(COLOR.L)
-    gc.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
+    GC.setColor(COLOR.L)
+    GC.draw(v.mapName,10,-1,nil,min(690/v.mapName:getWidth(),1),1)
+    GC.setColor(COLOR.L)
+    GC.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
 
     FONT.set(30,'mono')
-    gc.setColor(v.difficultyColor)
-    gc.draw(v.difficulty,1050-v.difficulty:getWidth(),2)
-    gc.setColor(COLOR.lS)
+    GC.setColor(v.difficultyColor)
+    GC.draw(v.difficulty,1050-v.difficulty:getWidth(),2)
+    GC.setColor(COLOR.lS)
     GC.mStr(v.tracks,1105,0)
 end}
 
@@ -66,9 +64,9 @@ local function _freshSongList()
                         ins(mapList,{
                             path=fullPath,
                             source=source,
-                            mapName=gc.newText(FONT.get(30),{color,metaData.mapName,COLOR.LD," - "..metaData.musicAuth}),
-                            mapAuth=gc.newText(FONT.get(30),metaData.mapAuth),
-                            difficulty=gc.newText(FONT.get(25),dText),
+                            mapName=GC.newText(FONT.get(30),{color,metaData.mapName,COLOR.LD," - "..metaData.musicAuth}),
+                            mapAuth=GC.newText(FONT.get(30),metaData.mapAuth),
+                            difficulty=GC.newText(FONT.get(25),dText),
                             difficultyColor=
                                 dText:sub(1,4)=='Easy' and COLOR.lG or
                                 dText:sub(1,4)=='Norm' and COLOR.lY or

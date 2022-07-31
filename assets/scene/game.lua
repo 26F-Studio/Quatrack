@@ -646,7 +646,7 @@ function scene.draw()
     -- Draw auto mark
     if game.autoPlay then
         gc_setColor(1,1,1,.126)
-        GC.draw(autoPlayTextObj,nil,nil,nil,3.55)
+        GC.mDraw(autoPlayTextObj,nil,nil,nil,3.55)
     end
 
     -- Draw tracks
@@ -732,8 +732,8 @@ function scene.draw()
         gc_setColor(1,1,1,a)
         gc_draw(game.texts.mapName,0,-260,nil,min(1200/game.texts.mapName:getWidth(),1),1,game.texts.mapName:getWidth()*.5)
         gc_setColor(.7,.7,.7,a)
-        GC.simpX(game.texts.musicAuth,0,-160)
-        GC.simpX(game.texts.mapAuth,0,-120)
+        GC.mDrawSimpX(game.texts.musicAuth,0,-160)
+        GC.mDrawSimpX(game.texts.mapAuth,0,-120)
     end
 
     gc_setColor(1,1,1)

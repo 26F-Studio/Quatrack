@@ -1,5 +1,3 @@
-local gc=love.graphics
-
 local scene={}
 
 local tryCounter=0
@@ -18,10 +16,10 @@ function scene.keyDown(key)
 end
 
 function scene.draw()
-    gc.setColor(1,1,1)
-    GC.draw(IMG.logo_full,640,200,0,.3)
-    gc.setColor(1,1,1,(1-math.abs(math.sin(love.timer.getTime())))^3/2)
-    GC.draw(IMG.logo_color,640,200,0,.3)
+    GC.setColor(1,1,1)
+    GC.mDraw(IMG.logo_full,640,200,0,.3)
+    GC.setColor(1,1,1,(1-math.abs(math.sin(love.timer.getTime())))^3/2)
+    GC.mDraw(IMG.logo_color,640,200,0,.3)
 end
 
 scene.widgetList={
