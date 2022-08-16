@@ -294,7 +294,7 @@ local function _emitParticles(id,auto)
     end
 end
 local function _emitHoldParticles(id,available)
-    if game.autoPlay or available and math.random()>.0626 then return end
+    if available and math.random()>.0626 then return end
     local p=game.hitParticles
     local state=game.tracks[id].state
     local s=sin(state.ang*.0174533)
