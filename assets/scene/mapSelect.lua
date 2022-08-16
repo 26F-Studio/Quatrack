@@ -1,22 +1,29 @@
 local min=math.min
 local ins=table.insert
 
-local listBox=WIDGET.new{type='listBox',x=60,y=80,w=1160,h=480,lineHeight=40,drawFunc=function(v,_,sel)
-    if sel then
-        GC.setColor(COLOR.X)
-        GC.rectangle('fill',0,0,1160,40)
-    end
-    GC.setColor(COLOR.L)
-    GC.draw(v.mapName,10,-1,nil,min(690/v.mapName:getWidth(),1),1)
-    GC.setColor(COLOR.L)
-    GC.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
+local scene={}
 
-    FONT.set(30,'mono')
-    GC.setColor(v.difficultyColor)
-    GC.draw(v.difficulty,1050-v.difficulty:getWidth(),2)
-    GC.setColor(COLOR.lS)
-    GC.mStr(v.tracks,1105,0)
-end}
+local listBox=WIDGET.new{
+    type='listBox',x=60,y=80,w=1160,h=480,lineHeight=40,drawFunc=function(v,_,sel)
+        if sel then
+            GC.setColor(COLOR.X)
+            GC.rectangle('fill',0,0,1160,40)
+        end
+        GC.setColor(COLOR.L)
+        GC.draw(v.mapName,10,-1,nil,min(690/v.mapName:getWidth(),1),1)
+        GC.setColor(COLOR.L)
+        GC.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
+
+        FONT.set(30,'mono')
+        GC.setColor(v.difficultyColor)
+        GC.draw(v.difficulty,1050-v.difficulty:getWidth(),2)
+        GC.setColor(COLOR.lS)
+        GC.mStr(v.tracks,1105,0)
+    end,
+    code=function()
+        scene.keyDown('return')
+    end
+}
 
 local mapLoaded=false
 local lastFreshTime=0
@@ -85,8 +92,6 @@ local function _freshSongList()
     table.sort(mapList,function(a,b) return a.sortName<b.sortName end)
     listBox:setList(mapList)
 end
-
-local scene={}
 
 function scene.enter()
     if not mapLoaded then _freshSongList() end

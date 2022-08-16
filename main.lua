@@ -176,6 +176,10 @@ WIDGET.setDefaultCheckBoxSound('check','uncheck')
 WIDGET.setDefaultSelectorSound('selector')
 WIDGET.setDefaultTypeSound('hit5','hit3','hold1')
 WIDGET.setDefaultClearSound('hold4')
+WIDGET._prototype.slider_fill.lineWidth=2
+WIDGET._prototype.switch.labelPos='left'
+WIDGET._prototype.button.lineWidth=2
+WIDGET._prototype.button_fill.color_text=TABLE.shift(COLOR.D)
 LANG.add{
     zh='assets/language/lang_zh.lua',
     en='assets/language/lang_en.lua',
