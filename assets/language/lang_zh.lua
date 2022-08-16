@@ -115,7 +115,7 @@ return{
     setting_clean="绘制优化",
     setting_fullscreen="全屏",
     setting_autoMute="失去焦点自动静音",
-    setting_slowUnfocus="挂后台节约性能",
+    setting_slowUnfocus="失去焦点节约性能",
 
     setting_maxFPS="最大FPS",
     setting_updRate="更新帧频率",
