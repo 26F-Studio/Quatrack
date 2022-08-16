@@ -651,6 +651,8 @@ function Map.new(file)
                             args={false},
                         }
                         trackAvailable[id]=false
+                    else
+                        trackAvailable[id]=true
                     end
                 end
             elseif code=='set_chord_color' then--Set chord color
