@@ -88,6 +88,12 @@ return{
     main_setting="设置",
     main_editor="编辑器",
 
+    mapSelect_sortMode="排序方式",
+    mapSelect_sortModes={
+        difficulty='难度',
+        name='名称',
+    },
+
     stat_path="打开存档文件夹",
 
     setting_mainVol="总音量",

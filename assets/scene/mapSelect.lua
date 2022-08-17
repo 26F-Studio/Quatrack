@@ -3,8 +3,13 @@ local ins=table.insert
 
 local scene={}
 
+local mapLoaded=false
+local lastFreshTime=0
+local sortMode='difficulty'
+
+local mapList
 local listBox=WIDGET.new{
-    type='listBox',x=60,y=80,w=1160,h=480,lineHeight=40,drawFunc=function(v,_,sel)
+    type='listBox',x=60,y=60,w=1160,h=500,lineHeight=40,drawFunc=function(v,_,sel)
         if sel then
             GC.setColor(COLOR.X)
             GC.rectangle('fill',0,0,1160,40)
@@ -24,11 +29,12 @@ local listBox=WIDGET.new{
         scene.keyDown('return')
     end
 }
-
-local mapLoaded=false
-local lastFreshTime=0
-
-local mapList
+local function _updateListBox()
+    table.sort(mapList,function(a,b) return a['sortStr_'..sortMode]<b['sortStr_'..sortMode] end)
+    listBox:setList(mapList)
+    listBox._selected=1
+    listBox:reset()
+end
 local function _freshSongList()
     mapLoaded=true
     lastFreshTime=love.timer.getTime()
@@ -71,6 +77,7 @@ local function _freshSongList()
                         ins(mapList,{
                             path=fullPath,
                             source=source,
+                            mapNameStr=metaData.mapName:lower(),
                             mapName=GC.newText(FONT.get(30),{color,metaData.mapName,COLOR.LD," - "..metaData.musicAuth}),
                             mapAuth=GC.newText(FONT.get(30),metaData.mapAuth),
                             difficulty=GC.newText(FONT.get(25),dText),
@@ -81,25 +88,39 @@ local function _freshSongList()
                                 dText:sub(1,4)=='Luna' and COLOR.lM or
                                 dText:sub(1,4)=='Over' and COLOR.dL or
                                 COLOR.X,
-                            tracks=metaData.realTracks and metaData.realTracks~=metaData.tracks and(('$1($2)'):repD(metaData.realTracks,metaData.tracks)) or metaData.tracks,
-                            sortName=(source=='outside' and '0' or '1')..(metaData.realTracks or metaData.tracks)..difficultyNum..metaData.mapName
+                            tracks=metaData.realTracks and metaData.realTracks~=metaData.tracks and (('$1($2)'):repD(metaData.realTracks,metaData.tracks)) or metaData.tracks,
+                            sortStr_difficulty=(source=='outside' and '0' or '1')..(metaData.realTracks or metaData.tracks)..difficultyNum..metaData.mapName,
+                            sortStr_name=metaData.mapName..(metaData.realTracks or metaData.tracks)..(source=='outside' and '0' or '1')..difficultyNum,
                         })
                     end
                 end
             end
         end
     end
-    table.sort(mapList,function(a,b) return a.sortName<b.sortName end)
-    listBox:setList(mapList)
+    _updateListBox()
 end
+local sortSelector=WIDGET.new{type='selector',pos={.5,1},x=240,y=-100,w=240,text=LANG'mapSelect_sortMode',
+    labelPos='down',
+    labelDistance=30,
+    list={'difficulty','name'},
+    fontSize=20,
+    selFontSize=35,
+    disp=function() return sortMode end,
+    show=function(v)
+        return Text and Text.mapSelect_sortModes[v]
+    end,
+    code=function(v)
+        sortMode=v
+        _updateListBox()
+    end
+}
 
 function scene.enter()
     if not mapLoaded then _freshSongList() end
     BG.set()
     BGM.play()
 end
-
-function scene.keyDown(key)
+function scene.keyDown(key,isRep)
     if key=='return' then
         local map,errmsg=loadBeatmap(listBox:getItem().path)
         if map then
@@ -108,6 +129,15 @@ function scene.keyDown(key)
         else
             MES.new('error',errmsg)
         end
+    elseif key=='tab' then
+        if isRep then return end
+        if sortMode=='difficulty' then
+            sortMode='name'
+        elseif sortMode=='name' then
+            sortMode='difficulty'
+        end
+        sortSelector:reset()
+        _updateListBox()
     elseif key=='up' or key=='down' then
         if key=='up' and listBox.selected==1 then
             listBox:select(listBox:getLen())
@@ -116,6 +146,16 @@ function scene.keyDown(key)
         else
             listBox:arrowKey(key)
         end
+    elseif #key==1 and key:find'[0-9a-z]'then
+        local list=listBox:getList()
+        local sel=listBox:getSelect()
+        for _=1,#list do
+            sel=sel%#list+1
+            if list[sel].mapNameStr:sub(1,1)==key then
+                listBox:select(sel)
+                break
+            end
+        end
     elseif key=='escape' then
         SCN.back()
     end
@@ -123,7 +163,7 @@ end
 
 scene.widgetList={
     listBox,
-    WIDGET.new{type='button_fill',x=160,y=640,w=200,h=80,  text=CHAR.icon.import,color='lV',fontSize=60,
+    WIDGET.new{type='button_fill',pos={0,1},x=160,y=-80,w=200,h=80,text=CHAR.icon.import,color='lV',fontSize=60,
         code=function()
             if not MOBILE then
                 love.system.openURL(love.filesystem.getSaveDirectory()..'/songs')
@@ -132,8 +172,9 @@ scene.widgetList={
             end
         end
     },
-    WIDGET.new{type='button_fill',x=320,y=640,w=80,        text=CHAR.icon.retry_spin,color='lB',fontSize=50,code=_freshSongList,visibleFunc=function() return love.timer.getTime()-lastFreshTime>2.6 end},
-    WIDGET.new{type='button_fill',x=640,y=640,w=140,h=80,  text=CHAR.icon.play,color='lG',fontSize=60,code=WIDGET.c_pressKey'return'},
+    WIDGET.new{type='button_fill',pos={0,1},x=320,y=-80,w=80,text=CHAR.icon.retry_spin,color='lB',fontSize=50,code=_freshSongList,visibleFunc=function() return love.timer.getTime()-lastFreshTime>2.6 end},
+    WIDGET.new{type='button_fill',pos={.5,1},y=-80,w=140,h=80,text=CHAR.icon.play,color='lG',fontSize=60,code=WIDGET.c_pressKey'return'},
+    sortSelector,
     WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
 }
 return scene

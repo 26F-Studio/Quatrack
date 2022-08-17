@@ -88,6 +88,12 @@ return{
     main_setting="Setting",
     main_editor="Editor",
 
+    mapSelect_sortMode="Sort Mode",
+    mapSelect_sortModes={
+        difficulty='Difficulty',
+        name='Name',
+    },
+
     stat_path="Open save directory",
 
     setting_mainVol="Main Volume",
