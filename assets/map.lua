@@ -318,7 +318,12 @@ function Map.new(file)
                     if animType=='S' then-- Sudden
                         _syntaxCheck(#animList==0,"Invalid animation data")
                         animData={type='S'}
-                    elseif animType=='L' then-- Linear
+                    elseif animType=='E' then-- Exponential
+                        _syntaxCheck(#animList==1,"Invalid animation data (need speed)")
+                        local s=tonumber(animList[1])
+                        _syntaxCheck(s and s>0,"Invalid speed param")
+                        animData={type='E',start=curTime,speed=s}
+                    elseif animType=='L' or animType=='T' then-- Linear / Trigonometric (sine)
                         _syntaxCheck(#animList==1,"Invalid animation data (need duration)")
                         local time,unit=_parseTime(animList[1])
                         _syntaxCheck(time and time>0,"Invalid animation duration (need positive number)")
@@ -334,12 +339,7 @@ function Map.new(file)
                         else unit=60/curBPM
                         end
                         time=time*unit
-                        animData={type='L',start=curTime,duration=time}
-                    elseif animType=='E' then-- Exponential
-                        _syntaxCheck(#animList==1,"Invalid animation data (need speed)")
-                        local s=tonumber(animList[1])
-                        _syntaxCheck(s and s>0,"Invalid speed param")
-                        animData={type='E',start=curTime,speed=s}
+                        animData={type=animType,start=curTime,duration=time}
                     elseif animType=='P' then-- Power
                         _syntaxCheck(#animList==2,"Invalid animation data (need duration and exponent)")
                         local time,unit=_parseTime(animList[1])

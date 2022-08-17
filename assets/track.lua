@@ -302,6 +302,17 @@ function Track:update(dt)
                 end
                 rem(self.animQueue,i)
             end
+        elseif animData.type=='T' then
+            for j=1,#animKeys do
+                local k=animKeys[j]
+                C[k]=mix(S[k],T[k],-math.cos((self.time-animData.start)/animData.duration*MATH.pi)*.5+.5)
+            end
+            if self.time>animData.start+animData.duration then
+                for j=1,#animKeys do
+                    C[animKeys[j]]=T[animKeys[j]]
+                end
+                rem(self.animQueue,i)
+            end
         elseif animData.type=='E' then
             for j=1,#animKeys do
                 local k=animKeys[j]
