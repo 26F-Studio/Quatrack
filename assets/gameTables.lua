@@ -71,7 +71,7 @@ do
             rectangle=function(mode,x,y,w,h) GC.rectangle(mode,x,y,w,h) end,
             circle=function(mode,x,y,r) GC.circle(mode,x,y,r) end,
             regPolygon=function(mode,x,y,r,sides,phase) GC.regPolygon(mode,x,y,r,sides,phase) end,
-            polygon=function(mode,...)GC.polygon(mode,...)end,
+            polygon=function(mode,...)GC.polygon(mode,...) end,
             print=function(text,x,y,mode)
                 if not mode or mode=='center' then
                     GC.printf(text,x-2600,y,5200,'center')
@@ -86,7 +86,7 @@ do
         },
 
         message=function(mes,time) MES.new('info',mes,time or 3) end,
-        -- sfx=function(name,vol,pos,pitch)SFX.play(name,vol,pos,pitch)end,
+        -- sfx=function(name,vol,pos,pitch) SFX.play(name,vol,pos,pitch) end,
     }
     for _,v in next,{
         'math','string','table',

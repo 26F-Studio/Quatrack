@@ -782,7 +782,7 @@ function Map.new(file)
                     local noJack=c==c:upper()
                     c=c:upper()
 
-                    if not(c=='L' or c=='R' or c=='X') then
+                    if not (c=='L' or c=='R' or c=='X') then
                         readState='time'
                         goto CONTINUE_nextState
                     end

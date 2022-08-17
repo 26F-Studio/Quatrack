@@ -185,7 +185,7 @@ end
 function Track:pollPressTime()
     local l=self.notes
     for i=1,#l do
-        if l[i].available and(l[i].type=='tap' or l[i].type=='hold' and l[i].active and l[i].head) then
+        if l[i].available and (l[i].type=='tap' or l[i].type=='hold' and l[i].active and l[i].head) then
             return l[i].time
         end
     end
@@ -224,7 +224,7 @@ function Track:press(weak,auto)
 
     --Check first note
     local i,note=self:pollNote('note')
-    if note and(auto or note.available) and self.time>note.time-note.trigTime then
+    if note and (auto or note.available) and self.time>note.time-note.trigTime then
         local deviateTime=self.time-note.time
         local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         local _a,_p,_d
@@ -251,7 +251,7 @@ function Track:release(weak,auto)
     if not weak then self.pressed=false end
     self.lastReleaseTime=self.time
     local i,note=self:pollNote('hold')
-    if note and(auto or note.available) and note.type=='hold' and not note.head then--Release hold note
+    if note and (auto or note.available) and note.type=='hold' and not note.head then--Release hold note
         local deviateTime=note.etime-self.time
         local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         if self.time>note.etime-note.trigTime then
@@ -406,7 +406,7 @@ function Track:draw(map)
             --Draw filling light
             local pressA=
                 self.pressed and 1 or
-                self.time-self.lastReleaseTime<.1 and(.1-(self.time-self.lastReleaseTime))/.1
+                self.time-self.lastReleaseTime<.1 and (.1-(self.time-self.lastReleaseTime))/.1
             if pressA then
                 for i=0,.99,.01 do
                     gc_setColor(r,g,b,a*(1-i)*pressA/6)

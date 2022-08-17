@@ -310,7 +310,7 @@ local function _trigNote(deviateTime,noTailHold,weak)
     game.hitLV=getHitLV(deviateTime,game.judgeTimes)
     game.hitTextTime=love.timer.getTime()
     game.fullAcc=game.fullAcc+100
-    if noTailHold and(game.hitLV>0 or game.hitLV==0 and weak) then game.hitLV=5 end
+    if noTailHold and (game.hitLV>0 or game.hitLV==0 and weak) then game.hitLV=5 end
     game.bestChain=min(game.bestChain,game.hitLV)
     game.hits[game.hitLV]=game.hits[game.hitLV]+1
     if game.hitLV>0 then
@@ -579,7 +579,7 @@ function scene.update(dt)
         local t=game.tracks[id]
         do-- Auto play and invalid notes' auto hitting
             local _,note=t:pollNote('note')
-            if note and(not note.available or game.autoPlay) and note.type=='tap' then
+            if note and (not note.available or game.autoPlay) and note.type=='tap' then
                 if game.time>=note.time then
                     _trackPress(id,false,true)
                     if note.type~='hold' then

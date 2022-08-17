@@ -127,7 +127,7 @@ function scene.draw()
     FONT.set(30)
     for i=1,20 do
         GC.setColor(
-            selected==actionNames[i] and(
+            selected==actionNames[i] and (
                 love.timer.getTime()%.26>.13 and COLOR.R or
                 COLOR.Y
             ) or

@@ -713,7 +713,7 @@ function update()
             rem(objs,index)
         end
     end
-    while(#events>0 and events[1].time<t) do
+    while (#events>0 and events[1].time<t) do
         events[1].func(events[1].arg)
         rem(events,1)
     end
