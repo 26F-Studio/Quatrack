@@ -19,7 +19,7 @@ local listBox=WIDGET.new{
         GC.setColor(COLOR.L)
         GC.draw(v.mapAuth,930,-1,nil,min(230/v.mapAuth:getWidth(),1),1,v.mapAuth:getWidth(),0)
 
-        FONT.set(30,'mono')
+        FONT.set(30)
         GC.setColor(v.difficultyColor)
         GC.draw(v.difficulty,1050-v.difficulty:getWidth(),2)
         GC.setColor(COLOR.lS)
@@ -163,7 +163,7 @@ end
 
 scene.widgetList={
     listBox,
-    WIDGET.new{type='button_fill',pos={0,1},x=160,y=-80,w=200,h=80,text=CHAR.icon.import,color='lV',fontSize=60,
+    WIDGET.new{type='button_fill',pos={0,1},x=160,y=-80,w=200,h=80,text=CHAR.icon.download,color='lV',fontSize=60,
         code=function()
             if not MOBILE then
                 love.system.openURL(love.filesystem.getSaveDirectory()..'/songs')
@@ -172,7 +172,7 @@ scene.widgetList={
             end
         end
     },
-    WIDGET.new{type='button_fill',pos={0,1},x=320,y=-80,w=80,text=CHAR.icon.retry_spin,color='lB',fontSize=50,code=_freshSongList,visibleFunc=function() return love.timer.getTime()-lastFreshTime>2.6 end},
+    WIDGET.new{type='button_fill',pos={0,1},x=320,y=-80,w=80,text=CHAR.icon.retry,color='lB',fontSize=50,code=_freshSongList,visibleFunc=function() return love.timer.getTime()-lastFreshTime>2.6 end},
     WIDGET.new{type='button_fill',pos={.5,1},y=-80,w=140,h=80,text=CHAR.icon.play,color='lG',fontSize=60,code=WIDGET.c_pressKey'return'},
     sortSelector,
     WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},

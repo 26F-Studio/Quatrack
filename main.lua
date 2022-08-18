@@ -161,12 +161,16 @@ do--Zenitha.setDrawSysInfo
         GC.print(os.date("%H:%M"),3,0,nil,.9)
     end)
 end
-FONT.load{
-    norm='assets/font/proportional.ttf',
-    mono='assets/font/monospaced.ttf',
-}
+FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
-FONT.setDefaultFallback('norm')
+FONT.setFallback('mono','norm')
+FONT.load{
+    mono='assets/font/monospaced.ttf',
+    bold='assets/font/Inter-ExtraBold.otf',
+    norm='assets/font/Inter-Regular.otf',
+    thin='assets/font/Inter-SemiBold.otf',
+    symbols='assets/font/symbols.otf',
+}
 SCR.setSize(1280,720)
 BGM.setDefault('title')
 BGM.setMaxSources(5)
