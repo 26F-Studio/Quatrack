@@ -136,7 +136,7 @@ jobs:
           keystore-store-password: ${{ secrets.ANDROID_KEYSTORE_STOREPASSWORD }}
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
-          resource-path: ./.github/build/android/dev/res
+          resource-path: ./.github/build/android/${{ env.BUILD_TYPE }}/res
           version-string: ${{ needs.get-info.outputs.version-string }}
           version-code: ${{ needs.get-info.outputs.version-code }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
@@ -194,7 +194,7 @@ jobs:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
           copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
-          icon-path: ./.github/build/iOS/dev/icon
+          icon-path: ./.github/build/iOS/${{ env.BUILD_TYPE }}/icon
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           version-string: ${{ needs.get-info.outputs.version-string }}
@@ -260,9 +260,9 @@ jobs:
         id: build-packages
         uses: 26F-Studio/love-actions-linux@v1
         with:
-          desktop-file-path: ./.github/build/linux/dev/template.desktop
+          desktop-file-path: ./.github/build/linux/${{ env.BUILD_TYPE }}/template.desktop
           executable-name: app
-          icon-path: ./.github/build/linux/dev/icon.png
+          icon-path: ./.github/build/linux/${{ env.BUILD_TYPE }}/icon.png
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
@@ -314,7 +314,7 @@ jobs:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
           copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
-          icon-path: ./.github/build/macOS/dev/icon.icns
+          icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/icon.icns
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           version-string: ${{ needs.get-info.outputs.version-string }}
@@ -384,7 +384,7 @@ jobs:
           app-name: ${{ needs.get-info.outputs.app-name }}
           bundle-id: ${{ steps.process-app-name.outputs.bundle-id }}
           copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
-          icon-path: ./.github/build/macOS/dev/icon.icns
+          icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/icon.icns
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           version-string: ${{ needs.get-info.outputs.version-string }}
@@ -396,12 +396,12 @@ jobs:
           team-id: "${{ secrets.APPLE_DEVELOPER_TEAM_ID }}"
           developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
           developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
-          dmg-background-path: ./.github/build/macOS/dev/dmg.png
+          dmg-background-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.png
           dmg-icon-position: "287 313"
           dmg-icon-size: "128"
           dmg-link-position: "734 313"
           dmg-text-size: "12"
-          dmg-volume-icon-path: ./.github/build/macOS/dev/dmg.icns
+          dmg-volume-icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.icns
           dmg-volume-name: ${{ steps.process-app-name.outputs.product-name }}
           dmg-window-position: "200 120"
           dmg-window-size: "1024 604"
@@ -461,8 +461,8 @@ jobs:
         id: build-packages
         uses: 26F-Studio/love-actions-windows@v1
         with:
-          icon-path: ./.github/build/windows/dev/icon.ico
-          rc-path: ./.github/build/windows/dev/template.rc
+          icon-path: ./.github/build/windows/${{ env.BUILD_TYPE }}/icon.ico
+          rc-path: ./.github/build/windows/${{ env.BUILD_TYPE }}/template.rc
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           product-name: ${{ steps.process-app-name.outputs.product-name }}
           version-string: ${{ needs.get-info.outputs.version-string }}
