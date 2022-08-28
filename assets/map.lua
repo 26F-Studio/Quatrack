@@ -299,7 +299,7 @@ function Map.new(file)
                     trackList=trackStr:split(',')
                     for i=1,#trackList do
                         local id=tonumber(trackList[i])
-                        _syntaxCheck(id and id>0 and id<=o.tracks,"Invalid track id")
+                        _syntaxCheck(id and id>0 and id<=o.tracks and id%1==0,"Invalid track id")
                         trackList[i]=id
                     end
                 end
@@ -314,7 +314,7 @@ function Map.new(file)
                     str=str:sub(t2+1)
 
                     local animType=rem(animList,1)
-                    _syntaxCheck(animType,"Need animation type (S/L/E/C)")
+                    _syntaxCheck(animType,"Need animation type (S/E/L/P)")
                     if animType=='S' then-- Sudden
                         _syntaxCheck(#animList==0,"Invalid animation data")
                         animData={type='S'}
