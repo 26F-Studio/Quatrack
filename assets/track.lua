@@ -399,17 +399,16 @@ function Track:draw(map)
     gc_translate(s.x*SETTING.scaleX,s.y)
     gc_rotate(s.ang/57.29577951308232)
     local trackW=50*s.kx*SETTING.trackW
-    local ky=s.ky
 
     do--Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
         if a>0 then
             --Draw sides
-            local unitY=640*ky
+            local unitY=640*s.ky
             for i=0,.99,.01 do
                 gc_setColor(r,g,b,a*(1-i))
-                gc_rectangle('fill',-trackW,4*ky-unitY*i,-4,-unitY*.01)
-                gc_rectangle('fill',trackW,4*ky-unitY*i,4,-unitY*.01)
+                gc_rectangle('fill',-trackW,4-unitY*i,-4,-unitY*.01)
+                gc_rectangle('fill',trackW,4-unitY*i,4,-unitY*.01)
             end
 
             --Draw filling light
@@ -425,7 +424,7 @@ function Track:draw(map)
 
             --Draw track line
             gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
-            gc_rectangle('fill',-trackW,0,2*trackW,4*ky)
+            gc_rectangle('fill',-trackW,0,2*trackW,4)
         end
 
         --Draw track name
@@ -439,8 +438,8 @@ function Track:draw(map)
     end
 
     --Prepare to draw notes
-    local dropSpeed=s.dropSpeed*(map.freeSpeed and 1.1^SETTING.dropSpeed or 0)*ky
-    local thick=SETTING.noteThick*ky
+    local dropSpeed=s.dropSpeed*s.ky*(map.freeSpeed and 1.1^SETTING.dropSpeed or 1)
+    local thick=SETTING.noteThick*s.ky
 
     local chordAlpha=SETTING.chordAlpha
     if chordAlpha==0 then
