@@ -17,7 +17,7 @@ local sin,cos=math.sin,math.cos
 local floor,ceil,abs=math.floor,math.ceil,math.abs
 local ins,rem=table.insert,table.remove
 
-local SETTING=SETTING
+local SET=SETTINGS
 
 local hitColors=hitColors
 local hitTexts=hitTexts
@@ -100,7 +100,7 @@ local function _tryGoResult()
     else
         MES.new('info',Text.invalidScore)
     end
-    Zenitha.setClickFX(SETTING.clickFX)
+    Zenitha.setClickFX(SET.clickFX)
     SCN.swapTo('result',nil,{
         map=game.map,
         score=game.score0,
@@ -134,10 +134,10 @@ local function _freshScriptArgs()
     rawset(gameArgs,'map',game.map)
 
     -- These can change during the game, we need to copy them.
-    rawset(settingArgs,'sfx',SETTING.sfx)
-    rawset(settingArgs,'bgm',SETTING.bgm)
-    rawset(settingArgs,'dropSpeed',SETTING.dropSpeed)
-    rawset(settingArgs,'fullscreen',SETTING.fullscreen)
+    rawset(settingArgs,'sfxVol',SET.sfxVol)
+    rawset(settingArgs,'bgmVol',SET.bgmVol)
+    rawset(settingArgs,'dropSpeed',SET.dropSpeed)
+    rawset(settingArgs,'fullscreen',SET.fullscreen)
 end
 local lastErrorTime=setmetatable({},{__index=function(self,k) self[k]=-1e99 return -1e99 end})
 local function callScriptEvent(event,...)
@@ -168,7 +168,7 @@ function scene.enter()
 
     game.map=SCN.args[1]
 
-    game.playSongTime=game.map.songOffset+SETTING.musicDelay/1000
+    game.playSongTime=game.map.songOffset+SET.musicDelay/1000
     game.songLength=game.map.songLength
 
     game.texts={
@@ -217,7 +217,7 @@ function scene.enter()
 
     game.errorCount=0
     _freshScriptArgs()
-    for k,v in next,SETTING do rawset(settingArgs,k,v) end
+    for k,v in next,SET do rawset(settingArgs,k,v) end
     game.mapEnv={}
     if game.map.script then
         if love.filesystem.getInfo(dirPath..game.map.script..'.lua') then
@@ -257,7 +257,7 @@ function scene.enter()
         end
         if image then
             BG.set('image')
-            BG.send('image',SETTING.bgAlpha*.626,image)
+            BG.send('image',SET.bgAlpha*.626,image)
         else
             BG.set('none')
         end
@@ -272,7 +272,7 @@ end
 
 function scene.leave()
     BGM.stop()
-    Zenitha.setClickFX(SETTING.clickFX)
+    Zenitha.setClickFX(SET.clickFX)
     applyFPS(false)
     if game.needSaveSetting then saveSettings() end
 end
@@ -288,7 +288,7 @@ local function _emitParticles(id,auto)
     p:setLinearDamping(10,12)
     for _=1,(auto and 3 or 16)*state.kx do
         local dx=(math.random()*2-1)*50*state.kx
-        local dy=-math.random()*SETTING.noteThick*fy
+        local dy=-math.random()*SET.noteThick*fy
         p:moveTo(x+c*dx+s*dy,y+s*dx+c*dy)
         p:emit(1)
     end
@@ -323,7 +323,7 @@ local function _trigNote(deviateTime,noTailHold,weak)
             ins(game.hitOffests,1,deviateTime)
             game.hitCount=game.hitCount+1
             game.totalDeviateTime=game.totalDeviateTime+deviateTime
-            game.hitOffests[SETTING.dvtCount+1]=nil
+            game.hitOffests[SET.dvtCount+1]=nil
         end
     else
         if game.combo>=10 then SFX.play('combobreak') end
@@ -380,22 +380,22 @@ function scene.keyDown(key,isRep)
         else
             MES.new('error',errmsg)
         end
-    elseif k=='sfxVolDn' then SETTING.sfx=max(SETTING.sfx-.1,0)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
-    elseif k=='sfxVolUp' then SETTING.sfx=min(SETTING.sfx+.1,1)SFX.setVol(SETTING.sfx)_showVolMes(SETTING.sfx)
-    elseif k=='musicVolDn' then SETTING.bgm=max(SETTING.bgm-.1,0)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
-    elseif k=='musicVolUp' then SETTING.bgm=min(SETTING.bgm+.1,1)BGM.setVol(SETTING.bgm)_showVolMes(SETTING.bgm)
+    elseif k=='sfxVolDn' then SET.sfxVol=max(SET.sfxVol-.1,0);_showVolMes(SET.sfxVol)
+    elseif k=='sfxVolUp' then SET.sfxVol=min(SET.sfxVol+.1,1);_showVolMes(SET.sfxVol)
+    elseif k=='musicVolDn' then SET.bgmVol=max(SET.bgmVol-.1,0);_showVolMes(SET.bgmVol)
+    elseif k=='musicVolUp' then SET.bgmVol=min(SET.bgmVol+.1,1);_showVolMes(SET.bgmVol)
     elseif k=='dropSpdDn' then
         if game.score0==0 or game.curAcc==-1e99 then
-            SETTING.dropSpeed=max(SETTING.dropSpeed-1,-8)
-            MES.new('info',Text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
+            SET.dropSpeed=max(SET.dropSpeed-1,-8)
+            MES.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
             game.needSaveSetting=true
         else
             MES.new('warn',Text.cannotAdjustDropSpeed,0)
         end
     elseif k=='dropSpdUp' then
         if game.score0==0 or game.curAcc==-1e99 then
-            SETTING.dropSpeed=min(SETTING.dropSpeed+1,8)
-            MES.new('info',Text.dropSpeedChanged:repD(SETTING.dropSpeed),0)
+            SET.dropSpeed=min(SET.dropSpeed+1,8)
+            MES.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
             game.needSaveSetting=true
         else
             MES.new('warn',Text.cannotAdjustDropSpeed,0)
@@ -463,10 +463,10 @@ end
 function scene.touchDown(x,y,id)
     if game.autoPlay then return end
     local _x,_y=SCR.xOy:transformPoint(x,y)
-    if _x<SETTING.safeX*SCR.k or _x>SCR.w-SETTING.safeX*SCR.k or _y<SETTING.safeY*SCR.k or _y>SCR.h-SETTING.safeY*SCR.k then return end
+    if _x<SET.safeX*SCR.k or _x>SCR.w-SET.safeX*SCR.k or _y<SET.safeY*SCR.k or _y>SCR.h-SET.safeY*SCR.k then return end
 
     x,y=SCR.xOy_m:inverseTransformPoint(_x,_y)
-    x=x/SETTING.scaleX
+    x=x/SET.scaleX
     local minDist,closestTrackID=1e99,false
     local onTrack,minTime={},1e99
     for i=1,#game.tracks do
@@ -485,7 +485,7 @@ function scene.touchDown(x,y,id)
             else
                 D=((y-T.state.y)^2+(x-T.state.x)^2)^.5
             end
-            if D<=50*T.state.kx*SETTING.trackW/SETTING.scaleX then
+            if D<=50*T.state.kx*SET.trackW/SET.scaleX then
                 ins(onTrack,T)
                 minTime=min(minTime,T:pollPressTime())
             elseif D<minDist then
@@ -638,7 +638,7 @@ function scene.draw()
 
     if game.safeAreaTimer>0 then
         gc.origin()
-        drawSafeArea(SETTING.safeX,SETTING.safeY,game.safeAreaTimer)
+        drawSafeArea(SET.safeX,SET.safeY,game.safeAreaTimer)
     end
 
     gc_replaceTransform(SCR.xOy_m)
@@ -655,7 +655,7 @@ function scene.draw()
     end
 
     -- Draw touches
-    if SETTING.showTouch then
+    if SET.showTouch then
         gc_setLineWidth(4)
         for i=1,#game.touches do
             local id=game.touches[i][1]
@@ -675,13 +675,13 @@ function scene.draw()
                 gc_setColor(1,1,1,.6)
                 gc_circle('line',x,y,62)
                 gc_setColor(1,1,1,.3)
-                gc_line(x,y,T.state.x*SETTING.scaleX,T.state.y)
+                gc_line(x,y,T.state.x*SET.scaleX,T.state.y)
             end
         end
     end
 
     -- Draw hit text
-    if love.timer.getTime()-game.hitTextTime<.26 and game.hitLV<=SETTING.showHitLV then
+    if love.timer.getTime()-game.hitTextTime<.26 and game.hitLV<=SET.showHitLV then
         local c=hitColors[game.hitLV]
         setFont(80,'mono')
         gc_setColor(c[1],c[2],c[3],2.6-(love.timer.getTime()-game.hitTextTime)*10)

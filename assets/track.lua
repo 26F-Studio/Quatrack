@@ -7,7 +7,7 @@ local ins,rem=table.insert,table.remove
 local max,min=math.max,math.min
 local clamp=MATH.clamp
 
-local SETTING=SETTING
+local SET=SETTINGS
 
 local Track={}
 
@@ -229,7 +229,7 @@ function Track:press(weak,auto)
         local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         local _a,_p,_d
         if hitLV>0 then
-            _a,_p,_d=note:getAlpha(1),self.state.x/420,min(hitLV-SETTING.showHitLV+1,0)
+            _a,_p,_d=note:getAlpha(1),self.state.x/420,min(hitLV-SET.showHitLV+1,0)
         end
         if note.type=='tap' then--Press tap note
             rem(self.notes,i)
@@ -396,9 +396,9 @@ function Track:draw(map)
     gc_push('transform')
 
     --Set coordinate for single track
-    gc_translate(s.x*SETTING.scaleX,s.y)
+    gc_translate(s.x*SET.scaleX,s.y)
     gc_rotate(s.ang/57.29577951308232)
-    local trackW=50*s.kx*SETTING.trackW
+    local trackW=50*s.kx*SET.trackW
 
     do--Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
@@ -438,10 +438,10 @@ function Track:draw(map)
     end
 
     --Prepare to draw notes
-    local dropSpeed=s.dropSpeed*s.ky*(map.freeSpeed and 1.1^SETTING.dropSpeed or 1)
-    local thick=SETTING.noteThick*s.ky
+    local dropSpeed=s.dropSpeed*s.ky*(map.freeSpeed and 1.1^SET.dropSpeed or 1)
+    local thick=SET.noteThick*s.ky
 
-    local chordAlpha=SETTING.chordAlpha
+    local chordAlpha=SET.chordAlpha
     if chordAlpha==0 then
         chordAlpha=false
     end
@@ -471,8 +471,8 @@ function Track:draw(map)
                 local tailH=(note.etime-self.time)*dropSpeed
                 local a2=note.active and a or a*.5
                 --Body
-                gc_setColor(r,g,b,a2*SETTING.holdAlpha)
-                gc_rectangle('fill',-trackW*SETTING.holdWidth,-tailH,2*trackW*SETTING.holdWidth,tailH-headH+(note.head and -thick or 0))
+                gc_setColor(r,g,b,a2*SET.holdAlpha)
+                gc_rectangle('fill',-trackW*SET.holdWidth,-tailH,2*trackW*SET.holdWidth,tailH-headH+(note.head and -thick or 0))
 
                 --Head & Tail
                 if note.head then

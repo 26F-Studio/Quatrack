@@ -2,44 +2,22 @@ local sin=math.sin
 local abs=math.abs
 
 --System
-do--function tryBack()
-    local sureTime=-1e99
-    function tryBack()
-        if love.timer.getTime()-sureTime<1 then
-            sureTime=-1e99
-            return true
-        else
-            sureTime=love.timer.getTime()
-            MES.new('warn',Text.sureQuit)
-        end
+local lastTime=setmetatable({},{
+    __index=function(self,k)
+        self[k]=-1e99
+        return self[k]
+    end,
+})
+function sureCheck(event)
+    if love.timer.getTime()-lastTime[event]<1 then
+        return true
+    else
+        MES.new('info',Text.sureText[event])
     end
+    lastTime[event]=love.timer.getTime()
 end
-do--function tryReset()
-    local sureTime=-1e99
-    function tryReset()
-        if love.timer.getTime()-sureTime<1 then
-            sureTime=-1e99
-            return true
-        else
-            sureTime=love.timer.getTime()
-            MES.new('warn',Text.sureReset)
-        end
-    end
-end
-do--function tryDelete()
-    local sureTime=-1e99
-    function tryDelete()
-        if love.timer.getTime()-sureTime<1 then
-            sureTime=-1e99
-            return true
-        else
-            sureTime=love.timer.getTime()
-            MES.new('warn',Text.sureDelete)
-        end
-    end
-end
-do--function loadFile(name,args), function saveFile(data,name,args)
-    local t=setmetatable({},{__index=function() return"'$1' loading failed: $2" end})
+do-- function loadFile(name,args)
+    local t=setmetatable({},{__index=function() return "'$1' loading failed: $2" end})
     function loadFile(name,args)
         local text=Text or t
         if not args then args='' end
@@ -62,6 +40,9 @@ do--function loadFile(name,args), function saveFile(data,name,args)
             end
         end
     end
+end
+do-- function saveFile(data,name,args)
+    local t=setmetatable({},{__index=function() return "'$1' saving failed: $2" end})
     function saveFile(data,name,args)
         local text=Text or t
         local res,mes=pcall(FILE.save,data,name,args)
@@ -84,39 +65,15 @@ function saveStats()
     return saveFile(STAT,'conf/data')
 end
 function saveSettings()
-    return saveFile(SETTING,'conf/settings')
-end
-do--function applySettings()
-    function applySettings()
-        --Apply language
-        Text=LANG.get(SETTING.locale)
-        LANG.setTextFuncSrc(Text)
-
-        --Apply cursor
-        love.mouse.setVisible(SETTING.sysCursor)
-
-        --Apply fullscreen
-        love.window.setFullscreen(SETTING.fullscreen)
-        love.resize(GC.getWidth(),GC.getHeight())
-
-        --Apply Zframework setting
-        Zenitha.setClickFX(SETTING.clickFX)
-        Zenitha.setCleanCanvas(SETTING.cleanCanvas)
-
-        --Apply sound
-        love.audio.setVolume(SETTING.mainVol)
-        BGM.setVol(SETTING.bgm)
-        SFX.setVol(SETTING.sfx)
-        VOC.setVol(SETTING.voc)
-    end
+    return saveFile(SETTINGS.__data,'conf/settings')
 end
 function applyFPS(inGame)
     if inGame then
-        Zenitha.setMaxFPS(SETTING.maxFPS)
-        Zenitha.setUpdateFreq(SETTING.updRate)
-        Zenitha.setDrawFreq(SETTING.drawRate)
+        Zenitha.setMaxFPS(SETTINGS.maxFPS)
+        Zenitha.setUpdateFreq(SETTINGS.updRate)
+        Zenitha.setDrawFreq(SETTINGS.drawRate)
     else
-        Zenitha.setMaxFPS(math.min(SETTING.maxFPS,90))
+        Zenitha.setMaxFPS(math.min(SETTINGS.maxFPS,90))
         Zenitha.setUpdateFreq(100)
         Zenitha.setDrawFreq(100)
     end
@@ -160,7 +117,7 @@ end
 
 
 --GC
-do--function posterizedText(str,x,y)
+do-- function posterizedText(str,x,y)
     local timer=love.timer.getTime
     local gc_setColorMask=GC.setColorMask
     function posterizedText(str,x,y)
@@ -246,10 +203,4 @@ function drawHits(hits,x,y)
     GC.printf(hitTexts[-1],-55,233,600,'right')
     GC.print(hits.miss,555,233)
     GC.translate(-x,-y)
-end
-
-do--SETXXX(k)
-    function SETval(k)return function() return SETTING[k] end end
-    function SETrev(k)return function() SETTING[k]=not SETTING[k] end end
-    function SETsto(k)return function(i) SETTING[k]=i end end
 end

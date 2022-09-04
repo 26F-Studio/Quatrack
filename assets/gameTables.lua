@@ -193,46 +193,6 @@ do--Userdata tables
             end
         end,
     }
-    SETTING={--Settings
-        --Framework
-        clickFX=true,
-        powerInfo=true,
-        cleanCanvas=false,
-        fullscreen=true,
-        maxFPS=300,
-        updRate=100,
-        drawRate=30,
-
-        --System
-        sysCursor=false,
-        locale='zh',
-        slowUnfocus=true,
-
-        --Game
-        bgAlpha=.26,
-        musicDelay=0,
-        dropSpeed=0,
-        noteThick=22,
-        chordAlpha=.8,
-        holdAlpha=.26,
-        holdWidth=.8,
-        scaleX=1,
-        trackW=1,
-        safeX=10,
-        safeY=10,
-        showHitLV=5,
-        dvtCount=20,
-        showTouch=true,
-
-        --Sound
-        autoMute=false,
-        mainVol=1,
-        sfx=1,
-        bgm=.7,
-        stereo=.7,
-        vib=0,
-        voc=0,
-    }
     STAT={
         version=VERSION.code,
         run=0,game=0,time=0,
@@ -253,4 +213,78 @@ do--Userdata tables
         date=false,
         todayTime=0,
     }
+    local settings={--Settings
+        __data={
+            --Framework
+            clickFX=true,
+            powerInfo=true,
+            cleanCanvas=false,
+            fullscreen=true,
+            maxFPS=300,
+            updRate=100,
+            drawRate=30,
+
+            --System
+            sysCursor=false,
+            locale='zh',
+            slowUnfocus=true,
+
+            --Game
+            bgAlpha=.26,
+            musicDelay=0,
+            dropSpeed=0,
+            noteThick=22,
+            chordAlpha=.8,
+            holdAlpha=.26,
+            holdWidth=.8,
+            scaleX=1,
+            trackW=1,
+            safeX=10,
+            safeY=10,
+            showHitLV=5,
+            dvtCount=20,
+            showTouch=true,
+
+            --Sound
+            autoMute=false,
+            mainVol=1,
+            sfxVol=1,
+            bgmVol=.7,
+            stereo=.7,
+            vib=0,
+            voc=0,
+        },
+    }
+    local settingTriggers={-- Changing values in SETTINGS.system will trigger these functions (if exist).
+        -- Audio
+        mainVol=        function(v) love.audio.setVolume(v) end,
+        bgmVol=         function(v) BGM.setVol(v) end,
+        sfxVol=         function(v) SFX.setVol(v) end,
+        vocVol=         function(v) VOC.setVol(v) end,
+
+        -- Video
+        fullscreen=     function(v) love.window.setFullscreen(v) love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
+        maxFPS=         function(v) Zenitha.setMaxFPS(v) end,
+        updRate=        function(v) Zenitha.setUpdateFreq(v) end,
+        drawRate=       function(v) Zenitha.setDrawFreq(v) end,
+        sysCursor=      function(v) love.mouse.setVisible(v) end,
+        clickFX=        function(v) Zenitha.setClickFX(v) end,
+        clean=          function(v) Zenitha.setCleanCanvas(v) end,
+
+        -- Other
+        locale=         function(v) Text=LANG.get(v) LANG.setTextFuncSrc(Text) end,
+    }
+    setmetatable(settings,{
+        __index=settings.__data,
+        __newindex=function(_,k,v)
+            if settings.__data[k]~=v then
+                settings.__data[k]=v
+                if settingTriggers[k] then
+                    settingTriggers[k](v)
+                end
+            end
+        end,
+        __metatable=true,
+    })
+    SETTINGS=settings
 end

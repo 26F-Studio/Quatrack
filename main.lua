@@ -59,7 +59,7 @@ Zenitha.setVersionText(VERSION.string)
 Zenitha.setFirstScene('load')
 do--Zenitha.setDrawCursor
     Zenitha.setDrawCursor(function(_,x,y)
-        if not SETTING.sysCursor then
+        if not SETTINGS.sysCursor then
             GC.setColor(1,1,1)
             GC.setLineWidth(2)
             GC.translate(x,y)
@@ -74,7 +74,7 @@ do--Zenitha.setDrawCursor
         end
     end)
 end
-Zenitha.setOnGlobalKey('f11',function() SETTING.fullscreen=not SETTING.fullscreen applySettings() end)
+Zenitha.setOnGlobalKey('f11',TABLE.func_revVal(SETTINGS,'fullscreen'))
 Zenitha.setOnFnKeys({
     function() MES.new('check',PROFILE.switch() and "profile start!" or "profile report copied!") end,
     function() MES.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
@@ -102,8 +102,8 @@ do--Zenitha.setOnFocus
         while true do
             coroutine.yield()
             local v=love.audio.getVolume()
-            if v<SETTING.mainVol then
-                love.audio.setVolume(math.min(v+.05,SETTING.mainVol,1))
+            if v<SETTINGS.mainVol then
+                love.audio.setVolume(math.min(v+.05,SETTINGS.mainVol,1))
             else
                 return
             end
@@ -113,16 +113,16 @@ do--Zenitha.setOnFocus
         if f then
             applyFPS(SCN.cur=='game')
             love.timer.step()
-            if SETTING.autoMute then
+            if SETTINGS.autoMute then
                 TASK.removeTask_code(task_autoSoundOff)
                 TASK.new(task_autoSoundOn)
             end
         else
-            if SETTING.slowUnfocus then
-                Zenitha.setMaxFPS(math.min(SETTING.maxFPS,90))
+            if SETTINGS.slowUnfocus then
+                Zenitha.setMaxFPS(math.min(SETTINGS.maxFPS,90))
                 Zenitha.setDrawFreq(15)
             end
-            if SETTING.autoMute then
+            if SETTINGS.autoMute then
                 TASK.removeTask_code(task_autoSoundOn)
                 TASK.new(task_autoSoundOff)
             end
@@ -131,7 +131,7 @@ do--Zenitha.setOnFocus
 end
 do--Zenitha.setDrawSysInfo
     Zenitha.setDrawSysInfo(function()
-        if not SETTING.powerInfo then return end
+        if not SETTINGS.powerInfo then return end
         GC.translate(SCR.safeX,0)
         GC.setColor(0,0,0,.26)
         GC.rectangle('fill',0,0,107,26)
@@ -247,7 +247,15 @@ end
 DEBUG.checkLoadTime("Load SDs+BGs+SCNs")
 --------------------------------------------------------------
 --Load settings and statistics
-TABLE.update(loadFile('conf/settings','-canSkip') or {},SETTING)
+local setting=FILE.load('conf/settings','-json -canskip')
+if setting then
+    for k,v in next,setting do SETTINGS.__data[k]=v end
+end
+for k,v in next,SETTINGS.__data do
+    SETTINGS.__data[k]=nil
+    SETTINGS[k]=v
+end
+
 TABLE.coverR(loadFile('conf/data','-canSkip') or {},STAT)
 local savedKey=loadFile('conf/key','-canSkip')
 if savedKey then
@@ -258,15 +266,15 @@ end
 --First start
 FIRSTLAUNCH=STAT.run==0
 if FIRSTLAUNCH and MOBILE then
-    SETTING.cleanCanvas=true
-    SETTING.scaleX=1.3
-    SETTING.trackW=1.3
+    SETTINGS.cleanCanvas=true
+    SETTINGS.scaleX=1.3
+    SETTINGS.trackW=1.3
 end
 --Update savedata
 do
-    SETTING.drawRate=SETTING.drawRate or SETTING.frameMul
+    SETTINGS.drawRate=SETTINGS.drawRate or SETTINGS.frameMul
     STAT.hits=nil
-    SETTING.frameMul=nil
+    SETTINGS.frameMul=nil
     love.filesystem.remove('progress')
     if STAT.version~=VERSION.code or not love.filesystem.getInfo('songs/readme.txt','file') then
         love.filesystem.write('songs/readme.txt',love.filesystem.read('assets/language/readme.txt'))
@@ -279,4 +287,3 @@ DEBUG.checkLoadTime("Load savedata")
 DEBUG.logLoadTime()
 --------------------------------------------------------------
 --Apply system setting
-applySettings()

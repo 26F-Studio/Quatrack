@@ -41,8 +41,7 @@ function scene.draw()
 end
 
 local function _setLang(lid)
-    SETTING.locale=lid
-    applySettings()
+    SETTINGS.locale=lid
     TEXT:clear()
     TEXT:add{
         text=langList[lid],
