@@ -103,7 +103,7 @@ return{
 
     setting_bgAlpha="Background Brightness",
     setting_musicDelay="Music Delay",
-    setting_dropSpeed="Scrolling Speed",
+    setting_dropSpeed="Drop Speed",
     setting_noteThick="Note Thickness",
     setting_chordAlpha="Chord Key Alpha",
     setting_holdAlpha="Hold Note Alpha",
