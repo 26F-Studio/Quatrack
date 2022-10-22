@@ -4,7 +4,7 @@ $musicAuth=光宗信吉
 $mapAuth=F2M5&图腾
 $mapDifficulty=Hard-1
 $songFile=slapstick.ogg
-$songOffset=-20
+$songOffset=-20ms
 $tracks=4
 $realTracks=4
 

@@ -5,7 +5,7 @@ $mapAuth=LaNterN
 $mapDifficulty=Easy-6
 $songFile=testify.ogg
 $songImage=Testify.jpg
-$songOffset=90
+$songOffset=90ms
 $tracks=12
 $realTracks=4
 

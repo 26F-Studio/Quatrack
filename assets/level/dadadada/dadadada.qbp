@@ -4,7 +4,7 @@ $musicAuth=Wuki
 $mapAuth=F2M5
 $mapDifficulty=Hard-8
 $songFile=dadadada.ogg
-$songOffset=-24
+$songOffset=-24ms
 $tracks=4
 $realTracks=4
 

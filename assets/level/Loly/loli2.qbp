@@ -4,7 +4,7 @@ $musicAuth=Hanser & 东京塔子
 $mapAuth=QHMY
 $mapDifficulty=Hard-6
 $songFile=loli2.ogg
-$songOffset=0
+$songOffset=0ms
 $tracks=6
 $realTracks=4
 

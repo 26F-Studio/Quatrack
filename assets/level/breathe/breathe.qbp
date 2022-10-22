@@ -5,7 +5,7 @@ $mapAuth=图腾
 $mapDifficulty=Hard-3
 $songFile=breath.ogg
 $songImage=breath.png
-$songOffset=-36
+$songOffset=-36ms
 
 [A]<L,8>T,0
 OOOO;[A]T,100

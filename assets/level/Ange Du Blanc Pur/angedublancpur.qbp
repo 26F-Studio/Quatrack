@@ -4,7 +4,7 @@ $musicAuth=ke-ji
 $mapAuth=Ykzl
 $mapDifficulty=Lunatic-3
 $songFile=audio.ogg
-$songOffset=0
+$songOffset=0ms
 $tracks=4
 $realTracks=4
 

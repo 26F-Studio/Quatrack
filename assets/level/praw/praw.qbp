@@ -6,7 +6,7 @@ $mapDifficulty=Hard-8
 
 $songFile=praw.ogg
 $songImage=brs-praw.jpg
-$songOffset=0
+$songOffset=0ms
 $tracks=4
 $freeSpeed=true
 

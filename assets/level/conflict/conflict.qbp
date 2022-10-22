@@ -4,7 +4,7 @@ $musicAuth=siromaru + cranky
 $mapAuth=Ykzl
 $mapDifficulty=Special
 $songFile=conflict.ogg
-$songOffset=0
+$songOffset=0ms
 $tracks=8
 $realTracks=8
 

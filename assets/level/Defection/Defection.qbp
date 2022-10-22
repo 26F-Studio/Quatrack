@@ -4,7 +4,7 @@ $musicAuth=Teddyloid & DELTA
 $mapAuth=LaNterN
 $mapDifficulty=Normal-7
 $songFile=Teddyloid, DELTA - Defection.ogg
-$songOffset=-50
+$songOffset=-50ms
 $tracks=24
 $realTracks=4
 

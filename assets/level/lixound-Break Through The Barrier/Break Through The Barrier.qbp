@@ -5,7 +5,7 @@ $mapAuth=LaNterN&图腾
 $mapDifficulty=Hard-3
 $songFile=music.ogg
 $songImage=cover.jpg
-$songOffset=134
+$songOffset=134ms
 $tracks=4
 $realTracks=4
 

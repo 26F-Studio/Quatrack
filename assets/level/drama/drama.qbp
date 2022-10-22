@@ -4,7 +4,7 @@ $musicAuth=Diana Boncheva
 $mapAuth=Ykzl
 $mapDifficulty=Hard-7
 $songFile=drama.ogg
-$songOffset=0
+$songOffset=0ms
 $tracks=4
 $realTracks=4
 
