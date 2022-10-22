@@ -5,8 +5,6 @@ $mapAuth=F2M5&图腾
 $mapDifficulty=Hard-1
 $songFile=slapstick.ogg
 $songOffset=-20ms
-$tracks=4
-$realTracks=4
 
 ----|||||;[A]T,0
 OOOO;[A]p,,1000

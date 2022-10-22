@@ -5,8 +5,6 @@ $mapAuth=Ykzl
 $mapDifficulty=Easy-6
 $songFile=Square Panic Serenade.ogg
 $songOffset=-150ms
-$tracks=4
-$realTracks=4
 
 O--O;>88156ms
 H---;>87821ms

@@ -5,8 +5,6 @@ $mapAuth=Ykzl
 $mapDifficulty=Lunatic-3
 $songFile=audio.ogg
 $songOffset=0ms
-$tracks=4
-$realTracks=4
 
 H--H;>153643ms
 UOOU;>150347ms

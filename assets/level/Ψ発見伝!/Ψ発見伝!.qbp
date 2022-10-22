@@ -5,8 +5,6 @@ $mapAuth=Ykzl
 $mapDifficulty=Hard-8
 $songFile=song.ogg
 $songOffset=-45ms
-$tracks=4
-$realTracks=4
 
 OOO-;>88421ms
 -O-O;>88316ms

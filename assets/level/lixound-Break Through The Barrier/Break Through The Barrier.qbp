@@ -6,8 +6,6 @@ $mapDifficulty=Hard-3
 $songFile=music.ogg
 $songImage=cover.jpg
 $songOffset=134ms
-$tracks=4
-$realTracks=4
 
 -O--
 -O--/4;[2]<E,4>T,0
@@ -842,4 +840,6 @@ O---/4
 O---/2
 --O-*0.75;[A]<L,4>T,0
 -U-O*0.75;[A]T,100
-----*3;!176;[A]T,0
+----*3
+!176
+[A]T,0

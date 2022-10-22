@@ -5,8 +5,6 @@ $mapAuth=Ykzl
 $mapDifficulty=Normal-10
 $songFile=drama.ogg
 $songOffset=0ms
-$tracks=4
-$realTracks=4
 
 -OO-;>204176ms
 O--O;>204064ms

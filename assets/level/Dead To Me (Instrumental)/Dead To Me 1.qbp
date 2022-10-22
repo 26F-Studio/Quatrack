@@ -5,8 +5,6 @@ $mapAuth=Ykzl
 $mapDifficulty=Easy-10
 $songFile=Dead To Me.ogg
 $songOffset=-7ms
-$tracks=4
-$realTracks=4
 
 ---O;>92447ms
 -O--;>92312ms

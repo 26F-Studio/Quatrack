@@ -6,8 +6,6 @@ $mapDifficulty=Lunatic-1
 $songFile=audio.ogg
 $songImage=bg.jpg
 $songOffset=-77ms
-$tracks=4
-$realTracks=4
 $freeSpeed=true
 
 O--O;>240282ms
