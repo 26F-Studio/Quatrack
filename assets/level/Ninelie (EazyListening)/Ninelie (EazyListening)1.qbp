@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Ninelie (EazyListening)
 $musicAuth=Aimer & Chelly
 $mapAuth=F2M5
-$mapDifficulty=Normal
+$mapDifficulty=Easy-7
 $songFile=Ninelie (EazyListening).ogg
 $songOffset=-170ms
 
