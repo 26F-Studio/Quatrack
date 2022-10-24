@@ -399,6 +399,7 @@ function Track:draw(map)
     gc_translate(s.x*SET.scaleX,s.y)
     gc_rotate(s.ang/57.29577951308232)
     local trackW=50*s.kx*SET.trackW
+    local noteDY=s.ky*s.dropSpeed/50
 
     do--Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
@@ -459,6 +460,7 @@ function Track:draw(map)
         end
         if a >0 then
             local dx,dy=note:getOffset(1-timeRemain/2.6)
+            dy=dy*noteDY
 
             gc_translate(dx,dy)
             if note.type=='tap' then
