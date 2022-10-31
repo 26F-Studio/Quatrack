@@ -74,7 +74,7 @@ do--Zenitha.setDrawCursor
         end
     end)
 end
-Zenitha.setOnGlobalKey('f11',TABLE.func_revVal(SETTINGS,'fullscreen'))
+Zenitha.setOnGlobalKey('f11',function() SETTINGS.fullscreen=not SETTINGS.fullscreen; saveSettings() end)
 Zenitha.setOnFnKeys({
     function() MES.new('check',PROFILE.switch() and "profile start!" or "profile report copied!") end,
     function() MES.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
