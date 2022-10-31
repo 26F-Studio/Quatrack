@@ -5,7 +5,7 @@ local studioLogo--Studio logo text object
 local logoColor1,logoColor2
 
 local loadingThread=coroutine.wrap(function()
-    BG.setDefault('galaxy')
+    BG.setDefault(MOBILE and 'space' or 'galaxy')
     BG.set()
     BGM.play()
     local r=math.random()*6.2832
