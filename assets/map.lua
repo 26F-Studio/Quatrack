@@ -485,8 +485,38 @@ function Map.new(file)
                         operation=opType..'NameAlpha',
                         args={animData,data[1]},
                     }
+                elseif op=='L' or op=='SIDE'        then-- Draw side mode
+                    _syntaxCheck(#data<=1,"Too many arguments")
+                    if not data[1] or #data[1]==0 then data[1]='normal' end
+                    _syntaxCheck(
+                        data[1]=='normal' or
+                        data[1]=='hide' or
+                        data[1]=='hard' or
+                        data[1]=='double' or
+                        data[1]=='harddouble',
+                        "Invalid option (need normal/hide/hard/double/harddouble)"
+                    )
+                    _syntaxCheck(opType=='set',"command mode cannot be 'move'")
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'DrawSideMode',
+                        args={data[1]},
+                    }
+                elseif op=='B' or op=='BASELINE'    then-- Draw baseline
+                    if data[1]=='true' then
+                        data[1]=true
+                    elseif data[1]=='false' then
+                        data[1]=false
+                    end
+                    event={
+                        type='setTrack',
+                        time=curTime,
+                        operation=opType..'DrawBaseline',
+                        args={data[1]},
+                    }
                 else
-                    _syntaxCheck(false,"Invalid track operation")
+                    _syntaxCheck(false,"Invalid track operation '"..tostring(op).."'")
                 end
                 for i=1,#trackList do
                     local E=TABLE.copy(event)

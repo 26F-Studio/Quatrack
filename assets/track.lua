@@ -4,7 +4,7 @@ local gc_setColor=GC.setColor
 local gc_rectangle=GC.rectangle
 
 local ins,rem=table.insert,table.remove
-local max,min=math.max,math.min
+local max,min,abs=math.max,math.min,math.abs
 local clamp=MATH.clamp
 
 local SET=SETTINGS
@@ -42,6 +42,8 @@ function Track.new(id)
             r=1,g=1,b=1,alpha=100,
             available=true,
             nameAlpha=0,
+            drawSideMode='normal',
+            drawBaseline=true,
         },
         defaultState=false,
         targetState=false,
@@ -70,13 +72,15 @@ function Track:setChordColor(chordColor)
     self.chordColor=chordColor
 end
 
-function Track:setDefaultPosition(x,y)self.defaultState.x,self.defaultState.y=x,y end
-function Track:setDefaultAngle(ang)self.defaultState.ang=ang end
-function Track:setDefaultSize(kx,ky)self.defaultState.kx,self.defaultState.ky=kx,ky end
-function Track:setDefaultDropSpeed(speed)self.defaultState.dropSpeed=speed end
-function Track:setDefaultAlpha(alpha)self.defaultState.alpha=clamp(alpha,0,100) end
-function Track:setDefaultAvailable(bool)self.defaultState.available=bool end
-function Track:setDefaultColor(r,g,b)self.defaultState.r,self.defaultState.g,self.defaultState.b=clamp(r,0,1),clamp(g,0,1),clamp(b,0,1) end
+function Track:setDefaultPosition(x,y) self.defaultState.x,self.defaultState.y=x,y end
+function Track:setDefaultAngle(ang) self.defaultState.ang=ang end
+function Track:setDefaultSize(kx,ky) self.defaultState.kx,self.defaultState.ky=kx,ky end
+function Track:setDefaultDropSpeed(speed) self.defaultState.dropSpeed=speed end
+function Track:setDefaultAlpha(alpha) self.defaultState.alpha=clamp(alpha,0,100) end
+function Track:setDefaultAvailable(bool) self.defaultState.available=bool end
+function Track:setDefaultColor(r,g,b) self.defaultState.r,self.defaultState.g,self.defaultState.b=clamp(r,0,1),clamp(g,0,1),clamp(b,0,1) end
+function Track:setDefaultDrawSide(mode) self.defaultState.drawSideMode=mode end
+function Track:setDefaultDrawBaseline(bool) self.defaultState.drawBaseline=bool end
 
 function Track:movePosition(animData,dx,dy)
     self:setPosition(animData,self.targetState.x+(dx or 0),self.targetState.y+(dy or 0))
@@ -93,7 +97,7 @@ end
 function Track:moveAlpha(animData,da)
     self:setAlpha(animData,self.targetState.alpha+(da or 0))
 end
-function Track:moveAvailable()-- wtf
+function Track:moveAvailable()
     self:setAvailable(not self.state.available)
 end
 function Track:moveColor(animData,dr,dg,db)
@@ -105,6 +109,10 @@ function Track:moveColor(animData,dr,dg,db)
 end
 function Track:moveNameAlpha(animData,dna)
     self:setNameAlpha(animData,self.targetState.nameAlpha+(dna or 0))
+end
+function Track:moveDrawBaseline()
+    error()
+    self.state.drawBaseline=not self.defaultState.drawBaseline
 end
 
 function Track:setPosition(animData,x,y)
@@ -156,6 +164,12 @@ function Track:setNameAlpha(animData,nameAlpha)
     self.startState.nameAlpha=self.targetState.nameAlpha
     self.targetState.nameAlpha=clamp(nameAlpha or self.defaultState.nameAlpha,0,100)
     self.animQueue:insert{paramSet='nameAlpha',data=animData}
+end
+function Track:setDrawSideMode(mode)
+    self.state.drawSideMode=mode
+end
+function Track:setDrawBaseline(bool)
+    self.state.drawBaseline=bool
 end
 
 function Track:addItem(note)
@@ -404,28 +418,52 @@ function Track:draw(map)
     do-- Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
         if a>0 then
-            -- Draw sides
-            local unitY=640*s.ky
-            for i=0,.99,.01 do
-                gc_setColor(r,g,b,a*(1-i))
-                gc_rectangle('fill',-trackW,4-unitY*i,-4,-unitY*.01)
-                gc_rectangle('fill',trackW,4-unitY*i,4,-unitY*.01)
-            end
+            if self.state.drawSideMode~='hide' then
+                -- Draw sides
+                local unitY=640*s.ky
+                if self.state.drawSideMode=='normal' then
+                    for i=0,99 do
+                        gc_setColor(r,g,b,a*(1-abs(i)/100))
+                        gc_rectangle('fill',-trackW,4-unitY*i/100,-4,-unitY*.01)
+                        gc_rectangle('fill',trackW,4-unitY*i/100,4,-unitY*.01)
+                    end
+                elseif self.state.drawSideMode=='hard' then
+                    for i=0,99 do
+                        gc_setColor(r,g,b,a)
+                        gc_rectangle('fill',-trackW,4-unitY*i/100,-4,-unitY*.01)
+                        gc_rectangle('fill',trackW,4-unitY*i/100,4,-unitY*.01)
+                    end
+                elseif self.state.drawSideMode=='double' then
+                    for i=-99,99 do
+                        gc_setColor(r,g,b,a*(1-abs(i)/100))
+                        gc_rectangle('fill',-trackW,4-unitY*i/100,-4,-unitY*.01)
+                        gc_rectangle('fill',trackW,4-unitY*i/100,4,-unitY*.01)
+                    end
+                elseif self.state.drawSideMode=='harddouble' then
+                    for i=-99,99 do
+                        gc_setColor(r,g,b,a)
+                        gc_rectangle('fill',-trackW,4-unitY*i/100,-4,-unitY*.01)
+                        gc_rectangle('fill',trackW,4-unitY*i/100,4,-unitY*.01)
+                    end
+                end
 
-            -- Draw filling light
-            local pressA=
-                self.pressed and 1 or
-                self.time-self.lastReleaseTime<.1 and (.1-(self.time-self.lastReleaseTime))/.1
-            if pressA then
-                for i=0,.99,.01 do
-                    gc_setColor(r,g,b,a*(1-i)*pressA/6)
-                    gc_rectangle('fill',-trackW*pressA,-unitY*i,2*trackW*pressA,-unitY*.01)
+                -- Draw filling light
+                local pressA=
+                    self.pressed and 1 or
+                    self.time-self.lastReleaseTime<.1 and (.1-(self.time-self.lastReleaseTime))/.1
+                if pressA then
+                    for i=0,.99,.01 do
+                        gc_setColor(r,g,b,a*(1-i)*pressA/6)
+                        gc_rectangle('fill',-trackW*pressA,-unitY*i,2*trackW*pressA,-unitY*.01)
+                    end
                 end
             end
 
-            -- Draw baseline
-            gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
-            gc_rectangle('fill',-trackW,0,2*trackW,4)
+            if self.state.drawBaseline then
+                -- Draw baseline
+                gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
+                gc_rectangle('fill',-trackW,0,2*trackW,4)
+            end
         end
 
         -- Draw track name
@@ -443,9 +481,7 @@ function Track:draw(map)
     local thick=SET.noteThick*s.ky
 
     local chordAlpha=SET.chordAlpha
-    if chordAlpha==0 then
-        chordAlpha=false
-    end
+    if chordAlpha==0 then chordAlpha=false end
 
     -- Draw notes
     for i=1,#self.notes do
