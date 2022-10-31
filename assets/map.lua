@@ -371,11 +371,11 @@ function Map.new(file)
 
                 local data=str:split(',')
                 local op=data[1]:upper()
-                local opType=data[1]==data[1]:upper() and 'set' or 'move'
+                local opType=data[1]:sub(1,1)==data[1]:sub(1,1):upper() and 'set' or 'move'
                 rem(data,1)
 
                 local event
-                if op=='P' then-- Position
+                if     op=='P' or op=='POSITION'    then
                     _syntaxCheck(#data<=2,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     data[2]=tonumber(data[2]) or false
@@ -385,7 +385,7 @@ function Map.new(file)
                         operation=opType..'Position',
                         args={animData,data[1],data[2]},
                     }
-                elseif op=='R' then-- Rotate
+                elseif op=='R' or op=='ROTATE'      then
                     _syntaxCheck(#data<=1,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     event={
@@ -394,7 +394,7 @@ function Map.new(file)
                         operation=opType..'Angle',
                         args={animData,data[1]},
                     }
-                elseif op=='S' then-- Size
+                elseif op=='S' or op=='SIZE'        then
                     _syntaxCheck(#data<=2,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     data[2]=tonumber(data[2]) or false
@@ -404,7 +404,7 @@ function Map.new(file)
                         operation=opType..'Size',
                         args={animData,data[1],data[2]},
                     }
-                elseif op=='D' then-- Drop speed
+                elseif op=='D' or op=='DROPSPEED'   then
                     _syntaxCheck(#data<=1,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     event={
@@ -413,7 +413,7 @@ function Map.new(file)
                         operation=opType..'DropSpeed',
                         args={animData,data[1]},
                     }
-                elseif op=='T' then-- Transparent
+                elseif op=='T' or op=='TRANSPARENT' then
                     _syntaxCheck(#data<=1,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     event={
@@ -422,7 +422,7 @@ function Map.new(file)
                         operation=opType..'Alpha',
                         args={animData,data[1]},
                     }
-                elseif op=='C' then-- Color
+                elseif op=='C' or op=='COLOR'       then
                     _syntaxCheck(#data<=1,"Too many arguments")
                     local r,g,b
                     if not data[1] then
@@ -449,7 +449,7 @@ function Map.new(file)
                         operation=opType..'Color',
                         args={animData,r,g,b},
                     }
-                elseif op=='A' then-- Available
+                elseif op=='A' or op=='AVAILABLE'   then
                     if data[1]=='true' then
                         data[1]=true
                     elseif data[1]=='false' then
@@ -474,7 +474,7 @@ function Map.new(file)
                         operation=opType..'Available',
                         args={data[1]},
                     }
-                elseif op=='N' then-- Show track name
+                elseif op=='N' or op=='NAME'        then-- Show track name
                     if data[1] then
                         data[1]=tonumber(data[1])
                         _syntaxCheck(data[1],"Invalid alpha")
