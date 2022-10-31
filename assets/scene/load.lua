@@ -1,7 +1,7 @@
 local scene={}
 
 local loading,progress,maxProgress
-local studioLogo--Studio logo text object
+local studioLogo-- Studio logo text object
 local logoColor1,logoColor2
 
 local loadingThread=coroutine.wrap(function()

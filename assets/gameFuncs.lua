@@ -1,7 +1,7 @@
 local sin=math.sin
 local abs=math.abs
 
---System
+-- System
 local lastTime=setmetatable({},{
     __index=function(self,k)
         self[k]=-1e99
@@ -81,7 +81,7 @@ end
 
 
 
---Game
+-- Game
 function loadBeatmap(path)
     local success,res=pcall(require'assets.map'.new,path)
     if success then
@@ -100,7 +100,7 @@ function getHitLV(div,judgeTimes)
     div<=judgeTimes[1] and 1 or
     0
 end
-function mergeStat(stat,delta)--Merge delta stat. to global stat.
+function mergeStat(stat,delta)-- Merge delta stat. to global stat.
     for k,v in next,delta do
         if type(v)=='table' then
             if type(stat[k])=='table' then
@@ -116,7 +116,7 @@ end
 
 
 
---GC
+-- GC
 do-- function posterizedText(str,x,y)
     local timer=love.timer.getTime
     local gc_setColorMask=GC.setColorMask

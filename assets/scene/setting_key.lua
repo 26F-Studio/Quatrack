@@ -1,6 +1,6 @@
 local scene={}
 
-local selected--if waiting for key
+local selected-- if waiting for key
 
 local keyNames={
     normal={

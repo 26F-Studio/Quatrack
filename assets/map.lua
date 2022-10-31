@@ -22,16 +22,16 @@ local function _insert(list,obj)
 end
 local function _parseTime(s)
     local _s,_e=s:find('^-?%d+%.?%d*')
-    if _e==#s then--All numbers
+    if _e==#s then-- All numbers
         return tonumber(s),nil
-    elseif not _s then--No numbers
+    elseif not _s then-- No numbers
         return nil,s
     else
         return tonumber(s:sub(_s,_e)),s:sub(_e+1)
     end
 end
 
-local codeMarks={--Attention, [1] is lua regex, not raw string
+local codeMarks={-- Attention, [1] is lua regex, not raw string
     {'^%!',      '/bpm:'},
     {'^%>',      '/time:'},
     {'^%++',     '/bar_line:'},
@@ -67,7 +67,7 @@ function Map.new(file)
         return setmetatable(o,{__index=Map})
     end
 
-    --Read file
+    -- Read file
     local fileData={} do
         local lineNum=1
         for l in love.filesystem.lines(file) do
@@ -89,7 +89,7 @@ function Map.new(file)
         end
     end
 
-    --Load metadata
+    -- Load metadata
     while true do
         assert(fileData[1],"Emtpy map")
         local str=fileData[1][2]
@@ -105,7 +105,7 @@ function Map.new(file)
         end
     end
 
-    --Parse metadata
+    -- Parse metadata
     SCline=0
     SCstr='[metadata]'
     _syntaxCheck(o.version=='1.0',"Invalid map version")
@@ -141,7 +141,7 @@ function Map.new(file)
 
     if type(o.freeSpeed)=='string' then o.freeSpeed=o.freeSpeed=='true' end
 
-    --Parse notes & animations
+    -- Parse notes & animations
     local curTime,curBPM=0,180
     local curBeat,signature=false,false
     local loopStack={}
@@ -159,7 +159,7 @@ function Map.new(file)
     local line=#fileData
     while line>0 do
         local str=fileData[line][2]
-        SCline,SCstr=fileData[line][1],str--For assertion
+        SCline,SCstr=fileData[line][1],str-- For assertion
 
         for i=1,#codeMarks do
             if str:find(codeMarks[i][1]) then
@@ -177,7 +177,7 @@ function Map.new(file)
                 code=str:sub(2):lower()
                 str=''
             end
-            if code=='bpm' then--BPM mark
+            if code=='bpm' then-- BPM mark
                 local data=str:split(',')
                 _syntaxCheck(data[1],"Need BPM mark")
                 _syntaxCheck(#data<=2,"Too many arguments")
@@ -204,7 +204,7 @@ function Map.new(file)
                     curBeat=false
                     signature=false
                 end
-            elseif code=='time' then--Time mark
+            elseif code=='time' then-- Time mark
                 _syntaxCheck(not loopStack[1],"Cannot set time in loop")
                 if str=='start' then
                     curTime=-3.6
@@ -253,7 +253,7 @@ function Map.new(file)
                         curTime=curTime-dt
                     end
                 end
-            elseif code=='bar_line' then--Bar separator
+            elseif code=='bar_line' then-- Bar separator
                 local len=0
                 repeat
                     len=len+1
@@ -265,7 +265,7 @@ function Map.new(file)
                 else
                     _syntaxCheck(signature,"No signature to check")
                 end
-            elseif code=='rnd_seed' then--Random seed mark
+            elseif code=='rnd_seed' then-- Random seed mark
                 if str=='' then
                     math.randomseed(love.timer.getTime())
                 else
@@ -274,9 +274,9 @@ function Map.new(file)
                         _syntaxCheck(tonumber(seedList[i]),"Invalid seed number")
                     end
                     math.randomseed(love.timer.getTime())
-                    math.randomseed(260000+seedList[rnd(#seedList)])--Too small number make randomizer not that random
+                    math.randomseed(260000+seedList[rnd(#seedList)])-- Too small number make randomizer not that random
                 end
-            elseif code=='set_track' then--Animation: set track states
+            elseif code=='set_track' then-- Animation: set track states
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('[x]...' or '/set_track:x;...'")
 
@@ -375,7 +375,7 @@ function Map.new(file)
                 rem(data,1)
 
                 local event
-                if op=='P' then--Position
+                if op=='P' then-- Position
                     _syntaxCheck(#data<=2,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     data[2]=tonumber(data[2]) or false
@@ -385,7 +385,7 @@ function Map.new(file)
                         operation=opType..'Position',
                         args={animData,data[1],data[2]},
                     }
-                elseif op=='R' then--Rotate
+                elseif op=='R' then-- Rotate
                     _syntaxCheck(#data<=1,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     event={
@@ -394,7 +394,7 @@ function Map.new(file)
                         operation=opType..'Angle',
                         args={animData,data[1]},
                     }
-                elseif op=='S' then--Size
+                elseif op=='S' then-- Size
                     _syntaxCheck(#data<=2,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     data[2]=tonumber(data[2]) or false
@@ -404,7 +404,7 @@ function Map.new(file)
                         operation=opType..'Size',
                         args={animData,data[1],data[2]},
                     }
-                elseif op=='D' then--Drop speed
+                elseif op=='D' then-- Drop speed
                     _syntaxCheck(#data<=1,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     event={
@@ -413,7 +413,7 @@ function Map.new(file)
                         operation=opType..'DropSpeed',
                         args={animData,data[1]},
                     }
-                elseif op=='T' then--Transparent
+                elseif op=='T' then-- Transparent
                     _syntaxCheck(#data<=1,"Too many arguments")
                     data[1]=tonumber(data[1]) or false
                     event={
@@ -422,7 +422,7 @@ function Map.new(file)
                         operation=opType..'Alpha',
                         args={animData,data[1]},
                     }
-                elseif op=='C' then--Color
+                elseif op=='C' then-- Color
                     _syntaxCheck(#data<=1,"Too many arguments")
                     local r,g,b
                     if not data[1] then
@@ -449,7 +449,7 @@ function Map.new(file)
                         operation=opType..'Color',
                         args={animData,r,g,b},
                     }
-                elseif op=='A' then--Available
+                elseif op=='A' then-- Available
                     if data[1]=='true' then
                         data[1]=true
                     elseif data[1]=='false' then
@@ -474,7 +474,7 @@ function Map.new(file)
                         operation=opType..'Available',
                         args={data[1]},
                     }
-                elseif op=='N' then--Show track name
+                elseif op=='N' then-- Show track name
                     if data[1] then
                         data[1]=tonumber(data[1])
                         _syntaxCheck(data[1],"Invalid alpha")
@@ -493,7 +493,7 @@ function Map.new(file)
                     E.track=trackList[i]
                     o.eventQueue:insert(E)
                 end
-            elseif code=='set_note' then--Note state: color & alpha
+            elseif code=='set_note' then-- Note state: color & alpha
                 local t=str:find(';')
                 _syntaxCheck(t,"Syntax error ('(x)...' or '/set_note:x;...')")
 
@@ -523,7 +523,7 @@ function Map.new(file)
 
                 local data=str:sub(t+1):split(',')
                 local op=data[1]:upper()
-                if op=='T' then--Transparent
+                if op=='T' then-- Transparent
                     local a={}
                     if data[2] then
                         for i=2,#data do
@@ -537,7 +537,7 @@ function Map.new(file)
                     for i=1,#trackList do
                         noteState.alpha[trackList[i]]=a
                     end
-                elseif op=='C' then--Color
+                elseif op=='C' then-- Color
                     local codes={}
                     if not data[2] then
                         codes[1]='E6E6E6'
@@ -555,7 +555,7 @@ function Map.new(file)
                     for i=1,#trackList do
                         noteState.color[trackList[i]]=color
                     end
-                elseif op=='X' or op=='Y' then--X/Y offset
+                elseif op=='X' or op=='Y' then-- X/Y offset
                     local offset={}
                     if data[2] then
                         for i=2,#data do
@@ -573,7 +573,7 @@ function Map.new(file)
                 else
                     _syntaxCheck(false,"Invalid note operation")
                 end
-            elseif code=='rep_s' then--Repeat start
+            elseif code=='rep_s' then-- Repeat start
                 local cd=1
                 if str~='' then
                     cd=tonumber(str)
@@ -585,7 +585,7 @@ function Map.new(file)
                     startMark=line,
                     endMark=false,
                 })
-            elseif code=='rep_e' then--Repeat end
+            elseif code=='rep_e' then-- Repeat end
                 _syntaxCheck(loopStack[1],"No loop to end")
                 local curState=loopStack[#loopStack]
                 if curState.countDown>0 then
@@ -595,20 +595,20 @@ function Map.new(file)
                 else
                     rem(loopStack)
                 end
-            elseif code=='rep_m' then--Repeat middle(skip)
+            elseif code=='rep_m' then-- Repeat middle(skip)
                 _syntaxCheck(loopStack[1],"No loop to break")
                 if loopStack[#loopStack].countDown==0 then
                     line=loopStack[#loopStack].endMark
                     rem(loopStack)
                 end
-            elseif code=='redirect_note' then--Redirect notes to different track
-                if str=='' then--Reset
+            elseif code=='redirect_note' then-- Redirect notes to different track
+                if str=='' then-- Reset
                     for i=1,o.tracks do trackDir[i]=i end
-                elseif str=='A' then--Random shuffle (won't reset to 1~N!)
+                elseif str=='A' then-- Random shuffle (won't reset to 1~N!)
                     local l={}
                     for i=1,o.tracks do l[i]=trackDir[i] end
                     for i=1,o.tracks do trackDir[i]=rem(l,rnd(#l)) end
-                else--Redirect tracks from presets
+                else-- Redirect tracks from presets
                     local argList=str:split(',')
                     for i=1,#argList do
                         _syntaxCheck(#argList[i]==o.tracks,"Illegal redirection (track count)")
@@ -622,7 +622,7 @@ function Map.new(file)
                         trackDir[i]=l[id]
                     end
                 end
-            elseif code=='rename_track' then--Rename tracks
+            elseif code=='rename_track' then-- Rename tracks
                 local nameList=str:split(',')
                 _syntaxCheck(#nameList==o.tracks,"Track names not match track count")
                 for id=1,#nameList do
@@ -655,7 +655,7 @@ function Map.new(file)
                         trackAvailable[id]=true
                     end
                 end
-            elseif code=='set_chord_color' then--Set chord color
+            elseif code=='set_chord_color' then-- Set chord color
                 local c=str:split(',')
                 if #c==0 then
                     c=defaultChordColor
@@ -672,11 +672,11 @@ function Map.new(file)
                     time=curTime,
                     color=c,
                 }
-            elseif code=='set_note_need' then--Set note per line
+            elseif code=='set_note_need' then-- Set note per line
                 local n=tonumber(str)
                 _syntaxCheck(n>0 and n%1==0,"Invalid note per line (need positive integer)")
                 curNotePerLine=n
-            elseif code=='set_judge' then--Set judgement widths
+            elseif code=='set_judge' then-- Set judgement widths
                 local t=str:split(',')
                 _syntaxCheck(#t==5,"Invalid judgement time list (need 5 values)")
                 for i=1,5 do
@@ -698,7 +698,7 @@ function Map.new(file)
                     time=curTime,
                     args=t,
                 }
-            elseif code=='set_acc_points' then--Set accuracy points
+            elseif code=='set_acc_points' then-- Set accuracy points
                 local t=str:split(',')
                 _syntaxCheck(#t==5,"Invalid accuracy list (need 5 values)")
                 for i=1,5 do
@@ -718,7 +718,7 @@ function Map.new(file)
             else
                 _syntaxCheck(false,"Invalid line type: "..code)
             end
-        else--Notes
+        else-- Notes
             local readState='note'
             local lastNote=TABLE.new(false,o.tracks)
             local curTrack=1
@@ -728,8 +728,8 @@ function Map.new(file)
             while true do
                 if readState=='note' then
                     c=str:sub(1,1)
-                    if c~='-' then--Space
-                        if c=='O' then--Tap note
+                    if c~='-' then-- Space
+                        if c=='O' then-- Tap note
                             local b={
                                 type='tap',
                                 time=curTime,
@@ -742,7 +742,7 @@ function Map.new(file)
                             }
                             o.noteQueue:insert(b)
                             lastNote[curTrack]=b
-                        elseif c=='U' then--Hold note start
+                        elseif c=='U' then-- Hold note start
                             _syntaxCheck(not lastLongBar[curTrack],"Cannot start a long bar in a long bar")
                             local b={
                                 type='hold',
@@ -760,7 +760,7 @@ function Map.new(file)
                             o.noteQueue:insert(b)
                             lastLongBar[curTrack]=b
                             lastNote[curTrack]=b
-                        elseif c=='A' or c=='H' then--Long bar stop
+                        elseif c=='A' or c=='H' then-- Long bar stop
                             _syntaxCheck(lastLongBar[curTrack],"No long bar to stop")
                             if c=='A' then
                                 lastNote[curTrack]=lastLongBar[curTrack]
@@ -797,20 +797,20 @@ function Map.new(file)
 
                     for i=#available,1,-1 do if not noJack==not lastLineState[available[i]] then rem(available,i) end end
 
-                    if c=='L' then--Random left
+                    if c=='L' then-- Random left
                         for i=#available,1,-1 do
                             if available[i]>(o.tracks+1)*.5 then
                                 rem(available,i)
                             end
                         end
-                    elseif c=='R' then--Random right
+                    elseif c=='R' then-- Random right
                         for i=#available,1,-1 do
                             if available[i]<(o.tracks+1)*.5 then
                                 rem(available,i)
                             end
                         end
-                    elseif c=='X' then--Random anywhere
-                        --Do nothing
+                    elseif c=='X' then-- Random anywhere
+                        -- Do nothing
                     end
                     _syntaxCheck(#available>0,"No space to place notes")
                     curTrack=available[rnd(#available)]
@@ -829,7 +829,7 @@ function Map.new(file)
                     lastNote[curTrack]=b
                     str=str:sub(2)
                 elseif readState=='time' then
-                    if str:sub(1,1)=='|' then--Shorten 1/2 for each
+                    if str:sub(1,1)=='|' then-- Shorten 1/2 for each
                         while true do
                             step=step*.5
                             str=str:sub(2)
@@ -839,7 +839,7 @@ function Map.new(file)
                                 _syntaxCheck(str:sub(1,1)=='|',"Mixed mark")
                             end
                         end
-                    elseif str:sub(1,1)=='~' then--Add 1 beat for each
+                    elseif str:sub(1,1)=='~' then-- Add 1 beat for each
                         while true do
                             step=step+1
                             str=str:sub(2)
@@ -849,12 +849,12 @@ function Map.new(file)
                                 _syntaxCheck(str:sub(1,1)=='~',"Mixed mark")
                             end
                         end
-                    elseif str:sub(1,1)=='*' then--Multiply time by any number
+                    elseif str:sub(1,1)=='*' then-- Multiply time by any number
                         local mul=tonumber(str:sub(2))
                         _syntaxCheck(type(mul)=='number',"Invalid scale num")
                         step=step*mul
                         break
-                    elseif str:sub(1,1)=='/' then--Divide time by any number
+                    elseif str:sub(1,1)=='/' then-- Divide time by any number
                         local div=tonumber(str:sub(2))
                         _syntaxCheck(type(div)=='number',"Invalid scale num")
                         step=step/div
@@ -902,7 +902,7 @@ function Map.new(file)
         _syntaxCheck(not lastLongBar[i],("Long bar not ended (Track $1)"):repD(i))
     end
 
-    --Reset two pointers
+    -- Reset two pointers
     o.notePtr,o.animePtr=1,1
 
     return setmetatable(o,{__index=Map})

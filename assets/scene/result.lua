@@ -31,7 +31,7 @@ function scene.enter()
     results.mapName=GC.newText(FONT.get(80,'mono'),results.map.mapName)
     results.mapDifficulty=GC.newText(FONT.get(30,'mono'),results.map.mapDifficulty)
 
-    --Rank
+    -- Rank
     local acc=tonumber(results.accText:sub(1,-2))
     local rankClr,rankStr
     if     acc==101   then rankClr,rankStr=rankColors[1],'X '
@@ -92,7 +92,7 @@ function scene.draw()
     GC.push('transform')
     GC.translate(240,255)
 
-    --Draw rank
+    -- Draw rank
     GC.push('transform')
     GC.scale(2.2)
     GC.setColor(results.rankClr)
@@ -101,7 +101,7 @@ function scene.draw()
     posterizedDraw(results.rankText2,47,14)
     GC.pop()
 
-    --Draw score & accuracy & combo
+    -- Draw score & accuracy & combo
     GC.setColor(COLOR.L)
     FONT.set(60)
     GC.print(results.score,140,0)
@@ -112,7 +112,7 @@ function scene.draw()
     FONT.set(40)
     GC.print(results.maxCombo.."x",140,135)
 
-    --Draw trophy
+    -- Draw trophy
     if results.bestChain>0 then
         local t=love.timer.getTime()
         local c=results.bestChain

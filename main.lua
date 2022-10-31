@@ -57,7 +57,7 @@ STRING.install()
 Zenitha.setAppName('Quatrack')
 Zenitha.setVersionText(VERSION.string)
 Zenitha.setFirstScene('load')
-do--Zenitha.setDrawCursor
+do-- Zenitha.setDrawCursor
     Zenitha.setDrawCursor(function(_,x,y)
         if not SETTINGS.sysCursor then
             GC.setColor(1,1,1)
@@ -89,7 +89,7 @@ Zenitha.setDebugInfo{
     {"Tasks",TASK.getCount},
     {"Audios",love.audio.getSourceCount},
 }
-do--Zenitha.setOnFocus
+do-- Zenitha.setOnFocus
     local function task_autoSoundOff()
         while true do
             coroutine.yield()
@@ -129,7 +129,7 @@ do--Zenitha.setOnFocus
         end
     end)
 end
-do--Zenitha.setDrawSysInfo
+do-- Zenitha.setDrawSysInfo
     Zenitha.setDrawSysInfo(function()
         if not SETTINGS.powerInfo then return end
         GC.translate(SCR.safeX,0)
@@ -246,7 +246,7 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
 end
 DEBUG.checkLoadTime("Load SDs+BGs+SCNs")
 --------------------------------------------------------------
---Load settings and statistics
+-- Load settings and statistics
 local setting=FILE.load('conf/settings','-json -canskip')
 if setting then
     for k,v in next,setting do SETTINGS.__data[k]=v end
@@ -263,14 +263,14 @@ if savedKey then
     KEY_MAP_inv:_update()
 end
 --------------------------------------------------------------
---First start
+-- First start
 FIRSTLAUNCH=STAT.run==0
 if FIRSTLAUNCH and MOBILE then
     SETTINGS.cleanCanvas=true
     SETTINGS.scaleX=1.3
     SETTINGS.trackW=1.3
 end
---Update savedata
+-- Update savedata
 do
     SETTINGS.drawRate=SETTINGS.drawRate or SETTINGS.frameMul
     STAT.hits=nil
@@ -286,4 +286,4 @@ DEBUG.checkLoadTime("Load savedata")
 --------------------------------------------------------------
 DEBUG.logLoadTime()
 --------------------------------------------------------------
---Apply system setting
+-- Apply system setting

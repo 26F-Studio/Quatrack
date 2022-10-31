@@ -1,4 +1,4 @@
---Static data tables
+-- Static data tables
 mapMetaKeys={
     "version",
     "mapName",
@@ -168,8 +168,8 @@ actionNames={
     'dropSpdDn',
     'dropSpdUp',
 }
-do--Userdata tables
-    KEY_MAP={--Keys-Function map, for convert direct key input
+do-- Userdata tables
+    KEY_MAP={-- Keys-Function map, for convert direct key input
         f='L1',d='L2',s='L3',a='L4',lshift='L5',
         space='C',
         j='R1',k='R2',l='R3',[';']='R4',['/']='R5',
@@ -183,7 +183,7 @@ do--Userdata tables
         ['-']='dropSpdDn',
         ['=']='dropSpdUp',
     }
-    KEY_MAP_inv={--Function-Keys map, for show key name
+    KEY_MAP_inv={-- Function-Keys map, for show key name
         _update=function(self)
             local _f=self._update
             TABLE.clear(self)
@@ -213,9 +213,9 @@ do--Userdata tables
         date=false,
         todayTime=0,
     }
-    local settings={--Settings
+    local settings={-- Settings
         __data={
-            --Framework
+            -- Framework
             clickFX=true,
             powerInfo=true,
             cleanCanvas=false,
@@ -224,12 +224,12 @@ do--Userdata tables
             updRate=100,
             drawRate=30,
 
-            --System
+            -- System
             sysCursor=false,
             locale='zh',
             slowUnfocus=true,
 
-            --Game
+            -- Game
             bgAlpha=.26,
             musicDelay=0,
             dropSpeed=0,
@@ -245,7 +245,7 @@ do--Userdata tables
             dvtCount=20,
             showTouch=true,
 
-            --Sound
+            -- Sound
             autoMute=false,
             mainVol=1,
             sfxVol=1,

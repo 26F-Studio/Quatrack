@@ -33,7 +33,7 @@ function Track.new(id)
         lastReleaseTime=-1e99,
         time=0,
         notes={},
-        animQueue={insert=_insert},--Current animation data
+        animQueue={insert=_insert},-- Current animation data
         state={
             x=0,y=0,
             ang=0,
@@ -93,7 +93,7 @@ end
 function Track:moveAlpha(animData,da)
     self:setAlpha(animData,self.targetState.alpha+(da or 0))
 end
-function Track:moveAvailable()--wtf
+function Track:moveAvailable()-- wtf
     self:setAvailable(not self.state.available)
 end
 function Track:moveColor(animData,dr,dg,db)
@@ -217,12 +217,12 @@ local holdTailSFX={
     'hit5',
 }
 function Track:press(weak,auto)
-    --Animation
+    -- Animation
     self.pressed=true
     self.lastPressTime=self.time
     if weak then return end
 
-    --Check first note
+    -- Check first note
     local i,note=self:pollNote('note')
     if note and (auto or note.available) and self.time>note.time-note.trigTime then
         local deviateTime=self.time-note.time
@@ -231,12 +231,12 @@ function Track:press(weak,auto)
         if hitLV>0 then
             _a,_p,_d=note:getAlpha(1),self.state.x/420,min(hitLV-SET.showHitLV+1,0)
         end
-        if note.type=='tap' then--Press tap note
+        if note.type=='tap' then-- Press tap note
             rem(self.notes,i)
             if _a then
                 SFX.play('hit_tap',.3+.7*_a,_p,_d)
             end
-        elseif note.type=='hold' then--Press hold note
+        elseif note.type=='hold' then-- Press hold note
             if not note.head then return end
             note.head=false
             if _a then
@@ -251,7 +251,7 @@ function Track:release(weak,auto)
     if not weak then self.pressed=false end
     self.lastReleaseTime=self.time
     local i,note=self:pollNote('hold')
-    if note and (auto or note.available) and note.type=='hold' and not note.head then--Release hold note
+    if note and (auto or note.available) and note.type=='hold' and not note.head then-- Release hold note
         local deviateTime=note.etime-self.time
         local hitLV=getHitLV(deviateTime,self._gameData.judgeTimes)
         if self.time>note.etime-note.trigTime then
@@ -343,7 +343,7 @@ function Track:update(dt)
     end
 end
 
---Logics
+-- Logics
 function Track:updateLogic(time)
     self.time=time
     local missCount,marvCount=0,0
@@ -355,13 +355,13 @@ function Track:updateLogic(time)
                 missCount=missCount+1
             end
         elseif note.type=='hold' then
-            if note.head then--Hold not pressed, miss whole when head missed
+            if note.head then-- Hold not pressed, miss whole when head missed
                 if note.active and self.time>note.time+note.lostTime then
                     note.active=false
                     note.head=false
                     missCount=missCount+2
                 end
-            else--Pressed, miss tail when tail missed
+            else-- Pressed, miss tail when tail missed
                 note.time=max(note.time,self.time)
                 if note.active then
                     if note.tail then
@@ -395,16 +395,16 @@ function Track:draw(map)
     local s=self.state
     gc_push('transform')
 
-    --Set coordinate for single track
+    -- Set coordinate for single track
     gc_translate(s.x*SET.scaleX,s.y)
     gc_rotate(s.ang/57.29577951308232)
     local trackW=50*s.kx*SET.trackW
     local noteDY=s.ky*s.dropSpeed/50
 
-    do--Draw track frame
+    do-- Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
         if a>0 then
-            --Draw sides
+            -- Draw sides
             local unitY=640*s.ky
             for i=0,.99,.01 do
                 gc_setColor(r,g,b,a*(1-i))
@@ -412,7 +412,7 @@ function Track:draw(map)
                 gc_rectangle('fill',trackW,4-unitY*i,4,-unitY*.01)
             end
 
-            --Draw filling light
+            -- Draw filling light
             local pressA=
                 self.pressed and 1 or
                 self.time-self.lastReleaseTime<.1 and (.1-(self.time-self.lastReleaseTime))/.1
@@ -423,12 +423,12 @@ function Track:draw(map)
                 end
             end
 
-            --Draw track line
+            -- Draw baseline
             gc_setColor(r,g,b,a*max(1-(self.pressed and 0 or self.time-self.lastReleaseTime)/.26,.26))
             gc_rectangle('fill',-trackW,0,2*trackW,4)
         end
 
-        --Draw track name
+        -- Draw track name
         if s.nameAlpha>0 then
             FONT.set(40)
             gc_setColor(r,g,b,s.nameAlpha/100)
@@ -438,7 +438,7 @@ function Track:draw(map)
         end
     end
 
-    --Prepare to draw notes
+    -- Prepare to draw notes
     local dropSpeed=s.dropSpeed*s.ky*(map.freeSpeed and 1.1^SET.dropSpeed or 1)
     local thick=SET.noteThick*s.ky
 
@@ -447,7 +447,7 @@ function Track:draw(map)
         chordAlpha=false
     end
 
-    --Draw notes
+    -- Draw notes
     for i=1,#self.notes do
         local note=self.notes[i]
         local timeRemain=note.time-self.time
@@ -472,11 +472,11 @@ function Track:draw(map)
             elseif note.type=='hold' then
                 local tailH=(note.etime-self.time)*dropSpeed
                 local a2=note.active and a or a*.5
-                --Body
+                -- Body
                 gc_setColor(r,g,b,a2*SET.holdAlpha)
                 gc_rectangle('fill',-trackW*SET.holdWidth,-tailH,2*trackW*SET.holdWidth,tailH-headH+(note.head and -thick or 0))
 
-                --Head & Tail
+                -- Head & Tail
                 if note.head then
                     if chordAlpha and note.chordCount_head>1 then
                         _drawChordBox(self.chordColor[note.chordCount_head-1],chordAlpha*a,trackW,headH,thick)

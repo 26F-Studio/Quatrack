@@ -129,7 +129,7 @@ local function _freshScriptArgs()
         end
     end
 
-    --Special, will remove in the future
+    -- Special, will remove in the future
     rawset(gameArgs,'hits',game.hits)
     rawset(gameArgs,'map',game.map)
 
