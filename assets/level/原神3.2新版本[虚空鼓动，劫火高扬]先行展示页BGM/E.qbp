@@ -3,7 +3,7 @@ $mapName=虚空鼓动，劫火高扬
 $musicAuth=Hoyo-Mix
 $mapAuth=Ykzl
 $mapDifficulty=Easy-3
-$songFile=audio.mp3
+$songFile=audio.ogg
 $songImage=bg.png
 $songOffset=-20ms
 
