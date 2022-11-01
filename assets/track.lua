@@ -1,5 +1,5 @@
 local gc_push,gc_pop=GC.push,GC.pop
-local gc_translate,gc_rotate=GC.translate,GC.rotate
+local gc_translate,gc_rotate,gc_scale=GC.translate,GC.rotate,GC.scale
 local gc_setColor=GC.setColor
 local gc_rectangle=GC.rectangle
 
@@ -412,15 +412,28 @@ function Track:draw(map)
     -- Set coordinate for single track
     gc_translate(s.x*SET.scaleX,s.y)
     gc_rotate(s.ang/57.29577951308232)
+    local ky=abs(s.ky)
     local trackW=50*s.kx*SET.trackW
-    local noteDY=s.ky*s.dropSpeed/50
+    local noteDY=ky*s.dropSpeed/50
 
     do-- Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
+        -- Draw track name
+        if s.nameAlpha>0 then
+            FONT.set(40)
+            gc_setColor(r,g,b,s.nameAlpha/100)
+            for i=1,#self.showName do
+                GC.mStr(self.showName[i],0,MATH.sign(s.ky)*(-20-40*i))
+            end
+        end
+
+        -- Use ky=abs(s,ky) instead of s.ky, flip all graphics except track name
+        if s.ky<0 then gc_scale(1,-1) end
+
         if a>0 then
             if self.state.drawSideMode~='hide' then
                 -- Draw sides
-                local unitY=640*s.ky
+                local unitY=640*ky
                 if self.state.drawSideMode=='normal' then
                     for i=0,99 do
                         gc_setColor(r,g,b,a*(1-abs(i)/100))
@@ -465,20 +478,11 @@ function Track:draw(map)
                 gc_rectangle('fill',-trackW,0,2*trackW,4)
             end
         end
-
-        -- Draw track name
-        if s.nameAlpha>0 then
-            FONT.set(40)
-            gc_setColor(r,g,b,s.nameAlpha/100)
-            for i=1,#self.showName do
-                GC.mStr(self.showName[i],0,-20-40*i)
-            end
-        end
     end
 
     -- Prepare to draw notes
-    local dropSpeed=s.dropSpeed*s.ky*(map.freeSpeed and 1.1^SET.dropSpeed or 1)
-    local thick=SET.noteThick*s.ky
+    local dropSpeed=s.dropSpeed*ky*(map.freeSpeed and 1.1^SET.dropSpeed or 1)
+    local thick=SET.noteThick*ky
 
     local chordAlpha=SET.chordAlpha
     if chordAlpha==0 then chordAlpha=false end
