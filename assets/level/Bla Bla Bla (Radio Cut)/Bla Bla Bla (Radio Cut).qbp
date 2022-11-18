@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Bla Bla Bla (Radio Cut)
 $musicAuth=Gigi D'Agostino
 $mapAuth=F2M5
-$mapDifficulty=Hard-4
+$mapDifficulty=Hard-2
 $songFile=music.ogg
 $songOffset=395ms
 

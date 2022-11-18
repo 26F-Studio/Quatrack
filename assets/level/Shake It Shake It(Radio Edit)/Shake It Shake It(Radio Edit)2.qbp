@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Shake It Shake It(Radio Edit)
 $musicAuth=Turbotronic
 $mapAuth=F2M5
-$mapDifficulty=Hard-7
+$mapDifficulty=Hard-5
 $songFile=Shake It Shake It(Radio Edit).ogg
 $songOffset=0ms
 
