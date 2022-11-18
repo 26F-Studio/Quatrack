@@ -8,9 +8,6 @@ local loadingThread=coroutine.wrap(function()
     BG.setDefault(MOBILE and 'space' or 'galaxy')
     BG.set()
     BGM.play()
-    local r=math.random()*6.2832
-    logoColor1={COLOR.rainbow(r)}
-    logoColor2={COLOR.rainbow_light(r)}
     coroutine.yield('loadSFX')SFX.load('assets/effect/chiptune/')
     coroutine.yield('loadVoice')VOC.load('assets/vocal/')
     coroutine.yield('loadFont') for i=1,17 do FONT.get(15+5*i) end
@@ -18,10 +15,13 @@ local loadingThread=coroutine.wrap(function()
     STAT.run=STAT.run+1
     saveStats()
     LOADED=true
-    return'finish'
+    return 'finish'
 end)
 
 function scene.enter()
+    local r=math.random()*6.2832
+    logoColor1={COLOR.rainbow(r)}
+    logoColor2={COLOR.rainbow_light(r)}
     studioLogo=GC.newText(FONT.get(90),"26F Studio")
     progress=0
     maxProgress=10
@@ -68,9 +68,11 @@ function scene.draw()
     for dx=-2,2,2 do for dy=-2,2,2 do GC.mDraw(studioLogo,640+dx,400+dy) end end
     GC.setColor(.2,.2,.2,progress/maxProgress)GC.mDraw(studioLogo,640,400)
 
-    GC.setColor(1,1,1)
-    FONT.set(30)
-    GC.mStr(Text.loadText[loading],640,530)
+    if loading then
+        GC.setColor(1,1,1)
+        FONT.set(30)
+        GC.mStr(Text.loadText[loading],640,530)
+    end
 end
 
 return scene

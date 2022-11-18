@@ -732,8 +732,8 @@ function scene.draw()
         gc_setColor(1,1,1,a)
         gc_draw(game.texts.mapName,0,-260,nil,min(1200/game.texts.mapName:getWidth(),1),1,game.texts.mapName:getWidth()*.5)
         gc_setColor(.7,.7,.7,a)
-        GC.mDrawSimpX(game.texts.musicAuth,0,-160)
-        GC.mDrawSimpX(game.texts.mapAuth,0,-120)
+        GC.mDrawX(game.texts.musicAuth,0,-160)
+        GC.mDrawX(game.texts.mapAuth,0,-120)
     end
 
     gc_setColor(1,1,1)
@@ -761,7 +761,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=40,y=60,w=50, sound='back',text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button',pos={0,0},x=40,y=60,w=50, sound='back',text=CHAR.icon.back,code=WIDGET.c_backScn()},
     WIDGET.new{type='button',pos={0,0},x=100,y=60,w=50,sound='key',text=CHAR.icon.retry,code=WIDGET.c_pressKey'restart'},
 }
 return scene

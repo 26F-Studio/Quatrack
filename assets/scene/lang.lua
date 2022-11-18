@@ -71,7 +71,7 @@ scene.widgetList={
     WIDGET.new{type='button'     ,x=1000,y=330,w=330,h=100,fontSize=40,text='',          color='B', sound='check'},
     WIDGET.new{type='button'     ,x=1000,y=450,w=330,h=100,fontSize=40,text='',          color='P', sound='check'},
 
-    WIDGET.new{type='button_fill',x=1000,y=570,w=330,h=100,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button_fill',x=1000,y=570,w=330,h=100,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

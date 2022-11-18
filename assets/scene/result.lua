@@ -85,9 +85,9 @@ function scene.draw()
     GC.push('transform')
         GC.translate(640,100)
         GC.scale(min(900/results.mapName:getWidth(),1))
-        GC.mDrawSimpX(results.mapName,0,0)
+        GC.mDrawX(results.mapName,0,0)
     GC.pop()
-    GC.mDrawSimpX(results.mapDifficulty,640,200)
+    GC.mDrawX(results.mapDifficulty,640,200)
 
     GC.push('transform')
     GC.translate(240,255)
@@ -156,6 +156,6 @@ end
 
 scene.widgetList={
     WIDGET.new{type='button_fill',pos={1,1},x=-300,y=-80,w=160,h=80,fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'restart'},
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene
