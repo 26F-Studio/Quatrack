@@ -1,6 +1,10 @@
 function love.conf(t)
-    t.identity='Quatrack'-- Saving folder
-    t.version="11.1"
+    local identity='Quatrack'
+    local fs=love.filesystem
+    fs.setIdentity(identity)
+
+    t.identity=identity--Saving folder
+    t.version="11.4"
     t.gammacorrect=false
     t.appendidentity=true-- Search files in source then in save directory
     t.accelerometerjoystick=false-- Accelerometer=joystick on ios/android
@@ -23,6 +27,10 @@ function love.conf(t)
     W.display=1-- Monitor ID
     W.highdpi=true-- High-dpi mode for the window on a Retina display
     W.x,W.y=nil
+
+    if fs.getInfo('assets/image/icon.png') then
+        W.icon='assets/image/icon.png'
+    end
 
     local M=t.modules
     M.window,M.system,M.event,M.thread=true,true,true,true
