@@ -4,8 +4,8 @@ local boundaryDispTime
 
 function scene.enter()
     local mobile=SYSTEM=='Android' or SYSTEM=='iOS'
-    scene.widgetList.fullscreen:setVisible(mobile)
-    scene.widgetList.portrait:setVisible(not mobile)
+    scene.widgetList.fullscreen:setVisible(not mobile)
+    scene.widgetList.portrait:setVisible(mobile)
     boundaryDispTime=0
     BG.set()
 end
@@ -83,7 +83,7 @@ scene.widgetList={
     WIDGET.new{                   type='switch', pos={1,0},x=-100,y=190, text=LANG'setting_power',      widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'powerInfo'),   code=TABLE.func_revVal(SETTINGS,'powerInfo')},
     WIDGET.new{                   type='switch', pos={1,0},x=-100,y=250, text=LANG'setting_clean',      widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'cleanCanvas'), code=TABLE.func_revVal(SETTINGS,'cleanCanvas')},
     WIDGET.new{name='fullscreen', type='switch', pos={1,0},x=-100,y=310, text=LANG'setting_fullscreen', widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'fullscreen'),  code=TABLE.func_revVal(SETTINGS,'fullscreen')},
-    WIDGET.new{name='portrait',   type='switch', pos={1,0},x=-100,y=310, text=LANG'setting_portrait',   widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'portrait'),    code=TABLE.func_revVal(SETTINGS,'portrait')},
+    WIDGET.new{name='portrait',   type='switch', pos={1,0},x=-100,y=310, text=LANG'setting_portrait',   widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'portrait'),    code=function() SETTINGS.portrait = not SETTINGS.portrait; saveSettings(); if TASK.lock('warnMessage',6.26) then MES.new('warn',Text.setting_needRestart,6.26) end end},
 
     WIDGET.new{type='switch',     pos={1,0},x=-100,y=370,           text=LANG'setting_autoMute',    widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'autoMute'),      code=TABLE.func_revVal(SETTINGS,'autoMute')},
     WIDGET.new{type='switch',     pos={1,0},x=-100,y=430,           text=LANG'setting_slowUnfocus', widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'slowUnfocus'),   code=TABLE.func_revVal(SETTINGS,'slowUnfocus')},
