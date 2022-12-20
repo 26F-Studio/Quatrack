@@ -33,8 +33,9 @@ end
 function scene.mouseDown()
     if LOADED then
         if FIRSTLAUNCH then
+            SCN.pop()
             SCN.push('main')
-            SCN.swapTo('lang')
+            SCN.go('lang')
         else
             SCN.swapTo('main')
         end
