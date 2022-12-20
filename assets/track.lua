@@ -111,7 +111,6 @@ function Track:moveNameAlpha(animData,dna)
     self:setNameAlpha(animData,self.targetState.nameAlpha+(dna or 0))
 end
 function Track:moveDrawBaseline()
-    error()
     self.state.drawBaseline=not self.defaultState.drawBaseline
 end
 
