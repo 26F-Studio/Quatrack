@@ -121,6 +121,7 @@ return{
     setting_power="电量显示",
     setting_clean="绘制优化",
     setting_fullscreen="全屏",
+    setting_portrait="竖屏",
     setting_autoMute="失去焦点自动静音",
     setting_slowUnfocus="失去焦点节约性能",
 

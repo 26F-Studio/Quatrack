@@ -3,9 +3,8 @@ local scene={}
 local boundaryDispTime
 
 function scene.enter()
-    local system=love.system.getOS()
-    local mobile=system=='Android' or system=='iOS'
-    scene.widgetList.fullscreen:setVisible( mobile)
+    local mobile=SYSTEM=='Android' or SYSTEM=='iOS'
+    scene.widgetList.fullscreen:setVisible(mobile)
     scene.widgetList.portrait:setVisible(not mobile)
     boundaryDispTime=0
     BG.set()
