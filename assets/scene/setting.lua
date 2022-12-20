@@ -49,7 +49,7 @@ local function sliderShow_hitLV(S)
     return hitTexts[S.disp()] or "?"
 end
 
-scene.scrollHeight=626
+scene.scrollHeight=700
 scene.widgetList={
     WIDGET.new{type='slider_fill',pos={0,0},x=260, y=150,w=420,h=35,text=LANG'setting_mainVol',     widthLimit=200,disp=TABLE.func_getVal(SETTINGS,'mainVol'), code=TABLE.func_setVal(SETTINGS,'mainVol')},
     WIDGET.new{type='slider_fill',pos={0,0},x=260, y=200,w=420,h=35,text=LANG'setting_bgm',         widthLimit=200,disp=TABLE.func_getVal(SETTINGS,'bgmVol'),  code=TABLE.func_setVal(SETTINGS,'bgmVol')},
@@ -73,6 +73,7 @@ scene.widgetList={
     WIDGET.new{type='slider',     pos={0,0},x=260,y=1200,w=420,     text=LANG'setting_maxFPS',      widthLimit=200,axis={60,360,10},smooth=true, disp=TABLE.func_getVal(SETTINGS,'maxFPS'),     valueShow=sliderShow_fps,code=TABLE.func_setVal(SETTINGS,'maxFPS')},
     WIDGET.new{type='slider',     pos={0,0},x=260,y=1250,w=420,     text=LANG'setting_updRate',     widthLimit=200,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS,'updRate'),    valueShow=sliderShow_mul,code=TABLE.func_setVal(SETTINGS,'updRate')},
     WIDGET.new{type='slider',     pos={0,0},x=260,y=1300,w=420,     text=LANG'setting_drawRate',    widthLimit=200,axis={20,100,10},             disp=TABLE.func_getVal(SETTINGS,'drawRate'),   valueShow=sliderShow_mul,code=TABLE.func_setVal(SETTINGS,'drawRate')},
+    WIDGET.new{type='slider',     pos={0,0},x=260,y=1350,w=210,     text=LANG'setting_msaa',        widthLimit=380,axis={0,4,1},                 disp=function() return SETTINGS.msaa==0 and 0 or math.log(SETTINGS.msaa,2) end, valueShow=function(S) return (S.disp()==0 and 0 or 2^S.disp()).."x" end,  code=function(v) SETTINGS.msaa=v==0 and 0 or 2^v; saveSettings(); if TASK.lock('warnMessage',6.26) then MES.new('warn',Text.setting_needRestart,6.26) end end},
 
     WIDGET.new{type='switch',     pos={1,0},x=-100,y=70,            text=LANG'setting_sysCursor',   widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'sysCursor'),     code=TABLE.func_revVal(SETTINGS,'sysCursor')},
     WIDGET.new{type='switch',     pos={1,0},x=-100,y=130,           text=LANG'setting_clickFX',     widthLimit=360,disp=TABLE.func_getVal(SETTINGS,'clickFX'),       code=TABLE.func_revVal(SETTINGS,'clickFX')},

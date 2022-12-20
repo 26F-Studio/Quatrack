@@ -223,6 +223,7 @@ do-- Userdata tables
             maxFPS=300,
             updRate=100,
             drawRate=30,
+            msaa=4,
 
             -- System
             sysCursor=false,

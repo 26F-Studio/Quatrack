@@ -8,6 +8,7 @@ return{
         loadOther="加载杂项",
         finish="按任意键继续",
     },
+    setting_needRestart="该设置需要重启后生效",
     sureQuit="再按一次退出",
     sureReset="再按一次重置",
     newDay="新的一天,新的开始~",
@@ -126,6 +127,7 @@ return{
     setting_maxFPS="最大FPS",
     setting_updRate="更新帧频率",
     setting_drawRate="绘制帧频率",
+    setting_msaa="抗锯齿",
 
     setting_showTouch="触摸显示",
 

@@ -1,7 +1,15 @@
 function love.conf(t)
     local identity='Quatrack'
+    local msaa=4
+
     local fs=love.filesystem
     fs.setIdentity(identity)
+    do -- Load grapgic settings from conf/settings
+        local fileData=fs.read('conf/settings')
+        if fileData then
+            msaa=tonumber(fileData:match('"msaa":(%d+)')) or 0
+        end
+    end
 
     t.identity=identity--Saving folder
     t.version="11.4"
@@ -21,7 +29,7 @@ function love.conf(t)
     W.resizable=true
     W.fullscreen=false
     W.vsync=0-- Unlimited FPS
-    W.msaa=0-- Multi-sampled antialiasing
+    W.msaa=msaa-- Multi-sampled antialiasing
     W.depth=0-- Bits/samp of depth buffer
     W.stencil=1-- Bits/samp of stencil buffer
     W.display=1-- Monitor ID

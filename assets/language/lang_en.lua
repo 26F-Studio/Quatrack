@@ -8,6 +8,7 @@ return{
         loadOther="Loading other assets",
         finish="Press any key to start!",
     },
+    setting_needRestart="This setting takes effect after restart",
     sureQuit="Press again to quit",
     sureReset="Press again to reset",
     newDay="A new day, a new beginning!",
@@ -126,6 +127,7 @@ return{
     setting_maxFPS="Max FPS",
     setting_updRate="Update rate",
     setting_drawRate="Draw rate",
+    setting_msaa="MSAA",
 
     setting_showTouch="Show touches",
 
