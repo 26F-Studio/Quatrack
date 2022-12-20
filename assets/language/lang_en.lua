@@ -121,6 +121,7 @@ return{
     setting_power="Battery Info",
     setting_clean="Quick Draw",
     setting_fullscreen="Fullscreen",
+    setting_portrait="Portrait",
     setting_autoMute="Mute while unfocused",
     setting_slowUnfocus="Slow when unfocused",
 
