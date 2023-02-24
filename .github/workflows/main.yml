@@ -286,7 +286,7 @@ jobs:
           cp ${{ env.OUTPUT_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}.ipa ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_iOS.ipa
       - name: Upload release
         if: ${{ startsWith(github.ref, 'refs/tags/pre') || startsWith(github.ref, 'refs/tags/v') }}
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifacts: ${{ env.RELEASE_FOLDER }}/${{ steps.process-app-name.outputs.product-name }}_iOS.ipa
@@ -711,7 +711,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Cleanup
-        uses: geekyeggo/delete-artifact@v1
+        uses: geekyeggo/delete-artifact@v2
         with:
           name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
       - name: Display summary
