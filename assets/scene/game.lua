@@ -478,18 +478,32 @@ function scene.touchDown(x,y,id)
             angle=angle+1.5707963267948966
             angle=angle%6.283185307179586
 
-            local D
-            if abs(angle-3.141592653589793)>=1.5707963267948966 then
-                if angle>3.141592653589793 then angle=6.283185307179586-angle end
-                D=abs(cos(T.state.ang/57.29577951308232)*(x-T.state.x)+sin(T.state.ang/57.29577951308232)*(y-T.state.y))
+            local dist
+            if T.state.drawSideMode=='double' or T.state.drawSideMode=='harddouble' then
+                dist=abs(cos(T.state.ang/57.29577951308232)*(x-T.state.x)+sin(T.state.ang/57.29577951308232)*(y-T.state.y))
+
+                if dist<=50*T.state.kx*SET.trackW/SET.scaleX then
+                    ins(onTrack,T)
+                    minTime=min(minTime,T:pollPressTime())
+                elseif dist<minDist then
+                    minDist,closestTrackID=dist,i
+                end
             else
-                D=((y-T.state.y)^2+(x-T.state.x)^2)^.5
-            end
-            if D<=50*T.state.kx*SET.trackW/SET.scaleX then
-                ins(onTrack,T)
-                minTime=min(minTime,T:pollPressTime())
-            elseif D<minDist then
-                minDist,closestTrackID=D,i
+                if abs(angle-3.141592653589793)>=1.5707963267948966 then
+                    if angle>3.141592653589793 then angle=6.283185307179586-angle end
+                    dist=abs(cos(T.state.ang/57.29577951308232)*(x-T.state.x)+sin(T.state.ang/57.29577951308232)*(y-T.state.y))
+                    if dist<=50*T.state.kx*SET.trackW/SET.scaleX then
+                        ins(onTrack,T)
+                        minTime=min(minTime,T:pollPressTime())
+                    elseif dist<minDist then
+                        minDist,closestTrackID=dist,i
+                    end
+                else
+                    dist=((y-T.state.y)^2+(x-T.state.x)^2)^.5
+                    if dist<minDist then
+                        minDist,closestTrackID=dist,i
+                    end
+                end
             end
         end
     end
