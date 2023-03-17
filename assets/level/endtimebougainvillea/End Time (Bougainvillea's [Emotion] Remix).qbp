@@ -3,8 +3,8 @@ $mapName=End Time (Bougainvillea's [Emotion] Remix)
 $musicAuth=Cres
 $mapAuth=Ykzl
 $mapDifficulty=Lunatic-1
-
 $songFile=endtimebougainvillea.ogg
+$songImage=bg.jpg
 $songOffset=-356ms
 
 ---O

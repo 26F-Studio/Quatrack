@@ -3,8 +3,8 @@ $mapName=哀の隙間
 $musicAuth=ゆーむ
 $mapAuth=Ykzl
 $mapDifficulty=Hard-2
-
 $songFile=ainosukima.ogg
+$songImage=bg.jpg
 $songOffset=10ms
 
 --O-;>104.052s

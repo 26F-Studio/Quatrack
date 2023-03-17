@@ -3,8 +3,8 @@ $mapName=Entrance (Metal Arrange)
 $musicAuth=Acotto
 $mapAuth=Ykzl
 $mapDifficulty=Hard-8
-
 $songFile=entrancemetal.ogg
+$songImage=Entrance.jpg
 $songOffset=224ms
 
 OO--;[A]T,40

@@ -4,6 +4,7 @@ $musicAuth=悠木碧,东山奈央,花泽香菜,MAKO,内山夕实
 $mapAuth=Ykzl
 $mapDifficulty=Easy-6
 $songFile=Square Panic Serenade.ogg
+$songImage=BG.jpg
 $songOffset=-150ms
 
 O--O;>88156ms

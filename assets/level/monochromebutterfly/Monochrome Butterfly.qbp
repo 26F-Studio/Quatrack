@@ -3,8 +3,8 @@ $mapName=Monochrome Butterfly
 $musicAuth=藍月なくる
 $mapAuth=Ykzl
 $mapDifficulty=Hard-1
-
 $songFile=monochromebutterfly.ogg
+$songImage=butterfly.jpg
 $songOffset=20ms
 
 H--H

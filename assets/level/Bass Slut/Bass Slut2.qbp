@@ -5,6 +5,7 @@ $mapAuth=Ykzl
 $scriptAuth=Ykzl
 $mapDifficulty=Normal-8
 $songFile=bassslut.ogg
+$songImage=bassslut.jpg
 $songOffset=-24ms
 $tracks=8
 $realTracks=4
