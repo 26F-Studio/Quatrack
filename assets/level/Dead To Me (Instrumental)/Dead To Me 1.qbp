@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Dead To Me (Instrumental)
 $musicAuth=Sex Whales, Fraxo
 $mapAuth=Ykzl
-$mapDifficulty=Easy-10
+$mapDifficulty=Easy-9
 $songFile=Dead To Me.ogg
 $songOffset=-7ms
 

@@ -2,7 +2,7 @@ $version=1.0
 $mapName=Logical Stimulus
 $musicAuth=a_hisa
 $mapAuth=Ykzl
-$mapDifficulty=Easy-9
+$mapDifficulty=Easy-8
 
 $songFile=logicalstimulus.ogg
 $songOffset=-11ms

@@ -2,7 +2,7 @@ $version=1.0
 $mapName=DX超性能フルメタル少女
 $musicAuth=IOSYS TRAX (uno with.ちよこ)
 $mapAuth=Ykzl
-$mapDifficulty=Easy-9
+$mapDifficulty=Easy-8
 
 $songFile=dxfullmetal.ogg
 $songImage=dxfullmetal.jpg
