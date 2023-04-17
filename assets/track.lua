@@ -499,7 +499,7 @@ function Track:draw(map)
         end
         if a >0 then
             local dx,dy=note:getOffset(1-timeRemain/2.6)
-            dy=dy*noteDY
+            dy=dy+noteDY
 
             gc_translate(dx,dy)
             if note.type=='tap' then
