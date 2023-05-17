@@ -127,7 +127,7 @@ function scene.keyDown(key,isRep)
             SFX.play('enter')
             SCN.go('game',nil,map)
         else
-            MES.new('error',errmsg)
+            MSG.new('error',errmsg)
         end
     elseif key=='tab' then
         if isRep then return end
@@ -168,7 +168,7 @@ scene.widgetList={
             if not MOBILE then
                 love.system.openURL(love.filesystem.getSaveDirectory()..'/songs')
             else
-                MES.new('info',love.filesystem.getSaveDirectory())
+                MSG.new('info',love.filesystem.getSaveDirectory())
             end
         end
     },

@@ -26,7 +26,7 @@ local trackNames=trackNames
 local getHitLV=getHitLV
 local function _showVolMes(v)
     needSaveSetting=true
-    MES.new('info',('$1%'):repD(('%d'):format(v*100)),0)
+    MSG.new('info',('$1%'):repD(('%d'):format(v*100)),0)
 end
 
 local autoPlayTextObj
@@ -96,9 +96,9 @@ local function _tryGoResult()
     if game.needSaveSetting then saveSettings() end
     if game.fullAcc>0 and game.curAcc/game.fullAcc>=.6 then
         _updateStat()
-        MES.new('check',Text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
+        MSG.new('check',Text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
     else
-        MES.new('info',Text.invalidScore)
+        MSG.new('info',Text.invalidScore)
     end
     Zenitha.setClickFX(SET.clickFX)
     SCN.swapTo('result',nil,{
@@ -148,8 +148,8 @@ local function callScriptEvent(event,...)
             if love.timer.getTime()-lastErrorTime[event]>=0.626 then
                 lastErrorTime[event]=love.timer.getTime()
                 err=err:gsub('%b[]:','')
-                -- MES.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
-                MES.new('error',err)
+                -- MSG.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
+                MSG.new('error',err)
             end
         end
     end
@@ -209,9 +209,9 @@ function scene.enter()
 
     local dirPath=game.map.qbpFilePath:sub(1,#game.map.qbpFilePath-game.map.qbpFilePath:reverse():find("/")+1)
     if love.filesystem.getInfo(dirPath..game.map.songFile) then
-        BGM.init(game.map.qbpFilePath,dirPath..game.map.songFile)
+        BGM.load(game.map.qbpFilePath,dirPath..game.map.songFile)
     elseif game.map.songFile~="[songFile]" then
-        MES.new('error',Text.noFile)
+        MSG.new('error',Text.noFile)
     end
     BGM.play(game.map.qbpFilePath,'-preLoad')
 
@@ -232,14 +232,14 @@ function scene.enter()
                 local _
                 _,err=pcall(func)
                 if err then
-                    MES.new('error',err)
+                    MSG.new('error',err)
                 end
             else
                 err=err:gsub('%b[]:','')
-                MES.new('error',("<$1>$2:$3"):repD('syntax',err:match('^%d+'),err:sub(err:find(':')+1)))
+                MSG.new('error',("<$1>$2:$3"):repD('syntax',err:match('^%d+'),err:sub(err:find(':')+1)))
             end
         else
-            MES.new('error',Text.noFile)
+            MSG.new('error',Text.noFile)
         end
     end
     callScriptEvent('init')
@@ -251,7 +251,7 @@ function scene.enter()
             local success
             success,image=pcall(gc.newImage,dirPath..game.map.songImage)
             if not success then
-                MES.new('error',Text.noFile)
+                MSG.new('error',Text.noFile)
                 image=nil
             end
         end
@@ -378,7 +378,7 @@ function scene.keyDown(key,isRep)
             BGM.stop()
             scene.enter()
         else
-            MES.new('error',errmsg)
+            MSG.new('error',errmsg)
         end
     elseif k=='sfxVolDn' then SET.sfxVol=max(SET.sfxVol-.1,0);_showVolMes(SET.sfxVol)
     elseif k=='sfxVolUp' then SET.sfxVol=min(SET.sfxVol+.1,1);_showVolMes(SET.sfxVol)
@@ -387,18 +387,18 @@ function scene.keyDown(key,isRep)
     elseif k=='dropSpdDn' then
         if game.score0==0 or game.curAcc==-1e99 then
             SET.dropSpeed=max(SET.dropSpeed-1,-8)
-            MES.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
+            MSG.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
             game.needSaveSetting=true
         else
-            MES.new('warn',Text.cannotAdjustDropSpeed,0)
+            MSG.new('warn',Text.cannotAdjustDropSpeed,0)
         end
     elseif k=='dropSpdUp' then
         if game.score0==0 or game.curAcc==-1e99 then
             SET.dropSpeed=min(SET.dropSpeed+1,8)
-            MES.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
+            MSG.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
             game.needSaveSetting=true
         else
-            MES.new('warn',Text.cannotAdjustDropSpeed,0)
+            MSG.new('warn',Text.cannotAdjustDropSpeed,0)
         end
     elseif k=='escape' then
         if _tryGoResult() then

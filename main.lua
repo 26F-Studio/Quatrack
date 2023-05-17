@@ -71,9 +71,9 @@ do-- Zenitha.setDrawCursor
 end
 Zenitha.setOnGlobalKey('f11',function() SETTINGS.fullscreen=not SETTINGS.fullscreen; saveSettings() end)
 Zenitha.setOnFnKeys({
-    function() MES.new('check',PROFILE.switch() and "profile start!" or "profile report copied!") end,
-    function() MES.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
-    function() MES.new('error',"挂了") end,
+    function() MSG.new('check',PROFILE.switch() and "profile start!" or "profile report copied!") end,
+    function() MSG.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
+    function() MSG.new('error',"挂了") end,
     function() end,
     function() print(WIDGET.getSelected() or "no widget selected") end,
     function() for k,v in next,_G do print(k,v) end end,
@@ -179,6 +179,7 @@ WIDGET._prototype.inputBox.sound_bksp='hit3'
 WIDGET._prototype.inputBox.sound_delete='hold1'
 WIDGET._prototype.inputBox.sound_clear='hold4'
 WIDGET._prototype.textBox.sound_clear='hold4'
+WIDGET._prototype.slider.numFontType='norm'
 WIDGET._prototype.slider_fill.lineWidth=2
 WIDGET._prototype.switch.labelPos='left'
 WIDGET._prototype.button.lineWidth=2
@@ -206,12 +207,12 @@ SFX.init((function()
     local L={}
     for _,v in next,love.filesystem.getDirectoryItems('assets/effect/chiptune/') do
         if FILE.isSafe('assets/effect/chiptune/'..v) then
-            table.insert(L,v:sub(1,-5))
+            L[v:sub(1,-5)]=v
         end
     end
     return L
 end)())
-BGM.init((function()
+BGM.load((function()
     local L={}
     for _,v in next,love.filesystem.getDirectoryItems('assets/music') do
         if FILE.isSafe('assets/music/'..v) then

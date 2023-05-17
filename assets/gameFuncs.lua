@@ -12,7 +12,7 @@ function sureCheck(event)
     if love.timer.getTime()-lastTime[event]<1 then
         return true
     else
-        MES.new('info',Text.sureText[event])
+        MSG.new('info',Text.sureText[event])
     end
     lastTime[event]=love.timer.getTime()
 end
@@ -26,17 +26,17 @@ do-- function loadFile(name,args)
             return mes
         else
             if mes:find'open error' then
-                MES.new('error',text.loadError_open:repD(name,""))
+                MSG.new('error',text.loadError_open:repD(name,""))
             elseif mes:find'unknown mode' then
-                MES.new('error',text.loadError_errorMode:repD(name,args))
+                MSG.new('error',text.loadError_errorMode:repD(name,args))
             elseif mes:find'no file' then
                 if not args:sArg'-canSkip' then
-                    MES.new('error',text.loadError_noFile:repD(name,""))
+                    MSG.new('error',text.loadError_noFile:repD(name,""))
                 end
             elseif mes then
-                MES.new('error',text.loadError_other:repD(name,mes))
+                MSG.new('error',text.loadError_other:repD(name,mes))
             else
-                MES.new('error',text.loadError_unknown:repD(name,""))
+                MSG.new('error',text.loadError_unknown:repD(name,""))
             end
         end
     end
@@ -49,7 +49,7 @@ do-- function saveFile(data,name,args)
         if res then
             return mes
         else
-            MES.new('error',
+            MSG.new('error',
                 mes:find'duplicate' and
                     text.saveError_duplicate:repD(name) or
                 mes:find'encode error' and

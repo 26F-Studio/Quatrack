@@ -68,7 +68,7 @@ function scene.keyDown(key,isRep)
             if map then
                 SCN.swapTo('game',nil,map)
             else
-                MES.new('error',errmsg)
+                MSG.new('error',errmsg)
             end
         end
     elseif k=='escape' then

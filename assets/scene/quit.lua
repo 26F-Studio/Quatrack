@@ -9,11 +9,11 @@ function scene.enter()
             error("So lucky! 0.00626% to get this!!   You can quit the game now.")
         end
     else
-        MES.update(1e99)
+        MSG.update(1e99)
         Zenitha.setPowerInfo(false)
         Zenitha.setClickFX(false)
         VERSION.string=""
-        MES.new('error',"Please quit with HOME button on iOS",1e99)
+        MSG.new('error',"Please quit with HOME button on iOS",1e99)
     end
 end
 

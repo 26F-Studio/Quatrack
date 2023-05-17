@@ -54,7 +54,7 @@ scene.widgetList={
             if not MOBILE then
                 love.system.openURL(love.filesystem.getSaveDirectory())
             else
-                MES.new('info',love.filesystem.getSaveDirectory())
+                MSG.new('info',love.filesystem.getSaveDirectory())
             end
         end
     },
