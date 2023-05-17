@@ -413,7 +413,6 @@ function Track:draw(map)
     gc_rotate(s.ang/57.29577951308232)
     local ky=abs(s.ky)
     local trackW=50*s.kx*SET.trackW
-    local noteDY=ky*s.dropSpeed/50
 
     do-- Draw track frame
         local r,g,b,a=s.r,s.g,s.b,s.alpha/100
@@ -499,7 +498,6 @@ function Track:draw(map)
         end
         if a >0 then
             local dx,dy=note:getOffset(1-timeRemain/2.6)
-            dy=dy+noteDY
 
             gc_translate(dx,dy)
             if note.type=='tap' then
@@ -507,7 +505,7 @@ function Track:draw(map)
                     _drawChordBox(self.chordColor[note.chordCount-1],chordAlpha*a,trackW,headH,thick)
                 end
                 gc_setColor(r,g,b,a)
-                gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
+                gc_rectangle('fill',-trackW,-headH,2*trackW,-thick)
             elseif note.type=='hold' then
                 local tailH=(note.etime-self.time)*dropSpeed
                 local a2=note.active and a or a*.5
@@ -521,14 +519,14 @@ function Track:draw(map)
                         _drawChordBox(self.chordColor[note.chordCount_head-1],chordAlpha*a,trackW,headH,thick)
                     end
                     gc_setColor(r,g,b,a)
-                    gc_rectangle('fill',-trackW,-headH-thick,2*trackW,thick)
+                    gc_rectangle('fill',-trackW,-headH,2*trackW,-thick)
                 end
                 if note.tail then
                     if chordAlpha and note.chordCount_tail>1 then
                         _drawChordBox(self.chordColor[note.chordCount_tail-1],chordAlpha*a2,trackW,tailH,thick/2)
                     end
                     gc_setColor(r,g,b,a2)
-                    gc_rectangle('fill',-trackW,-tailH-thick/2,2*trackW,thick/2)
+                    gc_rectangle('fill',-trackW,-tailH,2*trackW,-thick/2)
                 end
             end
             gc_translate(-dx,-dy)
