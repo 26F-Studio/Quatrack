@@ -280,7 +280,7 @@ function Track:release(weak,auto)
     end
 end
 
-local approach,mix=MATH.expApproach,MATH.mix
+local approach,lerp=MATH.expApproach,MATH.lerp
 local animManager={
     position={'x','y'},
     angle={'ang'},
@@ -307,7 +307,7 @@ function Track:update(dt)
         elseif animData.type=='L' then
             for j=1,#animKeys do
                 local k=animKeys[j]
-                C[k]=mix(S[k],T[k],(self.time-animData.start)/animData.duration)
+                C[k]=lerp(S[k],T[k],(self.time-animData.start)/animData.duration)
             end
             if self.time>animData.start+animData.duration then
                 for j=1,#animKeys do
@@ -318,7 +318,7 @@ function Track:update(dt)
         elseif animData.type=='T' then
             for j=1,#animKeys do
                 local k=animKeys[j]
-                C[k]=mix(S[k],T[k],-math.cos((self.time-animData.start)/animData.duration*MATH.pi)*.5+.5)
+                C[k]=lerp(S[k],T[k],-math.cos((self.time-animData.start)/animData.duration*MATH.pi)*.5+.5)
             end
             if self.time>animData.start+animData.duration then
                 for j=1,#animKeys do

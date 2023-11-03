@@ -125,28 +125,28 @@ function scene.draw()
         end
         GC.setColor(clr)
         if c==1 then
-            GC.print(trophy,0,195)
+            GC.print(trophy,0,202)
             GC.setColor(1,1,1,.626)
-            GC.print(trophy,0,195)
+            GC.print(trophy,0,202)
         elseif c==2 then
-            GC.print(trophy,0,195)
+            GC.print(trophy,0,202)
             GC.setColor(1,1,1,.626+.0626*sin(t*62.6))
-            GC.print(trophy,0,195)
+            GC.print(trophy,0,202)
         elseif c==3 then
-            GC.print(trophy,0,195)
+            GC.print(trophy,0,202)
             GC.setColor(1,1,1,.85+.15*sin(t*62.6))
-            GC.print(trophy,0,195)
+            GC.print(trophy,0,202)
         elseif c>=4 then
             for i=0,10 do
                 _stencilX=100*i
                 GC.stencil(_marvStencil,'replace',1)
                 GC.setStencilTest('equal',1)
                 GC.setColor(COLOR.rainbow(t*(c==4 and 2.6 or 6.26)-i))
-                GC.print(trophy,sin(t*355)*((c==4 and 1 or 2.6)+.6*sin(t*.626)),195+1.6*sin(t*260))
+                GC.print(trophy,sin(t*355)*((c==4 and 1 or 2.6)+.6*sin(t*.626)),202+1.6*sin(t*260))
                 GC.setStencilTest()
             end
             GC.setColor(1,1,1,.9)
-            GC.print(trophy,0,195)
+            GC.print(trophy,0,202)
         end
     end
     GC.pop()
@@ -156,6 +156,6 @@ end
 
 scene.widgetList={
     WIDGET.new{type='button_fill',pos={1,1},x=-300,y=-80,w=160,h=80,fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'restart'},
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_press='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 return scene

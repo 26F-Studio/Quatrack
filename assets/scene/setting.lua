@@ -52,7 +52,7 @@ local function sliderShow_hitLV(S)
     return hitTexts[S.disp()] or "?"
 end
 
-scene.scrollHeight=700
+scene.scrollHeight=626
 scene.widgetList={
     WIDGET.new{type='slider_fill',pos={0,0},x=260, y=150,w=420,h=35,text=LANG'setting_mainVol',     widthLimit=200,disp=TABLE.func_getVal(SETTINGS,'mainVol'), code=TABLE.func_setVal(SETTINGS,'mainVol')},
     WIDGET.new{type='slider_fill',pos={0,0},x=260, y=200,w=420,h=35,text=LANG'setting_bgm',         widthLimit=200,disp=TABLE.func_getVal(SETTINGS,'bgmVol'),  code=TABLE.func_setVal(SETTINGS,'bgmVol')},
@@ -92,7 +92,7 @@ scene.widgetList={
 
     WIDGET.new{type='button_fill',pos={1,1},x=-320,y=-80,w=160,h=80,fontSize=60,text=CHAR.icon.keyboard,code=WIDGET.c_goScn'setting_key'},
 
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_press='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
 }
 
 return scene

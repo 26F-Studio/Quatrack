@@ -170,20 +170,21 @@ SCR.setSize(1280,720)
 BGM.setDefault('title')
 BGM.setMaxSources(5)
 VOC.setDiversion(.62)
-WIDGET._prototype.button.sound='button'
+WIDGET._prototype.button.sound_press='button'
 WIDGET._prototype.checkBox.sound_on='check'
 WIDGET._prototype.checkBox.sound_off='uncheck'
-WIDGET._prototype.selector.sound='selector'
+WIDGET._prototype.selector.sound_press='selector'
+WIDGET._prototype.listBox.sound_select='click'
 WIDGET._prototype.inputBox.sound_input='hit5'
 WIDGET._prototype.inputBox.sound_bksp='hit3'
-WIDGET._prototype.inputBox.sound_delete='hold1'
+WIDGET._prototype.inputBox.sound_bksp='hold1'
 WIDGET._prototype.inputBox.sound_clear='hold4'
 WIDGET._prototype.textBox.sound_clear='hold4'
 WIDGET._prototype.slider.numFontType='norm'
 WIDGET._prototype.slider_fill.lineWidth=2
 WIDGET._prototype.switch.labelPos='left'
 WIDGET._prototype.button.lineWidth=2
-WIDGET._prototype.button_fill.color_text=TABLE.shift(COLOR.D)
+WIDGET._prototype.button_fill.textColor=TABLE.shift(COLOR.D)
 LANG.add{
     zh='assets/language/lang_zh.lua',
     en='assets/language/lang_en.lua',
@@ -203,11 +204,12 @@ IMG.init{
         particle4='assets/image/z_particle4.png',
     }
 }
-SFX.init((function()
+SFX.load((function()
+    local path='assets/effect/chiptune/'
     local L={}
-    for _,v in next,love.filesystem.getDirectoryItems('assets/effect/chiptune/') do
-        if FILE.isSafe('assets/effect/chiptune/'..v) then
-            L[v:sub(1,-5)]=v
+    for _,v in next,love.filesystem.getDirectoryItems(path) do
+        if FILE.isSafe(path..v) then
+            L[v:sub(1,-5)]=path..v
         end
     end
     return L

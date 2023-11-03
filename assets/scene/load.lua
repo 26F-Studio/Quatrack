@@ -8,7 +8,6 @@ local loadingThread=coroutine.wrap(function()
     BG.setDefault(MOBILE and 'space' or 'galaxy')
     BG.set()
     BGM.play()
-    coroutine.yield('loadSFX')SFX.load('assets/effect/chiptune/')
     coroutine.yield('loadVoice')VOC.load('assets/vocal/')
     coroutine.yield('loadFont') for i=1,17 do FONT.get(15+5*i) end
 
@@ -33,8 +32,8 @@ end
 function scene.mouseDown()
     if LOADED then
         if FIRSTLAUNCH then
-            SCN.pop()
-            SCN.push('main')
+            SCN._pop()
+            SCN._push('main')
             SCN.go('lang')
         else
             SCN.swapTo('main')

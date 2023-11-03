@@ -775,7 +775,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=40,y=60,w=50, sound='back',text=CHAR.icon.back,code=WIDGET.c_backScn()},
-    WIDGET.new{type='button',pos={0,0},x=100,y=60,w=50,sound='key',text=CHAR.icon.retry,code=WIDGET.c_pressKey'restart'},
+    WIDGET.new{type='button',pos={0,0},x=40,y=60,w=50, sound_press='back',text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={0,0},x=100,y=60,w=50,sound_press='key',text=CHAR.icon.retry,code=WIDGET.c_pressKey'restart'},
 }
 return scene

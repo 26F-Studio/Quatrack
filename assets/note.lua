@@ -1,4 +1,4 @@
-local listMix=MATH.listMix
+local listLerp=MATH.listLerp
 
 local Note={}
 
@@ -11,19 +11,19 @@ end
 
 function Note:getColor(t)
     return
-    listMix(self.color[1],t),
-    listMix(self.color[2],t),
-    listMix(self.color[3],t)
+    listLerp(self.color[1],t),
+    listLerp(self.color[2],t),
+    listLerp(self.color[3],t)
 end
 
 function Note:getAlpha(t)
-    return listMix(self.alpha,t)*.01
+    return listLerp(self.alpha,t)*.01
 end
 
 function Note:getOffset(t)
     return
-    listMix(self.xOffset,t),
-    listMix(self.yOffset,t)
+    listLerp(self.xOffset,t),
+    listLerp(self.yOffset,t)
 end
 
 return Note
