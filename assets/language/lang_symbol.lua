@@ -1,0 +1,145 @@
+return{
+    loadText={
+        loadSFX="#!#",
+        loadSample="#~#",
+        loadFont="#Aa#",
+        loadModeIcon="#[ ]#",
+        loadMode="#[…]#",
+        loadOther="#…#",
+        finish="&",
+    },
+    setting_needRestart="!!*#R#*!!",
+    sureQuit="X?",
+    sureReset="R?",
+    newDay="→→!→→",
+    playedLong="→→→→!, XX□XX!",
+    playedTooMuch="→→→→→→→→→→→!, XX□XX!!!!!!!",
+
+    music_early="+$1",
+    music_late="-$1",
+    music_nodelay="==",
+
+    pause="=",
+    pauseCount="==",
+    chainTexts={
+        "!X",
+        "!X+",
+        "AP",
+        "AP+",
+        "!!!!!!!!",
+    },
+
+    loadError_errorMode="'$1' ↑x!: no load mode '$2'",
+    loadError_read="'$1' ↑x!: read failed",
+    loadError_noFile="'$1' loading failed no file:",
+    loadError_other="'$1' ↑x!: $2",
+    loadError_unknown="'$1' ↑x!: unknown reason",
+
+    saveError_duplicate="'$1' ↓x!: duplicated filename",
+    saveError_encode="'$1' ↓x!: encode failed",
+    saveError_other="'$1' ↓x!: $2",
+    saveError_unknown="'$1' ↓x!: unknown reason",
+
+    copyDone="O->OO!",
+    saveDone="~~~",
+    exportSuccess="~Out~",
+    importSuccess="~In~",
+    dataCorrupted="XXXXX",
+    pasteWrongPlace="_?X.",
+    noFile="X.",
+
+    validScore="_____!$1",
+    invalidScore="XXXXX,X=~~~",
+    trackFailed="x",
+
+    noScore="?_____?",
+    modeLocked="XXXXX",
+    unlockHint="\\B/!",
+    highScore="__&:",
+    newRecord="^!!!^",
+
+    keySettingInstruction="Press to bind key\nescape: cancel\nbackspace: delete",
+
+    dropSpeedChanged="_↓->$1",
+    cannotAdjustDropSpeed="_↓->X",
+
+    errorMsg="Quatrack ran into a problem and needs to restart.\nYou can send the error log to the developers.",
+
+    stat={
+        "Game run:",
+        "Game played:",
+        "Time played:",
+        "Total score:",
+    },
+    staff={
+        "Author: MrZ  Email: 1046101471@qq.com",
+        "Powered by LÖVE",
+        "",
+        "Program: MrZ, AmateurMUL",
+        "Rule design: MrZ, 蕴空之灵",
+        "Music: T6735, T0722",
+        "Art: MrZ",
+        "Sound: MrZ",
+        "",
+        "Special Thanks:",
+        "Big_True",
+    },
+
+    -- Widget texts
+    main_play="!",
+    main_setting="_?_",
+    main_editor="O<--",
+
+    mapSelect_sortMode="Sort Mode",
+    mapSelect_sortModes={
+        difficulty=',oO',
+        name='xxx',
+    },
+
+    stat_path="_↑_",
+
+    setting_mainVol="#_#",
+    setting_bgm="#~#",
+    setting_sfx="#!#",
+    setting_stereo="←~→",
+
+    setting_bgAlpha="__?__",
+    setting_musicDelay="|    O-O",
+    setting_dropSpeed="↓---↓ ↓ ↓",
+    setting_noteThick="O ↑↓",
+    setting_chordAlpha="__O-O__",
+    setting_holdAlpha="__H---A__",
+    setting_holdWidth="H---A ←→",
+    setting_scaleX="↑~↓",
+    setting_trackW="←~→",
+    setting_safeX="Left-Right Safe Zone",
+    setting_safeY="Up-Down Safe Zone",
+    setting_showHitLV="Max Hit Level Shown",
+    setting_dvtCount="Deviate Sample Count",
+
+    setting_sysCursor="?→",
+    setting_clickFX="#O#",
+    setting_power="+.",
+    setting_clean="↑↑↑| |",
+    setting_fullscreen="|←→|",
+    setting_portrait="↑▉↓",
+    setting_autoMute="#X# | |.",
+    setting_slowUnfocus="↓↓↓ | |.",
+
+    setting_maxFPS="Max FPS",
+    setting_updRate="Update rate",
+    setting_drawRate="Draw rate",
+    setting_msaa="/ _",
+
+    setting_showTouch="@?",
+
+    keySetting_restart="_→_",
+    keySetting_skip=">>",
+    keySetting_auto="#&;",
+    keySetting_sfxVolDn="#!#-",
+    keySetting_sfxVolUp="#!#+",
+    keySetting_musicVolDn="#~#-",
+    keySetting_musicVolUp="#~#+",
+    keySetting_dropSpdDn="↓",
+    keySetting_dropSpdUp="↓↓↓",
+}

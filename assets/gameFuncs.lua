@@ -91,6 +91,7 @@ function loadBeatmap(path)
     end
 end
 function getHitLV(div,judgeTimes)
+    if div==nil then return 0 end-- Might fixes strange bad argument error.
     div=abs(div)
     return
     div<=judgeTimes[5] and 5 or
@@ -165,14 +166,14 @@ function drawSafeArea(x,y,time,alpha)
     x,y=x+1,y+1
     GC.rectangle('line',x,y,SCR.w-2*x,SCR.h-2*y)
 end
-function drawHits(hits,x,y)
+function drawHits(hits,x,y,mask)
     GC.translate(x,y)
     FONT.set(100)
     GC.setColor(.92,.82,.65)
     GC.printf(hits.perf+hits.prec+hits.marv,-140,0,600,'right')
 
     FONT.set(80)
-    GC.setColor(.58,.65,.96)
+    if mask>=2 then GC.setColor(.48,.48,.48) else GC.setColor(.58,.65,.96) end
     GC.printf(hits.well+hits.good,-140,100,600,'right')
 
     GC.setColor(.6,.1,.1)
@@ -182,17 +183,17 @@ function drawHits(hits,x,y)
     GC.setColor(hitColors[5])
     GC.printf(hitTexts[5],-55,27,600,'right')
     GC.print(hits.marv,555,27)
-    GC.setColor(hitColors[4])
+    if mask>=4 then GC.setColor(.48,.48,.48) else GC.setColor(hitColors[4]) end
     GC.printf(hitTexts[4],-55,52,600,'right')
     GC.print(hits.prec,555,52)
-    GC.setColor(hitColors[3])
+    if mask>=3 then GC.setColor(.48,.48,.48) else GC.setColor(hitColors[3]) end
     GC.printf(hitTexts[3],-55,77,600,'right')
     GC.print(hits.perf,555,77)
 
-    GC.setColor(hitColors[2])
+    if mask>=2 then GC.setColor(.48,.48,.48) else GC.setColor(hitColors[2]) end
     GC.printf(hitTexts[2],-55,123,600,'right')
     GC.print(hits.good,555,123)
-    GC.setColor(hitColors[1])
+    if mask>=1 then GC.setColor(.48,.48,.48) else GC.setColor(hitColors[1]) end
     GC.printf(hitTexts[1],-55,153,600,'right')
     GC.print(hits.well,555,153)
 

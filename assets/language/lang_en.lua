@@ -50,6 +50,7 @@ return{
 
     validScore="Score saved($1)",
     invalidScore="Invalid score, not saved",
+    trackFailed="Track Failed!",
 
     noScore="No scores",
     modeLocked="Locked",
@@ -74,7 +75,7 @@ return{
         "Author: MrZ  Email: 1046101471@qq.com",
         "Powered by LÖVE",
         "",
-        "Program: MrZ",
+        "Program: MrZ, AmateurMUL",
         "Rule design: MrZ, 蕴空之灵",
         "Music: T6735, T0722",
         "Art: MrZ",
@@ -107,8 +108,8 @@ return{
     setting_dropSpeed="Drop Speed",
     setting_noteThick="Note Thickness",
     setting_chordAlpha="Chord Key Alpha",
-    setting_holdAlpha="Hold Note Alpha",
-    setting_holdWidth="Hold Note Width",
+    setting_holdAlpha="Long Note Alpha",
+    setting_holdWidth="Long Note Width",
     setting_scaleX="Scale Up X",
     setting_trackW="Track Width",
     setting_safeX="Left-Right Safe Zone",

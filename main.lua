@@ -188,6 +188,7 @@ WIDGET._prototype.button_fill.textColor=TABLE.shift(COLOR.D)
 LANG.add{
     zh='assets/language/lang_zh.lua',
     en='assets/language/lang_en.lua',
+    symbol='assets/language/lang_symbol.lua',
 }
 LANG.setDefault('zh')
 --[Attention] Not loading IMG/SFX/BGM files here, just read file paths

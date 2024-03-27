@@ -404,6 +404,8 @@ local function _drawChordBox(c,a,trackW,H,thick)
     gc_rectangle('fill',-trackW-5,-H-thick,5,thick)
     gc_rectangle('fill',trackW,-H-thick,5,thick)
 end
+
+-- TODO: implement bar line
 function Track:draw(map)
     local s=self.state
     gc_push('transform')
