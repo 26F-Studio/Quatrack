@@ -66,14 +66,33 @@ local function _freshSongList()
                         local color=source=='game' and COLOR.L or source=='outside' and COLOR.lY or COLOR.lD
                         local dText=metaData.mapDifficulty
                         local difficultyNum=string.format('%03d',(
-                            dText:sub(1,4):lower()=='easy' and 0000 or
-                            dText:sub(1,4):lower()=='norm' and 1000 or
-                            dText:sub(1,4):lower()=='hard' and 2000 or
-                            dText:sub(1,4):lower()=='luna' and 3000 or
-                            dText:sub(1,4):lower()=='over' and 4000 or
-                            5000)+
-                            (metaData.mapDifficulty:match('%d+$') or 999)
+                            dText:sub(1,4):lower()=='easy' and 00 or
+                            dText:sub(1,4):lower()=='begi' and 00 or
+                            dText:sub(1,4):lower()=='basi' and 00 or
+                            dText:sub(1,4):lower()=='novi' and 00 or
+                            dText:sub(1,4):lower()=='ligh' and 00 or
+                            dText:sub(1,4):lower()=='past' and 00 or
+                            dText:sub(1,4):lower()=='norm' and 10 or
+                            dText:sub(1,4):lower()=='pers' and 10 or
+                            dText:sub(1,4):lower()=='adva' and 10 or
+                            dText:sub(1,4):lower()=='hard' and 20 or
+                            dText:sub(1,4):lower()=='hype' and 20 or
+                            dText:sub(1,4):lower()=='futu' and 20 or
+                            dText:sub(1,4):lower()=='luna' and 30 or
+                            dText:sub(1,4):lower()=='insa' and 30 or
+                            dText:sub(1,4):lower()=='mast' and 30 or
+                            dText:sub(1,4):lower()=='anot' and 30 or
+                            dText:sub(1,4):lower()=='expe' and 30 or
+                            dText:sub(1,4):lower()=='beyo' and 30 or
+                            dText:sub(1,4):lower()=='over' and 40 or
+                            dText:sub(1,4):lower()=='extr' and 40 or
+                            dText:sub(1,4):lower()=='legg' and 40 or
+                            dText:sub(1,4):lower()=='phan' and 40 or
+                            dText:sub(1,4):lower()=='ulti' and 40 or
+                            99)+
+                            (metaData.mapDifficulty:match('%d+$') or 9)
                         )
+                        local dNum=tonumber(difficultyNum)
                         ins(mapList,{
                             path=fullPath,
                             source=source,
@@ -82,12 +101,21 @@ local function _freshSongList()
                             mapAuth=GC.newText(FONT.get(30),metaData.mapAuth),
                             difficulty=GC.newText(FONT.get(25),dText),
                             difficultyColor=
-                                dText:sub(1,4)=='Easy' and COLOR.lG or
-                                dText:sub(1,4)=='Norm' and COLOR.lY or
-                                dText:sub(1,4)=='Hard' and COLOR.lR or
-                                dText:sub(1,4)=='Luna' and COLOR.lM or
-                                dText:sub(1,4)=='Over' and COLOR.dL or
-                                COLOR.X,
+                                dNum<=05 and COLOR.lC or
+                                dNum<=10 and COLOR.lJ or
+                                dNum<=12 and COLOR.lG or
+                                dNum<=15 and COLOR.lK or
+                                dNum<=18 and COLOR.lA or
+                                dNum<=20 and COLOR.lY or
+                                dNum<=24 and COLOR.lO or
+                                dNum<=28 and COLOR.lF or
+                                dNum<=32 and COLOR.lR or
+                                dNum<=36 and COLOR.lW or
+                                dNum<=39 and COLOR.lM or
+                                dNum<=45 and COLOR.lV or
+                                dNum<=48 and COLOR.lP or
+                                dNum<=50 and COLOR.LD or
+                                COLOR.dL,
                             tracks=metaData.realTracks and metaData.realTracks~=metaData.tracks and (('$1($2)'):repD(metaData.realTracks,metaData.tracks)) or metaData.tracks,
                             sortStr_difficulty=(source=='outside' and '0' or '1')..(metaData.realTracks or metaData.tracks)..difficultyNum..metaData.mapName,
                             sortStr_name=metaData.mapName..(metaData.realTracks or metaData.tracks)..(source=='outside' and '0' or '1')..difficultyNum,
