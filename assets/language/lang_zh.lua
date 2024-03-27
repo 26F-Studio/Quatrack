@@ -13,8 +13,9 @@ return{
     sureReset="再按一次重置",
     newDay="新的一天,新的开始~",
     playedLong="已经玩很久了!注意休息!",
-    playedTooMuch="今天玩太久啦!打块好玩但也要适可而止哦~",
+    playedTooMuch="今天玩太久啦!打歌好玩但也要适可而止哦~",
 
+    -- TODO: Add map delay
     music_early="提前 $1",
     music_late="延后 $1",
     music_nodelay="无",
@@ -50,6 +51,7 @@ return{
 
     validScore="成绩保存成功($1)",
     invalidScore="无效成绩 未保存",
+    trackFailed="挑战失败",
 
     noScore="暂无成绩",
     modeLocked="暂未解锁",
@@ -64,6 +66,26 @@ return{
 
     errorMsg="Quatrack遭受了雷击,需要重新启动.\n我们已收集了一些错误信息,你可以向作者进行反馈.",
 
+    -- TODO: Add modifiers like in osu/malody
+    modInstruction="选择你要使用的Mod!\n不同Mod会用不同的方式改变初始游戏规则(可能导致不能正常游玩)\n来开发新玩法或者挑战自我吧!\n提醒:开启一些Mod会降低最终得分,甚至会让成绩无效,但提高难度的Mod也会提高你的最终得分\n你也可以用键盘开关Mod,按住shift反向",
+    modInfo={
+        judgeDifficuty="判定准度:\n更改游戏的判定准度",
+        judgeMask="最低判定:\n设置不算做Bad的最低判定",
+        musicSpeed="歌曲速度:\n增加/降低歌曲速度,也会影响判定(低于0.75x时成绩无效)",
+        suddenDeath="强制全连:\n连击中断将强制结束游戏,可配合最低判定使用",
+        autoPlay="自动播放:\n让Z酱帮你打歌(不要用这个当音游王)",
+        mapMirror="谱面镜像:\n将轨道左右反转",
+        mapRandom="谱面随机:\n随机排列轨道的位置",
+        mapLuzeMode="谱面纵连化:\n人 生 就 是 纵 连",
+        mapNoLN="禁用长押:\n将长押转换成普通音符",
+        mapForceLN="长押无尾判:\n强制使用无尾判长押",
+        mapForceCN="长押尾判:\n强制使用尾判长押",
+        mapHCN="HCN模式:\n在尾判长押的基础上,松开长押时会持续降低ACC",
+        noTrackAnim="禁用轨道特效:\n别碰我的轨道!",
+        insaneTrackAnim="超级秘密设定:\n我不知道这个Mod是干什么的,反正最好别碰",
+        surivalGauge="生存模式:\n在出现Miss或Bad判定时扣除血条,Perf以上判定回复血条,血条归零将强制结束游戏",
+    },
+
     stat={
         "启动次数:",
         "游玩曲数:",
@@ -74,7 +96,7 @@ return{
         "作者: MrZ  邮箱: 1046101471@qq.com",
         "使用LÖVE引擎",
         "",
-        "程序: MrZ",
+        "程序: MrZ, AmateurMUL",
         "规则设计: MrZ, 蕴空之灵",
         "音乐: T6735, T0722",
         "美术: MrZ",

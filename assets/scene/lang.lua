@@ -3,13 +3,19 @@ local langList={
     zh_full="全简体中文",
     zh_trad="繁體中文",
     en="English",
+    en_googled="English Language",
     fr="Français",
     es="　Español\n(Castellano)",
+    eo="Esperanto",
     pt="Português",
     id="Bahasa Indonesia",
     ja="日本語",
-    zh_grass="机翻",
+    ja_kanji="日本語(漢字)",
+    ko="한국어",
+    zh_grass="简化瓷器",
+    zh_grass2="英国人",
     symbol="?????",
+    zh_classic="文言",
 }
 local languages={
     "Language  Langue  Lingua",
@@ -52,7 +58,7 @@ local function _setLang(lid)
         duration=1.6,
     }
     collectgarbage()
-    WIDGET.resize()
+    --WIDGET.resize()
     if FIRSTLAUNCH then SCN.back() end
 end
 
@@ -63,7 +69,7 @@ scene.widgetList={
     WIDGET.new{type='button'     ,x=270,y=570,w=330,h=100,fontSize=35, text='',          color='Y', sound_press='check'},
 
     WIDGET.new{type='button'     ,x=640,y=210,w=330,h=100,fontSize=40, text='',          color='A', sound_press='check'},
-    WIDGET.new{type='button'     ,x=640,y=330,w=330,h=100,fontSize=40, text='',          color='K', sound_press='check'},
+    WIDGET.new{type='button'     ,x=640,y=330,w=330,h=100,fontSize=40, text=langList.symbol,color='K', sound_press='check',code=function() _setLang('symbol') end},
     WIDGET.new{type='button'     ,x=640,y=450,w=330,h=100,fontSize=40, text='',          color='G', sound_press='check'},
     WIDGET.new{type='button'     ,x=640,y=570,w=330,h=100,fontSize=40, text='',          color='J', sound_press='check'},
 
