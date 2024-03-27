@@ -25,29 +25,38 @@ function scene.enter()
             marv=62,
         },
         bestChain=math.random(5),
+        playSpeed=1.0,
+        judgeMask=4,
     }
     if results.accText:sub(1,1)=='-' then results.bestChain=0 end
     if results.averageDeviate:sub(1,1)~='-' then results.averageDeviate='+'..results.averageDeviate end
     results.mapName=GC.newText(FONT.get(80,'mono'),results.map.mapName)
-    results.mapDifficulty=GC.newText(FONT.get(30,'mono'),results.map.mapDifficulty)
+    local diffName
+    if results.playSpeed==1.0 then
+        diffName=results.map.mapDifficulty
+    else
+        diffName=results.map.mapDifficulty..' (x'..results.playSpeed..')'
+    end
+    results.mapDifficulty=GC.newText(FONT.get(30,'mono'),diffName)
+    --results.mapDifficulty=GC.newText(FONT.get(30,'mono'),results.map.mapDifficulty)
 
     -- Rank
     local acc=tonumber(results.accText:sub(1,-2))
     local rankClr,rankStr
-    if     acc==101   then rankClr,rankStr=rankColors[1],'X '
-    elseif acc>=100.5 then rankClr,rankStr=rankColors[2],'U+'
-    elseif acc>=100   then rankClr,rankStr=rankColors[2],'U '
-    elseif acc>=99.5  then rankClr,rankStr=rankColors[3],'S+'
-    elseif acc>=99    then rankClr,rankStr=rankColors[3],'S '
-    elseif acc>=98    then rankClr,rankStr=rankColors[4],'A+'
-    elseif acc>=97    then rankClr,rankStr=rankColors[4],'A '
-    elseif acc>=94    then rankClr,rankStr=rankColors[5],'B+'
-    elseif acc>=90    then rankClr,rankStr=rankColors[5],'B '
-    elseif acc>=85    then rankClr,rankStr=rankColors[6],'C+'
-    elseif acc>=80    then rankClr,rankStr=rankColors[6],'C '
-    elseif acc>=75    then rankClr,rankStr=rankColors[7],'D+'
-    elseif acc>=70    then rankClr,rankStr=rankColors[7],'D '
-    elseif acc>=65    then rankClr,rankStr=rankColors[8],'E+'
+    if     acc==101   then rankClr,rankStr=rankColors[1],'Z '
+    elseif acc>=100.5 then rankClr,rankStr=rankColors[2],'X+'
+    elseif acc>=100   then rankClr,rankStr=rankColors[2],'X '
+    elseif acc>=99.5  then rankClr,rankStr=rankColors[3],'U+'
+    elseif acc>=99    then rankClr,rankStr=rankColors[3],'U '
+    elseif acc>=98    then rankClr,rankStr=rankColors[4],'S+'
+    elseif acc>=97    then rankClr,rankStr=rankColors[4],'S '
+    elseif acc>=94    then rankClr,rankStr=rankColors[5],'A+'
+    elseif acc>=90    then rankClr,rankStr=rankColors[5],'A '
+    elseif acc>=85    then rankClr,rankStr=rankColors[6],'B+'
+    elseif acc>=80    then rankClr,rankStr=rankColors[6],'B '
+    elseif acc>=75    then rankClr,rankStr=rankColors[7],'C+'
+    elseif acc>=70    then rankClr,rankStr=rankColors[7],'C '
+    elseif acc>=65    then rankClr,rankStr=rankColors[8],'D'
     elseif acc>=60    then rankClr,rankStr=rankColors[8],'E '
     else                   rankClr,rankStr=rankColors[8],'F '
     end
@@ -151,7 +160,7 @@ function scene.draw()
     end
     GC.pop()
 
-    drawHits(results.hits,480,240)
+    drawHits(results.hits,480,240,results.judgeMask)
 end
 
 scene.widgetList={

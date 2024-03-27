@@ -112,6 +112,8 @@ local function _GoResult()
             marv=game.hits[5],
         },
         bestChain=game.bestChain,
+        playSpeed=game.playSpeed,
+        judgeMask=game.judgeMask,
     })
 end
 
