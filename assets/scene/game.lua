@@ -30,10 +30,12 @@ local function _showVolMes(v)
 end
 
 local autoPlayTextObj
+local suddenDeathTextObj
 
 local game={
     needSaveSetting=false,
     autoPlay=false,
+    suddenDeath=false,
 
     playSongTime=nil,
     songLength=nil,
@@ -43,6 +45,8 @@ local game={
     tracks=nil,-- track object list
     texts={"","",""},
     judgeTimes=nil,-- judgeTimeList, copied from _G.judgeTimes
+    judgeTimesReal=nil,-- judgeTimesReal, calculated from judgeTimes
+    judgeMask=nil,-- mask of judge times (0~4)
     mapEnv=nil,-- Enviroment of script, copied from _G.mapScriptEnv
 
     hitLV=nil,-- Hit level (-1~5)
@@ -90,16 +94,7 @@ local function _updateAcc()
     game.accText=("%.2f%%"):format(acc)
 end
 
-local function _tryGoResult()
-    if SCN.swapping or not game.map.finished then return true end
-    for i=1,#game.tracks do if #game.tracks[i].notes>0 then return true end end
-    if game.needSaveSetting then saveSettings() end
-    if game.fullAcc>0 and game.curAcc/game.fullAcc>=.6 then
-        _updateStat()
-        MSG.new('check',Text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
-    else
-        MSG.new('info',Text.invalidScore)
-    end
+local function _GoResult()
     Zenitha.setClickFX(SET.clickFX)
     SCN.swapTo('result',nil,{
         map=game.map,
@@ -118,6 +113,34 @@ local function _tryGoResult()
         },
         bestChain=game.bestChain,
     })
+end
+
+local function _tryGoResult()
+    if SCN.swapping or not game.map.finished then return true end
+    for i=1,#game.tracks do if #game.tracks[i].notes>0 then return true end end
+    if game.needSaveSetting then saveSettings() end
+    if game.autoPlay then
+        -- 不要当音游王
+        MSG.new('info',Text.invalidScore)
+        SCN.back()
+    elseif game.fullAcc>0 and game.curAcc/game.fullAcc>=.6 then
+        _updateStat()
+        MSG.new('check',Text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
+    elseif game.playSpeed<.75 then
+        MSG.new('info',Text.invalidScore)
+    else
+        MSG.new('error',Text.trackFailed)
+    end
+    _GoResult()
+end
+
+local function _trackFailed()
+    game.curAcc=-1e99
+    game.fullAcc=1e99
+    _updateAcc()
+    if game.needSaveSetting then saveSettings() end
+    MSG.new('error',Text.trackFailed)
+    _GoResult()
 end
 
 local settingArgs=setmetatable({},{__newindex=function() error("setting.xxx is read only") end})
@@ -160,11 +183,15 @@ local scene={}
 function scene.enter()
     KEY_MAP_inv:_update()
     game.autoPlay=false
+    game.suddenDeath=false
     game.playSpeed=1
     if not autoPlayTextObj then autoPlayTextObj=gc.newText(FONT.get(100),'AUTO') end
+    if not suddenDeathTextObj then suddenDeathTextObj=gc.newText(FONT.get(100),'HAZARD') end
 
     game.judgeTimes={.16,.12,.08,.05,.03,0}
+    game.judgeTimesReal=game.judgeTimes
     game.accPoints={-100,0,75,100,101}
+    game.judgeMask=0
 
     game.map=SCN.args[1]
 
@@ -307,7 +334,7 @@ local function _emitHoldParticles(id,available)
     p:emit(1)
 end
 local function _trigNote(deviateTime,noTailHold,weak)
-    game.hitLV=getHitLV(deviateTime,game.judgeTimes)
+    game.hitLV=getHitLV(deviateTime,game.judgeTimesReal)
     game.hitTextTime=love.timer.getTime()
     game.fullAcc=game.fullAcc+100
     if noTailHold and (game.hitLV>0 or game.hitLV==0 and weak) then game.hitLV=5 end
@@ -327,8 +354,12 @@ local function _trigNote(deviateTime,noTailHold,weak)
         end
     else
         if game.combo>=10 then SFX.play('combobreak') end
+        if game.suddenDeath then _trackFailed() end
+        if abs(deviateTime)>.16 then deviateTime=deviateTime>0 and .16 or -.16 end
+        ins(game.hitOffests,1,deviateTime)
         game.combo=0
         game.bestChain=0
+        game.hitOffests[SET.dvtCount+1]=nil
     end
     _updateAcc()
 end
@@ -385,7 +416,7 @@ function scene.keyDown(key,isRep)
     elseif k=='musicVolDn' then SET.bgmVol=max(SET.bgmVol-.1,0);_showVolMes(SET.bgmVol)
     elseif k=='musicVolUp' then SET.bgmVol=min(SET.bgmVol+.1,1);_showVolMes(SET.bgmVol)
     elseif k=='dropSpdDn' then
-        if game.score0==0 or game.curAcc==-1e99 then
+        if game.score0==0 or game.autoPlay then
             SET.dropSpeed=max(SET.dropSpeed-1,-8)
             MSG.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
             game.needSaveSetting=true
@@ -393,7 +424,7 @@ function scene.keyDown(key,isRep)
             MSG.new('warn',Text.cannotAdjustDropSpeed,0)
         end
     elseif k=='dropSpdUp' then
-        if game.score0==0 or game.curAcc==-1e99 then
+        if game.score0==0 or game.autoPlay then
             SET.dropSpeed=min(SET.dropSpeed+1,8)
             MSG.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
             game.needSaveSetting=true
@@ -404,27 +435,55 @@ function scene.keyDown(key,isRep)
         if _tryGoResult() then
             SCN.back()
         end
-    elseif k=='auto' then
-        game.autoPlay=not game.autoPlay
-        if game.autoPlay then
-            game.curAcc=-1e99
-            game.fullAcc=1e99
-            _updateAcc()
+    elseif k=='auto' and not game.autoPlay and not game.suddenDeath then
+        if game.score0==0 then
+            game.autoPlay=true
+        else
+            MSG.new('warn',Text.cannotAdjustDropSpeed,0)
         end
+--         game.autoPlay=not game.autoPlay
+--         if game.autoPlay then
+--             game.curAcc=-1e99
+--             game.fullAcc=1e99
+--             _updateAcc()
+--         end
     elseif('12345'):find(key,1,true) and kbIsDown('lctrl','rctrl') and kbIsDown('lalt','ralt') then
-        game.playSpeed=
-            key=='1' and .25 or
-            key=='2' and .5 or
-            key=='3' and 1 or
-            key=='4' and 8 or
-            key=='5' and 32
-        if game.playSpeed<1 then
-            game.curAcc=-1e99
-            game.fullAcc=1e99
-            _updateAcc()
+        if game.score0==0 or game.autoPlay then
+            game.playSpeed=
+                key=='1' and .25 or
+                key=='2' and .75 or
+                key=='3' and 1 or
+                key=='4' and 1.25 or
+                key=='5' and 2
+            if game.playSpeed<.75 then
+                game.curAcc=-1e99
+                game.fullAcc=1e99
+                _updateAcc()
+            end
+
+            BGM.set('all','pitch',game.playSpeed,0)
+            BGM.set('all','seek',game.time-game.playSongTime)
+        else
+            MSG.new('warn',Text.cannotAdjustDropSpeed,0)
         end
-        BGM.set('all','pitch',game.playSpeed,0)
-        BGM.set('all','seek',game.time-game.playSongTime)
+    -- TODO: judge mask for "no good", "marv only" stuffs
+    elseif('67890'):find(key,1,true) and kbIsDown('lctrl','rctrl') and kbIsDown('lalt','ralt') then
+        if game.score0==0 and not game.autoPlay then
+            game.judgeMask=
+                key=='6' and 1 or
+                key=='7' and 2 or
+                key=='8' and 3 or
+                key=='9' and 4 or
+                key=='0' and 0
+        else
+            MSG.new('warn',Text.cannotAdjustDropSpeed,0)
+        end
+    elseif('/'):find(key,1,true) and kbIsDown('lctrl','rctrl') and kbIsDown('lalt','ralt') and not game.autoPlay then
+        if game.score0==0 then
+            game.suddenDeath=true
+        else
+            MSG.new('warn',Text.cannotAdjustDropSpeed,0)
+        end
     end
 end
 function scene.keyUp(key)
@@ -587,15 +646,26 @@ function scene.update(dt)
             end
         end
     end
+    -- Update real judge times
+    -- BUG: why does it also updates game.judgeTimes? :think:
+    game.judgeTimesReal=TABLE.copy(game.judgeTimes)
+    for i=1,5 do
+        if game.judgeMask<5 and i<=game.judgeMask then
+            game.judgeTimesReal[i]=0
+        else
+            game.judgeTimesReal[i]=game.judgeTimesReal[i]/game.playSpeed
+        end
+    end
 
     -- Update tracks (check too-late miss)
     for id=1,game.map.tracks do
         local t=game.tracks[id]
         do-- Auto play and invalid notes' auto hitting
             local _,note=t:pollNote('note')
+            local auto=not game.autoPlay or not (note and note.available)
             if note and (not note.available or game.autoPlay) and note.type=='tap' then
                 if game.time>=note.time then
-                    _trackPress(id,false,true)
+                    _trackPress(id,false,auto)
                     if note.type~='hold' then
                         _trackRelease(id)
                     end
@@ -604,9 +674,9 @@ function scene.update(dt)
             note=t.notes[1]
             if note and (not note.available or game.autoPlay) and note.type=='hold' then
                 if note.head then
-                    if game.time>=note.time then _trackPress(id,false,true) end
+                    if game.time>=note.time then _trackPress(id,false,auto) end
                 else
-                    if game.time>=note.etime then _trackRelease(id,false,true) end
+                    if game.time>=note.etime then _trackRelease(id,false,auto) end
                 end
             end
             if note and note.type=='hold' and note.active and not note.head then
@@ -627,9 +697,12 @@ function scene.update(dt)
             game.fullAcc=game.fullAcc+100*missCount
             _updateAcc()
             if game.combo>=10 then SFX.play('combobreak') end
+            if game.suddenDeath then _trackFailed() end
             game.combo=0
             game.bestChain=0
             game.hits[-1]=game.hits[-1]+missCount
+            ins(game.hitOffests,1,0.16)
+            game.hitOffests[SET.dvtCount+1]=nil
         end
     end
 
@@ -657,10 +730,13 @@ function scene.draw()
 
     gc_replaceTransform(SCR.xOy_m)
 
-    -- Draw auto mark
+    -- Draw auto mark and Sudden Death Mark
     if game.autoPlay then
         gc_setColor(1,1,1,.126)
         GC.mDraw(autoPlayTextObj,nil,nil,nil,3.55)
+    elseif game.suddenDeath then
+        gc_setColor(1,.25,.25,.126)
+        GC.mDraw(suddenDeathTextObj,nil,nil,nil,3.55)
     end
 
     -- Draw tracks
@@ -695,11 +771,19 @@ function scene.draw()
     end
 
     -- Draw hit text
+    -- TODO: make it can be switched between hit texts and offset rate
     if love.timer.getTime()-game.hitTextTime<.26 and game.hitLV<=SET.showHitLV then
         local c=hitColors[game.hitLV]
         setFont(80,'mono')
         gc_setColor(c[1],c[2],c[3],2.6-(love.timer.getTime()-game.hitTextTime)*10)
         mStr(hitTexts[game.hitLV],0,-115)
+        --mStr(("%fms"):format((love.timer.getTime()-game.hitTextTime)*1000),0,-115)
+        setFont(20,'mono')
+        if game.hitOffests[1] < -0.01 then
+            mStr("EARLY",0,-128)
+        elseif game.hitOffests[1] > 0.01 then
+            mStr("LATE",0,-128)
+        end
     end
 
     -- Draw combo
@@ -717,8 +801,8 @@ function scene.draw()
     gc_setColor(1,1,1)gc_rectangle('fill',-2,-23,4,30)
     for i=1,5 do
         local c=hitColors[i]
-        local d1=game.judgeTimes[i]
-        local d2=game.judgeTimes[i+1]
+        local d1=game.judgeTimesReal[i]
+        local d2=game.judgeTimesReal[i+1]
         gc_setColor(c[1]*.8+.3,c[2]*.8+.3,c[3]*.8+.3,.626)
         gc_rectangle('fill',-d1*688,-10,(d1-d2)*688,4)
         gc_rectangle('fill',d1*688, -10,(d2-d1)*688,4)
@@ -734,10 +818,12 @@ function scene.draw()
     -- Draw deviate times
     local l=#game.hitOffests
     for i=1,l do
-        local c=hitColors[getHitLV(game.hitOffests[i],game.judgeTimes)]
+        local ho
+        if game.hitOffests[i]==nil then ho=0 else ho=game.hitOffests[i] end
+        local c=hitColors[getHitLV(ho,game.judgeTimesReal)]
         local r=1+(1-i/l)^1.626
         gc_setColor(c[1],c[2],c[3],.2*r)
-        gc_rectangle('fill',game.hitOffests[i]*688-1,-10-6*r,3,4+12*r)
+        gc_rectangle('fill',ho*688-1,-10-6*r,3,4+12*r)
     end
 
     -- Draw map info at start

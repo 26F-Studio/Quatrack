@@ -91,6 +91,7 @@ function loadBeatmap(path)
     end
 end
 function getHitLV(div,judgeTimes)
+    if div==nil then return 0 end-- Might fixes strange bad argument error.
     div=abs(div)
     return
     div<=judgeTimes[5] and 5 or
