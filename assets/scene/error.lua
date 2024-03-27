@@ -11,6 +11,9 @@ function scene.enter()
     sysAndScn=SYSTEM.."-"..VERSION.string.."       scene:"..Zenitha.getErr('#').scene
     errorText=LOADED and Text.errorMsg or "An error has occurred while the game was loading.\nAn error log has been created so you can send it to the author."
     errorShot,errorInfo=Zenitha.getErr('#').shot,Zenitha.getErr('#').msg
+    if SETTINGS then
+        SFX.play('error',SETTINGS.sfxVol or 0)
+    end
 end
 
 function scene.draw()
