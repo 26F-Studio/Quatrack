@@ -146,7 +146,7 @@ do-- Zenitha.setDrawSysInfo
                 GC.rectangle('fill',76,6,pow*.22,14)
                 if pow<100 then
                     FONT.set(15,'_basic')
-                    GC.shadedPrint(pow,87,4,'center',1,8)
+                    GC.shadedPrint(pow,88,5,'center',1,8)
                 end
             end
             GC.rectangle('line',74,4,26,18)
