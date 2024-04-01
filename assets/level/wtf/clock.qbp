@@ -5,11 +5,11 @@ $mapAuth=XMiao
 $mapAuth2=MrZ
 $mapDifficulty=Special
 $tracks=5
-$realTracks=99
+$realTracks=1
 
 ====E
 ----O
-====S3600
+====S620
 >+1beat
 !60
 

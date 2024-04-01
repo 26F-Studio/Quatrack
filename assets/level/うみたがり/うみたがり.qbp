@@ -8,6 +8,7 @@ $songImage=cover.jpg
 $freeSpeed=false
 $songOffset=143ms
 $tracks=12
+$realTracks=4
 
 ------------
 --O---------;[3,4]C,FFC0CB;[1,2]C,92B1FF;[3,4]<E,6>T,0;[3,4]<E,5>p,80
