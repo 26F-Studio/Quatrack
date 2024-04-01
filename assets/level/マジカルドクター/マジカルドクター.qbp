@@ -3,11 +3,11 @@ $mapName=マジカルドクター
 $musicAuth=MARETU & Miku
 $mapAuth=ΓΤΜΕΔΙΘ
 $mapDifficulty=直接Special明年愚人節譜吧()
-$songFile=マジカルドクター.ogg
-$songImage=マジカルドクター.jpg
+$songFile=audio.ogg
+$songImage=cover.jpg
 $songOffset=220ms
 $tracks=4
-$
+
 ---H
 --H-/4
 -H--/4

@@ -6,7 +6,6 @@ $mapDifficulty=Easy-3
 $songFile=mopemope.ogg
 $songOffset=1495ms
 $tracks=4
-$$freeSpeed=true
 $songImage=mopemope.png
 
 -H--;[A]T,0

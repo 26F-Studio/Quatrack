@@ -2,11 +2,11 @@ $version=1.0
 $mapName=Reverse The Bass
 $musicAuth=TNT,Technoboy,Toneboy
 $mapAuth=F2M5
-$mapDifficulty=Hard-2~3
+$mapDifficulty=Hard-3
 $songFile=Reverse The Bass.ogg
 $songOffset=-55ms
 $tracks=4
-$
+
 /set_judge:1ms,1ms,1ms,1ms,1ms
 ----/3;[4]p,,-160
 /set_judge:2ms,4ms,6ms,8ms,10ms

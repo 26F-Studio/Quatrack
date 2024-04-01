@@ -3,12 +3,12 @@ $mapName=うみたがり (渴望诞生)
 $musicAuth=MARETU & 初音ミク
 $mapAuth=图腾
 $mapDifficulty=Normal-5
-$songFile=うみたがり.ogg
-$songImage=うみたがり.jpg
+$songFile=audio.ogg
+$songImage=cover.jpg
 $freeSpeed=false
 $songOffset=143ms
 $tracks=12
-$
+
 ------------
 --O---------;[3,4]C,FFC0CB;[1,2]C,92B1FF;[3,4]<E,6>T,0;[3,4]<E,5>p,80
 -O----------;[1,2]C,FFC0CB;[3,4]C,92B1FF;[1,2]<E,6>T,0;[1,2]<E,5>p,-80

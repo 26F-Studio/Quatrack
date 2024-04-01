@@ -6,7 +6,8 @@ $mapDifficulty=Hard-6
 $songFile=loli2.ogg
 $songOffset=0ms
 $tracks=6
-$
+$realTracks=4
+
 -H--
 H---*9
 [2]<L,9>D,708.75

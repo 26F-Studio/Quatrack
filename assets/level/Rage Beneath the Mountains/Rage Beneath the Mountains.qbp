@@ -7,7 +7,8 @@ $songImage=Rage Beneath the Mountains.jpg
 $songFile=Rage Beneath the Mountains.ogg
 $songOffset=-38ms
 $tracks=20
-$$script=script
+$realTracks=4
+$script=script
 $scriptAuth=Ykzl
 
 H-------------------;>204705ms

@@ -8,6 +8,7 @@ $songFile=bassslut.ogg
 $songImage=bassslut.jpg
 $songOffset=-24ms
 $tracks=8
+$realTracks=4
 $script=script
 
 O--O----;>137240ms

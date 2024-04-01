@@ -7,7 +7,8 @@ $songFile=testify.ogg
 $songImage=Testify.jpg
 $songOffset=90ms
 $tracks=12
-$
+$realTracks=4
+
 -HH---------
 ------------*10;[A]T,0;[1,2,3,4]D,10000
 -UU---------*4;[1,2,3,4]p,,200
