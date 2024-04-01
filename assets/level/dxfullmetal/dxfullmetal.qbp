@@ -8,8 +8,7 @@ $songFile=dxfullmetal.ogg
 $songImage=dxfullmetal.jpg
 $songOffset=600ms
 $tracks=8
-$realTracks=4
-
+$
 O------O;>111.787s
 --O--O--;>111.600s
 ---O----;>111.506s

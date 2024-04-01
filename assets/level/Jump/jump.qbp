@@ -4,7 +4,7 @@ $musicAuth=Tomsize、Simeon
 $mapAuth=F2M5
 $mapDifficulty=Hard-3
 $songFile=jump.ogg
-$songOffset=375
+$songOffset=375ms
 
 OO--
 -OO-/2

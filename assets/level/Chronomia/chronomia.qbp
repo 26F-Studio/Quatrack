@@ -5,7 +5,7 @@ $mapAuth=F2M5
 $mapDifficulty=Lunatic-3
 $songFile=chronomia.ogg
 $songImage=chronomia.jpg
-$songOffset=267
+$songOffset=267ms
 $tracks=6
 $realTracks=5
 

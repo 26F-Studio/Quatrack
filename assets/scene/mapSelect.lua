@@ -100,7 +100,7 @@ local function _freshSongList()
     _updateListBox()
 end
 local sortSelector=WIDGET.new{type='selector',pos={.5,1},x=240,y=-100,w=240,text=LANG'mapSelect_sortMode',
-    labelPos='down',
+    labelPos='bottom',
     labelDistance=30,
     list={'difficulty','name'},
     fontSize=20,

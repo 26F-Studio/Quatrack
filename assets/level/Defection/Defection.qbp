@@ -6,8 +6,7 @@ $mapDifficulty=Normal-7
 $songFile=Teddyloid, DELTA - Defection.ogg
 $songOffset=-50ms
 $tracks=24
-$realTracks=4
-
+$
 O-----------------------;[1]T,0
 -O----------------------*5.5;[2]T,0
 ------------------------/4;[3]T,0

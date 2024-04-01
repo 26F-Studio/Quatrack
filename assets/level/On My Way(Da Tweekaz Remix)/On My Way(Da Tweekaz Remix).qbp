@@ -4,7 +4,7 @@ $musicAuth=Alan Walker/Sabrina Carpenter/Farruko
 $mapAuth=F2M5
 $mapDifficulty=Hard-6
 $songFile=onmyway.ogg
-$songOffset=106
+$songOffset=106ms
 
 O---
 -O--/3
