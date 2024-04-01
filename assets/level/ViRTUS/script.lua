@@ -120,7 +120,7 @@ function init()
             end
         end
     end
-    
+
     local oCreator=TABLE.copy(objTemplate)
     oCreator.x=640
     oCreator.y=320
