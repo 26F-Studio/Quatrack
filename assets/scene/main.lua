@@ -1,6 +1,7 @@
 local scene={}
 
 local tryCounter=0
+local fool=os.date("%m%d")=="0401"
 
 function scene.enter()
     BG.set()
@@ -20,6 +21,18 @@ function scene.draw()
     GC.mDraw(IMG.logo_full,640,200,0,.3)
     GC.setColor(1,1,1,(1-math.abs(math.sin(love.timer.getTime())))^3/2)
     GC.mDraw(IMG.logo_color,640,200,0,.3)
+    if fool then
+        GC.setColor(1,.26,.26)
+        GC.setLineWidth(26)
+        GC.line(260,160,1010,260)
+        GC.setColor(1,1,1)
+        FONT.set(150,'_basic')
+        GC.shadedPrint("Techmino",640,130,'center',6,8)
+        GC.translate(860,260)
+        GC.rotate(-.0626)
+        FONT.set(70,'_basic')
+        GC.shadedPrint("Galaxy",0,0,'center',4,8)
+    end
 end
 
 scene.widgetList={
