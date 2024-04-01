@@ -234,7 +234,7 @@ do-- Userdata tables
             bgAlpha=.26,
             musicDelay=0,
             dropSpeed=0,
-            noteThick=22,
+            noteThick=26,
             chordAlpha=.8,
             holdAlpha=.26,
             holdWidth=.8,
