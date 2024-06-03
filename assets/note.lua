@@ -1,4 +1,4 @@
-local listLerp=MATH.listLerp
+local lLerp=MATH.lLerp
 
 local Note={}
 
@@ -11,19 +11,19 @@ end
 
 function Note:getColor(t)
     return
-    listLerp(self.color[1],t),
-    listLerp(self.color[2],t),
-    listLerp(self.color[3],t)
+    lLerp(self.color[1],t),
+    lLerp(self.color[2],t),
+    lLerp(self.color[3],t)
 end
 
 function Note:getAlpha(t)
-    return listLerp(self.alpha,t)*.01
+    return lLerp(self.alpha,t)*.01
 end
 
 function Note:getOffset(t)
     return
-    listLerp(self.xOffset,t),
-    listLerp(self.yOffset,t)
+    lLerp(self.xOffset,t),
+    lLerp(self.yOffset,t)
 end
 
 return Note

@@ -4,6 +4,7 @@ local sin=math.sin
 local rankColors=rankColors
 local results
 
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()
@@ -74,6 +75,7 @@ function scene.keyDown(key,isRep)
     elseif k=='escape' then
         SCN.back()
     end
+    return true
 end
 
 local _stencilX

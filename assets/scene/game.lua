@@ -100,7 +100,7 @@ local function _tryGoResult()
     else
         MSG.new('info',Text.invalidScore)
     end
-    Zenitha.setClickFX(SET.clickFX)
+    applyClickFX(SET.clickFX)
     SCN.swapTo('result',nil,{
         map=game.map,
         score=game.score0,
@@ -155,6 +155,7 @@ local function callScriptEvent(event,...)
     end
 end
 
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()
@@ -190,7 +191,7 @@ function scene.enter()
     game.bestChain=5
 
     game.needSaveSetting=false
-    TABLE.cut(game.touches)
+    TABLE.clear(game.touches)
 
     game.tracks={}
     local trackNameList=defaultTrackNames[game.map.tracks]
@@ -224,7 +225,7 @@ function scene.enter()
             local file=love.filesystem.read('string',dirPath..game.map.script..'.lua')
             local func,err=loadstring(file)
             if func then
-                game.mapEnv=TABLE.copy(mapScriptEnv)
+                game.mapEnv=TABLE.copyAll(mapScriptEnv)
                 game.mapEnv.game=gameArgs
                 game.mapEnv.setting=settingArgs
                 game.mapEnv._G=game.mapEnv
@@ -266,13 +267,13 @@ function scene.enter()
     end
 
     game.hitParticles:reset()
-    Zenitha.setClickFX(false)
+    applyClickFX(false)
     applyFPS(true)
 end
 
 function scene.leave()
     BGM.stop()
-    Zenitha.setClickFX(SET.clickFX)
+    applyClickFX(SET.clickFX)
     applyFPS(false)
     if game.needSaveSetting then saveSettings() end
 end
@@ -350,10 +351,10 @@ local function _trackRelease(id,weak,auto)
     end
 end
 function scene.keyDown(key,isRep)
-    if isRep then return end
+    if isRep then return true end
     local k=KEY_MAP[key] or key
     if trackNames[k] then
-        if game.autoPlay then return end
+        if game.autoPlay then return true end
         local minTime=1e99
         for id=1,game.map.tracks do
             if game.tracks[id].name:find(k) then
@@ -426,6 +427,7 @@ function scene.keyDown(key,isRep)
         BGM.set('all','pitch',game.playSpeed,0)
         BGM.set('all','seek',game.time-game.playSongTime)
     end
+    return true
 end
 function scene.keyUp(key)
     if game.autoPlay then return end

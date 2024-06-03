@@ -49,7 +49,7 @@ local codeMarks={-- Attention, [1] is lua regex, not raw string
     -- /set_acc_points:
 }
 function Map.new(file)
-    local o=TABLE.copy(mapTemplate)
+    local o=TABLE.copyAll(mapTemplate)
 
     o.qbpFilePath=file
 
@@ -519,7 +519,7 @@ function Map.new(file)
                     _syntaxCheck(false,"Invalid track operation '"..tostring(op).."'")
                 end
                 for i=1,#trackList do
-                    local E=TABLE.copy(event)
+                    local E=TABLE.copyAll(event)
                     E.track=trackList[i]
                     o.eventQueue:insert(E)
                 end
@@ -645,7 +645,7 @@ function Map.new(file)
                         _syntaxCheck(not argList[i]:find('[^1-9a-zA-Z]'),"Illegal redirection (track number)")
                     end
                     local reDirMethod=argList[rnd(#argList)]
-                    local l=TABLE.shift(trackDir)
+                    local l=TABLE.copy(trackDir)
                     for i=1,o.tracks do
                         local id=tonumber(reDirMethod:sub(i,i),36)
                         _syntaxCheck(id<=o.tracks,"Illegal redirection (too large track number)")

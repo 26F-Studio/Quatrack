@@ -1,3 +1,4 @@
+---@type Zenitha.Scene
 local scene={}
 
 local loading,progress,maxProgress
@@ -47,6 +48,7 @@ function scene.keyDown(key)
     elseif LOADED then
         scene.mouseDown()
     end
+    return true
 end
 
 function scene.update()

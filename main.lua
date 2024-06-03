@@ -49,42 +49,39 @@ DEBUG.checkLoadTime("Load Assets")
 --------------------------------------------------------------
 -- Config Zenitha
 STRING.install()
-Zenitha.setAppName('Quatrack')
-Zenitha.setVersionText(VERSION.string)
-Zenitha.setFirstScene('load')
-do-- Zenitha.setDrawCursor
-    Zenitha.setDrawCursor(function(_,x,y)
-        if not SETTINGS.sysCursor then
-            GC.setColor(1,1,1)
-            GC.setLineWidth(2)
-            GC.translate(x,y)
-            GC.rotate(love.timer.getTime()%6.283185307179586)
-            GC.circle('line',0,0,10)
-            if love.mouse.isDown(1) then GC.circle('line',0,0,6) end
-            if love.mouse.isDown(2) then GC.circle('fill',0,0,4) end
-            if love.mouse.isDown(3) then GC.line(-6,-6,6,6) GC.line(-6,6,6,-6) end
-            GC.setColor(1,1,1,.626)
-            GC.line(0,-20,0,20)
-            GC.line(-20,0,20,0)
-        end
-    end)
+ZENITHA.setAppName('Quatrack')
+ZENITHA.setVersionText(VERSION.string)
+ZENITHA.setFirstScene('load')
+function ZENITHA.globalEvent.drawCursor(_,x,y)
+    if not SETTINGS.sysCursor then
+        GC.setColor(1,1,1)
+        GC.setLineWidth(2)
+        GC.translate(x,y)
+        GC.rotate(love.timer.getTime()%6.283185307179586)
+        GC.circle('line',0,0,10)
+        if love.mouse.isDown(1) then GC.circle('line',0,0,6) end
+        if love.mouse.isDown(2) then GC.circle('fill',0,0,4) end
+        if love.mouse.isDown(3) then GC.line(-6,-6,6,6) GC.line(-6,6,6,-6) end
+        GC.setColor(1,1,1,.626)
+        GC.line(0,-20,0,20)
+        GC.line(-20,0,20,0)
+    end
 end
-Zenitha.setOnGlobalKey('f11',function() SETTINGS.fullscreen=not SETTINGS.fullscreen; saveSettings() end)
-Zenitha.setOnFnKeys({
-    function() MSG.new('check',PROFILE.switch() and "profile start!" or "profile report copied!") end,
-    function() MSG.new('info',("System:%s[%s]\nluaVer:%s\njitVer:%s\njitVerNum:%s"):format(SYSTEM,jit.arch,_VERSION,jit.version,jit.version_num)) end,
-    function() MSG.new('error',"挂了") end,
-    function() end,
-    function() print(WIDGET.getSelected() or "no widget selected") end,
-    function() for k,v in next,_G do print(k,v) end end,
-    function() if love["_openConsole"] then love["_openConsole"]() end end,
-})
-Zenitha.setDebugInfo{
+local _keyDown_orig=ZENITHA.globalEvent.keyDown
+function ZENITHA.globalEvent.keyDown(key,isRep)
+    if _keyDown_orig(key,isRep) then return true end
+    if key=='f11' then
+        SETTINGS.fullscreen=not SETTINGS.fullscreen
+        saveSettings()
+        return true
+    end
+end
+ZENITHA.setDebugInfo{
     {"Cache",gcinfo},
     {"Tasks",TASK.getCount},
     {"Audios",love.audio.getSourceCount},
 }
-do-- Zenitha.setOnFocus
+do-- OnFocus
     local function task_autoSoundOff()
         while true do
             coroutine.yield()
@@ -104,7 +101,7 @@ do-- Zenitha.setOnFocus
             end
         end
     end
-    Zenitha.setOnFocus(function(f)
+    function ZENITHA.globalEvent.focus(f)
         if f then
             applyFPS(SCN.cur=='game')
             love.timer.step()
@@ -114,47 +111,45 @@ do-- Zenitha.setOnFocus
             end
         else
             if SETTINGS.slowUnfocus then
-                Zenitha.setMaxFPS(math.min(SETTINGS.maxFPS,90))
-                Zenitha.setDrawFreq(15)
+                ZENITHA.setMaxFPS(math.min(SETTINGS.maxFPS,90))
+                ZENITHA.setDrawFreq(15)
             end
             if SETTINGS.autoMute then
                 TASK.removeTask_code(task_autoSoundOn)
                 TASK.new(task_autoSoundOff)
             end
         end
-    end)
+    end
 end
-do-- Zenitha.setDrawSysInfo
-    Zenitha.setDrawSysInfo(function()
-        if not SETTINGS.powerInfo then return end
-        GC.translate(SCR.safeX,0)
-        GC.setColor(0,0,0,.26)
-        GC.rectangle('fill',0,0,107,26)
-        local state,pow=love.system.getPowerInfo()
-        if state~='unknown' then
-            GC.setLineWidth(2)
-            if state=='nobattery' then
-                GC.setColor(1,1,1)
-                GC.line(74,5,100,22)
-            elseif pow then
-                if state=='charging' then GC.setColor(0,1,0)
-                elseif pow>50 then        GC.setColor(1,1,1)
-                elseif pow>26 then        GC.setColor(1,1,0)
-                elseif pow==26 then       GC.setColor(.5,0,1)
-                else                      GC.setColor(1,0,0)
-                end
-                GC.rectangle('fill',76,6,pow*.22,14)
-                if pow<100 then
-                    FONT.set(15,'_basic')
-                    GC.shadedPrint(pow,88,5,'center',1,8)
-                end
+function ZENITHA.globalEvent.drawSysInfo()
+    if not SETTINGS.powerInfo then return end
+    GC.translate(SCR.safeX,0)
+    GC.setColor(0,0,0,.26)
+    GC.rectangle('fill',0,0,107,26)
+    local state,pow=love.system.getPowerInfo()
+    if state~='unknown' then
+        GC.setLineWidth(2)
+        if state=='nobattery' then
+            GC.setColor(1,1,1)
+            GC.line(74,5,100,22)
+        elseif pow then
+            if state=='charging' then GC.setColor(0,1,0)
+            elseif pow>50 then        GC.setColor(1,1,1)
+            elseif pow>26 then        GC.setColor(1,1,0)
+            elseif pow==26 then       GC.setColor(.5,0,1)
+            else                      GC.setColor(1,0,0)
             end
-            GC.rectangle('line',74,4,26,18)
-            GC.rectangle('fill',102,6,2,14)
+            GC.rectangle('fill',76,6,pow*.22,14)
+            if pow<100 then
+                FONT.set(15,'_basic')
+                GC.shadedPrint(pow,88,5,'center',1,8)
+            end
         end
-        FONT.set(25,'_basic')
-        GC.print(os.date("%H:%M"),3,0,nil,.9)
-    end)
+        GC.rectangle('line',74,4,26,18)
+        GC.rectangle('fill',102,6,2,14)
+    end
+    FONT.set(25,'_basic')
+    GC.print(os.date("%H:%M"),3,0,nil,.9)
 end
 FONT.setDefaultFallback('symbols')
 FONT.setDefaultFont('norm')
@@ -184,7 +179,7 @@ WIDGET._prototype.slider.numFontType='norm'
 WIDGET._prototype.slider_fill.lineWidth=2
 WIDGET._prototype.switch.labelPos='left'
 WIDGET._prototype.button.lineWidth=2
-WIDGET._prototype.button_fill.textColor=TABLE.shift(COLOR.D)
+WIDGET._prototype.button_fill.textColor=TABLE.copy(COLOR.D)
 LANG.add{
     zh='assets/language/lang_zh.lua',
     en='assets/language/lang_en.lua',
@@ -258,7 +253,7 @@ for k,v in next,SETTINGS.__data do
     SETTINGS[k]=v
 end
 
-TABLE.coverR(loadFile('conf/data','-canSkip') or {},STAT)
+TABLE.update(STAT,loadFile('conf/data','-canSkip') or {})
 local savedKey=loadFile('conf/key','-canSkip')
 if savedKey then
     KEY_MAP=savedKey

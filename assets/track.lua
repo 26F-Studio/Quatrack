@@ -48,9 +48,9 @@ function Track.new(id)
         defaultState=false,
         targetState=false,
     }
-    track.defaultState=TABLE.copy(track.state)
-    track.startState=TABLE.copy(track.state)
-    track.targetState=TABLE.copy(track.state)
+    track.defaultState=TABLE.copyAll(track.state)
+    track.startState=TABLE.copyAll(track.state)
+    track.targetState=TABLE.copyAll(track.state)
     return setmetatable(track,{__index=Track})
 end
 
@@ -62,7 +62,7 @@ function Track:rename(name)
     self.name=name
     if name=='x' then name='' end
     self.nameList=name:split(' ')
-    self.showName=TABLE.shift(self.nameList)
+    self.showName=TABLE.copy(self.nameList)
     for i=1,#self.showName do
         self.showName[i]=(KEY_MAP_inv[self.showName[i]] or '[X]'):upper()
     end

@@ -1,3 +1,4 @@
+---@type Zenitha.Scene
 local scene={}
 
 function scene.enter()
@@ -10,8 +11,8 @@ function scene.enter()
         end
     else
         MSG.update(1e99)
-        Zenitha.setPowerInfo(false)
-        Zenitha.setClickFX(false)
+        ZENITHA.globalEvent.setPowerInfo=NULL
+        ZENITHA.globalEvent.clickFX=NULL
         VERSION.string=""
         MSG.new('error',"Please quit with HOME button on iOS",1e99)
     end

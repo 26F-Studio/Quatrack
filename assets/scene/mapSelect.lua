@@ -1,6 +1,7 @@
 local min=math.min
 local ins=table.insert
 
+---@type Zenitha.Scene
 local scene={}
 
 local mapLoaded=false
@@ -49,7 +50,7 @@ local function _freshSongList()
                         local fullPath=dirPath..'/'..itemName
                         local file=love.filesystem.newFile(fullPath)
                         local iterator=file:lines()
-                        local metaData=TABLE.copy(mapTemplate)
+                        local metaData=TABLE.copyAll(mapTemplate)
                         while true do
                             local line=iterator()
                             if not line then break end
@@ -130,7 +131,7 @@ function scene.keyDown(key,isRep)
             MSG.new('error',errmsg)
         end
     elseif key=='tab' then
-        if isRep then return end
+        if isRep then return true end
         if sortMode=='difficulty' then
             sortMode='name'
         elseif sortMode=='name' then
@@ -159,6 +160,7 @@ function scene.keyDown(key,isRep)
     elseif key=='escape' then
         SCN.back()
     end
+    return true
 end
 
 scene.widgetList={

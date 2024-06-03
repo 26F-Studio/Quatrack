@@ -69,14 +69,17 @@ function saveSettings()
 end
 function applyFPS(inGame)
     if inGame then
-        Zenitha.setMaxFPS(SETTINGS.maxFPS)
-        Zenitha.setUpdateFreq(SETTINGS.updRate)
-        Zenitha.setDrawFreq(SETTINGS.drawRate)
+        ZENITHA.setMaxFPS(SETTINGS.maxFPS)
+        ZENITHA.setUpdateFreq(SETTINGS.updRate)
+        ZENITHA.setDrawFreq(SETTINGS.drawRate)
     else
-        Zenitha.setMaxFPS(math.min(SETTINGS.maxFPS,90))
-        Zenitha.setUpdateFreq(100)
-        Zenitha.setDrawFreq(100)
+        ZENITHA.setMaxFPS(math.min(SETTINGS.maxFPS,90))
+        ZENITHA.setUpdateFreq(100)
+        ZENITHA.setDrawFreq(100)
     end
+end
+function applyClickFX(flag)
+    ZENITHA.globalEvent.clickFX=flag and function(x,y) SYSFX.tap(.26,x,y) end or NULL
 end
 
 

@@ -92,7 +92,7 @@ do
         'math','string','table',
         'bit','coroutine',
         'MATH','STRING','TABLE',
-    } do TABLE.complete(_G[v],mapScriptEnv[v]) end
+    } do TABLE.updateMissing(_G[v],mapScriptEnv[v]) end
     mapScriptEnv.string.dump=nil
     local dangerousLibMeta={__index=function() error("No way.") end}
     for _,v in next,{
@@ -186,7 +186,7 @@ do-- Userdata tables
     KEY_MAP_inv={-- Function-Keys map, for show key name
         _update=function(self)
             local _f=self._update
-            TABLE.clear(self)
+            TABLE.clearAll(self)
             self._update=_f
             for k,v in next,KEY_MAP do
                 self[v]=k
@@ -265,12 +265,12 @@ do-- Userdata tables
 
         -- Video
         fullscreen=     function(v) love.window.setFullscreen(v) love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
-        maxFPS=         function(v) Zenitha.setMaxFPS(v) end,
-        updRate=        function(v) Zenitha.setUpdateFreq(v) end,
-        drawRate=       function(v) Zenitha.setDrawFreq(v) end,
+        maxFPS=         function(v) ZENITHA.setMaxFPS(v) end,
+        updRate=        function(v) ZENITHA.setUpdateFreq(v) end,
+        drawRate=       function(v) ZENITHA.setDrawFreq(v) end,
         sysCursor=      function(v) love.mouse.setVisible(v) end,
-        clickFX=        function(v) Zenitha.setClickFX(v) end,
-        clean=          function(v) Zenitha.setCleanCanvas(v) end,
+        clickFX=        function(v) applyClickFX(v) end,
+        clean=          function(v) ZENITHA.setCleanCanvas(v) end,
 
         -- Other
         locale=         function(v) Text=LANG.get(v) LANG.setTextFuncSrc(Text) end,

@@ -8,7 +8,7 @@ local stars
 local W,H
 function back.init()
     stars={}
-    BG.resize(SCR.w,SCR.h)
+    BG._resize(SCR.w,SCR.h)
 end
 function back.resize(w,h)
     W,H=w+20,h+20

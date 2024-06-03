@@ -19,6 +19,7 @@ local languages={
 }
 local curLang=1
 
+---@type Zenitha.Scene
 local scene={}
 
 function scene.leave()
@@ -52,7 +53,7 @@ local function _setLang(lid)
         duration=1.6,
     }
     collectgarbage()
-    WIDGET.resize()
+    WIDGET._reset()
     if FIRSTLAUNCH then SCN.back() end
 end
 

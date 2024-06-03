@@ -121,7 +121,7 @@ local function objSource1(obj)
     if obj.tag.delay then obj.tag.delay=obj.tag.delay+ts%0.06 else obj.tag.delay=ts%0.06 end
     if obj.tag.delay>0.03 then
         obj.tag.delay=obj.tag.delay-0.03
-        local o=TABLE.copy(obj)
+        local o=TABLE.copyAll(obj)
         o.tag={'sub'}
         o.update=objColorControl
         o.direction=pointDirection(o.x,o.y,640,360)
@@ -131,7 +131,7 @@ local function objSource1(obj)
 end
 
 function init()
-    local o=TABLE.copy(objTemplate)
+    local o=TABLE.copyAll(objTemplate)
     o.x,o.y,o.scale=640,360,8
     o.draw=objDrawRinger
 
@@ -140,10 +140,10 @@ function init()
     o.speed=700
     for itheta=0,359,15 do
         o.direction=itheta
-        ins(events,{time=0.279,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=2.511,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=4.744,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=6.418,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=0.279,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=2.511,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=4.744,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=6.418,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --CenterOrange
@@ -152,8 +152,8 @@ function init()
         for itheta=45,315,90 do
             o.speed=irho
             o.direction=itheta
-            ins(events,{time=0.837,func=objCreate,arg=TABLE.copy(o)})
-            ins(events,{time=3.069,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=0.837,func=objCreate,arg=TABLE.copyAll(o)})
+            ins(events,{time=3.069,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -162,16 +162,16 @@ function init()
     o.speed=700
     for itheta=0,359,18 do
         o.direction=itheta+9
-        ins(events,{time=1.395,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=3.627,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=5.302,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=1.395,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=3.627,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=5.302,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.speed=900
     for itheta=0,359,18 do
         o.direction=itheta
-        ins(events,{time=1.534,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=3.767,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=5.441,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=1.534,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=3.767,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=5.441,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --CenterGreen
@@ -179,9 +179,9 @@ function init()
     for itheta=0,359,9 do
         o.speed=500+400*rnd()
         o.direction=itheta+9
-        ins(events,{time=1.953,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=4.186,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=5.86,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=1.953,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=4.186,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=5.86,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --CenterAqua
@@ -191,7 +191,7 @@ function init()
         for itheta=0,359,30 do
             o.speed=600
             o.direction=itheta+itime*3.75
-            ins(events,{time=6.976+itime*0.07,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=6.976+itime*0.07,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -206,19 +206,19 @@ function init()
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[itime%8]
-        ins(events,{time=8.93+itime*0.279,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=8.93+itime*0.279,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.life=0.24
     for itime=0,23 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[itime%8]
-        ins(events,{time=13.395+itime*0.1395,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=13.395+itime*0.1395,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.life=0.18
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[itime%8]
-        ins(events,{time=16.744+itime*0.07,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=16.744+itime*0.07,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --InsideCircle
@@ -233,7 +233,7 @@ function init()
             ins(o.tag,'insidecircle'..irho)
             o.speed=94.2*irho
             o.direction=itheta
-            ins(events,{time=17.86,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=17.86,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -243,7 +243,7 @@ function init()
         o.tag={'outsidecircle',offsetAngle=6*itime,distance=300}
         o.direction=o.tag.offsetAngle
         o.x,o.y=640+o.tag.distance*math.cos(math.rad(o.direction)),360-o.tag.distance*math.sin(math.rad(o.direction))
-        ins(events,{time=17.86+itime*0.0186,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=17.86+itime*0.0186,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --Animations
@@ -266,7 +266,7 @@ function init()
 
     --对 这里有他妈俩一样的东西 其中一个不可见 我也不知道为什么 但如果没有就不会正常工作 为什么呢 他妈的
     ins(events,{time=28.465,func=objExecute,arg={tag='outsidecircle',func=function(obj)
-        local _o=TABLE.copy(obj)
+        local _o=TABLE.copyAll(obj)
         _o.tag={}
         _o.update=objColorControl
         _o.direction=pointDirection(_o.x,_o.y,640,360)
@@ -275,7 +275,7 @@ function init()
         objCreate(_o)
     end}})
     ins(events,{time=28.465,func=objExecute,arg={tag='outsidecircle',func=function(obj)
-        local _o=TABLE.copy(obj)
+        local _o=TABLE.copyAll(obj)
         _o.tag={}
         _o.update=objColorControl
         _o.direction=pointDirection(_o.x,_o.y,640,360)
@@ -314,7 +314,7 @@ function init()
         local r=rnd()
         for itheta=0,359,72 do
             o.direction=itheta+72*r
-            ins(events,{time=44.651+0.279*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=44.651+0.279*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -324,7 +324,7 @@ function init()
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
-            ins(events,{time=53.581+0.279*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=53.581+0.279*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -334,7 +334,7 @@ function init()
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
-            ins(events,{time=60.279+0.1395*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=60.279+0.1395*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -344,7 +344,7 @@ function init()
         local r=rnd()
         for itheta=0,359,48 do
             o.direction=itheta+48*r
-            ins(events,{time=61.395+0.07*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=61.395+0.07*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -356,34 +356,34 @@ function init()
     o.x,o.y=0,0
     for itheta=15,75,30 do
         o.direction=itheta
-        ins(events,{time=67.255,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=69.488,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=71.72,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=73.395,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=67.255,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=69.488,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=71.72,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=73.395,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,0
     for itheta=105,165,30 do
         o.direction=itheta
-        ins(events,{time=67.255,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=69.488,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=71.72,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=73.395,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=67.255,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=69.488,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=71.72,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=73.395,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,720
     for itheta=195,255,30 do
         o.direction=itheta
-        ins(events,{time=67.255,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=69.488,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=71.72,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=73.395,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=67.255,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=69.488,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=71.72,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=73.395,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=0,720
     for itheta=285,345,30 do
         o.direction=itheta
-        ins(events,{time=67.255,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=69.488,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=71.72,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=73.395,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=67.255,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=69.488,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=71.72,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=73.395,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --CornerOrange
@@ -392,33 +392,33 @@ function init()
     o.direction=pointDirection(o.x,o.y,640,360)
     for irho=500,1000,100 do
         o.speed=irho
-        ins(events,{time=67.813,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.046,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=74.511,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=67.813,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.046,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=74.511,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,0
     o.direction=pointDirection(o.x,o.y,640,360)
     for irho=500,1000,100 do
         o.speed=irho
-        ins(events,{time=67.813,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.046,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=74.511,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=67.813,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.046,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=74.511,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,720
     o.direction=pointDirection(o.x,o.y,640,360)
     for irho=500,1000,100 do
         o.speed=irho
-        ins(events,{time=67.813,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.046,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=74.511,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=67.813,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.046,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=74.511,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=0,720
     o.direction=pointDirection(o.x,o.y,640,360)
     for irho=500,1000,100 do
         o.speed=irho
-        ins(events,{time=67.813,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.046,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=74.511,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=67.813,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.046,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=74.511,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --CornerYellow
@@ -427,67 +427,67 @@ function init()
     o.x,o.y=0,0
     for itheta=9,81,36 do
         o.direction=itheta
-        ins(events,{time=68.372,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.604,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.279,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=73.953,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.372,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.604,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.279,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=73.953,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,0
     for itheta=99,171,36 do
         o.direction=itheta
-        ins(events,{time=68.372,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.604,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.279,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=73.953,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.372,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.604,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.279,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=73.953,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,720
     for itheta=189,261,36 do
         o.direction=itheta
-        ins(events,{time=68.372,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.604,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.279,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=73.953,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.372,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.604,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.279,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=73.953,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=0,720
     for itheta=279,351,36 do
         o.direction=itheta
-        ins(events,{time=68.372,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.604,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.279,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=73.953,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.372,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.604,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.279,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=73.953,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.speed=900
     o.x,o.y=0,0
     for itheta=27,63,36 do
         o.direction=itheta
-        ins(events,{time=68.511,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.744,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.418,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=74.093,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.511,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.744,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.418,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=74.093,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,0
     for itheta=117,153,36 do
         o.direction=itheta
-        ins(events,{time=68.511,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.744,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.418,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=74.093,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.511,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.744,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.418,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=74.093,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,720
     for itheta=207,243,36 do
         o.direction=itheta
-        ins(events,{time=68.511,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.744,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.418,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=74.093,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.511,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.744,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.418,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=74.093,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=0,720
     for itheta=297,333,36 do
         o.direction=itheta
-        ins(events,{time=68.511,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=70.744,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.418,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=74.093,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.511,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=70.744,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.418,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=74.093,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --CornerGreen
@@ -496,33 +496,33 @@ function init()
     for itheta=0,4 do
         o.direction=itheta*22.5
         o.speed=225*pointDistance(0,0,itheta,4-itheta)
-        ins(events,{time=68.93,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=71.162,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.837,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.93,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=71.162,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.837,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,0
     for itheta=0,4 do
         o.direction=itheta*22.5+90
         o.speed=225*pointDistance(0,0,itheta,4-itheta)
-        ins(events,{time=68.93,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=71.162,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.837,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.93,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=71.162,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.837,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=1280,720
     for itheta=0,4 do
         o.direction=itheta*22.5+180
         o.speed=225*pointDistance(0,0,itheta,4-itheta)
-        ins(events,{time=68.93,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=71.162,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.837,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.93,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=71.162,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.837,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.x,o.y=0,720
     for itheta=0,4 do
         o.direction=itheta*22.5+270
         o.speed=225*pointDistance(0,0,itheta,4-itheta)
-        ins(events,{time=68.93,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=71.162,func=objCreate,arg=TABLE.copy(o)})
-        ins(events,{time=72.837,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=68.93,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=71.162,func=objCreate,arg=TABLE.copyAll(o)})
+        ins(events,{time=72.837,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --Bubbles
@@ -536,13 +536,13 @@ function init()
     for itime=0,15 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[itime%8]
-        ins(events,{time=75.906+itime*0.279,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=75.906+itime*0.279,func=objCreate,arg=TABLE.copyAll(o)})
     end
     o.life=0.18
     for itime=0,63 do
         o.x,o.y=rnd()*640+320,rnd()*360+180
         o.color=colorRainbow[itime%8]
-        ins(events,{time=80.372+itime*0.07,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=80.372+itime*0.07,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --InsideCircle
@@ -557,7 +557,7 @@ function init()
             ins(o.tag,'insidecircle'..irho)
             o.speed=94.2*irho
             o.direction=itheta
-            ins(events,{time=84.837,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=84.837,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -567,7 +567,7 @@ function init()
         o.tag={'outsidecircle',offsetAngle=6*itime,distance=300}
         o.direction=o.tag.offsetAngle
         o.x,o.y=640+o.tag.distance*math.cos(math.rad(o.direction)),360-o.tag.distance*math.sin(math.rad(o.direction))
-        ins(events,{time=84.837+itime*0.0186,func=objCreate,arg=TABLE.copy(o)})
+        ins(events,{time=84.837+itime*0.0186,func=objCreate,arg=TABLE.copyAll(o)})
     end
 
     --Animations
@@ -586,7 +586,7 @@ function init()
             local d=pointDirection(o.x,o.y,o.x+math.cos(math.rad(itheta*72))+(math.cos(math.rad((itheta+2)*72))-math.cos(math.rad(itheta*72)))*irho/11,o.y-math.sin(math.rad(itheta*72))-(math.sin(math.rad((itheta+2)*72))-math.sin(math.rad(itheta*72)))*irho/11);
             local s=pointDistance(o.x,o.y,o.x+math.cos(math.rad(itheta*72))+(math.cos(math.rad((itheta+2)*72))-math.cos(math.rad(itheta*72)))*irho/11,o.y-math.sin(math.rad(itheta*72))-(math.sin(math.rad((itheta+2)*72))-math.sin(math.rad(itheta*72)))*irho/11);
             o.tag={'star',starD=d,starS=s,starT=87.069}
-            ins(events,{time=87.069,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=87.069,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -618,7 +618,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=100.465+0.279*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=100.465+0.279*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
     for itime=0,7 do
@@ -626,7 +626,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=100.465+0.279*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=100.465+0.279*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
     for itime=0,7 do
@@ -634,7 +634,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=102.697+0.1395*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=102.697+0.1395*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 
@@ -647,7 +647,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=103.813+0.07*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=103.813+0.07*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
     for itime=0,15 do
@@ -655,7 +655,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=104.93+0.1395*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=104.93+0.1395*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
     for itime=0,31 do
@@ -663,7 +663,7 @@ function init()
         local r=rnd()
         for itheta=0,359,36 do
             o.direction=itheta+36*r
-            ins(events,{time=107.162+0.07*itime,func=objCreate,arg=TABLE.copy(o)})
+            ins(events,{time=107.162+0.07*itime,func=objCreate,arg=TABLE.copyAll(o)})
         end
     end
 

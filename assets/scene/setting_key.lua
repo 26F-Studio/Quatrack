@@ -1,3 +1,4 @@
+---@type Zenitha.Scene
 local scene={}
 
 local selected-- if waiting for key
@@ -94,7 +95,7 @@ local forbbidenKeys={
     ["return"]=true,
 }
 function scene.keyDown(key,isRep)
-    if isRep then return true end
+    if isRep then return end
     if key=='escape' then
         if selected then
             selected=false
@@ -119,8 +120,9 @@ function scene.keyDown(key,isRep)
             selected=false
         end
     else
-        return true
+        return
     end
+    return true
 end
 
 function scene.draw()

@@ -78,7 +78,7 @@ end
 function init()
     for _,note in next,game.map.noteQueue do
         if type(note)=='table' and note.track>=1 and note.track<=4 then
-            local oAnim=TABLE.copy(objTemplate)
+            local oAnim=TABLE.copyAll(objTemplate)
             local oAnimTime=note.time
             oAnim.life=0.5
             oAnim.x=290+140*note.track
@@ -87,28 +87,28 @@ function init()
             oAnim.y=668
             oAnim.drawFront=objAnimDefault
             oAnim.color={note.color[1][1],note.color[2][1],note.color[3][1],1}
-            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
         end
         if type(note)=='table' and note.track==5 and note.time>100 then
-            local oAnim=TABLE.copy(objTemplate)
+            local oAnim=TABLE.copyAll(objTemplate)
             local oAnimTime=note.time
             oAnim.life=0.5
             oAnim.x=640
             oAnim.y=668
             oAnim.drawFront=objAnimDefault
             oAnim.color={note.color[1][1],note.color[2][1],note.color[3][1],1}
-            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
         end
         if type(note)=='table' and note.track==5 and note.time<100 then
             note.yOffset=offsetWater
-            local oAnim=TABLE.copy(objTemplate)
+            local oAnim=TABLE.copyAll(objTemplate)
             local oAnimTime=note.time
             oAnim.life=0.5
             oAnim.x=640
             oAnim.y=668
             oAnim.drawFront=objAnimWater
             oAnim.color={note.color[1][1],note.color[2][1],note.color[3][1],1}
-            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
             for _=1,math.floor(6+8*rnd()) do
                 oAnim.life=0.1+0.4*rnd()
                 oAnim.x=640-55+rnd()*110
@@ -116,12 +116,12 @@ function init()
                 oAnim.drawFront=objPartWater
                 oAnim.xspeed=-8+rnd()*16
                 oAnim.yspeed=-36-rnd()*24
-                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
             end
         end
     end
 
-    local oCreator=TABLE.copy(objTemplate)
+    local oCreator=TABLE.copyAll(objTemplate)
     oCreator.x=640
     oCreator.y=320
     oCreator.life=25.6
@@ -129,7 +129,7 @@ function init()
     oCreator.update=function (obj)
         obj.t=obj.t+ts
         if obj.t>0.02 then
-            local o=TABLE.copy(objTemplate)
+            local o=TABLE.copyAll(objTemplate)
             o.x=obj.x
             o.y=obj.y
             o.life=1+0.5*math.random()
@@ -153,8 +153,8 @@ function init()
         end
     end
 
-    ins(events,{time=49.69,func=objCreate,arg=TABLE.copy(oCreator)})
-    local oCreator=TABLE.copy(objTemplate)
+    ins(events,{time=49.69,func=objCreate,arg=TABLE.copyAll(oCreator)})
+    local oCreator=TABLE.copyAll(objTemplate)
     oCreator.x=640
     oCreator.y=320
     oCreator.life=12.8
@@ -162,7 +162,7 @@ function init()
     oCreator.update=function (obj)
         obj.t=obj.t+ts
         if obj.t>0.01 then
-            local o=TABLE.copy(objTemplate)
+            local o=TABLE.copyAll(objTemplate)
             o.x=obj.x
             o.y=obj.y
             o.life=1+0.5*math.random()
@@ -185,7 +185,7 @@ function init()
             obj.t=obj.t-0.01
         end
     end
-    ins(events,{time=113.69,func=objCreate,arg=TABLE.copy(oCreator)})
+    ins(events,{time=113.69,func=objCreate,arg=TABLE.copyAll(oCreator)})
     --SORT IT
     table.sort(events,function(a,b) return a.time<b.time end)
 end

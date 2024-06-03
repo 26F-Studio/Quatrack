@@ -1,3 +1,4 @@
+---@type Zenitha.Scene
 local scene={}
 
 local tryCounter=0
@@ -11,7 +12,6 @@ end
 function scene.keyDown(key)
     if key=='application' then
         SCN.go('result')
-    else
         return true
     end
 end

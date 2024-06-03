@@ -165,44 +165,44 @@ end
 function init()
     for _,note in next,game.map.noteQueue do
         if type(note)=='table' and note.track>=1 and note.track<=4 then
-            local oAnim=TABLE.copy(objTemplate)
+            local oAnim=TABLE.copyAll(objTemplate)
             local oAnimTime=note.time
             oAnim.life=0.5
             oAnim.x=290+140*note.track
             oAnim.y=668
             oAnim.drawFront=objAnimDefault
-            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
         end
         if elementB==true and type(note)=='table' and note.track>=17 and note.track<=20 then
-            local oAnim=TABLE.copy(objTemplate)
+            local oAnim=TABLE.copyAll(objTemplate)
             local oAnimTime=note.time
             oAnim.life=0.5
             oAnim.x=-1950+140*note.track
             oAnim.y=668
             oAnim.drawFront=objAnimDefault
-            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
         end
         if elementB==false and type(note)=='table' and note.track>=9 and note.track<=12 then
-            local oAnim=TABLE.copy(objTemplate)
+            local oAnim=TABLE.copyAll(objTemplate)
             local oAnimTime=note.time
             oAnim.life=0.5
             oAnim.x=-830+140*note.track
             oAnim.y=668
             oAnim.drawFront=objAnimDefault
-            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
         end
         if elementB==false and type(note)=='table' and note.track>=13 and note.track<=16 then
-            local oAnim=TABLE.copy(objTemplate)
+            local oAnim=TABLE.copyAll(objTemplate)
             local oAnimTime=note.time
             oAnim.life=0.5
             oAnim.x=-1390+140*note.track
             oAnim.y=668
             oAnim.drawFront=objAnimDefault
-            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+            ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
         end
     end
 
-    local o=TABLE.copy(objTemplate)
+    local o=TABLE.copyAll(objTemplate)
     o.drawFront=objDrawText
     o.x,o.y=0,150
     o.life=5.294
@@ -212,13 +212,13 @@ function init()
             if type(note)=='table' and note.track>=5 and note.track<=8 then
                 note.color=colorFire
                 note.yOffset=offsetFire
-                local oAnim=TABLE.copy(objTemplate)
+                local oAnim=TABLE.copyAll(objTemplate)
                 local oAnimTime=note.time
                 oAnim.life=0.5
                 oAnim.x=-270+140*note.track
                 oAnim.y=668
                 oAnim.drawFront=objAnimFire
-                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 for _=1,math.floor(6+8*rnd()) do
                     oAnim.life=0.1+0.4*rnd()
                     oAnim.x=-270+140*note.track-55+rnd()*110
@@ -226,7 +226,7 @@ function init()
                     oAnim.drawFront=objPartFire
                     oAnim.direction=math.atan2(oAnim.y-668,oAnim.x-(140*note.track-270))-30+60*rnd()
                     oAnim.speed=72+rnd()*48
-                    ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+                    ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 end
             end
         end
@@ -245,13 +245,13 @@ function init()
             if type(note)=='table' and note.track>=5 and note.track<=8 then
                 note.color=colorWater
                 note.yOffset=offsetWater
-                local oAnim=TABLE.copy(objTemplate)
+                local oAnim=TABLE.copyAll(objTemplate)
                 local oAnimTime=note.time
                 oAnim.life=0.5
                 oAnim.x=-270+140*note.track
                 oAnim.y=668
                 oAnim.drawFront=objAnimWater
-                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 for _=1,math.floor(6+8*rnd()) do
                     oAnim.life=0.1+0.4*rnd()
                     oAnim.x=-270+140*note.track-55+rnd()*110
@@ -259,7 +259,7 @@ function init()
                     oAnim.drawFront=objPartWater
                     oAnim.xspeed=-8+rnd()*16
                     oAnim.yspeed=-36-rnd()*24
-                    ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+                    ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 end
             end
         end
@@ -273,21 +273,21 @@ function init()
             }
         end
     end
-    ins(events,{time=72.701,func=objCreate,arg=TABLE.copy(o)})
+    ins(events,{time=72.701,func=objCreate,arg=TABLE.copyAll(o)})
     if elementB then
         o.text={"若陀龙王即将汲取雷元素的力量…","附着雷元素的音符需要在一拍后重复击打！"}
         for _,note in next,game.map.noteQueue do
             if type(note)=='table' and note.track>=9 and note.track<=12 then
                 note.color=colorThunder
-                local oAnim=TABLE.copy(objTemplate)
+                local oAnim=TABLE.copyAll(objTemplate)
                 local oAnimTime=note.time
                 oAnim.life=0.441
                 oAnim.x=-830+140*note.track
                 oAnim.y=668
                 oAnim.drawFront=objAnimThunderA
-                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 oAnim.drawFront=objAnimThunderB
-                ins(events,{time=oAnimTime+0.441,func=objCreate,arg=TABLE.copy(oAnim)})
+                ins(events,{time=oAnimTime+0.441,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 for _=1,math.floor(6+8*rnd()) do
                     oAnim.life=0.1+0.4*rnd()
                     oAnim.x=-830+140*note.track-55+rnd()*110
@@ -295,7 +295,7 @@ function init()
                     oAnim.xOffset=-12+rnd()*24
                     oAnim.yOffset=-12+rnd()*24
                     oAnim.drawFront=objPartThunder
-                    ins(events,{time=oAnimTime+0.441,func=objCreate,arg=TABLE.copy(oAnim)})
+                    ins(events,{time=oAnimTime+0.441,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 end
             elseif type(note)=='table' and note.track>=13 and note.track<=16 then
                 note.xOffset=offsetThunder
@@ -316,13 +316,13 @@ function init()
             if type(note)=='table' and note.track>=17 and note.track<=20 then
                 note.color=colorIce
                 note.xOffset=offsetIce[2-note.track%2]
-                local oAnim=TABLE.copy(objTemplate)
+                local oAnim=TABLE.copyAll(objTemplate)
                 local oAnimTime=note.time
                 oAnim.life=0.5
                 oAnim.x=-1950+140*note.track
                 oAnim.y=668
                 oAnim.drawFront=objAnimIce
-                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+                ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 for _=1,math.floor(6+8*rnd()) do
                     oAnim.life=0.1+0.4*rnd()
                     oAnim.x=-1950+140*note.track-55+rnd()*110
@@ -331,7 +331,7 @@ function init()
                     oAnim.speed=6+rnd()*15
                     oAnim.scale=1+rnd()*4
                     oAnim.drawFront=objPartIce
-                    ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copy(oAnim)})
+                    ins(events,{time=oAnimTime,func=objCreate,arg=TABLE.copyAll(oAnim)})
                 end
             end
         end
@@ -345,7 +345,7 @@ function init()
             }
         end
     end
-    ins(events,{time=115.054,func=objCreate,arg=TABLE.copy(o)})
+    ins(events,{time=115.054,func=objCreate,arg=TABLE.copyAll(o)})
     for _,note in next,game.map.noteQueue do
         if type(note)=='table' then
             note.track=(note.track-1)%4+1
