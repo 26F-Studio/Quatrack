@@ -1,7 +1,7 @@
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     if SYSTEM~="iOS" then
         if math.random()>.0000626 then
             love.timer.sleep(.26)

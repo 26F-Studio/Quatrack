@@ -7,7 +7,7 @@ local errorShot,errorInfo
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     BGcolor=rnd()>.026 and{.3,.5,.9} or{.62,.3,.926}
     sysAndScn=SYSTEM.."-"..VERSION.string.."       scene:"..ZENITHA.getErr('#').scene
     errorText=LOADED and Text.errorMsg or "An error has occurred while the game was loading.\nAn error log has been created so you can send it to the author."

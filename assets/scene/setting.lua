@@ -3,14 +3,14 @@ local scene={}
 
 local boundaryDispTime
 
-function scene.enter()
+function scene.load()
     local mobile=SYSTEM=='Android' or SYSTEM=='iOS'
     scene.widgetList.fullscreen:setVisible(not mobile)
     scene.widgetList.portrait:setVisible(mobile)
     boundaryDispTime=0
     BG.set()
 end
-function scene.leave()
+function scene.unload()
     saveSettings()
 end
 

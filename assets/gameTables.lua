@@ -18,10 +18,10 @@ mapMetaKeys={
 }
 mapMetaKeyMap={} for i=1,#mapMetaKeys do mapMetaKeyMap[mapMetaKeys[i]]=true end
 defaultChordColor={
-    {COLOR.hex("FFFF00")},
-    {COLOR.hex("FFC000")},
-    {COLOR.hex("FF6000")},
-    {COLOR.hex("FF0000")},
+    {COLOR.HEX("FFFF00")},
+    {COLOR.HEX("FFC000")},
+    {COLOR.HEX("FF6000")},
+    {COLOR.HEX("FF0000")},
 }setmetatable(defaultChordColor,{__index=function(self,k)
     local l=#self
     for i=l+1,k do
@@ -92,7 +92,7 @@ do
         'math','string','table',
         'bit','coroutine',
         'MATH','STRING','TABLE',
-    } do TABLE.updateMissing(_G[v],mapScriptEnv[v]) end
+    } do TABLE.updateMissing(mapScriptEnv[v],_G[v]) end
     mapScriptEnv.string.dump=nil
     local dangerousLibMeta={__index=function() error("No way.") end}
     for _,v in next,{

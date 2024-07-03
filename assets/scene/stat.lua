@@ -3,7 +3,7 @@ local scene={}
 
 local item
 
-function scene.enter()
+function scene.load()
     BG.set('none')
     item={
         STAT.run,

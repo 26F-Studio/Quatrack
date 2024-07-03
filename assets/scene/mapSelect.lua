@@ -12,7 +12,7 @@ local mapList
 local listBox=WIDGET.new{
     type='listBox',x=60,y=60,w=1160,h=500,lineHeight=40,drawFunc=function(v,_,sel)
         if sel then
-            GC.setColor(COLOR.X)
+            GC.setColor(COLOR.T)
             GC.rectangle('fill',0,0,1160,40)
         end
         GC.setColor(COLOR.L)
@@ -88,7 +88,7 @@ local function _freshSongList()
                                 dText:sub(1,4)=='Hard' and COLOR.lR or
                                 dText:sub(1,4)=='Luna' and COLOR.lM or
                                 dText:sub(1,4)=='Over' and COLOR.dL or
-                                COLOR.X,
+                                COLOR.T,
                             tracks=metaData.realTracks and metaData.realTracks~=metaData.tracks and (('$1($2)'):repD(metaData.realTracks,metaData.tracks)) or metaData.tracks,
                             sortStr_difficulty=(source=='outside' and '0' or '1')..(metaData.realTracks or metaData.tracks)..difficultyNum..metaData.mapName,
                             sortStr_name=metaData.mapName..(metaData.realTracks or metaData.tracks)..(source=='outside' and '0' or '1')..difficultyNum,
@@ -116,7 +116,7 @@ local sortSelector=WIDGET.new{type='selector',pos={.5,1},x=240,y=-100,w=240,text
     end
 }
 
-function scene.enter()
+function scene.load()
     if not mapLoaded then _freshSongList() end
     BG.set()
     BGM.play()

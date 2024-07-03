@@ -7,7 +7,7 @@ local results
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     applyFPS(false)
     results=SCN.args[1] or{
         fake=true,

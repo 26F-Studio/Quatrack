@@ -148,8 +148,8 @@ local function callScriptEvent(event,...)
             if love.timer.getTime()-lastErrorTime[event]>=0.626 then
                 lastErrorTime[event]=love.timer.getTime()
                 err=err:gsub('%b[]:','')
-                -- MSG.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
-                MSG.new('error',err)
+                MSG.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
+                -- MSG.new('error',err)
             end
         end
     end
@@ -158,7 +158,7 @@ end
 ---@type Zenitha.Scene
 local scene={}
 
-function scene.enter()
+function scene.load()
     KEY_MAP_inv:_update()
     game.autoPlay=false
     game.playSpeed=1
@@ -212,7 +212,7 @@ function scene.enter()
     if love.filesystem.getInfo(dirPath..game.map.songFile) then
         BGM.load(game.map.qbpFilePath,dirPath..game.map.songFile)
     elseif game.map.songFile~="[songFile]" then
-        MSG.new('error',Text.noFile)
+        MSG.new('error',"<file>"..Text.noFile)
     end
     BGM.play(game.map.qbpFilePath,'-preLoad')
 
@@ -233,14 +233,14 @@ function scene.enter()
                 local _
                 _,err=pcall(func)
                 if err then
-                    MSG.new('error',err)
+                    MSG.new('error',"<firstrun>"..err)
                 end
             else
                 err=err:gsub('%b[]:','')
-                MSG.new('error',("<$1>$2:$3"):repD('syntax',err:match('^%d+'),err:sub(err:find(':')+1)))
+                MSG.new('error',("<syntax>$1:$2"):repD(err:match('^%d+'),err:sub(err:find(':')+1)))
             end
         else
-            MSG.new('error',Text.noFile)
+            MSG.new('error',"<file>"..Text.noFile)
         end
     end
     callScriptEvent('init')
@@ -252,7 +252,7 @@ function scene.enter()
             local success
             success,image=pcall(gc.newImage,dirPath..game.map.songImage)
             if not success then
-                MSG.new('error',Text.noFile)
+                MSG.new('error',"<file>"..Text.noFile)
                 image=nil
             end
         end
@@ -271,7 +271,7 @@ function scene.enter()
     applyFPS(true)
 end
 
-function scene.leave()
+function scene.unload()
     BGM.stop()
     applyClickFX(SET.clickFX)
     applyFPS(false)
@@ -377,7 +377,7 @@ function scene.keyDown(key,isRep)
         if m then
             SCN.args[1]=m
             BGM.stop()
-            scene.enter()
+            scene.load()
         else
             MSG.new('error',errmsg)
         end

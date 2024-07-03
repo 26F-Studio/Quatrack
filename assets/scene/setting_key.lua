@@ -81,12 +81,12 @@ local keyNames={
     },
 }setmetatable(keyNames.apple,{__index=keyNames.normal})
 
-function scene.enter()
+function scene.load()
     selected=false
     KEY_MAP_inv:_update()
     BG.set('none')
 end
-function scene.leave()
+function scene.unload()
     saveFile(KEY_MAP,'conf/key')
 end
 

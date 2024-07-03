@@ -438,7 +438,7 @@ function Map.new(file)
                             data[1]=data[1]:sub(2)
                         end
                         _syntaxCheck(not data[1]:find("[^0-9a-fA-F]") and #data[1]<=6,"Invalid color code")
-                        r,g,b=COLOR.hex(data[1])
+                        r,g,b=COLOR.HEX(data[1])
                         if neg then
                             r,g,b=-r,-g,-b
                         end
@@ -580,7 +580,7 @@ function Map.new(file)
                     end
                     local color={{},{},{}}
                     for i=1,#codes do
-                        color[1][i],color[2][i],color[3][i]=COLOR.hex(codes[i])
+                        color[1][i],color[2][i],color[3][i]=COLOR.HEX(codes[i])
                     end
                     for i=1,#trackList do
                         noteState.color[trackList[i]]=color
@@ -692,7 +692,7 @@ function Map.new(file)
                 else
                     for i=1,#c do
                         _syntaxCheck(not c[i]:find("[^0-9a-fA-F]") and #c[i]<=6,"Invalid color code")
-                        c[i]={COLOR.hex(c[i])}
+                        c[i]={COLOR.HEX(c[i])}
                     end
                     if #c>o.tracks-1 then _syntaxCheck(false,"Too many colors") end
                     setmetatable(c,getmetatable(defaultChordColor))

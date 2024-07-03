@@ -4,7 +4,7 @@ local scene={}
 local tryCounter=0
 local fool=os.date("%m%d")=="0401"
 
-function scene.enter()
+function scene.load()
     BG.set()
     BGM.play()
 end

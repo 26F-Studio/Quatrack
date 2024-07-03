@@ -18,16 +18,13 @@ local loadingThread=coroutine.wrap(function()
     return 'finish'
 end)
 
-function scene.enter()
+function scene.load()
     local r=math.random()*6.2832
     logoColor1={COLOR.rainbow(r)}
     logoColor2={COLOR.rainbow_light(r)}
     studioLogo=GC.newText(FONT.get(90),"26F Studio")
     progress=0
     maxProgress=10
-end
-function scene.leave()
-    love.event.quit()
 end
 
 function scene.mouseDown()
