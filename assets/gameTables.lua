@@ -85,7 +85,7 @@ do
             end,
         },
 
-        message=function(mes,time) MSG.new('info',mes,time or 3) end,
+        message=function(mes,time) MSG('info',mes,time or 3) end,
         -- sfx=function(name,vol,pos,pitch) SFX.play(name,vol,pos,pitch) end,
     }
     for _,v in next,{
@@ -265,9 +265,9 @@ do-- Userdata tables
 
         -- Video
         fullscreen=     function(v) love.window.setFullscreen(v) love.resize(love.graphics.getWidth(),love.graphics.getHeight()) end,
-        maxFPS=         function(v) ZENITHA.setMaxFPS(v) end,
-        updRate=        function(v) ZENITHA.setUpdateFreq(v) end,
-        drawRate=       function(v) ZENITHA.setDrawFreq(v) end,
+        maxFPS=         function(v) ZENITHA.setMainLoopSpeed(v) end,
+        updRate=        function(v) ZENITHA.setUpdateRate(v) end,
+        drawRate=       function(v) ZENITHA.setRenderRate(v) end,
         sysCursor=      function(v) love.mouse.setVisible(v) end,
         clickFX=        function(v) applyClickFX(v) end,
         clean=          function(v) ZENITHA.setCleanCanvas(v) end,

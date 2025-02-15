@@ -26,7 +26,7 @@ local trackNames=trackNames
 local getHitLV=getHitLV
 local function _showVolMes(v)
     needSaveSetting=true
-    MSG.new('info',('$1%'):repD(('%d'):format(v*100)),0)
+    MSG('info',('$1%'):repD(('%d'):format(v*100)),0)
 end
 
 local autoPlayTextObj
@@ -66,7 +66,7 @@ local game={
 
     touches={},
     hitParticles=(function()
-        local p=gc.newParticleSystem(GC.load{1,1,{'clear',1,1,1,.6}},1000)
+        local p=gc.newParticleSystem(GC.load{w=1,h=1,{'clear',1,1,1,.6}},1000)
         p:setColors(1,1,1,1,1,1,1,.26,1,1,1,0)
         p:setSizes(10,4,2,1)
         p:setParticleLifetime(.5,1)
@@ -96,9 +96,9 @@ local function _tryGoResult()
     if game.needSaveSetting then saveSettings() end
     if game.fullAcc>0 and game.curAcc/game.fullAcc>=.6 then
         _updateStat()
-        MSG.new('check',Text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
+        MSG('check',Text.validScore:repD(os.date('%Y-%m-%d %H:%M')),6.26)
     else
-        MSG.new('info',Text.invalidScore)
+        MSG('info',Text.invalidScore)
     end
     applyClickFX(SET.clickFX)
     SCN.swapTo('result',nil,{
@@ -148,8 +148,8 @@ local function callScriptEvent(event,...)
             if love.timer.getTime()-lastErrorTime[event]>=0.626 then
                 lastErrorTime[event]=love.timer.getTime()
                 err=err:gsub('%b[]:','')
-                MSG.new('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
-                -- MSG.new('error',err)
+                MSG('error',("<$1>$2:$3"):repD(event,err:match('^%d+'),err:sub(err:find(':')+1)))
+                -- MSG('error',err)
             end
         end
     end
@@ -212,7 +212,7 @@ function scene.load()
     if love.filesystem.getInfo(dirPath..game.map.songFile) then
         BGM.load(game.map.qbpFilePath,dirPath..game.map.songFile)
     elseif game.map.songFile~="[songFile]" then
-        MSG.new('error',"<file>"..Text.noFile)
+        MSG('error',"<file>"..Text.noFile)
     end
     BGM.play(game.map.qbpFilePath,'-preLoad')
 
@@ -233,14 +233,14 @@ function scene.load()
                 local _
                 _,err=pcall(func)
                 if err then
-                    MSG.new('error',"<firstrun>"..err)
+                    MSG('error',"<firstrun>"..err)
                 end
             else
                 err=err:gsub('%b[]:','')
-                MSG.new('error',("<syntax>$1:$2"):repD(err:match('^%d+'),err:sub(err:find(':')+1)))
+                MSG('error',("<syntax>$1:$2"):repD(err:match('^%d+'),err:sub(err:find(':')+1)))
             end
         else
-            MSG.new('error',"<file>"..Text.noFile)
+            MSG('error',"<file>"..Text.noFile)
         end
     end
     callScriptEvent('init')
@@ -252,7 +252,7 @@ function scene.load()
             local success
             success,image=pcall(gc.newImage,dirPath..game.map.songImage)
             if not success then
-                MSG.new('error',"<file>"..Text.noFile)
+                MSG('error',"<file>"..Text.noFile)
                 image=nil
             end
         end
@@ -379,7 +379,7 @@ function scene.keyDown(key,isRep)
             BGM.stop()
             scene.load()
         else
-            MSG.new('error',errmsg)
+            MSG('error',errmsg)
         end
     elseif k=='sfxVolDn' then SET.sfxVol=max(SET.sfxVol-.1,0);_showVolMes(SET.sfxVol)
     elseif k=='sfxVolUp' then SET.sfxVol=min(SET.sfxVol+.1,1);_showVolMes(SET.sfxVol)
@@ -388,18 +388,18 @@ function scene.keyDown(key,isRep)
     elseif k=='dropSpdDn' then
         if game.score0==0 or game.curAcc==-1e99 then
             SET.dropSpeed=max(SET.dropSpeed-1,-8)
-            MSG.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
+            MSG('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
             game.needSaveSetting=true
         else
-            MSG.new('warn',Text.cannotAdjustDropSpeed,0)
+            MSG('warn',Text.cannotAdjustDropSpeed,0)
         end
     elseif k=='dropSpdUp' then
         if game.score0==0 or game.curAcc==-1e99 then
             SET.dropSpeed=min(SET.dropSpeed+1,8)
-            MSG.new('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
+            MSG('info',Text.dropSpeedChanged:repD(SET.dropSpeed),0)
             game.needSaveSetting=true
         else
-            MSG.new('warn',Text.cannotAdjustDropSpeed,0)
+            MSG('warn',Text.cannotAdjustDropSpeed,0)
         end
     elseif k=='escape' then
         if _tryGoResult() then
@@ -709,9 +709,9 @@ function scene.draw()
         setFont(50,'mono')
         if game.bestChain==5 then
             SCC[3]=(1-game.time/game.songLength)^.26
-            GC.shadedPrint(game.combo,0,0,'center',1,8,chainColors[game.bestChain],SCC)
+            GC.strokePrint('full',1,chainColors[game.bestChain],SCC,game.combo,0,0,nil,'center')
         else
-            GC.shadedPrint(game.combo,0,0,'center',1,8,chainColors[game.bestChain],COLOR.L)
+            GC.strokePrint('full',1,chainColors[game.bestChain],COLOR.L,game.combo,0,0,nil,'center')
         end
     end
 
@@ -748,8 +748,8 @@ function scene.draw()
         gc_setColor(1,1,1,a)
         gc_draw(game.texts.mapName,0,-260,nil,min(1200/game.texts.mapName:getWidth(),1),1,game.texts.mapName:getWidth()*.5)
         gc_setColor(.7,.7,.7,a)
-        GC.mDrawX(game.texts.musicAuth,0,-160)
-        GC.mDrawX(game.texts.mapAuth,0,-120)
+        GC.draw(game.texts.musicAuth,-game.texts.musicAuth:getWidth()/2,-160)
+        GC.draw(game.texts.mapAuth,-game.texts.mapAuth:getWidth()/2,-120)
     end
 
     gc_setColor(1,1,1)
@@ -777,7 +777,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button',pos={0,0},x=40,y=60,w=50, sound_press='back',text=CHAR.icon.back,code=WIDGET.c_backScn()},
-    WIDGET.new{type='button',pos={0,0},x=100,y=60,w=50,sound_press='key',text=CHAR.icon.retry,code=WIDGET.c_pressKey'restart'},
+    WIDGET.new{type='button',pos={0,0},x=40,y=60,w=50, sound_press='back',text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
+    WIDGET.new{type='button',pos={0,0},x=100,y=60,w=50,sound_press='key',text=CHAR.icon.retry,onClick=WIDGET.c_pressKey'restart'},
 }
 return scene

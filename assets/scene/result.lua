@@ -69,7 +69,7 @@ function scene.keyDown(key,isRep)
             if map then
                 SCN.swapTo('game',nil,map)
             else
-                MSG.new('error',errmsg)
+                MSG('error',errmsg)
             end
         end
     elseif k=='escape' then
@@ -87,9 +87,9 @@ function scene.draw()
     GC.push('transform')
         GC.translate(640,100)
         GC.scale(min(900/results.mapName:getWidth(),1))
-        GC.mDrawX(results.mapName,0,0)
+        GC.draw(results.mapName,-results.mapName:getWidth()/2,0)
     GC.pop()
-    GC.mDrawX(results.mapDifficulty,640,200)
+    GC.draw(results.mapDifficulty,640-results.mapDifficulty:getWidth()/2,200)
 
     GC.push('transform')
     GC.translate(240,255)
@@ -157,7 +157,7 @@ function scene.draw()
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',pos={1,1},x=-300,y=-80,w=160,h=80,fontSize=60,text=CHAR.icon.retry,code=WIDGET.c_pressKey'restart'},
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_press='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={1,1},x=-300,y=-80,w=160,h=80,fontSize=60,text=CHAR.icon.retry,onClick=WIDGET.c_pressKey'restart'},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_press='back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 return scene

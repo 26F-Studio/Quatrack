@@ -8,7 +8,7 @@ local logoColor1,logoColor2
 local loadingThread=coroutine.wrap(function()
     BG.setDefault(MOBILE and 'space' or 'galaxy')
     BG.set()
-    BGM.play()
+    BGM.play('title')
     coroutine.yield('loadVoice')VOC.load('assets/vocal/')
     coroutine.yield('loadFont') for i=1,17 do FONT.get(15+5*i) end
 

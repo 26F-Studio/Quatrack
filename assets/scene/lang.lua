@@ -58,7 +58,7 @@ local function _setLang(lid)
 end
 
 scene.widgetList={
-    WIDGET.new{type='button_fill',x=270,y=210,w=330,h=100,fontSize=40, text=langList.en, color='R', sound_press='check',code=function() _setLang('en') end},
+    WIDGET.new{type='button_fill',x=270,y=210,w=330,h=100,fontSize=40, text=langList.en, color='R', sound_press='check',onClick=function() _setLang('en') end},
     WIDGET.new{type='button'     ,x=270,y=330,w=330,h=100,fontSize=40, text='',          color='F', sound_press='check'},
     WIDGET.new{type='button'     ,x=270,y=450,w=330,h=100,fontSize=35, text='',          color='O', sound_press='check'},
     WIDGET.new{type='button'     ,x=270,y=570,w=330,h=100,fontSize=35, text='',          color='Y', sound_press='check'},
@@ -68,11 +68,11 @@ scene.widgetList={
     WIDGET.new{type='button'     ,x=640,y=450,w=330,h=100,fontSize=40, text='',          color='G', sound_press='check'},
     WIDGET.new{type='button'     ,x=640,y=570,w=330,h=100,fontSize=40, text='',          color='J', sound_press='check'},
 
-    WIDGET.new{type='button_fill',x=1000,y=210,w=330,h=100,fontSize=40,text=langList.zh, color='I', sound_press='check',code=function() _setLang('zh') end},
+    WIDGET.new{type='button_fill',x=1000,y=210,w=330,h=100,fontSize=40,text=langList.zh, color='I', sound_press='check',onClick=function() _setLang('zh') end},
     WIDGET.new{type='button'     ,x=1000,y=330,w=330,h=100,fontSize=40,text='',          color='B', sound_press='check'},
     WIDGET.new{type='button'     ,x=1000,y=450,w=330,h=100,fontSize=40,text='',          color='P', sound_press='check'},
 
-    WIDGET.new{type='button_fill',x=1000,y=570,w=330,h=100,sound_press='back',fontSize=60,text=CHAR.icon.back,code=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',x=1000,y=570,w=330,h=100,sound_press='back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene

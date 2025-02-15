@@ -14,7 +14,7 @@ function scene.load()
         ZENITHA.globalEvent.setPowerInfo=NULL
         ZENITHA.globalEvent.clickFX=NULL
         VERSION.string=""
-        MSG.new('error',"Please quit with HOME button on iOS",1e99)
+        MSG('error',"Please quit with HOME button on iOS",1e99)
     end
 end
 

@@ -12,7 +12,7 @@ function sureCheck(event)
     if love.timer.getTime()-lastTime[event]<1 then
         return true
     else
-        MSG.new('info',Text.sureText[event])
+        MSG('info',Text.sureText[event])
     end
     lastTime[event]=love.timer.getTime()
 end
@@ -26,17 +26,17 @@ do-- function loadFile(name,args)
             return mes
         else
             if mes:find'open error' then
-                MSG.new('error',text.loadError_open:repD(name,""))
+                MSG('error',text.loadError_open:repD(name,""))
             elseif mes:find'unknown mode' then
-                MSG.new('error',text.loadError_errorMode:repD(name,args))
+                MSG('error',text.loadError_errorMode:repD(name,args))
             elseif mes:find'no file' then
                 if not args:sArg'-canSkip' then
-                    MSG.new('error',text.loadError_noFile:repD(name,""))
+                    MSG('error',text.loadError_noFile:repD(name,""))
                 end
             elseif mes then
-                MSG.new('error',text.loadError_other:repD(name,mes))
+                MSG('error',text.loadError_other:repD(name,mes))
             else
-                MSG.new('error',text.loadError_unknown:repD(name,""))
+                MSG('error',text.loadError_unknown:repD(name,""))
             end
         end
     end
@@ -49,7 +49,7 @@ do-- function saveFile(data,name,args)
         if res then
             return mes
         else
-            MSG.new('error',
+            MSG('error',
                 mes:find'duplicate' and
                     text.saveError_duplicate:repD(name) or
                 mes:find'encode error' and
@@ -69,13 +69,13 @@ function saveSettings()
 end
 function applyFPS(inGame)
     if inGame then
-        ZENITHA.setMaxFPS(SETTINGS.maxFPS)
-        ZENITHA.setUpdateFreq(SETTINGS.updRate)
-        ZENITHA.setDrawFreq(SETTINGS.drawRate)
+        ZENITHA.setMainLoopSpeed(SETTINGS.maxFPS)
+        ZENITHA.setUpdateRate(SETTINGS.updRate)
+        ZENITHA.setRenderRate(SETTINGS.drawRate)
     else
-        ZENITHA.setMaxFPS(math.min(SETTINGS.maxFPS,90))
-        ZENITHA.setUpdateFreq(100)
-        ZENITHA.setDrawFreq(100)
+        ZENITHA.setMainLoopSpeed(math.min(SETTINGS.maxFPS,90))
+        ZENITHA.setUpdateRate(100)
+        ZENITHA.setRenderRate(100)
     end
 end
 function applyClickFX(flag)

@@ -16,7 +16,7 @@
 -------------------------------------------------------------
 -- Load Zenitha
 require("Zenitha")
-DEBUG.checkLoadTime("Load Zenitha")
+UTIL.time("Load Zenitha",true)
 --------------------------------------------------------------
 -- Global Vars Declaration
 VERSION=require"version"
@@ -45,14 +45,14 @@ end
 CHAR=require'assets.char'
 require'assets.gameTables'
 require'assets.gameFuncs'
-DEBUG.checkLoadTime("Load Assets")
+UTIL.time("Load Assets",true)
 --------------------------------------------------------------
 -- Config Zenitha
 STRING.install()
 ZENITHA.setAppName('Quatrack')
 ZENITHA.setVersionText(VERSION.string)
 ZENITHA.setFirstScene('load')
-function ZENITHA.globalEvent.drawCursor(_,x,y)
+function ZENITHA.globalEvent.drawCursor(x,y)
     if not SETTINGS.sysCursor then
         GC.setColor(1,1,1)
         GC.setLineWidth(2)
@@ -111,8 +111,8 @@ do-- OnFocus
             end
         else
             if SETTINGS.slowUnfocus then
-                ZENITHA.setMaxFPS(math.min(SETTINGS.maxFPS,90))
-                ZENITHA.setDrawFreq(15)
+                ZENITHA.setMainLoopSpeed(math.min(SETTINGS.maxFPS,90))
+                ZENITHA.setRenderRate(15)
             end
             if SETTINGS.autoMute then
                 TASK.removeTask_code(task_autoSoundOn)
@@ -142,7 +142,7 @@ function ZENITHA.globalEvent.drawSysInfo()
             GC.rectangle('fill',76,6,pow*.22,14)
             if pow<100 then
                 FONT.set(15,'_basic')
-                GC.shadedPrint(pow,88,5,'center',1,8)
+                GC.strokePrint('full',1,COLOR.D,COLOR.L,pow,88,5)
             end
         end
         GC.rectangle('line',74,4,26,18)
@@ -162,24 +162,83 @@ FONT.load{
     symbols='assets/font/symbols.otf',
 }
 SCR.setSize(1280,720)
-BGM.setDefault('title')
 BGM.setMaxSources(5)
 VOC.setDiversion(.62)
-WIDGET._prototype.button.sound_press='button'
-WIDGET._prototype.checkBox.sound_on='check'
-WIDGET._prototype.checkBox.sound_off='uncheck'
-WIDGET._prototype.selector.sound_press='selector'
-WIDGET._prototype.listBox.sound_select='click'
-WIDGET._prototype.inputBox.sound_input='hit5'
-WIDGET._prototype.inputBox.sound_bksp='hit3'
-WIDGET._prototype.inputBox.sound_bksp='hold1'
-WIDGET._prototype.inputBox.sound_clear='hold4'
-WIDGET._prototype.textBox.sound_clear='hold4'
-WIDGET._prototype.slider.numFontType='norm'
-WIDGET._prototype.slider_fill.lineWidth=2
-WIDGET._prototype.switch.labelPos='left'
-WIDGET._prototype.button.lineWidth=2
-WIDGET._prototype.button_fill.textColor=TABLE.copy(COLOR.D)
+do -- WIDGET.newClass
+    local bFill=WIDGET.newClass('button_fill','button')
+
+    local gc=love.graphics
+    local gc_push,gc_pop=gc.push,gc.pop
+    local gc_translate,gc_scale=gc.translate,gc.scale
+    local gc_setColor=gc.setColor
+    local alignDraw=WIDGET._alignDraw
+    function bFill:draw()
+        gc_push('transform')
+        gc_translate(self._x,self._y)
+
+        if self._pressTime>0 then
+            gc_scale(1-self._pressTime/self._pressTimeMax*.0626)
+        end
+
+        local w,h=self.w,self.h
+        local HOV=self._hoverTime/self._hoverTimeMax
+
+        local c=self.fillColor
+        local r,g,b=c[1],c[2],c[3]
+
+        -- Rectangle
+        gc_setColor(.15+r*.7*(1-HOV*.26),.15+g*.7*(1-HOV*.26),.15+b*.7*(1-HOV*.26),.9)
+        GC.mRect('fill',0,0,w,h,self.cornerR)
+
+        -- Drawable
+        if self._image then
+            gc_setColor(1,1,1)
+            alignDraw(self,self._image)
+        end
+        if self._text then
+            gc_setColor(self.textColor)
+            alignDraw(self,self._text)
+        end
+        gc_pop()
+    end
+end
+WIDGET.setDefaultOption{
+    button={
+        lineWidth=2,
+        sound_release='button',
+    },
+    checkBox={
+        sound_on='check',
+        sound_off='uncheck',
+    },
+    selector={
+        sound_press='selector',
+    },
+    listBox={
+        sound_select='click',
+    },
+    inputBox={
+        sound_input='hit5',
+        -- sound_bksp='hit3',
+        sound_bksp='hold1',
+        sound_clear='hold4',
+    },
+    textBox={
+        sound_clear='hold4',
+    },
+    slider={
+        numFontType='norm',
+    },
+    slider_fill={
+        lineWidth=2,
+    },
+    switch={
+        labelPos='left',
+    },
+    button_fill={
+        textColor=TABLE.copy(COLOR.D),
+    },
+}
 LANG.add{
     zh='assets/language/lang_zh.lua',
     en='assets/language/lang_en.lua',
@@ -219,7 +278,7 @@ BGM.load((function()
     return L
 end)())
 VOC.init{}
-DEBUG.checkLoadTime("Configuring Zenitha")
+UTIL.time("Configuring Zenitha",true)
 --------------------------------------------------------------
 -- Load SOURCE ONLY resources
 SHADER={}
@@ -241,7 +300,7 @@ for _,v in next,love.filesystem.getDirectoryItems('assets/scene') do
         SCN.add(sceneName,require('assets/scene/'..sceneName))
     end
 end
-DEBUG.checkLoadTime("Load SDs+BGs+SCNs")
+UTIL.time("Load SDs+BGs+SCNs",true)
 --------------------------------------------------------------
 -- Load settings and statistics
 local setting=FILE.load('conf/settings','-json -canskip')
@@ -279,8 +338,7 @@ do
         saveStats()
     end
 end
-DEBUG.checkLoadTime("Load savedata")
+UTIL.time("Load savedata",true)
+
 --------------------------------------------------------------
-DEBUG.logLoadTime()
---------------------------------------------------------------
--- Apply system setting
+UTIL.showTimeLog()
