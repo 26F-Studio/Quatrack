@@ -196,13 +196,16 @@ do -- WIDGET.newClass
             alignDraw(self,self._image)
         end
         if self._text then
-            gc_setColor(self.textColor)
+            gc_setColor(0,0,0,.626)
             alignDraw(self,self._text)
         end
         gc_pop()
     end
 end
 WIDGET.setDefaultOption{
+    base={
+        textColor='dL',
+    },
     button={
         lineWidth=2,
         sound_release='button',
@@ -234,9 +237,6 @@ WIDGET.setDefaultOption{
     },
     switch={
         labelPos='left',
-    },
-    button_fill={
-        textColor=TABLE.copy(COLOR.D),
     },
 }
 LANG.add{

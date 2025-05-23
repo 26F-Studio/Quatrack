@@ -180,7 +180,7 @@ scene.widgetList={
     WIDGET.new{type='button',pos={0.7777,false},x=0,y=400,w=120,h=60,sound_press='key',fontSize=25,text=LANG'keySetting_dropSpdDn', color='lL',onClick=function() _setSel(19) end},
     WIDGET.new{type='button',pos={0.7777,false},x=0,y=480,w=120,h=60,sound_press='key',fontSize=25,text=LANG'keySetting_dropSpdUp', color='lL',onClick=function() _setSel(20) end},
 
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_press='back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_release='back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene

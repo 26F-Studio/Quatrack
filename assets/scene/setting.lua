@@ -93,7 +93,7 @@ scene.widgetList={
 
     WIDGET.new{type='button_fill',pos={1,1},x=-320,y=-80,w=160,h=80,fontSize=60,text=CHAR.icon.keyboard,onClick=WIDGET.c_goScn'setting_key'},
 
-    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_press='back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
+    WIDGET.new{type='button_fill',pos={1,1},x=-120,y=-80,w=160,h=80,sound_release='back',fontSize=60,text=CHAR.icon.back,onClick=WIDGET.c_backScn()},
 }
 
 return scene
